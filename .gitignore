@@ -1,1 +1,7 @@
 .venv/
+
+# PlatformIO
+.pio/
+
+# Python virtual environment
+.venv/
