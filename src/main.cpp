@@ -7,8 +7,8 @@
 #error "NODE_ID must be defined"
 #endif
 
-static constexpr uint8_t NODE_A = 0;
-static constexpr uint8_t NODE_B = 1;
+static constexpr uint8_t NODE_A = 1;
+static constexpr uint8_t NODE_B = 2;
 
 static const uint8_t MAC_A[] = {
     0x14, 0x63, 0x93, 0xC5, 0xD0, 0x18
@@ -92,7 +92,7 @@ void setup() {
     peer_info.encrypt = false;
     peer_info.ifidx = WIFI_IF_STA;
 
-#if NODE_ID == NODE_A
+#if NODE_ID == 1
     memcpy(peer_info.peer_addr, MAC_B, 6);
 #else
     memcpy(peer_info.peer_addr, MAC_A, 6);
@@ -108,7 +108,7 @@ void setup() {
 
 void loop() {
 
-#if NODE_ID == NODE_A
+#if NODE_ID == 1
 
     static unsigned long last_send = 0;
 
