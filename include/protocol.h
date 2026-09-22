@@ -1,5 +1,7 @@
 #pragma once
 
+#include "node_id.h"
+
 #include <cstddef>
 #include <cstdint>
 
@@ -19,19 +21,19 @@ constexpr std::size_t VALUE_MAX = 192;
 
 	// node ids
 
-using NodeId = std::uint8_t;
+using NodeId = node::Id;
 
-constexpr NodeId NODE_ID_INVALID = 0x00;
+constexpr NodeId NODE_ID_INVALID = node::INVALID;
 
-constexpr NodeId NODE_A = 0x01;
-constexpr NodeId NODE_B = 0x02;
-constexpr NodeId NODE_C = 0x03;
-constexpr NodeId NODE_D = 0x04;
+constexpr NodeId NODE_A = node::A;
+constexpr NodeId NODE_B = node::B;
+constexpr NodeId NODE_C = node::C;
+constexpr NodeId NODE_D = node::D;
 
-constexpr NodeId NODE_ID_MIN = NODE_A;
-constexpr NodeId NODE_ID_MAX = NODE_D;
+constexpr NodeId NODE_ID_MIN = node::MIN;
+constexpr NodeId NODE_ID_MAX = node::MAX;
 
-constexpr NodeId NODE_ID_BROADCAST = 0xFF;
+constexpr NodeId NODE_ID_BROADCAST = node::BROADCAST;
 
 //request identity
 
