@@ -1,41 +1,26 @@
-#include "node_id.h"
-#include "protocol.h"
-#include "transport.h"
-
 #include <Arduino.h>
 #include <cstring>
 
+#include "eeprom.h"
+
 namespace {
 
-constexpr std::uint32_t TEST_REQUEST_ID = 1001;
-constexpr std::uint64_t TEST_HLC = 0x0000000100000001ULL;
+constexpr std::uint8_t SDA_PIN = 8;
+constexpr std::uint8_t SCL_PIN = 9;
 
-constexpr std::uint8_t NODE_A_MAC[transport::MAC_ADDRESS_SIZE] = {
-    0x14, 0x63, 0x93, 0xC5, 0xD0, 0x18
-};
+constexpr std::uint16_t CROSS_PAGE_ADDRESS = 0x003F;
+constexpr std::uint16_t END_TEST_ADDRESS = 0x7FFE;
 
-constexpr std::uint8_t NODE_B_MAC[transport::MAC_ADDRESS_SIZE] = {
-    0x14, 0x63, 0x93, 0xC5, 0xC3, 0x1C
-};
+eeprom::AT24C256 memory;
 
-constexpr std::uint8_t TEST_KEY[] = {
-    't', 'e', 'm', 'p'
-};
-
-constexpr std::uint8_t TEST_VALUE[] = {
-    '4', '2'
-};
-
-transport::EspNowTransport esp_transport;
-
-void print_protocol_result(
+void print_result(
     const char* operation,
-    protocol::Result result
+    eeprom::Result result
 ) {
     Serial.print(operation);
     Serial.print(": ");
 
-    if (result == protocol::Result::OK) {
+    if (result == eeprom::Result::OK) {
         Serial.println("OK");
     } else {
         Serial.print("FAIL (result=");
@@ -44,472 +29,258 @@ void print_protocol_result(
     }
 }
 
-void print_transport_result(
+bool expect_result(
     const char* operation,
-    transport::Result result
+    eeprom::Result actual,
+    eeprom::Result expected
 ) {
     Serial.print(operation);
     Serial.print(": ");
 
-    if (result == transport::Result::OK) {
-        Serial.println("OK");
-    } else {
-        Serial.print("FAIL (result=");
-        Serial.print(static_cast<int>(result));
-        Serial.println(")");
+    if (actual == expected) {
+        Serial.println("PASS");
+        return true;
     }
-}
 
-bool mac_matches(
-    const std::uint8_t* actual,
-    const std::uint8_t* expected
-) {
-    return std::memcmp(
-        actual,
-        expected,
-        transport::MAC_ADDRESS_SIZE
-    ) == 0;
-}
-
-bool wait_for_tx_status(
-    node::Id expected_destination,
-    bool& success,
-    unsigned long timeout_ms
-) {
-    const unsigned long start = millis();
-
-    while ((millis() - start) < timeout_ms) {
-        transport::SendStatus status{};
-
-        if (esp_transport.receive_send_status(status)) {
-            if (status.destination == expected_destination) {
-                success = status.success;
-                return true;
-            }
-        }
-
-        delay(5);
-    }
+    Serial.print("FAIL (expected=");
+    Serial.print(static_cast<int>(expected));
+    Serial.print(", actual=");
+    Serial.print(static_cast<int>(actual));
+    Serial.println(")");
 
     return false;
 }
 
-bool build_and_send_set_request() {
-    std::uint8_t payload_buffer[protocol::MAX_PAYLOAD_SIZE]{};
-    std::size_t payload_bytes = 0;
-
-    protocol::SetRequestPayload payload{
-        {
-            TEST_KEY,
-            static_cast<std::uint8_t>(sizeof(TEST_KEY))
-        },
-        {
-            TEST_VALUE,
-            static_cast<std::uint8_t>(sizeof(TEST_VALUE))
-        }
-    };
-
-    protocol::Result result = protocol::serialize_set_request(
-        payload,
-        payload_buffer,
-        sizeof(payload_buffer),
-        payload_bytes
-    );
-
-    print_protocol_result(
-        "SET_REQ payload serialization",
-        result
-    );
-
-    if (result != protocol::Result::OK) {
-        return false;
-    }
-
-    protocol::PacketHeader header{};
-
-    header.protocol_version = protocol::PROTOCOL_VERSION;
-    header.msg_type = protocol::MessageType::SET_REQ;
-    header.flags = 0;
-    header.header_len = protocol::HEADER_SIZE;
-    header.request_id = TEST_REQUEST_ID;
-    header.origin_node_id = node::A;
-    header.sender_node_id = node::A;
-    header.destination_node_id = node::B;
-    header.ttl = 0;
-    header.hlc = TEST_HLC;
-    header.payload_len =
-        static_cast<std::uint16_t>(payload_bytes);
-
-    std::uint8_t packet_buffer[protocol::MAX_PACKET_SIZE]{};
-    std::size_t packet_bytes = 0;
-
-    result = protocol::serialize_packet(
-        header,
-        {
-            payload_buffer,
-            static_cast<std::uint8_t>(payload_bytes)
-        },
-        packet_buffer,
-        sizeof(packet_buffer),
-        packet_bytes
-    );
-
-    print_protocol_result(
-        "SET_REQ packet serialization",
-        result
-    );
-
-    if (result != protocol::Result::OK) {
-        return false;
-    }
-
-    Serial.print("SET_REQ packet length: ");
-    Serial.println(packet_bytes);
-
-    transport::Result transport_result =
-        esp_transport.send_unicast(
-            node::B,
-            packet_buffer,
-            packet_bytes
-        );
-
-    print_transport_result(
-        "A -> B SET_REQ transmission",
-        transport_result
-    );
-
-    if (transport_result != transport::Result::OK) {
-        return false;
-    }
-
-    bool tx_success = false;
-
-    if (!wait_for_tx_status(
-            node::B,
-            tx_success,
-            1000
-        )) {
-        Serial.println("SET_REQ TX STATUS: TIMEOUT");
-        return false;
-    }
-
-    Serial.print("SET_REQ TX STATUS: ");
-    Serial.println(tx_success ? "SUCCESS" : "FAIL");
-
-    return tx_success;
+bool buffers_equal(
+    const std::uint8_t* lhs,
+    const std::uint8_t* rhs,
+    std::size_t length
+) {
+    return std::memcmp(lhs, rhs, length) == 0;
 }
 
-bool handle_set_request_on_b(
-    const transport::ReceivedFrame& frame
-) {
-    if (!mac_matches(frame.source_mac, NODE_A_MAC)) {
-        Serial.println("B: source MAC verification: FAIL");
+bool test_cross_page_write() {
+    std::uint8_t original[4]{};
+    std::uint8_t test_data[2] = {
+        0xA5,
+        0x5A
+    };
+    std::uint8_t readback[2]{};
+
+    eeprom::Result result = memory.read(
+        0x003E,
+        original,
+        sizeof(original)
+    );
+
+    if (!expect_result(
+            "Read bytes around page boundary",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    Serial.println("B: source MAC verification: PASS");
-
-    protocol::PacketView packet{};
-
-    protocol::Result result =
-        protocol::deserialize_packet(
-            frame.data,
-            frame.length,
-            packet
-        );
-
-    print_protocol_result(
-        "B: packet deserialization",
-        result
+    result = memory.write(
+        CROSS_PAGE_ADDRESS,
+        test_data,
+        sizeof(test_data)
     );
 
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "2-byte write across 64-byte page boundary",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    protocol::DecodedMessage message{};
-
-    result = protocol::decode_message(
-        packet,
-        message
+    result = memory.read(
+        CROSS_PAGE_ADDRESS,
+        readback,
+        sizeof(readback)
     );
 
-    print_protocol_result(
-        "B: message decoding",
-        result
-    );
-
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "Read back cross-page write",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    bool header_ok =
-        message.header.protocol_version ==
-            protocol::PROTOCOL_VERSION &&
-        message.header.msg_type ==
-            protocol::MessageType::SET_REQ &&
-        message.header.flags == 0 &&
-        message.header.header_len ==
-            protocol::HEADER_SIZE &&
-        message.header.request_id ==
-            TEST_REQUEST_ID &&
-        message.header.origin_node_id ==
-            node::A &&
-        message.header.sender_node_id ==
-            node::A &&
-        message.header.destination_node_id ==
-            node::B &&
-        message.header.ttl == 0 &&
-        message.header.hlc == TEST_HLC;
-
-    if (!header_ok) {
-        Serial.println("B: SET_REQ header verification: FAIL");
+    if (!buffers_equal(
+            test_data,
+            readback,
+            sizeof(test_data))) {
+        Serial.println("Cross-page data verification: FAIL");
         return false;
     }
 
-    Serial.println("B: SET_REQ header verification: PASS");
+    Serial.println("Cross-page data verification: PASS");
 
-    const protocol::SetRequestPayload& received =
-        message.payload.set_request;
+    // Restore the original two bytes at 0x003F-0x0040.
+    result = memory.write(
+        CROSS_PAGE_ADDRESS,
+        &original[1],
+        2
+    );
 
-    bool payload_ok =
-        received.key.len == sizeof(TEST_KEY) &&
-        received.value.len == sizeof(TEST_VALUE) &&
-        std::memcmp(
-            received.key.data,
-            TEST_KEY,
-            sizeof(TEST_KEY)
-        ) == 0 &&
-        std::memcmp(
-            received.value.data,
-            TEST_VALUE,
-            sizeof(TEST_VALUE)
-        ) == 0;
-
-    if (!payload_ok) {
-        Serial.println("B: SET_REQ payload verification: FAIL");
+    if (!expect_result(
+            "Restore page-boundary bytes",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
-
-    Serial.println("B: SET_REQ payload verification: PASS");
-
-    Serial.print("B: key = ");
-    Serial.write(
-        received.key.data,
-        received.key.len
-    );
-    Serial.println();
-
-    Serial.print("B: value = ");
-    Serial.write(
-        received.value.data,
-        received.value.len
-    );
-    Serial.println();
 
     return true;
 }
 
-bool send_set_ack(
-    const protocol::PacketHeader& request_header
-) {
-    std::uint8_t payload_buffer[protocol::MAX_PAYLOAD_SIZE]{};
-    std::size_t payload_bytes = 0;
+bool test_multiple_page_write() {
+    constexpr std::size_t TEST_LENGTH = 128;
+    constexpr std::uint16_t TEST_ADDRESS = 0x0180;
 
-    protocol::SetAckPayload payload{
-        protocol::StatusCode::OK,
-        {
-            TEST_KEY,
-            static_cast<std::uint8_t>(sizeof(TEST_KEY))
-        }
-    };
+    std::uint8_t original[TEST_LENGTH]{};
+    std::uint8_t pattern[TEST_LENGTH]{};
+    std::uint8_t readback[TEST_LENGTH]{};
 
-    protocol::Result result =
-        protocol::serialize_set_ack(
-            payload,
-            payload_buffer,
-            sizeof(payload_buffer),
-            payload_bytes
+    for (std::size_t i = 0; i < TEST_LENGTH; ++i) {
+        pattern[i] = static_cast<std::uint8_t>(
+            0x20 + (i & 0x3F)
         );
+    }
 
-    print_protocol_result(
-        "SET_ACK payload serialization",
-        result
+    eeprom::Result result = memory.read(
+        TEST_ADDRESS,
+        original,
+        TEST_LENGTH
     );
 
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "Read original multi-page test region",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    protocol::PacketHeader header{};
-
-    header.protocol_version = protocol::PROTOCOL_VERSION;
-    header.msg_type = protocol::MessageType::SET_ACK;
-    header.flags = 0;
-    header.header_len = protocol::HEADER_SIZE;
-
-    // Preserve the original request identity so A can
-    // associate the ACK with request 1001.
-    header.request_id = request_header.request_id;
-    header.origin_node_id = request_header.origin_node_id;
-
-    header.sender_node_id = node::B;
-    header.destination_node_id = node::A;
-    header.ttl = 0;
-
-    // No HLC module yet. Preserve the test HLC for this phase.
-    header.hlc = request_header.hlc;
-
-    header.payload_len =
-        static_cast<std::uint16_t>(payload_bytes);
-
-    std::uint8_t packet_buffer[protocol::MAX_PACKET_SIZE]{};
-    std::size_t packet_bytes = 0;
-
-    result = protocol::serialize_packet(
-        header,
-        {
-            payload_buffer,
-            static_cast<std::uint8_t>(payload_bytes)
-        },
-        packet_buffer,
-        sizeof(packet_buffer),
-        packet_bytes
+    result = memory.write(
+        TEST_ADDRESS,
+        pattern,
+        TEST_LENGTH
     );
 
-    print_protocol_result(
-        "SET_ACK packet serialization",
-        result
-    );
-
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "128-byte multi-page write",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    Serial.print("SET_ACK packet length: ");
-    Serial.println(packet_bytes);
-
-    transport::Result transport_result =
-        esp_transport.send_unicast(
-            node::A,
-            packet_buffer,
-            packet_bytes
-        );
-
-    print_transport_result(
-        "B -> A SET_ACK transmission",
-        transport_result
+    result = memory.read(
+        TEST_ADDRESS,
+        readback,
+        TEST_LENGTH
     );
 
-    if (transport_result != transport::Result::OK) {
+    if (!expect_result(
+            "Read back 128-byte write",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    bool tx_success = false;
-
-    if (!wait_for_tx_status(
-            node::A,
-            tx_success,
-            1000
-        )) {
-        Serial.println("SET_ACK TX STATUS: TIMEOUT");
+    if (!buffers_equal(
+            pattern,
+            readback,
+            TEST_LENGTH)) {
+        Serial.println("128-byte data verification: FAIL");
         return false;
     }
 
-    Serial.print("SET_ACK TX STATUS: ");
-    Serial.println(tx_success ? "SUCCESS" : "FAIL");
+    Serial.println("128-byte data verification: PASS");
 
-    return tx_success;
+    result = memory.write(
+        TEST_ADDRESS,
+        original,
+        TEST_LENGTH
+    );
+
+    if (!expect_result(
+            "Restore multi-page test region",
+            result,
+            eeprom::Result::OK)) {
+        return false;
+    }
+
+    return true;
 }
 
-bool handle_set_ack_on_a(
-    const transport::ReceivedFrame& frame
-) {
-    if (!mac_matches(frame.source_mac, NODE_B_MAC)) {
-        Serial.println("A: source MAC verification: FAIL");
-        return false;
-    }
+bool test_end_of_device() {
+    std::uint8_t original[2]{};
+    const std::uint8_t test_data[2] = {
+        0x3C,
+        0xC3
+    };
+    std::uint8_t readback[2]{};
 
-    Serial.println("A: source MAC verification: PASS");
-
-    protocol::PacketView packet{};
-
-    protocol::Result result =
-        protocol::deserialize_packet(
-            frame.data,
-            frame.length,
-            packet
-        );
-
-    print_protocol_result(
-        "A: SET_ACK packet deserialization",
-        result
+    eeprom::Result result = memory.read(
+        END_TEST_ADDRESS,
+        original,
+        sizeof(original)
     );
 
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "Read final two EEPROM bytes",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    protocol::DecodedMessage message{};
-
-    result = protocol::decode_message(
-        packet,
-        message
+    result = memory.write(
+        END_TEST_ADDRESS,
+        test_data,
+        sizeof(test_data)
     );
 
-    print_protocol_result(
-        "A: SET_ACK message decoding",
-        result
+    if (!expect_result(
+            "Write exactly through 0x7FFF",
+            result,
+            eeprom::Result::OK)) {
+        return false;
+    }
+
+    result = memory.read(
+        END_TEST_ADDRESS,
+        readback,
+        sizeof(readback)
     );
 
-    if (result != protocol::Result::OK) {
+    if (!expect_result(
+            "Read final two EEPROM bytes back",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
 
-    const protocol::SetAckPayload& ack =
-        message.payload.set_ack;
-
-    bool header_ok =
-        message.header.protocol_version ==
-            protocol::PROTOCOL_VERSION &&
-        message.header.msg_type ==
-            protocol::MessageType::SET_ACK &&
-        message.header.flags == 0 &&
-        message.header.header_len ==
-            protocol::HEADER_SIZE &&
-        message.header.request_id ==
-            TEST_REQUEST_ID &&
-        message.header.origin_node_id ==
-            node::A &&
-        message.header.sender_node_id ==
-            node::B &&
-        message.header.destination_node_id ==
-            node::A &&
-        message.header.ttl == 0 &&
-        message.header.hlc == TEST_HLC;
-
-    if (!header_ok) {
-        Serial.println("A: SET_ACK header verification: FAIL");
+    if (!buffers_equal(
+            test_data,
+            readback,
+            sizeof(test_data))) {
+        Serial.println("End-of-device data verification: FAIL");
         return false;
     }
 
-    Serial.println("A: SET_ACK header verification: PASS");
+    Serial.println("End-of-device data verification: PASS");
 
-    bool payload_ok =
-        ack.status == protocol::StatusCode::OK &&
-        ack.key.len == sizeof(TEST_KEY) &&
-        std::memcmp(
-            ack.key.data,
-            TEST_KEY,
-            sizeof(TEST_KEY)
-        ) == 0;
+    result = memory.write(
+        END_TEST_ADDRESS,
+        original,
+        sizeof(original)
+    );
 
-    if (!payload_ok) {
-        Serial.println("A: SET_ACK payload verification: FAIL");
+    if (!expect_result(
+            "Restore final two EEPROM bytes",
+            result,
+            eeprom::Result::OK)) {
         return false;
     }
-
-    Serial.println("A: SET_ACK payload verification: PASS");
 
     return true;
 }
@@ -518,136 +289,104 @@ bool handle_set_ack_on_a(
 
 void setup() {
     Serial.begin(115200);
-
     delay(1000);
 
     Serial.println();
     Serial.println("========================================");
-    Serial.println("PHASE 1D - PROTOCOL OVER ESP-NOW");
+    Serial.println("PHASE 2C-1D - AT24C256 DRIVER TEST");
     Serial.println("========================================");
 
-#if NODE_ID == 1
+    bool all_passed = true;
 
-    transport::Result result =
-        esp_transport.begin(node::A);
+    // Driver must reject access before initialization.
+    {
+        std::uint8_t value = 0;
 
-    print_transport_result(
-        "Transport begin (Node A)",
-        result
+        all_passed &= expect_result(
+            "Read before begin",
+            memory.read(0x0000, &value, 1),
+            eeprom::Result::NOT_INITIALIZED
+        );
+
+        all_passed &= expect_result(
+            "Write before begin",
+            memory.write(0x0000, &value, 1),
+            eeprom::Result::NOT_INITIALIZED
+        );
+    }
+
+    print_result(
+        "EEPROM begin",
+        memory.begin(SDA_PIN, SCL_PIN)
     );
 
-#elif NODE_ID == 2
+    if (!memory.ready()) {
+        Serial.println("EEPROM ready state: FAIL");
+        all_passed = false;
+    } else {
+        Serial.println("EEPROM ready state: PASS");
+    }
 
-    transport::Result result =
-        esp_transport.begin(node::B);
-
-    print_transport_result(
-        "Transport begin (Node B)",
-        result
+    // Null buffers.
+    all_passed &= expect_result(
+        "Read with null buffer",
+        memory.read(0x0000, nullptr, 1),
+        eeprom::Result::INVALID_ARGUMENT
     );
 
-#else
-
-    Serial.println(
-        "ERROR: Phase 1D test requires NODE_ID=1 or NODE_ID=2."
+    all_passed &= expect_result(
+        "Write with null buffer",
+        memory.write(0x0000, nullptr, 1),
+        eeprom::Result::INVALID_ARGUMENT
     );
 
-#endif
+    // Invalid address/range cases.
+    std::uint8_t value = 0x55;
 
-#if NODE_ID == 1
+    all_passed &= expect_result(
+        "Write starting at 0x7FFF with length 2",
+        memory.write(0x7FFF, &value, 2),
+        eeprom::Result::OUT_OF_RANGE
+    );
 
-    Serial.println("A: protocol integration test ready.");
+    all_passed &= expect_result(
+        "Read starting at 0x7FFF with length 2",
+        memory.read(0x7FFF, &value, 2),
+        eeprom::Result::OUT_OF_RANGE
+    );
 
-#elif NODE_ID == 2
+    all_passed &= expect_result(
+        "Write starting at 0x8000",
+        memory.write(0x8000, &value, 1),
+        eeprom::Result::OUT_OF_RANGE
+    );
 
-    Serial.println("B: protocol integration test ready.");
+    // Empty operations should be harmless.
+    all_passed &= expect_result(
+        "Zero-length write at 0x8000",
+        memory.write(0x8000, nullptr, 0),
+        eeprom::Result::OK
+    );
 
-#endif
+    all_passed &= test_cross_page_write();
+    all_passed &= test_multiple_page_write();
+    all_passed &= test_end_of_device();
+
+    Serial.println();
+
+    if (all_passed) {
+        Serial.println("========================================");
+        Serial.println("PHASE 2C-1D RESULT: PASS");
+        Serial.println("AT24C256 driver validation complete.");
+        Serial.println("========================================");
+    } else {
+        Serial.println("========================================");
+        Serial.println("PHASE 2C-1D RESULT: FAIL");
+        Serial.println("Do not proceed to record implementation.");
+        Serial.println("========================================");
+    }
 }
 
 void loop() {
-
-#if NODE_ID == 1
-
-    static bool request_sent = false;
-    static bool completed = false;
-
-    if (!request_sent) {
-        delay(2000);
-
-        Serial.println();
-        Serial.println("A: building SET_REQ...");
-        
-        request_sent = build_and_send_set_request();
-
-        if (request_sent) {
-            Serial.println("A: SET_REQ transmission complete.");
-        }
-    }
-
-    if (!completed) {
-        transport::ReceivedFrame frame{};
-
-        if (esp_transport.receive(frame)) {
-            Serial.println();
-            Serial.println("A: received frame.");
-
-            if (handle_set_ack_on_a(frame)) {
-                Serial.println();
-                Serial.println("========================================");
-                Serial.println("PHASE 1D RESULT: PASS");
-                Serial.println("A <-> B protocol-over-ESP-NOW verified.");
-                Serial.println("========================================");
-
-                completed = true;
-            } else {
-                Serial.println("A: SET_ACK verification failed.");
-            }
-        }
-    }
-
-#elif NODE_ID == 2
-
-    static bool completed = false;
-
-    if (!completed) {
-        transport::ReceivedFrame frame{};
-
-        if (esp_transport.receive(frame)) {
-            Serial.println();
-            Serial.println("B: received frame.");
-
-            if (handle_set_request_on_b(frame)) {
-                Serial.println("B: SET_REQ verification complete.");
-
-                protocol::PacketView request_packet{};
-
-                protocol::Result result =
-                    protocol::deserialize_packet(
-                        frame.data,
-                        frame.length,
-                        request_packet
-                    );
-
-                if (result != protocol::Result::OK) {
-                    Serial.println(
-                        "B: could not deserialize request "
-                        "again for ACK construction."
-                    );
-                    return;
-                }
-
-                if (send_set_ack(request_packet.header)) {
-                    Serial.println("B: SET_ACK transmission complete.");
-                    completed = true;
-                }
-            } else {
-                Serial.println("B: SET_REQ verification failed.");
-            }
-        }
-    }
-
-#endif
-
-    delay(5);
+    delay(1000);
 }
