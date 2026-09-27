@@ -4,6 +4,10 @@
 #include <cstdint>
 
 #include "node_id.h"
+#include "eeprom.h"
+#include "storage_metadata.h"
+#include "storage_result.h"
+
 
 namespace storage {
 
@@ -31,20 +35,7 @@ enum class State : std::uint8_t {
     TOMBSTONE = 0x01
 };
 
-enum class Result : std::uint8_t {
-    OK = 0x00,
-    NOT_FOUND,
-    STALE_VERSION,
-    NOT_INITIALIZED,
-    INVALID_ARGUMENT,
-    KEY_TOO_LARGE,
-    VALUE_TOO_LARGE,
-    BUFFER_TOO_SMALL,
-    INDEX_FULL,
-    NO_SPACE,
-    STORAGE_ERROR,
-    CORRUPTED
-};
+
 
 class StorageManager {
 public:
@@ -77,6 +68,7 @@ public:
 
     bool ready() const;
 
+      Result compact();  
 
     private:
     struct IndexEntry {
@@ -118,6 +110,95 @@ public:
         const IndexEntry& entry,
         KeyView key
     );
+
+
+        Result initialize_empty_store();
+
+    Result write_committed_block(
+        uint16_t address,
+        const uint8_t* data,
+        size_t length,
+        size_t commit_offset
+    );
+
+
+
+
+    Result write_bank_header(
+        metadata::Bank bank,
+        metadata::BankState state,
+        uint32_t generation,
+        uint16_t record_count,
+        uint16_t records_end_offset
+    );
+
+    Result write_bank_footer(
+        metadata::Bank bank,
+        uint32_t generation,
+        uint16_t record_count,
+        uint16_t records_end_offset
+    );
+
+    Result write_superblock(
+        uint32_t generation,
+        metadata::Bank active_bank,
+        uint32_t active_bank_generation,
+        uint32_t last_known_sequence,
+        uint16_t stored_record_count
+    );
+
+
+
+
+    Result clear_range(
+        uint16_t address,
+        size_t length
+    );
+
+    Result map_eeprom_result(eeprom::Result result) const;
+
+    eeprom::AT24C256 eeprom_;
+
+    metadata::Bank active_bank_ = metadata::Bank::A;
+    uint32_t superblock_generation_ = 0;
+    uint32_t active_bank_generation_ = 0;
+    uint32_t next_sequence_ = 1;
+uint16_t append_address_ = 0;
+    uint16_t record_count_ = 0;
+
+
+    Result append_record(
+        KeyView key,
+        ValueView value,
+        Version version,
+        State state,
+        uint16_t& record_address
+    );
+
+    Result append_record_to_bank(
+        metadata::Bank bank,
+        uint16_t& append_address,
+        uint32_t& next_sequence,
+        KeyView key,
+        ValueView value,
+        Version version,
+        State state,
+        uint16_t& record_address
+    );
+    
+    Result read_value(
+    const IndexEntry& entry,
+    uint8_t* value_out,
+    size_t value_capacity,
+    size_t& value_len
+);
+        Result recover_active_bank();
+
+    bool erased_tail(
+        uint16_t address
+    );
+
+
 
 };
 
