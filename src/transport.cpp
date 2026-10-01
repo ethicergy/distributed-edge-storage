@@ -211,7 +211,7 @@ Result EspNowTransport::begin(
     esp_now_register_recv_cb(on_receive);
     esp_now_register_send_cb(on_send);
 
-    for (node::Id id = node::MIN;
+        for (node::Id id = node::MIN;
          id <= node::MAX;
          ++id) {
 
@@ -243,6 +243,31 @@ Result EspNowTransport::begin(
         if (result != ESP_OK) {
             return Result::SEND_FAILED;
         }
+    }
+
+    /*
+     * Register the broadcast address as an ESP-NOW peer.
+     * Broadcast transmission uses this MAC directly.
+     */
+    esp_now_peer_info_t broadcast_peer = {};
+
+    std::memcpy(
+        broadcast_peer.peer_addr,
+        MAC_BROADCAST,
+        MAC_ADDRESS_SIZE
+    );
+
+    broadcast_peer.channel = CHANNEL;
+    broadcast_peer.encrypt = false;
+    broadcast_peer.ifidx = WIFI_IF_STA;
+
+    const esp_err_t broadcast_result =
+        esp_now_add_peer(
+            &broadcast_peer
+        );
+
+    if (broadcast_result != ESP_OK) {
+        return Result::SEND_FAILED;
     }
 
     initialized = true;

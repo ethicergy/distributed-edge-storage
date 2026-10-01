@@ -1,0 +1,367 @@
+The plan from here
+
+I would not go straight into "implement SET" next. There are several foundations underneath SET that need to be designed first.
+
+Phase 1 — Connect protocol to the real ESP-NOW transport
+
+Currently we need a clean interface between:
+
+ESP-NOW RX callback
+        ↓
+receive queue
+        ↓
+protocol/message task
+
+The master architecture explicitly calls for a lightweight ESP-NOW callback that only pushes frames into a queue, while the Message/Protocol Task performs parsing and request handling.
+
+We will design:
+
+Transport API
+peer/MAC table
+RX packet queue
+TX interface
+send-status handling
+Node ID ↔ MAC mapping
+
+Crucially, protocol code should not know ESP-NOW details.
+
+Phase 2 — Persistent storage model
+
+Before distributed operations, we need to settle exactly how:
+
+key
+value
+version
+version_origin
+tombstone
+
+are represented inside the AT24C256.
+
+The EEPROM is 32 KB and already physically validated, but the project document only specifies the storage boundary, not our final internal record layout.
+
+This is an important design checkpoint.
+
+We'll need to decide something like:
+
+Storage Manager
+    ├── put(key, value, version)
+    ├── get(key)
+    ├── delete/tombstone(key, version)
+    └── compare_version(...)
+
+while ensuring:
+
+Only Storage Manager touches I2C.
+
+That boundary is explicitly required by the architecture.
+
+We should design this before distributed replication, because otherwise we'd end up redesigning the EEPROM layout halfway through.
+
+Phase 3 — HLC
+
+Then implement the HLC as its own small module.
+
+We already know the exact semantics; they're frozen:
+
+48-bit physical milliseconds
+16-bit logical counter
+
+with the specified local-event and receive-event update rules.
+
+It should expose something conceptually like:
+
+now()
+on_local_event()
+on_receive(remote_hlc)
+compare(...)
+
+and we need the reboot rule tied into persistent storage: after reboot the HLC must start at least as high as the highest persisted mutation version.
+
+This is foundational for every write.
+
+Phase 4 — Request identity + reliability engine
+
+This is the other major foundation.
+
+We'll build:
+
+(origin_node_id, request_id)
+
+as the logical request identity.
+
+Then:
+
+Request Manager
+    ├── outgoing requests
+    ├── timeout tracking
+    ├── retries
+    ├── RETRY flag
+    ├── response correlation
+    └── terminal/late-response handling
+
+and on the receiver:
+
+Dedup Manager
+    ├── IN_PROGRESS
+    └── COMPLETED + cached result
+
+The key rule is that retries preserve:
+
+origin
+request_id
+HLC
+payload
+
+and only change the retry transmission state/destination as permitted.
+
+We should also keep the timing values configurable. The spec gives 500 ms / 2× backoff / 3 retransmissions / 5 s deadline / 10 s dedup retention as initial values, but explicitly says these are implementation parameters to be measured and retuned.
+
+Phase 5 — Membership / heartbeat
+
+Then:
+
+Heartbeat Task
+       ↓
+broadcast HEARTBEAT
+       ↓
+neighbor[node_id] = last_heard_ms
+
+with per-observer liveness, not one global alive[] bitmap.
+
+This gives every node its own current view of the cluster.
+
+We should measure actual radio behavior before permanently choosing heartbeat/failure thresholds; the master document explicitly leaves those values open.
+
+Phase 6 — Consistent-hashing placement
+
+Only once membership exists do we build:
+
+hash(key)
+    ↓
+ring
+    ↓
+primary
+    ↓
+replica
+
+The current architecture is:
+
+4 physical nodes
+RF = 2
+static ring representation
+identical ring computation on every node
+
+and every node independently computes placement.
+
+This module should know about:
+
+Node IDs
+membership
+ring
+key
+
+but not EEPROM or ESP-NOW.
+
+Phase 7 — Actual single-node KV operations
+
+Now we can finally implement the basic semantic operations:
+
+SET
+GET
+DELETE
+
+without replication initially.
+
+The path should look approximately like:
+
+SET request
+   ↓
+Protocol decode
+   ↓
+Request/reliability handling
+   ↓
+Placement
+   ↓
+Storage Manager
+   ↓
+AT24C256
+   ↓
+versioned result
+   ↓
+SET_ACK
+
+This is where the status codes become meaningful:
+
+OK
+NOT_FOUND
+STORAGE_ERROR
+NOT_RESPONSIBLE
+...
+
+The frozen protocol explicitly distinguishes these application/storage outcomes from transport and parsing failures.
+
+Phase 8 — RF=2 replication
+
+Then add:
+
+Primary
+   │
+   └── REPL_REQ ──→ Replica
+                         │
+                         └── REPL_ACK
+
+The important design point is that replication uses the same reliability machinery as normal requests, with the original request identity preserved.
+
+So we shouldn't invent a second retry system specifically for replication.
+
+Phase 9 — Tombstones + version conflict resolution
+
+At this point we make DELETE genuinely distributed:
+
+DELETE
+   ↓
+tombstone + HLC version
+   ↓
+replica
+
+and all writes use:
+
+Version = (HLC, version_origin_id)
+
+with lexicographic comparison.
+
+This is what prevents an old replica from resurrecting deleted data.
+
+Phase 10 — Anti-entropy / recovery
+
+Then implement:
+
+VERSION_TABLE
+      ↓
+compare versions
+      ↓
+RESYNC_DATA
+      ↓
+repair stale/missing replica
+
+The frozen design deliberately makes these periodic synchronization messages non-ACKed; dropped sync packets are repaired by future exchanges rather than individual retransmission.
+
+This is also where the under-replicated-write case gets repaired after a failed replica.
+
+Phase 11 — Four-node integration
+
+Only after those pieces work independently:
+
+A ↔ B
+A ↔ C
+A ↔ D
+B ↔ C
+B ↔ D
+C ↔ D
+
+then:
+
+4 nodes
++
+membership
++
+ring
++
+RF=2
++
+failure
++
+recovery
+
+We'll deliberately test:
+
+normal write
+normal read
+delete
+retry
+duplicate request
+node failure
+node recovery
+stale version
+replica failure
+anti-entropy repair
+power-cycle persistence
+Phase 12 — Sensor path
+
+Then connect sensor acquisition:
+
+Sensor Task
+    ↓
+SET operation
+    ↓
+same distributed path as everything else
+
+The architecture explicitly wants sensor-originated writes to use the same storage path as network/Pi operations.
+
+Phase 13 — Raspberry Pi bridge
+
+Finally:
+
+Pi
+ ↓ UART
+Bridge node
+ ↓
+Message/Protocol Task
+ ↓
+normal distributed KV path
+
+The Pi does not become a fifth node or coordinator. The bridge is merely a software role on whichever ESP32 is tethered to it.
+
+The frozen protocol has now also sealed the serial wrapper:
+
+AA 55
+length
+22-byte envelope + payload
+CRC-8
+
+so we shouldn't invent another application protocol for the Pi.
+
+The dependency graph
+
+This is the part I would keep in our heads going forward:
+
+                 ┌──────────────┐
+                 │ Wire Protocol│ ✅
+                 └──────┬───────┘
+                        │
+                 ┌──────▼───────┐
+                 │ ESP-NOW TX/RX│
+                 └──────┬───────┘
+                        │
+          ┌─────────────┼──────────────┐
+          ▼             ▼              ▼
+      Storage          HLC       Request/Reliability
+          │             │              │
+          └─────────────┼──────────────┘
+                        ▼
+                   Membership
+                        │
+                        ▼
+                 Consistent Hashing
+                        │
+                        ▼
+                  SET/GET/DELETE
+                        │
+                        ▼
+                    RF = 2
+                  Replication
+                        │
+                        ▼
+                 Anti-Entropy
+                        │
+               ┌────────┴────────┐
+               ▼                 ▼
+            Sensors              Pi
+
+That ordering avoids the worst kind of redesign: building replication before knowing how versions are persisted, or building retries before knowing request identity, or letting the protocol layer become coupled to EEPROM/ESP-NOW.
+
+One thing I would explicitly not build yet
+
+Don't start multi-hop routing, runtime MAC discovery, ESP-NOW v2 fragmentation, or other future-scope features. They're explicitly deferred in v3.
+
+So the next ideation session should be Phase 1: the ESP-NOW transport interface + RX queue + Message/Protocol Task boundary, not SET/GET yet. That gives us the cleanest bridge from the protocol layer we've just finished into the actual firmware architecture.

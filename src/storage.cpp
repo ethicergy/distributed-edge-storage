@@ -1182,6 +1182,7 @@ Result StorageManager::compact()
         // superblock was never committed.
         return result;
     }
+    
 
     // --------------------------------------------------
     // 7. Only NOW update runtime state.
@@ -1667,6 +1668,29 @@ Result StorageManager::begin()
 bool StorageManager::ready() const
 {
     return initialized_;
+}
+
+Result StorageManager::max_persisted_hlc(Hlc& out) const
+{
+    out = 0;
+
+    if (!initialized_) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    for (std::size_t i = 0; i < MAX_LOGICAL_KEYS; ++i) {
+        const IndexEntry& entry = index_[i];
+
+        if (!entry.valid) {
+            continue;
+        }
+
+        if (entry.version_hlc > out) {
+            out = entry.version_hlc;
+        }
+    }
+
+    return Result::OK;
 }
 
 } // namespace storage

@@ -68,7 +68,9 @@ public:
 
     bool ready() const;
 
-      Result compact();  
+    Result max_persisted_hlc(Hlc& out) const;
+    
+    Result compact();  
 
     private:
     struct IndexEntry {
