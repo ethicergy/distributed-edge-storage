@@ -1,392 +1,586 @@
+
 #include <Arduino.h>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <cstring>
 
-#include "eeprom.h"
+#include "dedup_manager.h"
+#include "hlc.h"
+#include "platform_time.h"
+#include "protocol.h"
+#include "reliable_packet.h"
+#include "request_identity.h"
+#include "request_manager.h"
+#include "transport.h"
+#include "node_id.h"
 
-namespace {
+#ifndef NODE_ID
+#error "NODE_ID must be defined by PlatformIO"
+#endif
 
-constexpr std::uint8_t SDA_PIN = 8;
-constexpr std::uint8_t SCL_PIN = 9;
+constexpr node::Id LOCAL_NODE_ID =
+    static_cast<node::Id>(NODE_ID);
 
-constexpr std::uint16_t CROSS_PAGE_ADDRESS = 0x003F;
-constexpr std::uint16_t END_TEST_ADDRESS = 0x7FFE;
+constexpr node::Id PEER_NODE_ID =
+    LOCAL_NODE_ID == node::A ? node::B : node::A;
 
-eeprom::AT24C256 memory;
+constexpr std::uint8_t REQUEST_KEY[] = {'r','t','e','s','t'};
+constexpr std::uint8_t REQUEST_VALUE[] = {'4','2'};
 
-void print_result(
-    const char* operation,
-    eeprom::Result result
-) {
-    Serial.print(operation);
-    Serial.print(": ");
+hlc::Clock hlc_clock(platform_time::now_ms);
+transport::EspNowTransport espnow_transport;
 
-    if (result == eeprom::Result::OK) {
-        Serial.println("OK");
-    } else {
-        Serial.print("FAIL (result=");
-        Serial.print(static_cast<int>(result));
-        Serial.println(")");
+request::TimingConfig request_timing{};
+request::Manager request_manager(request_timing);
+request::DedupManager dedup_manager;
+request::Generator request_id_generator;
+
+struct SenderContext {
+    transport::EspNowTransport* transport;
+};
+
+SenderContext sender_context{&espnow_transport};
+
+bool request_submitted = false;
+bool request_finished = false;
+bool drop_first_response = true;
+
+request::Identity active_request{};
+
+std::uint32_t receiver_execution_count = 0;
+
+bool reliable_send(
+    void* context,
+    node::Id destination,
+    const std::uint8_t* packet,
+    std::size_t packet_length,
+    bool retry
+)
+{
+    auto* sender = static_cast<SenderContext*>(context);
+
+    if (sender == nullptr ||
+        sender->transport == nullptr ||
+        packet == nullptr ||
+        packet_length > protocol::MAX_PACKET_SIZE) {
+        return false;
     }
-}
 
-bool expect_result(
-    const char* operation,
-    eeprom::Result actual,
-    eeprom::Result expected
-) {
-    Serial.print(operation);
-    Serial.print(": ");
-
-    if (actual == expected) {
-        Serial.println("PASS");
-        return true;
+    if (!retry) {
+        return sender->transport->send_unicast(
+            destination,
+            packet,
+            packet_length
+        ) == transport::Result::OK;
     }
 
-    Serial.print("FAIL (expected=");
-    Serial.print(static_cast<int>(expected));
-    Serial.print(", actual=");
-    Serial.print(static_cast<int>(actual));
-    Serial.println(")");
+    std::uint8_t retry_packet[protocol::MAX_PACKET_SIZE]{};
+    std::size_t retry_length = 0;
 
-    return false;
+    if (
+        request::prepare_retry(
+            packet,
+            packet_length,
+            retry_packet,
+            sizeof(retry_packet),
+            retry_length
+        ) != request::PacketResult::OK
+    ) {
+        return false;
+    }
+
+    return sender->transport->send_unicast(
+        destination,
+        retry_packet,
+        retry_length
+    ) == transport::Result::OK;
 }
 
-bool buffers_equal(
-    const std::uint8_t* lhs,
-    const std::uint8_t* rhs,
-    std::size_t length
-) {
-    return std::memcmp(lhs, rhs, length) == 0;
-}
-
-bool test_cross_page_write() {
-    std::uint8_t original[4]{};
-    std::uint8_t test_data[2] = {
-        0xA5,
-        0x5A
+bool build_set_request(
+    std::uint8_t* output,
+    std::size_t capacity,
+    std::size_t& length
+)
+{
+    const std::uint8_t payload[] = {
+        static_cast<std::uint8_t>(sizeof(REQUEST_KEY)),
+        REQUEST_KEY[0],
+        REQUEST_KEY[1],
+        REQUEST_KEY[2],
+        REQUEST_KEY[3],
+        REQUEST_KEY[4],
+        static_cast<std::uint8_t>(sizeof(REQUEST_VALUE)),
+        REQUEST_VALUE[0],
+        REQUEST_VALUE[1]
     };
-    std::uint8_t readback[2]{};
 
-    eeprom::Result result = memory.read(
-        0x003E,
-        original,
-        sizeof(original)
-    );
+    const protocol::PacketHeader header{
+        protocol::PROTOCOL_VERSION,
+        protocol::MessageType::SET_REQ,
+        0,
+        protocol::HEADER_SIZE,
+        active_request.request_id,
+        active_request.origin,
+        active_request.origin,
+        PEER_NODE_ID,
+        0,
+        hlc_clock.on_local_event(),
+        static_cast<std::uint16_t>(sizeof(payload))
+    };
 
-    if (!expect_result(
-            "Read bytes around page boundary",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    result = memory.write(
-        CROSS_PAGE_ADDRESS,
-        test_data,
-        sizeof(test_data)
-    );
-
-    if (!expect_result(
-            "2-byte write across 64-byte page boundary",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    result = memory.read(
-        CROSS_PAGE_ADDRESS,
-        readback,
-        sizeof(readback)
-    );
-
-    if (!expect_result(
-            "Read back cross-page write",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    if (!buffers_equal(
-            test_data,
-            readback,
-            sizeof(test_data))) {
-        Serial.println("Cross-page data verification: FAIL");
-        return false;
-    }
-
-    Serial.println("Cross-page data verification: PASS");
-
-    // Restore the original two bytes at 0x003F-0x0040.
-    result = memory.write(
-        CROSS_PAGE_ADDRESS,
-        &original[1],
-        2
-    );
-
-    if (!expect_result(
-            "Restore page-boundary bytes",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    return true;
+    return protocol::serialize_packet(
+        header,
+        protocol::ByteView{payload, sizeof(payload)},
+        output,
+        capacity,
+        length
+    ) == protocol::Result::OK;
 }
 
-bool test_multiple_page_write() {
-    constexpr std::size_t TEST_LENGTH = 128;
-    constexpr std::uint16_t TEST_ADDRESS = 0x0180;
+bool build_set_ack(
+    const protocol::PacketHeader& request_header,
+    std::uint8_t* output,
+    std::size_t capacity,
+    std::size_t& length
+)
+{
+    protocol::SetAckPayload payload{
+        protocol::StatusCode::OK,
+        protocol::KeyView{
+            REQUEST_KEY,
+            static_cast<std::uint8_t>(sizeof(REQUEST_KEY))
+        }
+    };
 
-    std::uint8_t original[TEST_LENGTH]{};
-    std::uint8_t pattern[TEST_LENGTH]{};
-    std::uint8_t readback[TEST_LENGTH]{};
+    std::uint8_t payload_buffer[
+        protocol::MAX_PAYLOAD_SIZE
+    ]{};
 
-    for (std::size_t i = 0; i < TEST_LENGTH; ++i) {
-        pattern[i] = static_cast<std::uint8_t>(
-            0x20 + (i & 0x3F)
+    std::size_t payload_length = 0;
+
+    if (
+        protocol::serialize_set_ack(
+            payload,
+            payload_buffer,
+            sizeof(payload_buffer),
+            payload_length
+        ) != protocol::Result::OK
+    ) {
+        return false;
+    }
+
+    const protocol::PacketHeader header{
+        protocol::PROTOCOL_VERSION,
+        protocol::MessageType::SET_ACK,
+        0,
+        protocol::HEADER_SIZE,
+        request_header.request_id,
+        request_header.origin_node_id,
+        LOCAL_NODE_ID,
+        request_header.origin_node_id,
+        0,
+        hlc_clock.on_local_event(),
+        static_cast<std::uint16_t>(payload_length)
+    };
+
+    return protocol::serialize_packet(
+        header,
+        protocol::ByteView{
+            payload_buffer,
+            static_cast<std::uint8_t>(payload_length)
+        },
+        output,
+        capacity,
+        length
+    ) == protocol::Result::OK;
+}
+
+void process_receiver(
+    const transport::ReceivedFrame& frame
+)
+{
+    protocol::PacketView packet{};
+
+    if (
+        protocol::deserialize_packet(
+            frame.data,
+            frame.length,
+            packet
+        ) != protocol::Result::OK
+    ) {
+        return;
+    }
+
+    if (
+        packet.header.msg_type !=
+        protocol::MessageType::SET_REQ
+    ) {
+        return;
+    }
+
+    protocol::DecodedMessage decoded{};
+
+    if (
+        protocol::decode_message(
+            packet,
+            decoded
+        ) != protocol::Result::OK
+    ) {
+        return;
+    }
+
+    request::Identity identity{};
+
+    if (
+        request::extract_identity(
+            packet,
+            identity
+        ) != request::PacketResult::OK
+    ) {
+        return;
+    }
+
+    if (hlc_clock.on_receive(packet.header.hlc) == 0) {
+        return;
+    }
+
+    const std::uint64_t now =
+        platform_time::now_ms();
+
+    const request::DedupResult result =
+        dedup_manager.begin_request(
+            identity,
+            now
         );
+
+    if (
+        result ==
+        request::DedupResult::NEW_REQUEST
+    ) {
+        ++receiver_execution_count;
+
+        std::uint8_t response[
+            protocol::MAX_PACKET_SIZE
+        ]{};
+
+        std::size_t response_length = 0;
+
+        if (
+            !build_set_ack(
+                packet.header,
+                response,
+                sizeof(response),
+                response_length
+            )
+        ) {
+            return;
+        }
+
+        if (
+            dedup_manager.complete_request(
+                identity,
+                response,
+                response_length,
+                now
+            ) != request::DedupResult::NEW_REQUEST
+        ) {
+            return;
+        }
+
+        if (drop_first_response) {
+            drop_first_response = false;
+            Serial.println("SET_ACK: DELIBERATELY DROPPED");
+            return;
+        }
+
+        espnow_transport.send_unicast(
+            packet.header.origin_node_id,
+            response,
+            response_length
+        );
+
+        Serial.println("SET_ACK: SENT");
+        return;
     }
 
-    eeprom::Result result = memory.read(
-        TEST_ADDRESS,
-        original,
-        TEST_LENGTH
-    );
-
-    if (!expect_result(
-            "Read original multi-page test region",
-            result,
-            eeprom::Result::OK)) {
-        return false;
+    if (
+        result ==
+        request::DedupResult::DUPLICATE_IN_PROGRESS
+    ) {
+        Serial.println("DEDUP: DUPLICATE IN_PROGRESS");
+        return;
     }
 
-    result = memory.write(
-        TEST_ADDRESS,
-        pattern,
-        TEST_LENGTH
-    );
+    if (
+        result ==
+        request::DedupResult::DUPLICATE_COMPLETED
+    ) {
+        std::uint8_t cached[
+            protocol::MAX_PACKET_SIZE
+        ]{};
 
-    if (!expect_result(
-            "128-byte multi-page write",
-            result,
-            eeprom::Result::OK)) {
-        return false;
+        std::size_t cached_length = 0;
+
+        if (
+            dedup_manager.get_cached_response(
+                identity,
+                cached,
+                sizeof(cached),
+                cached_length,
+                now
+            ) != request::DedupResult::DUPLICATE_COMPLETED
+        ) {
+            Serial.println("DEDUP CACHE: FAIL");
+            return;
+        }
+
+        espnow_transport.send_unicast(
+            packet.header.origin_node_id,
+            cached,
+            cached_length
+        );
+
+        Serial.println("CACHED SET_ACK: REPLAYED");
     }
-
-    result = memory.read(
-        TEST_ADDRESS,
-        readback,
-        TEST_LENGTH
-    );
-
-    if (!expect_result(
-            "Read back 128-byte write",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    if (!buffers_equal(
-            pattern,
-            readback,
-            TEST_LENGTH)) {
-        Serial.println("128-byte data verification: FAIL");
-        return false;
-    }
-
-    Serial.println("128-byte data verification: PASS");
-
-    result = memory.write(
-        TEST_ADDRESS,
-        original,
-        TEST_LENGTH
-    );
-
-    if (!expect_result(
-            "Restore multi-page test region",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    return true;
 }
 
-bool test_end_of_device() {
-    std::uint8_t original[2]{};
-    const std::uint8_t test_data[2] = {
-        0x3C,
-        0xC3
+void process_requester(
+    const transport::ReceivedFrame& frame
+)
+{
+    protocol::PacketView packet{};
+
+    if (
+        protocol::deserialize_packet(
+            frame.data,
+            frame.length,
+            packet
+        ) != protocol::Result::OK
+    ) {
+        return;
+    }
+
+    if (
+        packet.header.msg_type !=
+        protocol::MessageType::SET_ACK
+    ) {
+        return;
+    }
+
+    protocol::DecodedMessage decoded{};
+
+    if (
+        protocol::decode_message(
+            packet,
+            decoded
+        ) != protocol::Result::OK
+    ) {
+        Serial.println("SET_ACK decode: FAIL");
+        return;
+    }
+
+    const request::Identity identity{
+        packet.header.origin_node_id,
+        packet.header.request_id
     };
-    std::uint8_t readback[2]{};
 
-    eeprom::Result result = memory.read(
-        END_TEST_ADDRESS,
-        original,
-        sizeof(original)
-    );
-
-    if (!expect_result(
-            "Read final two EEPROM bytes",
-            result,
-            eeprom::Result::OK)) {
-        return false;
+    if (identity != active_request) {
+        return;
     }
 
-    result = memory.write(
-        END_TEST_ADDRESS,
-        test_data,
-        sizeof(test_data)
-    );
-
-    if (!expect_result(
-            "Write exactly through 0x7FFF",
-            result,
-            eeprom::Result::OK)) {
-        return false;
+    if (
+        decoded.payload.set_ack.key.len !=
+        sizeof(REQUEST_KEY) ||
+        std::memcmp(
+            decoded.payload.set_ack.key.data,
+            REQUEST_KEY,
+            sizeof(REQUEST_KEY)
+        ) != 0
+    ) {
+        Serial.println("SET_ACK key: FAIL");
+        return;
     }
 
-    result = memory.read(
-        END_TEST_ADDRESS,
-        readback,
-        sizeof(readback)
-    );
+    const request::Result result =
+        request_manager.complete(
+            identity,
+            frame.data,
+            frame.length
+        );
 
-    if (!expect_result(
-            "Read final two EEPROM bytes back",
-            result,
-            eeprom::Result::OK)) {
-        return false;
+    if (result == request::Result::OK) {
+        request_finished = true;
+        Serial.println("REQUEST: COMPLETED");
     }
-
-    if (!buffers_equal(
-            test_data,
-            readback,
-            sizeof(test_data))) {
-        Serial.println("End-of-device data verification: FAIL");
-        return false;
-    }
-
-    Serial.println("End-of-device data verification: PASS");
-
-    result = memory.write(
-        END_TEST_ADDRESS,
-        original,
-        sizeof(original)
-    );
-
-    if (!expect_result(
-            "Restore final two EEPROM bytes",
-            result,
-            eeprom::Result::OK)) {
-        return false;
-    }
-
-    return true;
 }
 
-} // namespace
+void process_frames()
+{
+    transport::ReceivedFrame frame{};
 
-void setup() {
+    while (espnow_transport.receive(frame)) {
+        if (LOCAL_NODE_ID == node::A) {
+            process_requester(frame);
+        } else if (LOCAL_NODE_ID == node::B) {
+            process_receiver(frame);
+        }
+    }
+}
+
+void submit_request()
+{
+    if (
+        LOCAL_NODE_ID != node::A ||
+        request_submitted
+    ) {
+        return;
+    }
+
+    std::uint32_t seed = esp_random();
+    if (seed == 0) {
+        seed = 1;
+    }
+
+    if (!request_id_generator.begin(node::A, seed)) {
+        Serial.println("Request ID generator: FAIL");
+        return;
+    }
+
+    active_request = request_id_generator.next();
+
+    if (!active_request.valid()) {
+        Serial.println("Request identity: FAIL");
+        return;
+    }
+
+    std::uint8_t packet[
+        protocol::MAX_PACKET_SIZE
+    ]{};
+
+    std::size_t packet_length = 0;
+
+    if (
+        !build_set_request(
+            packet,
+            sizeof(packet),
+            packet_length
+        )
+    ) {
+        Serial.println("SET_REQ build: FAIL");
+        return;
+    }
+
+    bool initial_send_ok = false;
+
+    const request::Result result =
+        request_manager.submit(
+            active_request,
+            node::B,
+            packet,
+            packet_length,
+            platform_time::now_ms(),
+            reliable_send,
+            &sender_context,
+            initial_send_ok
+        );
+
+    if (result != request::Result::OK) {
+        Serial.println("REQUEST SUBMIT: FAIL");
+        return;
+    }
+
+    request_submitted = true;
+
+    Serial.print("REQUEST ID: ");
+    Serial.println(active_request.request_id);
+
+    Serial.print("INITIAL SEND: ");
+    Serial.println(
+        initial_send_ok ? "OK" : "TRANSPORT FAILED"
+    );
+}
+
+void setup()
+{
     Serial.begin(115200);
     delay(1000);
 
     Serial.println();
-    Serial.println("========================================");
-    Serial.println("PHASE 2C-1D - AT24C256 DRIVER TEST");
-    Serial.println("========================================");
+    Serial.println("PHASE 4R - LOST ACK RELIABILITY TEST");
 
-    bool all_passed = true;
-
-    // Driver must reject access before initialization.
-    {
-        std::uint8_t value = 0;
-
-        all_passed &= expect_result(
-            "Read before begin",
-            memory.read(0x0000, &value, 1),
-            eeprom::Result::NOT_INITIALIZED
-        );
-
-        all_passed &= expect_result(
-            "Write before begin",
-            memory.write(0x0000, &value, 1),
-            eeprom::Result::NOT_INITIALIZED
-        );
+    if (!hlc_clock.begin(0)) {
+        Serial.println("HLC begin: FAIL");
+        return;
     }
 
-    print_result(
-        "EEPROM begin",
-        memory.begin(SDA_PIN, SCL_PIN)
-    );
+    Serial.println("HLC begin: OK");
 
-    if (!memory.ready()) {
-        Serial.println("EEPROM ready state: FAIL");
-        all_passed = false;
-    } else {
-        Serial.println("EEPROM ready state: PASS");
+    if (
+        espnow_transport.begin(LOCAL_NODE_ID) !=
+        transport::Result::OK
+    ) {
+        Serial.println("Transport begin: FAIL");
+        return;
     }
 
-    // Null buffers.
-    all_passed &= expect_result(
-        "Read with null buffer",
-        memory.read(0x0000, nullptr, 1),
-        eeprom::Result::INVALID_ARGUMENT
-    );
+    Serial.println("Transport begin: OK");
 
-    all_passed &= expect_result(
-        "Write with null buffer",
-        memory.write(0x0000, nullptr, 1),
-        eeprom::Result::INVALID_ARGUMENT
-    );
+    if (
+        request_manager.begin() !=
+        request::Result::OK
+    ) {
+        Serial.println("RequestManager begin: FAIL");
+        return;
+    }
 
-    // Invalid address/range cases.
-    std::uint8_t value = 0x55;
+    Serial.println("RequestManager begin: OK");
 
-    all_passed &= expect_result(
-        "Write starting at 0x7FFF with length 2",
-        memory.write(0x7FFF, &value, 2),
-        eeprom::Result::OUT_OF_RANGE
-    );
+    dedup_manager.begin();
+    Serial.println("DedupManager begin: OK");
 
-    all_passed &= expect_result(
-        "Read starting at 0x7FFF with length 2",
-        memory.read(0x7FFF, &value, 2),
-        eeprom::Result::OUT_OF_RANGE
-    );
-
-    all_passed &= expect_result(
-        "Write starting at 0x8000",
-        memory.write(0x8000, &value, 1),
-        eeprom::Result::OUT_OF_RANGE
-    );
-
-    // Empty operations should be harmless.
-    all_passed &= expect_result(
-        "Zero-length write at 0x8000",
-        memory.write(0x8000, nullptr, 0),
-        eeprom::Result::OK
-    );
-
-    all_passed &= test_cross_page_write();
-    all_passed &= test_multiple_page_write();
-    all_passed &= test_end_of_device();
-
-    Serial.println();
-
-    if (all_passed) {
-        Serial.println("========================================");
-        Serial.println("PHASE 2C-1D RESULT: PASS");
-        Serial.println("AT24C256 driver validation complete.");
-        Serial.println("========================================");
-    } else {
-        Serial.println("========================================");
-        Serial.println("PHASE 2C-1D RESULT: FAIL");
-        Serial.println("Do not proceed to record implementation.");
-        Serial.println("========================================");
+    if (LOCAL_NODE_ID == node::A) {
+        Serial.println("ROLE: REQUESTER A");
+    } else if (LOCAL_NODE_ID == node::B) {
+        Serial.println("ROLE: RECEIVER B");
     }
 }
 
-void loop() {
-    delay(1000);
+void loop()
+{
+    process_frames();
+
+    if (LOCAL_NODE_ID == node::A) {
+        submit_request();
+
+        request_manager.tick(
+            platform_time::now_ms()
+        );
+    }
+
+    if (request_finished) {
+        static bool printed = false;
+
+        if (!printed) {
+            printed = true;
+
+            request::RequestInfo info{};
+
+            if (
+                request_manager.get_info(
+                    active_request,
+                    info
+                ) == request::Result::OK
+            ) {
+                Serial.print("Retransmissions: ");
+                Serial.println(info.retry_count);
+            }
+
+            Serial.println(
+                "RELIABILITY LOST-ACK TEST: PASS"
+            );
+        }
+    }
+
+    delay(5);
 }
