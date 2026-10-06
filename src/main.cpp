@@ -4,11 +4,13 @@
 #include <cstdint>
 
 #include "consistent_hash.h"
-#include "hash_ring.h"
+#include "hlc.h"
 #include "membership.h"
+#include "node_id.h"
 #include "placement.h"
 #include "platform_time.h"
-#include "node_id.h"
+#include "protocol.h"
+#include "transport.h"
 
 #ifndef NODE_ID
 #error "NODE_ID must be defined by PlatformIO"
@@ -17,9 +19,18 @@
 constexpr node::Id LOCAL_NODE_ID =
     static_cast<node::Id>(NODE_ID);
 
-constexpr std::uint64_t MEMBERSHIP_TIMEOUT_MS = 60000;
+constexpr std::uint64_t HEARTBEAT_INTERVAL_MS = 500;
+constexpr std::uint64_t MEMBERSHIP_TIMEOUT_MS = 2000;
 
-constexpr std::uint32_t TEST_KEY_COUNT = 1000;
+constexpr std::uint8_t TEST_KEY[] = {
+    'p', 'h', 'a', 's', 'e', '5', '_', 'f', 'a', 'i', 'l'
+};
+
+hlc::Clock hlc_clock(
+    platform_time::now_ms
+);
+
+transport::EspNowTransport espnow_transport;
 
 membership::Manager membership_manager(
     LOCAL_NODE_ID,
@@ -28,27 +39,142 @@ membership::Manager membership_manager(
 
 placement::Resolver placement_resolver;
 
-static bool test_complete = false;
+bool initialized = false;
+bool initial_placement_printed = false;
+bool failure_reported = false;
+bool recovery_reported = false;
 
-static bool setup_membership()
+std::uint64_t last_heartbeat_send_ms = 0;
+
+placement::Assignment initial_assignment{};
+
+static bool send_heartbeat()
+{
+    std::uint8_t buffer[
+        protocol::MAX_PACKET_SIZE
+    ]{};
+
+    const protocol::PacketHeader header{
+        protocol::PROTOCOL_VERSION,
+        protocol::MessageType::HEARTBEAT,
+        0,
+        protocol::HEADER_SIZE,
+        0,
+        LOCAL_NODE_ID,
+        LOCAL_NODE_ID,
+        node::BROADCAST,
+        0,
+        hlc_clock.now(),
+        0
+    };
+
+    std::size_t length = 0;
+
+    const protocol::Result result =
+        protocol::serialize_packet(
+            header,
+            protocol::ByteView{
+                nullptr,
+                0
+            },
+            buffer,
+            sizeof(buffer),
+            length
+        );
+
+    if (result != protocol::Result::OK) {
+        return false;
+    }
+
+    return espnow_transport.send_broadcast(
+        buffer,
+        length
+    ) == transport::Result::OK;
+}
+
+static void process_received_frames()
+{
+    transport::ReceivedFrame frame{};
+
+    while (espnow_transport.receive(frame)) {
+        protocol::PacketView packet{};
+
+        if (
+            protocol::deserialize_packet(
+                frame.data,
+                frame.length,
+                packet
+            ) != protocol::Result::OK
+        ) {
+            continue;
+        }
+
+        if (
+            packet.header.msg_type !=
+            protocol::MessageType::HEARTBEAT
+        ) {
+            continue;
+        }
+
+        if (
+            packet.header.origin_node_id <
+                node::MIN ||
+            packet.header.origin_node_id >
+                node::MAX
+        ) {
+            continue;
+        }
+
+        if (
+            packet.header.sender_node_id !=
+            packet.header.origin_node_id
+        ) {
+            continue;
+        }
+
+        membership_manager.heartbeat_received(
+            packet.header.sender_node_id,
+            platform_time::now_ms()
+        );
+    }
+}
+
+static void print_membership()
 {
     const std::uint64_t now =
         platform_time::now_ms();
 
-    if (!membership_manager.begin(now)) {
-        return false;
-    }
+    Serial.print("ALIVE: ");
 
     for (
         node::Id id = node::MIN;
         id <= node::MAX;
         ++id
     ) {
-        if (id == LOCAL_NODE_ID) {
-            continue;
+        if (
+            membership_manager.is_alive(
+                id,
+                now
+            )
+        ) {
+            Serial.print(
+                static_cast<unsigned>(id)
+            );
+            Serial.print(' ');
         }
+    }
 
-        if (!membership_manager.heartbeat_received(id, now)) {
+    Serial.println();
+}
+
+static bool all_nodes_alive(std::uint64_t now)
+{
+    for (
+        node::Id id = node::MIN;
+        id <= node::MAX;
+        ++id
+    ) {
+        if (!membership_manager.is_alive(id, now)) {
             return false;
         }
     }
@@ -56,74 +182,188 @@ static bool setup_membership()
     return true;
 }
 
-static std::uint32_t ring_fingerprint(
-    const hash_ring::Ring& ring
-)
+static void check_placement()
 {
-    std::uint32_t fingerprint =
-        consistent_hash::FNV1A_OFFSET_BASIS;
+    const std::uint64_t now =
+        platform_time::now_ms();
 
-    for (
-        std::size_t i = 0;
-        i < ring.point_count();
-        ++i
-    ) {
-        const hash_ring::VirtualPoint& point =
-            ring.point(i);
-
-        const std::uint8_t bytes[] = {
-            static_cast<std::uint8_t>(
-                point.position >> 24
-            ),
-            static_cast<std::uint8_t>(
-                point.position >> 16
-            ),
-            static_cast<std::uint8_t>(
-                point.position >> 8
-            ),
-            static_cast<std::uint8_t>(
-                point.position
-            ),
-            point.owner,
-            point.virtual_index
-        };
-
-        fingerprint =
-            consistent_hash::fnv1a(
-                bytes,
-                sizeof(bytes)
-            ) ^ fingerprint;
+    if (!initial_placement_printed) {
+        if (!all_nodes_alive(now)) {
+            return;
+        }
     }
 
-    return fingerprint;
-}
+    placement::Assignment assignment{};
 
-static void run_test()
+    if (
+        !placement_resolver.locate(
+            TEST_KEY,
+            sizeof(TEST_KEY),
+            membership_manager,
+            now,
+            assignment
+        )
+    ) {
+        return;
+    }
+
+    if (!initial_placement_printed) {
+        initial_assignment = assignment;
+        initial_placement_printed = true;
+
+        Serial.print(
+            "INITIAL PLACEMENT: PRIMARY="
+        );
+        Serial.print(
+            static_cast<unsigned>(
+                assignment.primary
+            )
+        );
+        Serial.print(
+            " REPLICA="
+        );
+        Serial.println(
+            static_cast<unsigned>(
+                assignment.replica
+            )
+        );
+
+        Serial.println(
+            "ALL 4 NODES ALIVE: PASS"
+        );
+
+        Serial.println(
+            "UNPLUG THE PRIMARY NODE NOW."
+        );
+
+        return;
+    }
+
+    if (
+        !failure_reported &&
+        initial_assignment.primary !=
+            assignment.primary
+    ) {
+        failure_reported = true;
+
+        Serial.println();
+        Serial.println(
+            "PRIMARY FAILURE DETECTED"
+        );
+
+        Serial.print(
+            "OLD PRIMARY="
+        );
+        Serial.println(
+            static_cast<unsigned>(
+                initial_assignment.primary
+            )
+        );
+
+        Serial.print(
+            "NEW PRIMARY="
+        );
+        Serial.println(
+            static_cast<unsigned>(
+                assignment.primary
+            )
+        );
+
+        Serial.print(
+            "NEW REPLICA="
+        );
+        Serial.println(
+            static_cast<unsigned>(
+                assignment.replica
+            )
+        );
+
+        if (
+            assignment.primary ==
+                initial_assignment.replica
+        ) {
+            Serial.println(
+                "OLD REPLICA PROMOTION: PASS"
+            );
+        } else {
+            Serial.println(
+                "OLD REPLICA PROMOTION: FAIL"
+            );
+        }
+    }
+
+    if (
+        failure_reported &&
+        !recovery_reported &&
+        assignment.primary ==
+            initial_assignment.primary &&
+        assignment.replica ==
+            initial_assignment.replica
+    ) {
+        recovery_reported = true;
+
+        Serial.println();
+        Serial.println(
+            "NODE REJOINED"
+        );
+
+        Serial.println(
+            "ORIGINAL PLACEMENT RESTORED: PASS"
+        );
+
+        Serial.println();
+        Serial.println(
+            "PHASE 5 MEMBERSHIP + "
+            "PLACEMENT TEST: PASS"
+        );
+    }
+}
+void setup()
 {
+    Serial.begin(115200);
+    delay(1000);
+
     Serial.println();
     Serial.println(
         "========================================"
     );
     Serial.println(
-        "PHASE 5 - HARDWARE PLACEMENT TEST"
+        "PHASE 5 - MEMBERSHIP + PLACEMENT"
+    );
+    Serial.println(
+        "HARDWARE FAILURE TEST"
     );
     Serial.println(
         "========================================"
     );
 
-    Serial.print("LOCAL NODE: ");
-    Serial.println(LOCAL_NODE_ID);
-
-    if (!setup_membership()) {
+    if (!hlc_clock.begin(0)) {
         Serial.println(
-            "Membership setup: FAIL"
+            "HLC begin: FAIL"
         );
         return;
     }
 
-    Serial.println(
-        "Membership setup: OK"
-    );
+    if (
+        espnow_transport.begin(LOCAL_NODE_ID) !=
+        transport::Result::OK
+    ) {
+        Serial.println(
+            "Transport begin: FAIL"
+        );
+        return;
+    }
+
+    if (
+        !membership_manager.begin(
+            platform_time::now_ms()
+        )
+    ) {
+        Serial.println(
+            "Membership begin: FAIL"
+        );
+        return;
+    }
 
     if (!placement_resolver.begin()) {
         Serial.println(
@@ -132,154 +372,67 @@ static void run_test()
         return;
     }
 
-    Serial.println(
-        "Placement begin: OK"
-    );
+    initialized = true;
 
-    hash_ring::Ring ring;
-
-    if (!ring.begin()) {
-        Serial.println(
-            "Ring begin: FAIL"
-        );
-        return;
-    }
-
-    Serial.print(
-        "Ring points: "
-    );
+    Serial.print("LOCAL NODE: ");
     Serial.println(
         static_cast<unsigned>(
-            ring.point_count()
+            LOCAL_NODE_ID
         )
     );
 
     Serial.print(
-        "Ring fingerprint: 0x"
+        "Heartbeat interval: "
     );
-    Serial.printf(
-        "%08lX\n",
+    Serial.print(
         static_cast<unsigned long>(
-            ring_fingerprint(ring)
+            HEARTBEAT_INTERVAL_MS
         )
     );
+    Serial.println(" ms");
 
-    std::size_t primary_counts[5]{};
-
-    bool placement_ok = true;
-
-    for (
-        std::uint32_t i = 0;
-        i < TEST_KEY_COUNT;
-        ++i
-    ) {
-        const std::uint8_t key[] = {
-            'p',
-            'l',
-            'a',
-            'c',
-            static_cast<std::uint8_t>(
-                i & 0xFF
-            ),
-            static_cast<std::uint8_t>(
-                (i >> 8) & 0xFF
-            ),
-            static_cast<std::uint8_t>(
-                (i >> 16) & 0xFF
-            ),
-            static_cast<std::uint8_t>(
-                (i >> 24) & 0xFF
-            )
-        };
-
-        placement::Assignment assignment{};
-
-        if (
-            !placement_resolver.locate(
-                key,
-                sizeof(key),
-                membership_manager,
-                platform_time::now_ms(),
-                assignment
-            )
-        ) {
-            placement_ok = false;
-            break;
-        }
-
-        if (
-            assignment.primary == node::INVALID ||
-            assignment.replica == node::INVALID ||
-            assignment.primary == assignment.replica
-        ) {
-            placement_ok = false;
-            break;
-        }
-
-        ++primary_counts[
-            assignment.primary
-        ];
-
-        if (i < 5) {
-            Serial.printf(
-                "KEY %lu -> PRIMARY=%u REPLICA=%u\n",
-                static_cast<unsigned long>(i),
-                assignment.primary,
-                assignment.replica
-            );
-        }
-    }
-
-    if (!placement_ok) {
-        Serial.println(
-            "Placement validation: FAIL"
-        );
-        return;
-    }
-
-    Serial.println(
-        "Placement validation: OK"
+    Serial.print(
+        "Membership timeout: "
     );
-
-    Serial.printf(
-        "PRIMARY COUNTS: A=%u B=%u C=%u D=%u\n",
-        static_cast<unsigned>(
-            primary_counts[node::A]
-        ),
-        static_cast<unsigned>(
-            primary_counts[node::B]
-        ),
-        static_cast<unsigned>(
-            primary_counts[node::C]
-        ),
-        static_cast<unsigned>(
-            primary_counts[node::D]
+    Serial.print(
+        static_cast<unsigned long>(
+            MEMBERSHIP_TIMEOUT_MS
         )
     );
+    Serial.println(" ms");
 
     Serial.println(
-        "PHASE 5 HARDWARE TEST: PASS"
-    );
-}
-
-void setup()
-{
-    Serial.begin(115200);
-
-    delay(1000);
-
-    Serial.println();
-    Serial.println(
-        "Booting placement test..."
+        "Waiting for all nodes..."
     );
 }
 
 void loop()
 {
-    if (!test_complete) {
-        test_complete = true;
-        run_test();
+    if (!initialized) {
+        delay(1000);
+        return;
     }
 
-    delay(1000);
+    const std::uint64_t now =
+        platform_time::now_ms();
+
+    if (
+        last_heartbeat_send_ms == 0 ||
+        now - last_heartbeat_send_ms >=
+            HEARTBEAT_INTERVAL_MS
+    ) {
+        if (!send_heartbeat()) {
+            Serial.println(
+                "Heartbeat send: FAIL"
+            );
+        }
+
+        last_heartbeat_send_ms = now;
+    }
+
+    process_received_frames();
+
+    check_placement();
+
+    delay(5);
 }
