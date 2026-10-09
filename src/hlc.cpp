@@ -118,7 +118,6 @@ Hlc Clock::on_local_event()
     const std::uint64_t current_physical =
         physical_now_ms();
 
-
     const std::uint64_t next_physical =
         current_physical > previous_physical
             ? current_physical
@@ -173,14 +172,6 @@ Hlc Clock::on_receive(Hlc remote_hlc)
     const std::uint64_t current_physical =
         physical_now_ms();
 
-    
-
-if (remote_physical > current_physical &&
-    remote_physical - current_physical >
-        MAX_REMOTE_DRIFT_MS) {
-
-    return 0;
-}
     /*
      * p = max(local physical, remote physical, physical_now)
      */

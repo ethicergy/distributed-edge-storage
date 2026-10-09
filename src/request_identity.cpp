@@ -49,11 +49,7 @@ bool Generator::begin(
      *
      * Zero is reserved and will never be returned.
      */
-    next_request_id_ = seed;
-
-    if (next_request_id_ == 0) {
-        next_request_id_ = 0;
-    }
+        next_request_id_ = seed;
 
     initialized_ = true;
 
