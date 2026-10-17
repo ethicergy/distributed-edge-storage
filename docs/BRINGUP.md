@@ -379,14 +379,45 @@ The bridge node A gets the BH1750 because its driver never disables interrupts. 
 | work | h | status |
 |---|---|---|
 | Kinds, logic, fakes, tests, Pi, raw-log, drivers | — | done |
-| DHT11 on D | 1 | Day 2 PM |
+| DHT11 on D, including the radio check (4.8) | 1.5 | Day 2 PM |
 | AM312 on B, including settle measurement | 1.5 | Day 2 PM |
 | LM393 on C, including knob setting | 1 | Day 2 PM |
 | BH1750 on A, including EEPROM coexistence (`bench 50` while sampling at 1 s) | 1 | Day 2 PM |
 | All four together, 30 min run, logs | 1 | Day 2 PM |
-| **total remaining** | **5.5** | after the essential H-tests; go/no-go 17:00 |
+| **total remaining** | **6** | after the essential H-tests; go/no-go 17:00 |
 
 Go/no-go is per module. Any module not confirmed by 17:00 keeps its bit clear and stays simulated (flagged `simulated` everywhere), so it can't break the demo.
+
+
+### 4.8 Check: does the DHT11 disturb the radio? (`bench 50` on D, bit off vs on)
+
+The DHT11 library disables interrupts for ~5 ms per read, every 2 s (4.3). This check measures whether that costs D any radio retries or latency. Do it with all four nodes up and ACTIVE, D's DHT11 wired, and the other nodes' sensor bits as they are.
+
+`bench` prints only ok/failed and min/avg/max latency (`console.cpp:735-750`, summary at `:763`). Retries show up as deltas in `stats`:
+* `client … attempts` on D: one attempt per op unless an attempt timed out.
+* `radio … tx` and `(failed …)` on D: retransmissions and MAC-level send failures.
+* `server … dedup replays` on the primaries: retransmissions that reached them.
+
+| run | D's bit (`config.h:151`) | steps on D |
+|---|---|---|
+| 1 | clear (`0x00` or without `0x08`), flash `node-d` | `sensor period 1000`, wait 10 s, `stats` → note; `bench 50` ×3 → note each line; `stats` → note |
+| 2 | set (`… | 0x08`), flash `node-d`; boot line says `sensor temp: hardware` | the same steps; also check `status` shows the DHT11 reading (no `ERROR`) |
+
+On A, B and C, run `stats` before and after each run for `dedup replays`. Save both runs as `docs/test-logs/dht-radio-off.log` / `-on.log`.
+
+| metric (per 150 SETs) | bit off | bit on | pass if |
+|---|---|---|---|
+| ok / failed | | | 150 / 0 both |
+| avg latency (mean of 3 runs) | | | on ≤ off + 5 ms |
+| max latency | | | on ≤ off + 20 ms |
+| Δ `client attempts` − 150 (extra attempts) | | | equal (both 0 expected) |
+| Δ `radio tx` − Δ `hb tx` (data frames incl. retransmissions) | | | within 5 % |
+| Δ `radio … failed` | | | within noise (± 2) |
+| Σ Δ `dedup replays` on A, B, C | | | equal |
+
+What to expect: no measurable difference. A 5 ms gap holds back at most one or two queued frames; the Wi-Fi hardware still receives and ACKs. If run 2 fails:
+* raise `DHT11_READ_INTERVAL_MS` (e.g. 5000) and re-run, or
+* keep D's bit clear for the demo (temperature simulated, flagged).
 
 ---
 
