@@ -1,10 +1,13 @@
 /*
  * Real sensor drivers (D1), one per node, behind config::REAL_SENSOR_NODES.
  *
- *   A  DHT11 module      DATA -> config::DHT11_PIN     own task, 1 read / 2 s
+ *   A  BH1750 (GY-302)   I2C 0x23 on the EEPROM bus    continuous high-res
  *   B  AM312 PIR         OUT  -> config::PIR_PIN       polled by MotionSource
  *   C  LM393 sound (DO)  DO   -> config::SOUND_DO_PIN  ISR edge counter
- *   D  BH1750 (GY-302)   I2C 0x23 on the EEPROM bus    continuous high-res
+ *   D  DHT11 module      DATA -> config::DHT11_PIN     own task, 1 read / 2 s
+ *
+ * The bridge node A gets the BH1750: its driver never disables
+ * interrupts, so the Pi link is never held up by a sensor.
  *
  * The logic (windows, settling, events, keep-last-good, fallback) is in
  * src/sensor_sources.cpp and tested on the host; this file only touches
@@ -29,7 +32,7 @@ namespace platform_sensors {
 namespace {
 
 // ------------------------------------------------------------------
-// DHT11 (node A): read in its own low-priority task, so the node task
+// DHT11 (node D): read in its own low-priority task, so the node task
 // (radio, storage, console) never waits for it. One read takes about
 // 25 ms: an 18 ms start pulse (the task sleeps) and ~5 ms with
 // interrupts off while the 40 bits arrive.
@@ -157,7 +160,7 @@ public:
 };
 
 // ------------------------------------------------------------------
-// BH1750 (node D) on the EEPROM bus, continuous high-resolution mode:
+// BH1750 (node A) on the EEPROM bus, continuous high-resolution mode:
 // a read is one 2-byte transfer (~0.1 ms at 400 kHz), under the bus
 // lock (i2c_bus.h).
 // ------------------------------------------------------------------
@@ -219,8 +222,7 @@ sensor::Source* real_source(node::Id id)
     // touches these pins.
     switch (id) {
         case node::A: {
-            static Dht11Input dht;
-            static sensor::LatestValueSource source(sensor::Kind::TEMPERATURE, dht);
+            static Bh1750Source source;
             return &source;
         }
         case node::B: {
@@ -234,7 +236,8 @@ sensor::Source* real_source(node::Id id)
             return &source;
         }
         case node::D: {
-            static Bh1750Source source;
+            static Dht11Input dht;
+            static sensor::LatestValueSource source(sensor::Kind::TEMPERATURE, dht);
             return &source;
         }
         default:

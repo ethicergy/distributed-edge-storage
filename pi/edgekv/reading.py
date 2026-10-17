@@ -1,7 +1,7 @@
 """Sensor readings stored by the nodes (include/sensor.h).
 
 Key schema:
-    s/<node>/<kind>          latest reading,   e.g. s/A/temp
+    s/<node>/<kind>          latest reading,   e.g. s/D/temp
     h/<node>/<kind>/<slot>   history ring slot, slot = sequence % 4
 
 Formats:
@@ -40,8 +40,8 @@ KINDS = {
 }
 EVENT_KINDS = {"motion", "sound"}
 
-# Node -> sensor (D1): A DHT11, B AM312 PIR, C LM393 sound, D BH1750.
-NODE_SENSORS = {"A": "temp", "B": "motion", "C": "sound", "D": "light"}
+# Node -> sensor (D1): A BH1750, B AM312 PIR, C LM393 sound, D DHT11.
+NODE_SENSORS = {"A": "light", "B": "motion", "C": "sound", "D": "temp"}
 
 
 @dataclass

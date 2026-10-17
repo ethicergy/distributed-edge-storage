@@ -16,7 +16,7 @@
  * sensor::Source; nothing else changes.
  *
  * Data model (D3, option a + b):
- *   latest value  : "s/<node>/<kind>"            e.g. "s/A/temp"
+ *   latest value  : "s/<node>/<kind>"            e.g. "s/D/temp"
  *   history ring  : "h/<node>/<kind>/<seq % N>"  e.g. "h/A/temp/2"
  * N = config::SENSOR_HISTORY_SLOTS. Keys per node: 1 + N, so the
  * whole cluster uses 4 * (1 + N) keys, far below the key budget.
@@ -42,7 +42,9 @@ const char* kind_unit(Kind kind);  // "degC", "%RH", "hPa", "lux", "events"
 // value; level kinds report one measurement.
 bool has_aux(Kind kind);
 
-// Node -> sensor (D1): A DHT11, B AM312 PIR, C LM393 sound, D BH1750.
+// Node -> sensor (D1): A BH1750, B AM312 PIR, C LM393 sound, D DHT11.
+// The bridge node (A) gets the sensor whose driver never disables
+// interrupts.
 Kind kind_for_node(node::Id id);
 
 /*

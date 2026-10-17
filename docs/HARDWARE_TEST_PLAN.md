@@ -77,8 +77,8 @@ four nodes up:
 | B | C | `k4` | | D | B | `k18` |
 | B | D | `k9` | | D | C | `k2` |
 
-Sensor keys: `s/A/temp` (D, B), `s/B/motion` (C, D),
-`s/C/sound` (B, D), `s/D/light` (B, D).
+Sensor keys (primary, replica): `s/A/light` (C, A), `s/B/motion` (C, D),
+`s/C/sound` (B, D), `s/D/temp` (B, D).
 
 ---
 

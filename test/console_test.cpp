@@ -87,9 +87,10 @@ int main()
     g_output.clear();
     cluster.run_for(5000);
     run(cluster, console, "sensors", 1000);
-    REQUIRE(contains("s/A/temp = "));
+    REQUIRE(contains("s/A/light = "));
+    REQUIRE(contains("lux"));
+    REQUIRE(contains("s/D/temp = "));
     REQUIRE(contains("degC"));
-    REQUIRE(contains("s/D/light = "));
 
     g_output.clear();
     run(cluster, console, "dump");

@@ -2,7 +2,7 @@
 
 /*
  * Owner of the one I2C bus (GPIO8/9): the AT24C256 on every node and
- * the BH1750 on node D (DECISIONS D2). Every bus transaction holds this
+ * the BH1750 on node A (DECISIONS D2). Every bus transaction holds this
  * lock, and an EEPROM write keeps it until its write cycle finished
  * (ACK polling), so a sensor read can never start inside a write
  * cycle or between the halves of an EEPROM transaction. Today all

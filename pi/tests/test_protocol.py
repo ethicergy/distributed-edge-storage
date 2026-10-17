@@ -101,10 +101,10 @@ class ReadingTest(unittest.TestCase):
         self.assertIsNone(level.events)
 
     def test_keys(self):
-        self.assertEqual(reading.latest_key("A"), b"s/A/temp")
+        self.assertEqual(reading.latest_key("A"), b"s/A/light")
         self.assertEqual(reading.latest_key("B"), b"s/B/motion")
         self.assertEqual(reading.history_key("C", 5), b"h/C/sound/1")
-        self.assertEqual(reading.history_key("D", 6), b"h/D/light/2")
+        self.assertEqual(reading.history_key("D", 6), b"h/D/temp/2")
 
 
 if __name__ == "__main__":

@@ -853,9 +853,9 @@ void h13_sensor_soak()
 
 // ------------------------------------------------------------------
 // SENSORS: the real-sensor logic on every node over fake inputs driven
-// by cluster time: A DHT11-style latest value with failed reads, B PIR
-// (settling, then two detections), C sound (two claps), D a broken
-// BH1750 behind the fallback switch. Readings are read back through
+// by cluster time: A a broken BH1750 behind the fallback switch, B PIR
+// (settling, then two detections), C sound (two claps), D DHT11-style
+// latest value with failed reads that later dies (stale). Readings are read back through
 // the cluster like any client would.
 // ------------------------------------------------------------------
 namespace {
@@ -959,7 +959,7 @@ std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, st
     auto rig = std::make_unique<Rig>();
 
     switch (id) {
-        case node::A: {
+        case node::D: {
             auto dht = std::make_unique<FakeDht>();
             dht->cluster = &cluster;
             dht->t0 = t0;
@@ -983,7 +983,7 @@ std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, st
             rig->input = std::move(mic);
             break;
         }
-        default:
+        default: // node A
             rig->real = std::make_unique<BrokenLight>();
             break;
     }
@@ -1074,30 +1074,31 @@ void real_sensor_logic_end_to_end()
     CHECK(read_latest(cluster, node::C, reading));
     CHECK(reading.kind == sensor::Kind::SOUND);
 
-    // A: every third DHT read fails; the last good value is kept and
+    // D: every third DHT read fails; the last good value is kept and
     // the failures are counted.
-    CHECK(read_latest(cluster, node::A, reading));
+    CHECK(read_latest(cluster, node::D, reading));
     CHECK(reading.kind == sensor::Kind::TEMPERATURE);
     CHECK(reading.value_milli == 21500);
     CHECK(reading.flags == 0);
-    CHECK(cluster.node(node::A).source->failures() >= 1);
-    CHECK(cluster.node(node::A).sampler->stats().read_errors == 0);
+    CHECK(cluster.node(node::D).source->failures() >= 1);
+    CHECK(cluster.node(node::D).sampler->stats().read_errors == 0);
 
-    // D: the broken BH1750 is replaced by the simulated source.
-    CHECK(read_latest(cluster, node::D, reading));
+    // A (the bridge): the broken BH1750 is replaced by the simulated
+    // source.
+    CHECK(read_latest(cluster, node::A, reading));
     CHECK(reading.kind == sensor::Kind::LIGHT);
     CHECK(reading.flags & sensor::READING_FLAG_SIMULATED);
-    CHECK(cluster.node(node::D).source->simulated());
-    CHECK(cluster.node(node::D).source->failures() >= config::SENSOR_FALLBACK_AFTER_FAILURES);
+    CHECK(cluster.node(node::A).source->simulated());
+    CHECK(cluster.node(node::A).source->failures() >= config::SENSOR_FALLBACK_AFTER_FAILURES);
 
-    // A's DHT dies at t0 + 26 s. More than DHT_STALE_MS later its
+    // D's DHT dies at t0 + 26 s. More than DHT_STALE_MS later its
     // readings are flagged stale, keep the last good value, and are
     // never replaced by simulated values.
     cluster.run_for(t0 + 26000 + config::DHT_STALE_MS + 2 * RIG_PERIOD_MS - cluster.now());
-    CHECK(read_latest(cluster, node::A, reading));
+    CHECK(read_latest(cluster, node::D, reading));
     CHECK(reading.flags == sensor::READING_FLAG_STALE);
     CHECK(reading.value_milli == 21500);
-    CHECK(!cluster.node(node::A).source->simulated());
+    CHECK(!cluster.node(node::D).source->simulated());
 }
 
 int main(int argc, char** argv)

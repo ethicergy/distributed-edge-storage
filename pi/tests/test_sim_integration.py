@@ -100,7 +100,8 @@ class SimulatorIntegrationTest(unittest.TestCase):
                 break
             time.sleep(0.5)
         self.assertTrue(all(sample is not None for sample in sensors.values()), sensors)
-        self.assertEqual(sensors["A"].kind, "temp")
+        self.assertEqual(sensors["A"].kind, "light")
+        self.assertEqual(sensors["D"].kind, "temp")
         self.assertIsNotNone(self.kv.wall_time(sensors["A"].hlc))
 
         # H14: a node other than the bridge goes down.

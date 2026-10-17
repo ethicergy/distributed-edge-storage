@@ -319,7 +319,7 @@ Eventually consistent, last-writer-wins per key, RF = 2:
 
 Each node runs a `sensor::Sampler` over a `sensor::Source`. Until the
 real parts are known every node uses a deterministic `SimulatedSource`
-(A temperature, B motion, C sound, D light; level kinds follow a
+(A light, B motion, C sound, D temperature; level kinds follow a
 20-minute "day" wave, a ripple and a bounded random walk, event kinds
 draw a few events per window). A real driver implements `Source`
 (`begin`, `kind`, `read`, optionally `poll`) and replaces the simulated

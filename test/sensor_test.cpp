@@ -148,10 +148,10 @@ void test_keys()
 
     REQUIRE(sensor::latest_key(node::B, sensor::Kind::HUMIDITY, key, 4) == 0);
 
-    REQUIRE(sensor::kind_for_node(node::A) == sensor::Kind::TEMPERATURE);
+    REQUIRE(sensor::kind_for_node(node::A) == sensor::Kind::LIGHT);
     REQUIRE(sensor::kind_for_node(node::B) == sensor::Kind::MOTION);
     REQUIRE(sensor::kind_for_node(node::C) == sensor::Kind::SOUND);
-    REQUIRE(sensor::kind_for_node(node::D) == sensor::Kind::LIGHT);
+    REQUIRE(sensor::kind_for_node(node::D) == sensor::Kind::TEMPERATURE);
 }
 
 void test_simulated_sources_are_plausible()

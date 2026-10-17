@@ -33,13 +33,15 @@ every node runs a `sensor::SimulatedSource`:
 
 | node | real part | kind | unit | simulated range |
 |---|---|---|---|---|
-| A | DHT11 | temperature | °C | 22.5 ± 3.5 |
+| A | BH1750 (GY-302) | light | lux | 320 ± 330 |
 | B | AM312 PIR | motion | events per window (+ s since last motion) | 0–3 events |
 | C | LM393 sound (DO) | sound | events per window (+ % of window active) | 0–6 events |
-| D | BH1750 (GY-302) | light | lux | 320 ± 330 |
+| D | DHT11 | temperature | °C | 22.5 ± 3.5 |
 
 (Revised 2026-10-17: the parts were chosen; humidity and pressure
-were the earlier placeholders for B and C.)
+were the earlier placeholders for B and C. The bridge node A gets the
+BH1750 because its driver never disables interrupts; the DHT11 library
+disables them for ~5 ms per read, so it is on D.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real

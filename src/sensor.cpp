@@ -77,10 +77,10 @@ bool has_aux(Kind kind)
 Kind kind_for_node(node::Id id)
 {
     switch (id) {
-        case node::A: return Kind::TEMPERATURE;
+        case node::A: return Kind::LIGHT;
         case node::B: return Kind::MOTION;
         case node::C: return Kind::SOUND;
-        default: return Kind::LIGHT;
+        default: return Kind::TEMPERATURE;
     }
 }
 

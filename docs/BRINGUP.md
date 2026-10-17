@@ -213,16 +213,16 @@ Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):
 | pin 6, GND | GND |
 | Pi 5V / 3V3 | **not connected**. Node A is powered from its USB. |
 
-Sensors (each node has one; `config.h:159-163`):
+Sensors (each node has one; `config.h:159-165`):
 
 | node | module pin | SuperMini pin | notes |
 |---|---|---|---|
-| A | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up |
+| A (bridge) | GY-302 VCC / GND / SDA / SCL / ADDR | 3V3 / GND / **GPIO8** / **GPIO9** / GND | Same bus as A's EEPROM, address 0x23. **3V3 only**: its pull-ups may go to VCC. Its driver never disables interrupts, so the Pi link is unaffected. |
 | B | AM312 VCC / GND / OUT | 3V3 / GND / **GPIO4** | 3.3 V supply is fine; no pots |
 | C | LM393 VCC / GND / DO | 3V3 / GND / **GPIO4** | **3V3 only**, so DO never exceeds 3.3 V. DO is usually active-low. |
-| D | GY-302 VCC / GND / SDA / SCL / ADDR | 3V3 / GND / **GPIO8** / **GPIO9** / GND | Same bus as the EEPROM, address 0x23. **3V3 only**: its pull-ups may go to VCC. |
+| D | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up |
 
-GPIO4 is not a strapping pin, not USB (18/19) and not the bridge UART (20/21). `config.h:256-266` refuses any pin other than 0–10 minus 2/8/9 at compile time. Spare pins: 3, 5, 6, 7, 10.
+GPIO4 is not a strapping pin, not USB (18/19) and not the bridge UART (20/21). `config.h:262-272` refuses any pin other than 0–10 minus 2/8/9 at compile time. Spare pins: 3, 5, 6, 7, 10.
 
 ### 3.4 Bring-up order
 
@@ -290,45 +290,42 @@ No driver has run on a board yet. Each module is enabled only after it was check
 
 | node | module | interface | pin (`config.h`) | reading |
 |---|---|---|---|---|
-| A | DHT11 3-pin module | single-wire, open drain, pull-up on module | `DHT11_PIN = 4` (`:159`) | `s/A/temp`, degC |
-| B | AM312 mini PIR | digital, push-pull, high ~2 s per detection | `PIR_PIN = 4` (`:160`) | `s/B/motion`: detections per window + seconds since last motion; `settling` after power-on |
-| C | LM393 sound, **DO only** | digital comparator output, active level in `SOUND_ACTIVE_HIGH` (`:176`, default `false` = active-low) | `SOUND_DO_PIN = 4` (`:161`) | `s/C/sound`: events per window + % of window active |
-| D | GY-302 BH1750 | I2C 0x23 on the EEPROM bus | `BH1750_I2C_ADDRESS` (`:163`), GPIO8/9 | `s/D/light`, lux |
+| A (bridge) | GY-302 BH1750 | I2C 0x23 on the EEPROM bus | `BH1750_I2C_ADDRESS` (`:165`), GPIO8/9 | `s/A/light`, lux |
+| B | AM312 mini PIR | digital, push-pull, high ~2 s per detection | `PIR_PIN = 4` (`:161`) | `s/B/motion`: detections per window + seconds since last motion; `settling` after power-on |
+| C | LM393 sound, **DO only** (confirmed DO-only; no AO work) | digital comparator output, active level in `SOUND_ACTIVE_HIGH` (`:182`, default `false` = active-low) | `SOUND_DO_PIN = 4` (`:162`) | `s/C/sound`: events per window + % of window active |
+| D | DHT11 3-pin module | single-wire, open drain, pull-up on module | `DHT11_PIN = 4` (`:163`) | `s/D/temp`, degC; `STALE` / `ERROR` when it stops reading |
 
-**Open: the LM393 variant.** Your message still had the placeholder `[3-pin DO only / 4-pin with AO]`. I built for DO only. If the module turns out to have an AO pin, the plan is:
-* wire AO to GPIO3 (ADC1);
-* add a `peak-to-peak` aux next to `% active`, from `analogRead` min/max sampled in `poll()`;
-* about 1.5 h with tests.
+The bridge node A gets the BH1750 because its driver never disables interrupts. The DHT11 library turns interrupts off for ~5 ms per read, so it goes on D (decided 2026-10-17).
 
-That isn't built and needs your OK.
+**LM393:** DO only (decided). No AO / peak-to-peak work unless requested.
 
 ### 4.3 Per-module design
 
-**DHT11 (A).**
+**DHT11 (D).**
 * Driver: `adafruit/DHT sensor library@1.4.7` (+ `Adafruit Unified Sensor@1.1.15`), pinned in `platformio.ini:33-36`.
-* It runs in its own task, `Dht11Input` (`sensors.cpp:41-106`): priority 1 (the node task is 3), one read every `DHT11_READ_INTERVAL_MS = 2000` (`config.h:166`). A `static_assert` keeps that at ≥ 1000 ms, i.e. at most 1 Hz.
+* It runs in its own task, `Dht11Input` (`sensors.cpp:45-111`): priority 1 (the node task is 3), one read every `DHT11_READ_INTERVAL_MS = 2000` (`config.h:168`). A `static_assert` keeps that at ≥ 1000 ms, i.e. at most 1 Hz.
 * A read takes about 25 ms. 20 ms of that is `delay()`, which only sleeps the DHT task. The other ~5 ms has **interrupts disabled**: the library's `InterruptLock` (`DHT.cpp:285`) is `portDISABLE_INTERRUPTS()` on this core.
 * So the node task never waits on the DHT. Radio frames arriving in those ~5 ms are held by the Wi-Fi hardware and the RX queue.
 * The node task only calls `take()`, which swaps counters under a spinlock.
 * `LatestValueSource` (`sensor_sources.h:133`) keeps the last good value through failed reads and counts them. `status` shows them as `read failures`.
-* Staleness: after `DHT_STALE_MS = 10000` (`config.h`) without a good read, readings carry the `STALE` flag and keep the last good value. With no good read since boot they carry `ERROR` with value 0. Both show in `sensors` / `get`, the Pi text output and the CSV `status` column. The DHT11 is never replaced by simulated values (`fallback_allowed()` is false).
+* Staleness: after `DHT_STALE_MS = 10000` (`config.h:172`) without a good read, readings carry the `STALE` flag and keep the last good value. With no good read since boot they carry `ERROR` with value 0. Both show in `sensors` / `get`, the Pi text output and the CSV `status` column. The DHT11 is never replaced by simulated values (`fallback_allowed()` is false).
 
 **AM312 (B).**
-* `PirInput` (`sensors.cpp:113`): `INPUT_PULLDOWN`, so an unplugged sensor reads as "no motion".
-* `MotionSource` (`sensor_sources.h:42`) polls every `PIR_POLL_INTERVAL_MS = 100` (`config.h:171`), well inside the ~2 s pulse.
+* `PirInput` (`sensors.cpp:118`): `INPUT_PULLDOWN`, so an unplugged sensor reads as "no motion".
+* `MotionSource` (`sensor_sources.h:42`) polls every `PIR_POLL_INTERVAL_MS = 100` (`config.h:177`), well inside the ~2 s pulse.
 * Value: rising edges per window. Aux: seconds from the last time OUT was seen high to the sample.
 * The Pi shows "last motion N s ago", adding the sample's age.
-* `PIR_SETTLE_MS = 30000` (`config.h:172`) counts from the first poll, which is about power-on. Until then every reading carries the `settling` flag with value 0, and input is ignored.
+* `PIR_SETTLE_MS = 30000` (`config.h:178`) counts from the first poll, which is about power-on. Until then every reading carries the `settling` flag with value 0, and input is ignored.
 * **Measure the settle time:** set `PIR_SETTLE_MS = 0` temporarily, power-cycle with nobody in view, and note when spurious detections stop. Use that plus a margin.
 
 **LM393 sound (C).**
-* `SoundInput` (`sensors.cpp:130-155`): an `IRAM_ATTR` ISR on the edge into the active level (FALLING when active-low). It only increments a 32-bit counter: no logging, no calls.
-* `SoundSource` (`sensor_sources.h:78`) reads counter differences on every node-task iteration, so wrap-around is handled. Edges closer than `SOUND_EVENT_GAP_MS = 150` (`config.h:179`) form one event, because a clap makes the comparator chatter.
+* `SoundInput` (`sensors.cpp:135-160`): an `IRAM_ATTR` ISR on the edge into the active level (FALLING when active-low). It only increments a 32-bit counter: no logging, no calls.
+* `SoundSource` (`sensor_sources.h:78`) reads counter differences on every node-task iteration, so wrap-around is handled. Edges closer than `SOUND_EVENT_GAP_MS = 150` (`config.h:185`) form one event, because a clap makes the comparator chatter.
 * "% of window active" is measured by sampling the DO level on each iteration (about 1 ms).
 * DO stuck active with no edges shows as 100 % active, 0 events. That means the knob is too sensitive.
 
-**BH1750 (D).**
-* `Bh1750Source` (`sensors.cpp:166`): power-on, then continuous high-res mode (`0x01`, `0x10`) at begin. A read is one 2-byte transfer, and lux = raw / 1.2.
+**BH1750 (A, the bridge).**
+* `Bh1750Source` (`sensors.cpp:171`): power-on, then continuous high-res mode (`0x01`, `0x10`) at begin. A read is one 2-byte transfer, and lux = raw / 1.2.
 * No library: three I2C transfers. That also lets every transfer hold the bus lock.
 
 **Shared bus.**
@@ -363,16 +360,16 @@ That isn't built and needs your OK.
 ### 4.6 Enabling one module (do one at a time)
 
 1. Wire it as in 3.3, on its own board (one node alone is fine: it goes ACTIVE, and writes report `UNDER_REPLICATED`).
-2. Set that node's bit in `config.h:151` (e.g. `0x02` for B), `pio run -e node-b -t upload --upload-port $P`. The other nodes only read their own bit, so they don't need reflashing.
+2. Set that node's bit in `config.h:151` (A `0x01`, B `0x02`, C `0x04`, D `0x08`), `pio run -e node-b -t upload --upload-port $P`. The other nodes only read their own bit, so they don't need reflashing.
 3. The boot output must say `sensor motion: hardware`. If it says `hardware did not start, using the SIMULATED source`, `begin()` failed.
-4. Run `sensor period 5000`, then use `status` (sensor line `(hardware)`, `read failures`) and `get s/B/motion`.
+4. Run `sensor period 5000`, then use `status` (sensor line `(hardware)`, `read failures`) and `get s/<node>/<kind>` (`s/A/light`, `s/B/motion`, `s/C/sound`, `s/D/temp`).
 
 | module | stimulus | expected | likely failure → fix |
 |---|---|---|---|
-| DHT11 (A) | breathe on it | temp rises within a few samples; `read failures` stays near 0 | Every read fails, `get` shows simulated: DATA not on GPIO4, or the module is powered from the wrong pin. |
+| DHT11 (D) | breathe on it; then pull DATA for 15 s | temp rises within a few samples; `read failures` stays near 0. With DATA pulled: `STALE` after 10 s, then back to normal when reconnected. | `ERROR (no good temp read since boot)`: DATA not on GPIO4, or the module is powered from the wrong pin. |
 | AM312 (B) | stay still for `PIR_SETTLE_MS`, then wave | `settling` first; then `1 events, last motion 0 s before the sample`; quiet windows show age growing | Detections with nobody there: settle time too short (measure, 4.3). Never any: OUT not on GPIO4. |
 | LM393 (C) | set the knob so the DO LED is off in a quiet room; clap twice | `2 events, x % active` | 100 % active: knob too sensitive or `SOUND_ACTIVE_HIGH` wrong. 0 events but LED flashes: wrong edge (flip `SOUND_ACTIVE_HIGH`). |
-| BH1750 (D) | cover / torch | lux drops / rises; `set`/`get` and `bench 50` still OK; `stats` storage errors 0 | `hardware did not start`: ADDR not low, or SDA/SCL swapped. EEPROM FATAL appearing after adding it: bus loaded (check pull-ups, 3V3). |
+| BH1750 (A) | cover / torch | lux drops / rises; `set`/`get` and `bench 50` still OK; `stats` storage errors 0 | `hardware did not start`: ADDR not low, or SDA/SCL swapped. EEPROM FATAL appearing after adding it: bus loaded (check pull-ups, 3V3). |
 
 5. Leave the period at 5 s for the demo (EEPROM wear about 6× the 30 s rate; fine for days), then set it back to 30 s.
 6. Commit the bit flip with the log of the check, e.g. `docs/test-logs/sensor-B.log`.
@@ -382,10 +379,10 @@ That isn't built and needs your OK.
 | work | h | status |
 |---|---|---|
 | Kinds, logic, fakes, tests, Pi, raw-log, drivers | — | done |
-| DHT11 on A | 1 | Day 2 PM |
+| DHT11 on D | 1 | Day 2 PM |
 | AM312 on B, including settle measurement | 1.5 | Day 2 PM |
 | LM393 on C, including knob setting | 1 | Day 2 PM |
-| BH1750 on D, including EEPROM coexistence (`bench 50` while sampling at 1 s) | 1 | Day 2 PM |
+| BH1750 on A, including EEPROM coexistence (`bench 50` while sampling at 1 s) | 1 | Day 2 PM |
 | All four together, 30 min run, logs | 1 | Day 2 PM |
 | **total remaining** | **5.5** | after the essential H-tests; go/no-go 17:00 |
 

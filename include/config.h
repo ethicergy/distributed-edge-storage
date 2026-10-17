@@ -156,10 +156,12 @@ constexpr std::uint8_t REAL_SENSOR_NODES = 0x00;
 constexpr std::uint8_t SENSOR_FALLBACK_AFTER_FAILURES = 3;
 
 // Sensor pins, ESP32-C3 SuperMini (see sensor_pin_ok below).
-constexpr std::uint8_t DHT11_PIN = 4;      // node A, DHT11 module DATA
+// The bridge node A gets the BH1750, whose driver never disables
+// interrupts; the DHT11 (interrupts off ~5 ms per read) is on D.
 constexpr std::uint8_t PIR_PIN = 4;        // node B, AM312 OUT
 constexpr std::uint8_t SOUND_DO_PIN = 4;   // node C, LM393 DO
-// Node D's BH1750 shares the EEPROM bus (EEPROM_SDA_PIN/SCL_PIN), ADDR low.
+constexpr std::uint8_t DHT11_PIN = 4;      // node D, DHT11 module DATA
+// Node A's BH1750 shares the EEPROM bus (EEPROM_SDA_PIN/SCL_PIN), ADDR low.
 constexpr std::uint8_t BH1750_I2C_ADDRESS = 0x23;
 
 // DHT11: at most 1 Hz. Read by its own task, never by the node task.
