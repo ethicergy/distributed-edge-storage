@@ -10,7 +10,8 @@ The expected outputs below come from a full rehearsal in `build/host/edge_sim` o
 2. SSH into the Pi in one terminal: `cd ~/distributed-edge-storage/pi`.
 3. On every console: `sensor period 5000`, so readings change visibly. On B and D, `log off` to keep their consoles quiet. Keep A and C at the default `log info`: their log lines are part of the show.
 4. Check that the Pi's `python3 -m edgekv ping` prints `bridge is node A`.
-5. Run only one Pi command at a time. Two clients on `/dev/serial0` steal each other's answers (`SerialException: … multiple access on port`). Stop `watch` with Ctrl-C before any other Pi command.
+5. Doing step 7 on the boards? Flash the `-fi` images beforehand (`pio run -e node-a-fi -t upload …`, same for B–D). Otherwise step 7 uses the simulator.
+6. Run only one Pi command at a time. A second command while `watch` runs is refused with ``error: port busy: another edgekv command is using it, stop `watch` first``. Stop `watch` with Ctrl-C first.
 
 ## 1. The cluster is up (1 min)
 
@@ -160,26 +161,42 @@ k6 = "written-while-C-down"
 
 ## 7. Optional: 20 % packet loss (1 min)
 
-With the normal images this runs in the simulator on the laptop (`build/host/edge_sim`):
+This needs the fault-injection images (`node-a-fi` … `node-d-fi`) on all four boards; see "Before the audience arrives". They behave exactly like the normal images until a fault is armed. Their banner says `[fault injection build]`.
+
+| where | command |
+|---|---|
+| each console (A, B, C, D) | `fault loss 20` |
+| console A | `bench 50` |
+| each console | `fault clear` |
+
+**Audience sees** (on each console, then on A):
 
 ```
-loss 0.2
-A: bench 50
-loss 0
-```
-
-**Audience sees:**
-
-```
-frame loss 0.20
+frame loss 20 % on every frame this node sends
 bench: 50 sequential SETs on keys bench/0..7
   [D] SET_REQ bench/3 from A#62641: duplicate, cached response replayed
   [A] REPL_REQ D#86360 duplicate: cached REPL_ACK replayed
   ...
-bench: 50 ok, 0 failed in 29513 ms; latency min 7 avg 590 max 4310 ms
+bench: 50 ok, 0 failed in 36594 ms; latency min 7 avg 731 max 5211 ms
 ```
 
-On boards flashed with the `-fi` images it runs on the hardware: `fault loss 20` on all four consoles, `bench 50` on A, then `fault clear` on all four. The measured numbers are in `docs/RESULTS.md` §3.
+The `duplicate … replayed` lines appear on the consoles of the nodes that are primaries for the bench keys. Simulator reference numbers: avg 731 ms, max 5.2 s, 0 failed (`docs/RESULTS.md` §3, `loss20_A`).
+
+**Fallback (normal images on the boards, or no time to reflash):** run it in the simulator on the laptop (`build/host/edge_sim`). Same mechanism, same output:
+
+```
+A: fault loss 20
+B: fault loss 20
+C: fault loss 20
+D: fault loss 20
+A: bench 50
+A: fault clear
+B: fault clear
+C: fault clear
+D: fault clear
+```
+
+(`loss 0.2` / `loss 0` in the simulator does the same from the simulated radio's side, in one line.) If you type `fault loss` on a normal image, the console answers `fault injection not compiled in`: the normal images cannot drop packets on purpose (`scripts/check_images.sh`, run by `make firmware`).
 
 **Idea:** lost packets are retransmitted with the same request id, and the receiver's dedup table replays the cached answer. Every write still executes exactly once (all 50 ok, latency goes up, no failures).
 
@@ -208,7 +225,7 @@ Type node commands as `<node>: <command>` in the simulator window; the other cli
 | 4 | `ring …` | `A: ring demo/greeting`, `A: ring s/B/motion`, `A: ring k6` |
 | 5 | unplug C | `off C`, then `A: members`, Pi `sensors`, `B: set k6 written-while-C-down`, `A: ring k6`, `D: get k6` |
 | 6 | plug C in | `on C`, wait ~6 s, `C: dump` |
-| 7 | (simulator anyway) | `loss 0.2`, `A: bench 50`, `loss 0` |
+| 7 | `-fi` images: `fault loss 20` on all four, `bench 50` on A, `fault clear` | `A: fault loss 20` … `D: fault loss 20`, `A: bench 50`, `A: fault clear` … `D: fault clear` (or `loss 0.2` / `loss 0`) |
 
 All readings in the simulator are flagged `simulated`, so say so. Key placement and the outputs above are identical, because it is the same firmware logic compiled for the PC.
 
