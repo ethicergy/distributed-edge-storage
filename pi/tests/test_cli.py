@@ -1,3 +1,7 @@
+import contextlib
+import importlib.util
+import io
+import os
 import struct
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -91,6 +95,48 @@ class CsvTest(unittest.TestCase):
             cli.CSV_HEADER[:8],
             ["read_at", "node", "kind", "value", "unit", "sequence", "sampled_at", "simulated"],
         )
+
+
+class PortErrorTest(unittest.TestCase):
+    def run_cli(self, argv):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code = cli.main(argv)
+        return code, err.getvalue()
+
+    def test_messages(self):
+        busy = OSError(11, "Could not exclusively lock port /dev/serial0: [Errno 11] Resource temporarily unavailable")
+        self.assertEqual(cli._port_error("/dev/serial0", busy),
+                         "error: port busy: another edgekv command is using it, stop `watch` first")
+        late = OSError("device reports readiness to read but returned no data "
+                       "(device disconnected or multiple access on port?)")
+        self.assertIn("port busy", cli._port_error("/dev/serial0", late))
+        self.assertIn("not found", cli._port_error("/dev/x", OSError(2, "could not open port /dev/x")))
+        self.assertIn("dialout", cli._port_error("/dev/x", OSError(13, "could not open port: Permission denied")))
+        self.assertTrue(cli._port_error("/dev/x", OSError(5, "I/O error")).startswith("error: serial port /dev/x:"))
+
+    @unittest.skipUnless(importlib.util.find_spec("serial"), "pyserial not installed")
+    def test_not_found_is_one_line(self):
+        code, err = self.run_cli(["--port", "/dev/ttyEDGEKV-NOPE", "ping"])
+        self.assertEqual(code, 4)
+        self.assertEqual(err.count("\n"), 1)
+        self.assertIn("not found", err)
+
+    @unittest.skipUnless(importlib.util.find_spec("serial") and hasattr(os, "openpty"), "needs pyserial and a pty")
+    def test_second_client_gets_port_busy(self):
+        import serial
+
+        master, slave = os.openpty()
+        name = os.ttyname(slave)
+        holder = serial.serial_for_url(name, baudrate=115200, timeout=0.05, exclusive=True)
+        try:
+            code, err = self.run_cli(["--port", name, "--timeout", "0.2", "ping"])
+        finally:
+            holder.close()
+            os.close(master)
+            os.close(slave)
+        self.assertEqual(code, 4)
+        self.assertEqual(err.strip(), "error: port busy: another edgekv command is using it, stop `watch` first")
 
 
 if __name__ == "__main__":

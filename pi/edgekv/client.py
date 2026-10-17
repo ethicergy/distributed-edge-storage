@@ -53,7 +53,10 @@ class EdgeKV:
         if transport is None:
             import serial  # pyserial; imported lazily so tests need not have it
 
-            transport = serial.serial_for_url(port, baudrate=baudrate, timeout=0.05)
+            # Exclusive: a second edgekv on the same port fails at once
+            # instead of both stealing each other's answers.
+            options = {} if "://" in port else {"exclusive": True}
+            transport = serial.serial_for_url(port, baudrate=baudrate, timeout=0.05, **options)
 
         self._io = transport
         self._timeout = timeout

@@ -55,7 +55,12 @@ is the last good one) or `error` (DHT11: no good read since boot). Start a new C
 from the 8-column format.
 
 Exit codes: 0 success, 1 key not found, 2 the cluster refused the
-operation, 3 no answer from the bridge.
+operation, 3 no answer from the bridge, 4 serial-port problem (one line
+says which: port busy, i.e. another edgekv such as `watch` holds it;
+port not found; no permission, i.e. join the `dialout` group).
+
+Only one edgekv command can use the port at a time: the port is opened
+exclusively, so stop `watch` (Ctrl-C) before running another command.
 
 `OK (under-replicated)` after a write means the value is stored on its
 primary only (its replica was unreachable); the cluster copies it to

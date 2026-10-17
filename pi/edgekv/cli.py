@@ -155,6 +155,21 @@ def cmd_watch(kv: EdgeKV, args) -> int:
             handle.close()
 
 
+def _port_error(port: str, error: OSError) -> str:
+    """One line for a serial-port problem (open or read)."""
+    text = str(error)
+    code = getattr(error, "errno", None)
+    if code in (11, 16) or "lock" in text or "busy" in text or "multiple access" in text:
+        return "error: port busy: another edgekv command is using it, stop `watch` first"
+    if code == 2 or "No such file" in text:
+        return (f"error: serial port {port} not found "
+                "(check --port or $EDGEKV_PORT; on the Pi enable the UART, see pi/README.md)")
+    if code == 13 or "Permission denied" in text:
+        return (f"error: no permission to open {port}: add yourself to the dialout group "
+                "(sudo usermod -aG dialout $USER), then log out and back in")
+    return f"error: serial port {port}: {text}"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="edgekv", description="Raspberry Pi client for the edge-kv cluster")
     parser.add_argument("--port", default=os.environ.get("EDGEKV_PORT", "/dev/serial0"),
@@ -210,6 +225,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     except TimeoutError as error:
         print(f"error: {error}", file=sys.stderr)
         return 3
+    except OSError as error:  # pyserial's SerialException is an OSError
+        print(_port_error(args.port, error), file=sys.stderr)
+        return 4
 
 
 if __name__ == "__main__":
