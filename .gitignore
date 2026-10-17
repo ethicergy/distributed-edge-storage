@@ -1,7 +1,16 @@
-.venv/
-
 # PlatformIO
 .pio/
 
-# Python virtual environment
+# Host build output (make)
+build/
+
+# Python
 .venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Local working notes (not published)
+PROJECT_COMPLETION_PROMPT.txt
+docs/devise
