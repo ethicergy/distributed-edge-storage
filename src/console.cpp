@@ -295,16 +295,17 @@ void Console::cmd_status(std::uint64_t now_ms)
     if (sampler_ != nullptr) {
         const sensor::SamplerStats& s = sampler_->stats();
         const sensor::Kind kind = sampler_->source().kind();
+        char last[64];
+
+        sensor::format_value(kind, s.last_value_milli, s.last_aux, s.last_flags, last, sizeof(last));
 
         printf(
-            "sensor %s (%s): %s, %lu samples, last %ld.%03ld %s seq %lu, %lu ok, %lu under-replicated, %lu failed\n",
+            "sensor %s (%s): %s, %lu samples, last %s seq %lu, %lu ok, %lu under-replicated, %lu failed\n",
             sensor::kind_key(kind),
             sampler_->source().simulated() ? "simulated" : "hardware",
             sampler_->enabled() ? "on" : "off",
             static_cast<unsigned long>(s.samples),
-            static_cast<long>(s.last_value_milli / 1000),
-            static_cast<long>(std::labs(s.last_value_milli % 1000)),
-            sensor::kind_unit(kind),
+            s.samples > 0 ? last : "-",
             static_cast<unsigned long>(s.last_sequence),
             static_cast<unsigned long>(s.writes_ok),
             static_cast<unsigned long>(s.writes_under_replicated),
@@ -464,17 +465,15 @@ void Console::print_value(
     sensor::Reading reading{};
 
     if (sensor::decode(value, value_length, reading)) {
-        const long whole = static_cast<long>(reading.value_milli / 1000);
-        const long frac = static_cast<long>(std::labs(reading.value_milli % 1000));
+        char text[64];
+
+        sensor::format_value(reading.kind, reading.value_milli, reading.aux, reading.flags, text, sizeof(text));
 
         printf(
-            "%.*s = %s%ld.%03ld %s  (seq %lu, sampled at hlc %llu%s)\n",
+            "%.*s = %s  (seq %lu, sampled at hlc %llu%s)\n",
             static_cast<int>(key_length),
             reinterpret_cast<const char*>(key),
-            (reading.value_milli < 0 && whole == 0) ? "-" : "",
-            whole,
-            frac,
-            sensor::kind_unit(reading.kind),
+            text,
             static_cast<unsigned long>(reading.sequence),
             static_cast<unsigned long long>(hlc::physical(reading.hlc)),
             (reading.flags & sensor::READING_FLAG_SIMULATED) ? ", simulated" : ""

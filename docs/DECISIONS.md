@@ -9,7 +9,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D0 | Spec document | `include/protocol.h` + `docs/DESIGN.md` are the spec |
 | D1 | Sensors | simulated sources behind `sensor::Source` until real parts are chosen |
 | D2 | I2C sharing | no I2C sensor yet; rule for when one is added |
-| D3 | Data model | latest key + 4-slot history ring per node, 20-byte big-endian reading |
+| D3 | Data model | latest key + 4-slot history ring per node, 20-byte (level) / 24-byte (event) big-endian reading |
 | D4 | Timestamps | HLC in the reading; the Pi converts with the bridge's clock offset |
 | D5 | Replica failure | write committed on the primary, reported REPLICATION_FAILED / UNDER_REPLICATED, repaired by anti-entropy; accepted with one live node |
 | D6 | Reads after rejoin | primary-only reads behind a boot/catch-up gate |
@@ -31,12 +31,15 @@ turns up, add it under `docs/` and reconcile any difference explicitly.
 The parts are not described anywhere. Instead of inventing hardware,
 every node runs a `sensor::SimulatedSource`:
 
-| node | kind | unit | simulated range |
-|---|---|---|---|
-| A | temperature | °C | 22.5 ± 3.5 |
-| B | humidity | %RH | 48 ± 15 |
-| C | pressure | hPa | 1013 ± 5 |
-| D | light | lux | 320 ± 330 |
+| node | real part | kind | unit | simulated range |
+|---|---|---|---|---|
+| A | DHT11 | temperature | °C | 22.5 ± 3.5 |
+| B | AM312 PIR | motion | events per window (+ s since last motion) | 0–3 events |
+| C | LM393 sound (DO) | sound | events per window (+ % of window active) | 0–6 events |
+| D | BH1750 (GY-302) | light | lux | 320 ± 330 |
+
+(Revised 2026-10-17: the parts were chosen; humidity and pressure
+were the earlier placeholders for B and C.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real
@@ -72,13 +75,16 @@ Option (a) + (b) from the prompt:
 That is 5 keys per sensor, 20 in the cluster, about 10 per node with
 RF = 2: well inside the 64-key budget, leaving room for user keys.
 
-Reading encoding v1, 20 bytes, big-endian like the protocol:
+Reading encoding, big-endian like the protocol. v1 (20 bytes) for
+level kinds, v2 (24 bytes) for event kinds:
 
 ```
-0 format (1) | 1 kind | 2 flags (bit0 simulated) | 3 reserved 0
+0 format (1 or 2) | 1 kind | 2 flags (bit0 simulated, bit1 settling) | 3 reserved 0
 4..7  sequence  (u32)
 8..11 value in thousandths of the unit (i32)
 12..19 HLC of the sample (u64)
+20..23 v2 only: aux (i32): motion = s from last detection to sample
+       (-1: none since boot); sound = milli-% of the window active
 ```
 
 The sequence survives reboots: at start-up the sampler reads its own

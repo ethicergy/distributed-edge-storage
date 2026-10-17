@@ -61,8 +61,42 @@ class ReadingTest(unittest.TestCase):
         self.assertIsNone(reading.decode(b"hello, this is text!"))
         self.assertIsNone(reading.decode(data[:-1]))
 
+    def test_decode_event_kinds(self):
+        # Same bytes as test/sensor_test.cpp test_codec_event_kinds.
+        data = struct.pack(">BBBBIiQi", 2, 5, 2, 0, 7, 3000, 0x0102030405060708, -1)
+        sample = reading.decode(data)
+        self.assertEqual(sample.kind, "motion")
+        self.assertEqual(sample.unit, "events")
+        self.assertEqual(sample.events, 3)
+        self.assertTrue(sample.settling)
+        self.assertFalse(sample.simulated)
+        self.assertIsNone(sample.last_motion_s)
+
+        sample = reading.decode(struct.pack(">BBBBIiQi", 2, 5, 0, 0, 8, 2000, 1, 12))
+        self.assertFalse(sample.settling)
+        self.assertEqual(sample.last_motion_s, 12)
+        self.assertIsNone(sample.active_pct)
+
+        sample = reading.decode(struct.pack(">BBBBIiQi", 2, 6, 1, 0, 1, 5000, 42, 37500))
+        self.assertEqual(sample.kind, "sound")
+        self.assertEqual(sample.events, 5)
+        self.assertAlmostEqual(sample.active_pct, 37.5)
+        self.assertTrue(sample.simulated)
+
+        # Format byte and length must agree.
+        self.assertIsNone(reading.decode(data[:20]))
+        self.assertIsNone(reading.decode(b"\x01" + data[1:]))
+        self.assertIsNone(reading.decode(struct.pack(">BBBBIiQi", 2, 9, 0, 0, 1, 0, 0, 0)))
+
+        # Level kinds stay v1, without aux.
+        level = reading.decode(struct.pack(">BBBBIiQ", 1, 4, 0, 0, 1, 320000, 5))
+        self.assertIsNone(level.aux)
+        self.assertIsNone(level.events)
+
     def test_keys(self):
         self.assertEqual(reading.latest_key("A"), b"s/A/temp")
+        self.assertEqual(reading.latest_key("B"), b"s/B/motion")
+        self.assertEqual(reading.history_key("C", 5), b"h/C/sound/1")
         self.assertEqual(reading.history_key("D", 6), b"h/D/light/2")
 
 

@@ -1,8 +1,14 @@
-"""Sensor readings stored by the nodes (include/sensor.h, format v1).
+"""Sensor readings stored by the nodes (include/sensor.h).
 
 Key schema:
     s/<node>/<kind>          latest reading,   e.g. s/A/temp
     h/<node>/<kind>/<slot>   history ring slot, slot = sequence % 4
+
+Formats:
+    v1, 20 bytes: level kinds (temp, humidity, pressure, light)
+    v2, 24 bytes: event kinds (motion, sound), v1 layout plus an i32 aux
+        motion: seconds from the last detection to the sample (-1: none)
+        sound:  milli-percent of the window the output was active
 """
 
 from __future__ import annotations
@@ -14,14 +20,26 @@ from typing import Optional
 from .protocol import hlc_physical_ms
 
 READING = struct.Struct(">BBBBIiQ")
+READING_AUX = struct.Struct(">BBBBIiQi")
 READING_FORMAT = 0x01
+READING_FORMAT_AUX = 0x02
 FLAG_SIMULATED = 0x01
+FLAG_SETTLING = 0x02
+AUX_NONE = -1
 HISTORY_SLOTS = 4
 
-KINDS = {1: ("temp", "degC"), 2: ("humidity", "%RH"), 3: ("pressure", "hPa"), 4: ("light", "lux")}
+KINDS = {
+    1: ("temp", "degC"),
+    2: ("humidity", "%RH"),
+    3: ("pressure", "hPa"),
+    4: ("light", "lux"),
+    5: ("motion", "events"),
+    6: ("sound", "events"),
+}
+EVENT_KINDS = {"motion", "sound"}
 
-# Default node -> sensor assignment (decision D1 placeholder).
-NODE_SENSORS = {"A": "temp", "B": "humidity", "C": "pressure", "D": "light"}
+# Node -> sensor (D1): A DHT11, B AM312 PIR, C LM393 sound, D BH1750.
+NODE_SENSORS = {"A": "temp", "B": "motion", "C": "sound", "D": "light"}
 
 
 @dataclass
@@ -32,20 +50,46 @@ class Reading:
     sequence: int
     hlc: int
     simulated: bool
+    aux: Optional[int] = None
+    settling: bool = False
 
     @property
     def hlc_ms(self) -> int:
         return hlc_physical_ms(self.hlc)
 
+    @property
+    def events(self) -> Optional[int]:
+        return int(self.value) if self.kind in EVENT_KINDS else None
+
+    @property
+    def last_motion_s(self) -> Optional[int]:
+        """Seconds from the last detection to the sample time."""
+        if self.kind != "motion" or self.settling or self.aux is None or self.aux == AUX_NONE:
+            return None
+        return self.aux
+
+    @property
+    def active_pct(self) -> Optional[float]:
+        if self.kind != "sound" or self.aux is None:
+            return None
+        return self.aux / 1000.0
+
 
 def decode(data: bytes) -> Optional[Reading]:
-    if len(data) != READING.size:
+    if len(data) == READING.size and data[0] == READING_FORMAT:
+        fmt, kind, flags, reserved, sequence, value_milli, hlc = READING.unpack(data)
+        aux = None
+    elif len(data) == READING_AUX.size and data[0] == READING_FORMAT_AUX:
+        fmt, kind, flags, reserved, sequence, value_milli, hlc, aux = READING_AUX.unpack(data)
+    else:
         return None
-    fmt, kind, flags, reserved, sequence, value_milli, hlc = READING.unpack(data)
-    if fmt != READING_FORMAT or kind not in KINDS or reserved != 0:
+    if kind not in KINDS or reserved != 0:
         return None
     name, unit = KINDS[kind]
-    return Reading(name, unit, value_milli / 1000.0, sequence, hlc, bool(flags & FLAG_SIMULATED))
+    return Reading(
+        name, unit, value_milli / 1000.0, sequence, hlc,
+        bool(flags & FLAG_SIMULATED), aux, bool(flags & FLAG_SETTLING),
+    )
 
 
 def latest_key(node: str) -> bytes:

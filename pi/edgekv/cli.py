@@ -14,13 +14,49 @@ from .client import EdgeKV, EdgeKVError
 from .reading import Reading
 
 
-def _format_reading(node: str, sample: Optional[Reading], kv: EdgeKV) -> str:
+CSV_HEADER = [
+    "read_at", "node", "kind", "value", "unit", "sequence", "sampled_at", "simulated",
+    "last_motion_s", "active_pct", "settling",
+]
+
+
+def _value_and_detail(sample: Reading, when: Optional[datetime], now: datetime) -> str:
+    if sample.kind == "motion":
+        if sample.settling:
+            return f"{'':>11} {'':<5} settling (PIR warm-up)"
+        if sample.last_motion_s is None:
+            detail = "no motion since boot"
+        else:
+            age = max(0.0, (now - when).total_seconds()) if when else 0.0
+            detail = f"last motion {sample.last_motion_s + age:.0f} s ago"
+        return f"{sample.events:>11d} {sample.unit:<6} {detail}"
+    if sample.kind == "sound":
+        return f"{sample.events:>11d} {sample.unit:<6} {sample.active_pct:.1f} % active"
+    return f"{sample.value:>11.3f} {sample.unit:<5}"
+
+
+def _format_reading(node: str, sample: Optional[Reading], kv: EdgeKV, now: Optional[datetime] = None) -> str:
     if sample is None:
         return f"{node}  (no reading yet)"
+    now = now or datetime.now().astimezone()
     when = kv.wall_time(sample.hlc)
     stamp = when.strftime("%H:%M:%S") if when else f"hlc {sample.hlc_ms}"
     sim = "  simulated" if sample.simulated else ""
-    return f"{node}  {sample.kind:<9}{sample.value:>11.3f} {sample.unit:<5} seq {sample.sequence:<6} at {stamp}{sim}"
+    return f"{node}  {sample.kind:<9}{_value_and_detail(sample, when, now)} seq {sample.sequence:<6} at {stamp}{sim}"
+
+
+def _csv_row(now: datetime, node: str, sample: Reading, kv: EdgeKV) -> List[str]:
+    when = kv.wall_time(sample.hlc)
+    last_motion = sample.last_motion_s
+    active = sample.active_pct
+    return [
+        now.isoformat(timespec="seconds"), node, sample.kind, f"{sample.value:.3f}",
+        sample.unit, str(sample.sequence), when.isoformat(timespec="seconds") if when else "",
+        str(int(sample.simulated)),
+        "" if last_motion is None else str(last_motion),
+        "" if active is None else f"{active:.1f}",
+        str(int(sample.settling)) if sample.kind == "motion" else "",
+    ]
 
 
 def _value_text(value: bytes) -> str:
@@ -82,7 +118,7 @@ def cmd_watch(kv: EdgeKV, args) -> int:
         handle = open(args.csv, "a", newline="")
         writer = csv.writer(handle)
         if new_file:
-            writer.writerow(["read_at", "node", "kind", "value", "unit", "sequence", "sampled_at", "simulated"])
+            writer.writerow(CSV_HEADER)
 
     last_sequence = {}
 
@@ -92,16 +128,11 @@ def cmd_watch(kv: EdgeKV, args) -> int:
             print(f"--- {now.strftime('%Y-%m-%d %H:%M:%S')}")
 
             for node, sample in kv.sensors().items():
-                print(_format_reading(node, sample, kv))
+                print(_format_reading(node, sample, kv, now))
 
                 if writer and sample is not None and last_sequence.get(node) != sample.sequence:
                     last_sequence[node] = sample.sequence
-                    when = kv.wall_time(sample.hlc)
-                    writer.writerow([
-                        now.isoformat(timespec="seconds"), node, sample.kind, f"{sample.value:.3f}",
-                        sample.unit, sample.sequence, when.isoformat(timespec="seconds") if when else "",
-                        int(sample.simulated),
-                    ])
+                    writer.writerow(_csv_row(now, node, sample, kv))
 
             if handle:
                 handle.flush()
