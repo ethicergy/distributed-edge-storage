@@ -55,8 +55,10 @@ replication and the Pi client stay as they are.
 ## D2 — Sensors on I2C
 
 There is only one hardware I2C controller on the ESP32-C3 and the
-EEPROM uses it (SDA GPIO8, SCL GPIO9). No I2C sensor exists yet, so
-rule R1 stands unchanged. When one is added:
+EEPROM uses it (SDA GPIO8, SCL GPIO9). Node D's BH1750 (0x23) now
+shares it. Every transfer on the bus holds `i2c_bus::Lock`
+(`src/platform/i2c_bus.h`); an EEPROM write keeps it through its write
+cycle. The original rule for adding a device was:
 
 * preferred: put it on the same bus. The node task is the only task
   that touches either device, so no mutex is needed as long as the

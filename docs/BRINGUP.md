@@ -1,18 +1,18 @@
 # Hardware bring-up (4× ESP32-C3 SuperMini, AT24C256, Raspberry Pi)
 
 Written 2026-10-17, the day before the hardware arrives. Plan: Day 1 = Sun 18 Oct,
-Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to the tree
-with the boot-banner change (see "Changes already made").
+Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to branch
+`hw-bringup` after the sensor commits.
 
 ## Changes already made (approved)
 
 | change | where | what it does |
 |---|---|---|
-| A. Boot identity | `src/platform/main.cpp:133-243`, called at `main.cpp:410` and from `stats` (`main.cpp:254`); `transport::configured_mac()` in `include/transport.h:74-75` and `src/platform/transport.cpp:188-191`; `EDGE_ENV_NAME` set by `platformio.ini:29-30` | Prints the env name, build time, `esp_reset_reason()` as text, and the board's STA MAC. Says whether the MAC matches the table entry for `NODE_ID`. On a mismatch it prints a `MAC MISMATCH` block and, if the MAC belongs to another node, which env to flash instead. |
+| A. Boot identity | `src/platform/main.cpp:144-254`, called at `main.cpp:421` and from `stats` (`main.cpp:265`); `transport::configured_mac()` in `include/transport.h:74-75` and `src/platform/transport.cpp:188-191`; `EDGE_ENV_NAME` set by `platformio.ini:29-30` | Prints the env name, build time, `esp_reset_reason()` as text, and the board's STA MAC. Says whether the MAC matches the table entry for `NODE_ID`. On a mismatch it prints a `MAC MISMATCH` block and, if the MAC belongs to another node, which env to flash instead. |
 | B. MAC reader | `scripts/read_macs.sh` | Runs `esptool.py read_mac` on each `/dev/ttyACM*` (or the ports you list) and prints `MAC_A`…`MAC_D` blocks in the format of `transport.cpp:24-38`. |
 
 * The build time is the compile time of `main.cpp`. PlatformIO rebuilds that file only when it changes, so after edits to other files the time can be older than the image.
-* The banner prints about 1.5 s after reset (`main.cpp:401`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again.
+* The banner prints about 1.5 s after reset (`main.cpp:412`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again.
 * The MAC table itself is unchanged.
 
 ---
@@ -23,19 +23,19 @@ with the boot-banner change (see "Changes already made").
 |---|---|---|---|
 | Board target | `esp32-c3-devkitm-1`: 4 MB flash, QIO, 160 MHz | `platformio.ini:18`; `~/.platformio/platforms/espressif32/boards/esp32-c3-devkitm-1.json` | OK for SuperMini (ESP32-C3FH4, 4 MB). If a board boot-loops right after flashing, the proposed fix is `board_build.flash_mode = dio`. It is **not applied**. |
 | Core / IDF | espressif32@7.1.3 → Arduino-ESP32 2.0.17, IDF 4.4. The build stops on IDF ≥ 5. | `platformio.ini:17`, `transport.cpp:14-16` | Keep the pin. |
-| USB console | `Serial` is USB-Serial-JTAG CDC (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`), 115200, 4 KB TX buffer | `platformio.ini:27-28`, `main.cpp:394-399` | Correct for SuperMini. Shows up as `/dev/ttyACM*`, VID:PID 303a:1001. |
+| USB console | `Serial` is USB-Serial-JTAG CDC (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`), 115200, 4 KB TX buffer | `platformio.ini:27-28`, `main.cpp:405-410` | Correct for SuperMini. Shows up as `/dev/ttyACM*`, VID:PID 303a:1001. |
 | Monitor reset | The monitor does not toggle RTS/DTR | `platformio.ini:21-22` | Opening the monitor does not reset the board. |
-| I2C (EEPROM) | SDA GPIO8, SCL GPIO9, 400 kHz | `config.h:166-167`, `eeprom.h:14`, `eeprom.cpp:53-57` | 8 and 9 are strapping pins. See 2b; acceptable with pull-ups. |
-| EEPROM | AT24C256 at 0x50, 32 KB, 64-byte pages, write completion by ACK polling up to 10 ms | `eeprom.h:8-16`, `eeprom.cpp:26-45`, `eeprom.cpp:188-222` | Matches the datasheet (see 2b). |
-| EEPROM missing | Halts and prints `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | `main.cpp:416-418`, `main.cpp:382-388` | Useful as a wiring test. |
-| Pi bridge | Node A only. UART1, RX GPIO20, TX GPIO21, 115200 8N1 | `platformio.ini:32`, `config.h:152-160`, `main.cpp:103`, `main.cpp:428-437` | 20/21 are the UART0 pins and get ROM boot text (see 2b). |
+| I2C (EEPROM) | SDA GPIO8, SCL GPIO9, 400 kHz | `config.h:166-167`, `eeprom.h:14`, `eeprom.cpp:57-61` | 8 and 9 are strapping pins. See 2b; acceptable with pull-ups. |
+| EEPROM | AT24C256 at 0x50, 32 KB, 64-byte pages, write completion by ACK polling up to 10 ms | `eeprom.h:8-16`, `eeprom.cpp:28-47`, `eeprom.cpp:191-232` | Matches the datasheet (see 2b). |
+| EEPROM missing | Halts and prints `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | `main.cpp:427-429`, `main.cpp:393-399` | Useful as a wiring test. |
+| Pi bridge | Node A only. UART1, RX GPIO20, TX GPIO21, 115200 8N1 | `platformio.ini:32`, `config.h:152-160`, `main.cpp:114`, `main.cpp:449-458` | 20/21 are the UART0 pins and get ROM boot text (see 2b). |
 | ESP-NOW | STA mode, no modem sleep, fixed channel 6, unencrypted peers | `transport.cpp:222-230`, `transport.cpp:266`, `transport.cpp:290`, `transport.cpp:22` | OK. Nothing else on the demo site needs to be on channel 6. |
 | TX power | 8.5 dBm, hard-coded, not in `config.h` | `transport.cpp:224` | This is already the usual SuperMini fix (see 2b). |
-| MAC table | Hard-coded `MAC_A`…`MAC_D`. Frames from unknown MACs are dropped and counted. | `transport.cpp:24-38`, `transport.cpp:127-131`, `main.cpp:274-279` (`stats`: `unknown MAC`) | Each board must match its row (see 2b). |
+| MAC table | Hard-coded `MAC_A`…`MAC_D`. Frames from unknown MACs are dropped and counted. | `transport.cpp:24-38`, `transport.cpp:127-131`, `main.cpp:285-290` (`stats`: `unknown MAC`) | Each board must match its row (see 2b). |
 | LEDs / buttons | None used by the firmware (no `pinMode`/`digitalWrite` under `src/`) | grep | The GPIO8 LED flickers with I2C traffic. That's harmless. |
-| Sensors | `SimulatedSource` on every node; readings flagged `simulated` | `main.cpp:96-101`, `sensor.h:86-105` | Phase 4. |
+| Sensors | Real drivers for DHT11 / AM312 / LM393 / BH1750 exist but are off: `REAL_SENSOR_NODES = 0x00`, so every node runs `SimulatedSource` and readings are flagged `simulated` | `config.h:151`, `main.cpp:98-115`, `src/platform/sensors.cpp` | Phase 4. |
 | Power | No supply assumption in code. IDF brown-out detector on (`CONFIG_ESP32C3_BROWNOUT_DET 1`, level 7). Storage is crash-safe (A/B banks, CRC, torn-tail discard). Corrupted storage is reformatted and refilled by anti-entropy. | `…/framework-arduinoespressif32/tools/sdk/esp32c3/*/include/sdkconfig.h`; `config.h:135`; `test/storage_manager_test.cpp` | Power each board from USB. Brown-outs now show up as `reset reason: BROWNOUT`. |
-| Node task | 16 KB stack, priority 3, yields 1 tick per loop | `main.cpp:55-56`, `main.cpp:376` | Check `stats` → `stack headroom` on hardware. |
+| Node task | 16 KB stack, priority 3, yields 1 tick per loop | `main.cpp:57-58`, `main.cpp:387` | Check `stats` → `stack headroom` on hardware. |
 | Pi side | `/dev/serial0` by default (`$EDGEKV_PORT` overrides). Serial login console must be off. | `pi/README.md:10-12`, `pi/README.md:34` | Bluetooth / Pi 5 notes in Phase 3.2. |
 
 ---
@@ -55,13 +55,13 @@ The port keeps the same VID:PID but may come back under a different `/dev/ttyACM
 * The LED is wired from 3V3 through a resistor to GPIO8 (active low). With SDA high it carries no current. With SDA low it draws a fraction of a mA. It doesn't load the bus enough to matter at 400 kHz. The core's own default I2C pins for this chip are 8/9 (`variants/esp32c3/pins_arduino.h:19-20`).
 * Strapping: GPIO9 low at reset means download mode, and GPIO8 must be high for download boot. External pull-ups to 3.3 V keep both pins in the right state.
 * Don't press BOOT while the board is running. It shorts SCL to ground in the middle of a transaction. The log is crash-safe, but don't rely on it.
-* If the bus gives trouble anyway, use SDA GPIO6 / SCL GPIO7. That means editing `config.h:166-167` and the hard-coded text in `main.cpp:417`. **Not applied.**
+* If the bus gives trouble anyway, use SDA GPIO6 / SCL GPIO7. That means editing `config.h:166-167` and the hard-coded text in `main.cpp:428`. **Not applied.**
 
 **UART0 boot noise to the Pi.**
 * The ROM prints about 300 bytes of ASCII on GPIO21 at every reset of node A.
 * The Pi decoder hunts for `AA 55`, then checks the length and CRC-8 (`pi/edgekv/framing.py:59-83`). 0xAA never occurs in ASCII.
 * I fed the actual ROM banner followed by one frame into `framing.Decoder`. Result: 1 frame decoded, 0 CRC errors. Existing tests cover noise, CRC errors and bogus lengths (`pi/tests/test_framing.py:24-46`).
-* The firmware never starts UART0. `Serial1.begin(…, 20, 21)` (`main.cpp:429`) re-routes both pins to UART1 through the GPIO matrix. After that, UART0 output (IDF error logs, panics) no longer reaches the Pi.
+* The firmware never starts UART0. `Serial1.begin(…, 20, 21)` (`main.cpp:449`) re-routes both pins to UART1 through the GPIO matrix. After that, UART0 output (IDF error logs, panics) no longer reaches the Pi.
 * The second-stage bootloader is silent (`CONFIG_BOOTLOADER_LOG_LEVEL 0`).
 
 **ESP-NOW range.**
@@ -87,7 +87,7 @@ scripts/read_macs.sh /dev/ttyACM1          # one board
 ls -l /dev/serial/by-id/                   # USB serial number is usually the MAC as well
 ```
 
-The STA MAC printed by esptool is the address ESP-NOW sends from. The banner reads the same one (`main.cpp:187`).
+The STA MAC printed by esptool is the address ESP-NOW sends from. The banner reads the same one (`main.cpp:198`).
 
 **AT24C256.**
 
@@ -96,9 +96,9 @@ The STA MAC printed by esptool is the address ESP-NOW sends from. The banner rea
 | address | 0x50: A0, A1, A2 to GND (module jumpers) | `eeprom.h:8` |
 | WP | GND (a high WP silently blocks writes; ACK polling still passes) | n/a |
 | supply | 3.3 V from the SuperMini 3V3 pin. **Never 5 V**, because the module's pull-ups would then pull SDA/SCL to 5 V | n/a |
-| pull-ups | The driver relies on external pull-ups. `Wire.begin()` only enables the ~45 kΩ internal ones, too weak for 400 kHz. Check with power off: resistance from SDA to VCC and from SCL to VCC should be 2–10 kΩ. If not, add 4.7 kΩ to 3V3. | `eeprom.cpp:53-57` |
-| write cycle | Datasheet tWR = 5 ms max. The driver polls for ACK every 1 ms up to 10 ms (2× margin) | `eeprom.h:15`, `eeprom.cpp:26-45` |
-| pages | 64 B. Writes are split at page boundaries. Reads are 64 B chunks (Wire buffer 128). | `eeprom.h:13,16`, `eeprom.cpp:186-222`, `eeprom.cpp:97-130` |
+| pull-ups | The driver relies on external pull-ups. `Wire.begin()` only enables the ~45 kΩ internal ones, too weak for 400 kHz. Check with power off: resistance from SDA to VCC and from SCL to VCC should be 2–10 kΩ. If not, add 4.7 kΩ to 3V3. | `eeprom.cpp:57-61` |
+| write cycle | Datasheet tWR = 5 ms max. The driver polls for ACK every 1 ms up to 10 ms (2× margin) | `eeprom.h:15`, `eeprom.cpp:28-47` |
+| pages | 64 B. Writes are split at page boundaries. Reads are 64 B chunks (Wire buffer 128). | `eeprom.h:13,16`, `eeprom.cpp:191-232`, `eeprom.cpp:105-156` |
 
 ---
 
@@ -213,7 +213,16 @@ Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):
 | pin 6, GND | GND |
 | Pi 5V / 3V3 | **not connected**. Node A is powered from its USB. |
 
-Sensor pins are in Phase 4.
+Sensors (each node has one; `config.h:159-163`):
+
+| node | module pin | SuperMini pin | notes |
+|---|---|---|---|
+| A | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up |
+| B | AM312 VCC / GND / OUT | 3V3 / GND / **GPIO4** | 3.3 V supply is fine; no pots |
+| C | LM393 VCC / GND / DO | 3V3 / GND / **GPIO4** | **3V3 only**, so DO never exceeds 3.3 V. DO is usually active-low. |
+| D | GY-302 VCC / GND / SDA / SCL / ADDR | 3V3 / GND / **GPIO8** / **GPIO9** / GND | Same bus as the EEPROM, address 0x23. **3V3 only**: its pull-ups may go to VCC. |
+
+GPIO4 is not a strapping pin, not USB (18/19) and not the bridge UART (20/21). `config.h:256-266` refuses any pin other than 0–10 minus 2/8/9 at compile time. Spare pins: 3, 5, 6, 7, 10.
 
 ### 3.4 Bring-up order
 
@@ -235,11 +244,11 @@ E = essential for the demo, N = nice to have, D = drop first. Hours are bench ti
 
 | when | work | tests | h |
 |---|---|---|---|
-| Day 0 (today, Sat 17) | WSL usbipd/dialout/udev; Pi SD card + UART config if the Pi is available; host-side sensor code once the module list is confirmed (Phase 4) | — | 1 + 3 |
+| Day 0 (today, Sat 17) | WSL usbipd/dialout/udev; Pi SD card + UART config if the Pi is available. Host-side sensor code: **done** (Phase 4). | — | 1 |
 | Day 1 (Sun 18) AM | Bring-up 0–4 | pre-flight, **H1 (E)**, **H2 (E)**, H3 (N) | 4 |
 | Day 1 PM | Bring-up 5; first measurements (`bench 200`, `members` idle) | **H14 (E)** | 2.5 |
 | Day 2 (Mon 19) AM | Core fault story | **H6 (E)**, **H7 (E)**, **H8 (E)**, **H11 (E)**, **H12a (E)**, H9 (N) | 4 |
-| Day 2 PM | Sensors on hardware (Phase 4), go/no-go at 17:00 | sensor checks | 4–5 |
+| Day 2 PM | Sensors on hardware, one module at a time (Phase 4.6), go/no-go at 17:00 | per-module checks | 5.5 |
 | Day 2 night | Unattended soak, 30 s period, real or simulated sensors | H13 (N, shortened to whatever runs overnight) | 0.5 |
 | Day 3 (Tue 20) AM | Read the soak; fault-injection images if time | H4, H5, H10 (D: the sim proves them, show `cluster_test` output); H12b (D) | 1.5 |
 | Day 3 PM | Demo script, 2 rehearsals, numbers table, slides | — | 4 |
@@ -252,82 +261,135 @@ E = essential for the demo, N = nice to have, D = drop first. Hours are bench ti
 
 | # | risk | mitigation |
 |---|---|---|
-| 1 | Board/MAC mismatch. Nothing talks, or nodes impersonate each other. | Step 0 before anything else. The banner flags mismatches (`main.cpp:171-243`). Label the boards. `stats` → `unknown MAC`. |
+| 1 | Board/MAC mismatch. Nothing talks, or nodes impersonate each other. | Step 0 before anything else. The banner flags mismatches (`main.cpp:182-254`). Label the boards. `stats` → `unknown MAC`. |
 | 2 | WSL USB passthrough eats hours: 4 boards re-enumerating on every reset. | `--auto-attach`, by-id paths, one board per fixed port. Fall back to Windows esptool or flashing from the Pi (3.2) after 30 min of trouble. |
 | 3 | The integrated firmware has never run on a board (`STATUS.md:67-70`): stack, timing or USB-output bugs, and panics not visible on USB. | One board first (step 1). Check `reset reason` and stack headroom in `stats`. USB-UART adapter on GPIO21. Budget half of Day 1 PM as slack. The sim (`build/host/edge_sim`) is the demo fallback for the distributed-systems part. |
 | 4 | Pi UART misconfigured (console on, mini-UART, Pi 5 naming), so the bridge is silent. | Loopback test first. `stats` bridge counters on A. The USB-UART adapter on the laptop can run `python3 -m edgekv --port /dev/ttyUSB0 ping` against node A's GPIO20/21, which takes the Pi out of the equation. |
-| 5 | Scope: sensors (and a dashboard) eat validation time. | Sensors are gated: host code before the boards arrive, hardware work only after the essential tests pass, go/no-go Day 2 17:00. Simulated fallback per node (Phase 4). No dashboard (DEMO_PLAN phase 3 is out of scope); use `watch --csv`. |
+| 5 | Scope: sensors (and a dashboard) eat validation time. | The host-side sensor code is already done. Hardware work starts only after the essential tests pass, with a per-module go/no-go at Day 2 17:00. Each node falls back to its simulated sensor (Phase 4). No dashboard (DEMO_PLAN phase 3 is out of scope); use `watch --csv`. |
 
 Also watch for: with USB connected but no monitor open, the core can block up to 100 ms per console write (`framework-arduinoespressif32/cores/esp32/HWCDC.cpp:81`, `:440-466`). If views flap only when monitors are closed, run `log off` on idle nodes.
 
 ---
 
-## Phase 4: real sensors (plan only; waiting for the module list)
+## Phase 4: real sensors
 
-### Proposed mapping (confirm)
+### 4.1 State
 
-| node | module | kind | interface | pin | notes |
-|---|---|---|---|---|---|
-| A (bridge) | DHT11 | TEMPERATURE (humidity is a stretch goal) | single-wire, open drain | GPIO4 | 3.3 V supply. 4.7–10 kΩ pull-up to 3V3 (most modules have one). At most 1 read/s. |
-| B | PIR (AM312 / HC-SR501) | MOTION (new) | digital, active high | GPIO4 | AM312 runs at 3.3 V. HC-SR501 can take 5 V on VCC, its output is 3.3 V. |
-| C | sound module (LM393 comparator) | SOUND (new) | digital DO (AO optional) | DO GPIO4, AO GPIO3 (ADC1) | **Power from 3V3**, so DO never exceeds 3.3 V. Avoid GPIO5 for AO (ADC2 conflicts with Wi-Fi). |
-| D | BH1750 (GY-302) | LIGHT | I2C 0x23 on the EEPROM bus | GPIO8/9 | ADDR → GND. Power from 3V3. Pull-ups in parallel with the EEPROM's (≈3 kΩ total) is fine. |
+The pre-hardware part is done on branch `hw-bringup`. `make check` is green, and all 8 images build with the switch at `0x00` (shipped) and at `0x0F` (checked once).
 
-* All pins avoid 2/8/9 (strapping) and 20/21 (UART). GPIO8/9 are reused for I2C only.
-* GPIO4–7 double as JTAG pins, but they are free while debugging goes through USB-JTAG.
-* Spare pins: 3, 5, 6, 7, 10.
+| commit | content |
+|---|---|
+| `9b9229e` | MOTION / SOUND kinds end to end: firmware, reading format v2, console, Pi client, CLI, CSV |
+| `65fa686` | Platform-independent sensor logic + host fakes, `REAL_SENSOR_NODES` switch, pins and timings in `config.h` |
+| `6533991` | Pi `--raw-log FILE` |
+| `55c6188` | Drivers (`src/platform/sensors.cpp`), I2C bus lock. Off until a node's bit is set. |
 
-**Why this mapping and not the one in `STATUS.md:289-294`** (A DHT11, B BH1750, C PIR, D sound): A stays temperature and D stays light, which are the current simulated kinds (`sensor.cpp:67-75`). Those two need no kind or Pi changes. Only B and C change kind.
+No driver has run on a board yet. Each module is enabled only after it was checked on its own (4.6).
 
-### Drivers
+### 4.2 Modules (mapping approved)
 
-| module | choice | blocking behaviour |
+| node | module | interface | pin (`config.h`) | reading |
+|---|---|---|---|---|
+| A | DHT11 3-pin module | single-wire, open drain, pull-up on module | `DHT11_PIN = 4` (`:159`) | `s/A/temp`, degC |
+| B | AM312 mini PIR | digital, push-pull, high ~2 s per detection | `PIR_PIN = 4` (`:160`) | `s/B/motion`: detections per window + seconds since last motion; `settling` after power-on |
+| C | LM393 sound, **DO only** | digital comparator output, active level in `SOUND_ACTIVE_HIGH` (`:176`, default `false` = active-low) | `SOUND_DO_PIN = 4` (`:161`) | `s/C/sound`: events per window + % of window active |
+| D | GY-302 BH1750 | I2C 0x23 on the EEPROM bus | `BH1750_I2C_ADDRESS` (`:163`), GPIO8/9 | `s/D/light`, lux |
+
+**Open: the LM393 variant.** Your message still had the placeholder `[3-pin DO only / 4-pin with AO]`. I built for DO only. If the module turns out to have an AO pin, the plan is:
+* wire AO to GPIO3 (ADC1);
+* add a `peak-to-peak` aux next to `% active`, from `analogRead` min/max sampled in `poll()`;
+* about 1.5 h with tests.
+
+That isn't built and needs your OK.
+
+### 4.3 Per-module design
+
+**DHT11 (A).**
+* Driver: `adafruit/DHT sensor library@1.4.7` (+ `Adafruit Unified Sensor@1.1.15`), pinned in `platformio.ini:33-36`.
+* It runs in its own task, `Dht11Input` (`sensors.cpp:41-106`): priority 1 (the node task is 3), one read every `DHT11_READ_INTERVAL_MS = 2000` (`config.h:166`). A `static_assert` keeps that at ≥ 1000 ms, i.e. at most 1 Hz.
+* A read takes about 25 ms. 20 ms of that is `delay()`, which only sleeps the DHT task. The other ~5 ms has **interrupts disabled**: the library's `InterruptLock` (`DHT.cpp:285`) is `portDISABLE_INTERRUPTS()` on this core.
+* So the node task never waits on the DHT. Radio frames arriving in those ~5 ms are held by the Wi-Fi hardware and the RX queue.
+* The node task only calls `take()`, which swaps counters under a spinlock.
+* `LatestValueSource` (`sensor_sources.h:133`) keeps the last good value through failed reads and counts them. `status` shows them as `read failures`.
+* Limitation: if a DHT that had worked is unplugged, it keeps reporting its last good value. The growing `read failures` count is the only sign. Say if you want a stale timeout.
+
+**AM312 (B).**
+* `PirInput` (`sensors.cpp:113`): `INPUT_PULLDOWN`, so an unplugged sensor reads as "no motion".
+* `MotionSource` (`sensor_sources.h:42`) polls every `PIR_POLL_INTERVAL_MS = 100` (`config.h:171`), well inside the ~2 s pulse.
+* Value: rising edges per window. Aux: seconds from the last time OUT was seen high to the sample.
+* The Pi shows "last motion N s ago", adding the sample's age.
+* `PIR_SETTLE_MS = 30000` (`config.h:172`) counts from the first poll, which is about power-on. Until then every reading carries the `settling` flag with value 0, and input is ignored.
+* **Measure the settle time:** set `PIR_SETTLE_MS = 0` temporarily, power-cycle with nobody in view, and note when spurious detections stop. Use that plus a margin.
+
+**LM393 sound (C).**
+* `SoundInput` (`sensors.cpp:130-155`): an `IRAM_ATTR` ISR on the edge into the active level (FALLING when active-low). It only increments a 32-bit counter: no logging, no calls.
+* `SoundSource` (`sensor_sources.h:78`) reads counter differences on every node-task iteration, so wrap-around is handled. Edges closer than `SOUND_EVENT_GAP_MS = 150` (`config.h:179`) form one event, because a clap makes the comparator chatter.
+* "% of window active" is measured by sampling the DO level on each iteration (about 1 ms).
+* DO stuck active with no edges shows as 100 % active, 0 events. That means the knob is too sensitive.
+
+**BH1750 (D).**
+* `Bh1750Source` (`sensors.cpp:166`): power-on, then continuous high-res mode (`0x01`, `0x10`) at begin. A read is one 2-byte transfer, and lux = raw / 1.2.
+* No library: three I2C transfers. That also lets every transfer hold the bus lock.
+
+**Shared bus.**
+* `i2c_bus::Lock` (`src/platform/i2c_bus.h`) is held by every EEPROM read and write (`eeprom.cpp`) for the whole transfer, including write-cycle ACK polling. Every BH1750 transfer holds it too.
+* So a sensor read can't start inside an EEPROM write cycle or between the address phase and data phase of an EEPROM read.
+* Today both users run in the node task, so the lock never waits. It enforces DECISIONS D2 if that ever changes.
+
+### 4.4 How it plugs in
+
+| piece | where |
+|---|---|
+| Kinds `MOTION = 5`, `SOUND = 6`, `has_aux`, reading v2 (24 B: v1 + i32 aux), flag `SETTLING` | `include/sensor.h:29-73`, `src/sensor.cpp` (codec, `kind_for_node` at `:77`) |
+| Source interface: `Sample`, `poll()`, `failures()` | `include/sensor.h:106-130` |
+| Logic: `MotionSource`, `SoundSource`, `LatestValueSource`, `FallbackSource`, `real_sensor_enabled()` | `include/sensor_sources.h`, `src/sensor_sources.cpp` |
+| Per-node switch | `config.h:151` `REAL_SENSOR_NODES` (A 0x01, B 0x02, C 0x04, D 0x08); fallback after `SENSOR_FALLBACK_AFTER_FAILURES = 3` (`:156`) |
+| Wiring in the firmware | `main.cpp:98-115` (FallbackSource around `platform_sensors::real_source()`), boot line `sensor <kind>: hardware / simulated` (`main.cpp:440-447`) |
+| Pi | `pi/edgekv/reading.py:31-42` (kinds, v2 decode, `NODE_SENSORS`), `cli.py:18` (CSV gets trailing columns `last_motion_s, active_pct, settling`), `--raw-log` (`pi/edgekv/rawlog.py`) |
+
+### 4.5 Host coverage (`make check`)
+
+* `test/sensor_test.cpp`: v1/v2 codec byte layout, formatter, kinds, simulated event sources over 24 h.
+* `test/sensor_sources_test.cpp` (new):
+  * PIR settling, detections, ages, 100 ms polling;
+  * sound chatter grouping, duty, counter wrap, stuck-active;
+  * DHT keep-last-good and failure count;
+  * fallback switching both ways;
+  * the switch mask, including the shipped all-simulated default.
+* `test/cluster_test.cpp` `SENSORS` (new): all four logics on a 4-node sim over fake inputs driven by cluster time, read back through the cluster. Three deliberate mutations of the scenario made it fail as expected.
+* Pi: `test_protocol` (v2 decode, same bytes as C++), `test_cli` (text and CSV), `test_rawlog` (discard hook, merging, client with ROM text before every answer).
+* Drivers (`src/platform/sensors.cpp`, `i2c_bus.cpp`) are compile-checked only.
+
+### 4.6 Enabling one module (do one at a time)
+
+1. Wire it as in 3.3, on its own board (one node alone is fine: it goes ACTIVE, and writes report `UNDER_REPLICATED`).
+2. Set that node's bit in `config.h:151` (e.g. `0x02` for B), `pio run -e node-b -t upload --upload-port $P`. The other nodes only read their own bit, so they don't need reflashing.
+3. The boot output must say `sensor motion: hardware`. If it says `hardware did not start, using the SIMULATED source`, `begin()` failed.
+4. Run `sensor period 5000`, then use `status` (sensor line `(hardware)`, `read failures`) and `get s/B/motion`.
+
+| module | stimulus | expected | likely failure → fix |
+|---|---|---|---|
+| DHT11 (A) | breathe on it | temp rises within a few samples; `read failures` stays near 0 | Every read fails, `get` shows simulated: DATA not on GPIO4, or the module is powered from the wrong pin. |
+| AM312 (B) | stay still for `PIR_SETTLE_MS`, then wave | `settling` first; then `1 events, last motion 0 s before the sample`; quiet windows show age growing | Detections with nobody there: settle time too short (measure, 4.3). Never any: OUT not on GPIO4. |
+| LM393 (C) | set the knob so the DO LED is off in a quiet room; clap twice | `2 events, x % active` | 100 % active: knob too sensitive or `SOUND_ACTIVE_HIGH` wrong. 0 events but LED flashes: wrong edge (flip `SOUND_ACTIVE_HIGH`). |
+| BH1750 (D) | cover / torch | lux drops / rises; `set`/`get` and `bench 50` still OK; `stats` storage errors 0 | `hardware did not start`: ADDR not low, or SDA/SCL swapped. EEPROM FATAL appearing after adding it: bus loaded (check pull-ups, 3V3). |
+
+5. Leave the period at 5 s for the demo (EEPROM wear about 6× the 30 s rate; fine for days), then set it back to 30 s.
+6. Commit the bit flip with the log of the check, e.g. `docs/test-logs/sensor-B.log`.
+
+### 4.7 Estimate and slot
+
+| work | h | status |
 |---|---|---|
-| DHT11 | Pinned library `adafruit/DHT sensor library` + `adafruit/Adafruit Unified Sensor`. Pin exact versions in `lib_deps` (`pio pkg show …`; 1.4.6 / 1.1.14 are the latest I know of). A hand-written driver is a 60-line fallback with the same timing. | One read takes about 25 ms: an 18–20 ms start pulse via `delay()` (yields to FreeRTOS), then about 5 ms with interrupts off while it reads 40 bits. That happens once per sample period (30 s) in the node task. Heartbeats are every 500 ms and the dead timeout is 2 s (`config.h:22-25`), so the stall is harmless. The radio MAC ACKs in hardware; RX callbacks queue (`transport.cpp:154`). Never read more often than every 2 s. |
-| BH1750 | `claws/BH1750` (pinned), `begin(CONTINUOUS_HIGH_RES_MODE, 0x23, &Wire)`, called after `eeprom_chip.begin()` | In continuous mode `readLightLevel()` is one 2-byte read, about 0.1 ms. Don't use one-time mode (120–180 ms delay). Don't call `Wire.begin()` again. Single node task, so no mutex (DECISIONS D2, `docs/DECISIONS.md:52-63`). |
-| PIR, sound | Hand-written, about 30 lines: `attachInterrupt(pin, isr, RISING)`, where an `IRAM_ATTR` ISR increments a `volatile uint32_t`. No library. | Non-blocking. `read()` swaps the counter out and reports events per period. |
+| Kinds, logic, fakes, tests, Pi, raw-log, drivers | — | done |
+| DHT11 on A | 1 | Day 2 PM |
+| AM312 on B, including settle measurement | 1.5 | Day 2 PM |
+| LM393 on C, including knob setting | 1 | Day 2 PM |
+| BH1750 on D, including EEPROM coexistence (`bench 50` while sampling at 1 s) | 1 | Day 2 PM |
+| All four together, 30 min run, logs | 1 | Day 2 PM |
+| **total remaining** | **5.5** | after the essential H-tests; go/no-go 17:00 |
 
-### Plugging into the sensor interface
-
-* Interface: `sensor::Source` (`include/sensor.h:74-84`: `begin`, `kind`, `simulated`, `read(now, value_milli)`). Constructed at `src/platform/main.cpp:96-101` (`sensor_source`, `sampler`).
-* The sampler reads the source once per period and writes `s/<node>/<kind>` and `h/<node>/<kind>/<seq%4>` (`src/sensor.cpp:262-330`). Nothing there changes.
-
-Changes needed:
-1. `include/sensor.h:28-33`: add `MOTION = 5` (milli-events per period) and `SOUND = 6`. `src/sensor.cpp:33` `valid_kind`, `:43-61` `kind_key` / `kind_unit` (`"motion"`, `"sound"`, unit `"events"`).
-2. `src/sensor.cpp:67-75` `kind_for_node`: B → MOTION, C → SOUND. This is also used by the console `sensors` command (`src/console.cpp:405`) and the sim (`sim/cluster.cpp:282`).
-3. `src/sensor.cpp:163-180` `SimulatedSource::read`: add MOTION and SOUND profiles (small non-negative counts), so the fallback and the sim cover the new kinds.
-4. New, platform-independent: an `EventSource` (counter in, count per period out, with an injectable count function) and a `FallbackSource(real, simulated)` that serves the simulated source if `real.begin()` fails or `read()` fails N times in a row. Today `main.cpp:426` ignores the return value of `sampler.begin()`.
-5. New, platform-only: `src/platform/sensors_dht.cpp`, `sensors_bh1750.cpp`, `sensors_event.cpp`, plus `lib_deps` in `platformio.ini`.
-6. Per-node switch, a single home (rule R8): `config.h` gets `constexpr std::uint8_t REAL_SENSOR_NODES = 0x0;` (bit n-1 = node n uses its real sensor). `main.cpp` picks the real source, wrapped in `FallbackSource`, when the bit is set. Default 0 means everything stays simulated until flipped.
-7. Pi (`pi/edgekv/reading.py:21` `KINDS`: add `5: ("motion","events"), 6: ("sound","events")`; `:24` `NODE_SENSORS`: B → motion, C → sound). `client.py:159` iterates `NODE_SENSORS`, so no change there. Check `cli.py` formatting of event counts.
-
-### Host coverage
-
-* `EventSource`, `FallbackSource`, the new kinds, key names and encoding are all platform-independent, so `make check` covers them:
-  * extend `test/sensor_test.cpp`;
-  * extend the sensor section of `test/cluster_test.cpp`, where B and C now sample MOTION and SOUND through `SimulatedSource`;
-  * Pi `ReadingTest` vectors (`pi/tests/test_protocol.py`).
-* `pi/tests/test_sim_integration.py:103` only asserts A is `temp`, which is unchanged.
-* The DHT11, BH1750 and ISR drivers can't run on the host; `make firmware` covers them at compile time only.
-
-### Estimate
-
-| work | h | needs boards |
-|---|---|---|
-| Kinds, `SimulatedSource` profiles, `kind_for_node`, `EventSource`, `FallbackSource`, config switch, host tests | 2.5 | no |
-| Pi `reading.py` + tests | 0.5 | no |
-| DHT11 driver + wiring check on A | 1.5 | yes |
-| BH1750 on the shared bus (EEPROM still OK: `set`/`get`, `stats` storage errors 0) on D | 1.5 | yes |
-| PIR + sound ISR drivers on B, C | 1.5 | yes |
-| 4-node integration, `sensor period 5000` demo check, logs | 1.5 | yes |
-| **total** | **9** (3 off-board, 6 on-board) | |
-
-* The 3 off-board hours go into Day 0/Day 1 evening.
-* The 6 on-board hours go into Day 2 PM, after the essential H-tests.
-* If 17:00 Day 2 arrives without a working sensor, leave `REAL_SENSOR_NODES = 0` and demo the simulated readings.
-* EEPROM wear at a 5 s demo period is about 6× the 30 s rate (`config.h:141-145`): fine for days, so set the period back to 30 s afterwards.
-
-**Not started. Waiting for confirmation of the module list and the node mapping.**
+Go/no-go is per module. Any module not confirmed by 17:00 keeps its bit clear and stays simulated (flagged `simulated` everywhere), so it can't break the demo.
 
 ---
 
@@ -337,6 +399,7 @@ Changes needed:
 |---|---|---|
 | Paste the real MACs | `src/platform/transport.cpp:24-38` | if step 0 shows a difference |
 | `board_build.flash_mode = dio` | `platformio.ini` `[env]` | only if a SuperMini boot-loops after flashing |
-| I2C on GPIO6/7 | `config.h:166-167`, `main.cpp:417` | only if 8/9 misbehave |
+| I2C on GPIO6/7 | `config.h:166-167`, `main.cpp:428` | only if 8/9 misbehave |
 | `RADIO_TX_POWER_QDBM` in config | `config.h`, `transport.cpp:224` | if range needs tuning |
-| Phase 4 sensor work | see Phase 4 | after the module list is confirmed |
+| Set `REAL_SENSOR_NODES` bits | `config.h:151` | per module, after its check (4.6) |
+| LM393 AO peak-to-peak | `sensor_sources`, `sensors.cpp` | only if the module has AO (4.2) |
