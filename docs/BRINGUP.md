@@ -248,12 +248,12 @@ E = essential for the demo, N = nice to have, D = drop first. Hours are bench ti
 | Day 1 (Sun 18) AM | Bring-up 0–4 | pre-flight, **H1 (E)**, **H2 (E)**, H3 (N) | 4 |
 | Day 1 PM | Bring-up 5; first measurements (`bench 200`, `members` idle) | **H14 (E)** | 2.5 |
 | Day 2 (Mon 19) AM | Core fault story | **H6 (E)**, **H7 (E)**, **H8 (E)**, **H11 (E)**, **H12a (E)**, H9 (N) | 4 |
-| Day 2 PM | Sensors on hardware, one module at a time (Phase 4.6), go/no-go at 17:00 | per-module checks | 5.5 |
+| Day 2 PM | Sensors on hardware, one module at a time (Phase 4.6), go/no-go at 17:00 | per-module checks | 6 |
 | Day 2 night | Unattended soak, 30 s period, real or simulated sensors | H13 (N, shortened to whatever runs overnight) | 0.5 |
 | Day 3 (Tue 20) AM | Read the soak; fault-injection images if time | H4, H5, H10 (D: the sim proves them, show `cluster_test` output); H12b (D) | 1.5 |
 | Day 3 PM | Demo script, 2 rehearsals, numbers table, slides | — | 4 |
 
-* Total is about 26 h of bench time plus Day 0 prep.
+* Total is about 23.5 h, Day 0 prep included. Track planned vs actual in `docs/BRINGUP_LOG.md`.
 * If Day 1 slips, cut H3 and H9, and keep sensors simulated (they are honestly flagged).
 * The essential set (H1, H2, H6, H7, H8, H11, H12a, H14) is about 9 h.
 
