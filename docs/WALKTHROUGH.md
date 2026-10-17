@@ -155,6 +155,10 @@ If C's EEPROM was wiped or corrupted, the same steps rebuild it from scratch (`S
 
 ## 5. Likely examiner questions
 
+Questions 1–10 are about the distributed-systems design, 11–20 about the hardware and engineering.
+
+### Design
+
 1. **Why consistent hashing instead of `hash(key) % 4`?**
    With modulo, removing one of four nodes remaps about 3/4 of all keys. With the ring, only the failed node's keys move, to the next node clockwise. The 64 virtual points per node spread the load evenly (23–27 % each, `test/ring_balance_test.cpp`).
 
@@ -176,13 +180,84 @@ If C's EEPROM was wiped or corrupted, the same steps rebuild it from scratch (`S
 7. **Why tombstones? Why not just delete?**
    If the key were erased, a replica that missed the delete would still hold the old value, and anti-entropy would copy it back. A tombstone has a newer version than the value, so LWW makes the delete win everywhere. Tombstones are dropped only after 10 minutes and confirmation from all four nodes.
 
-8. **What happens on a power cut in the middle of an EEPROM write?**
-   Each record is written without its commit byte, verified, and committed last. Recovery ignores and wipes an uncommitted tail. Compaction copies into the other bank and switches over atomically through a two-copy superblock. A test cuts power at every byte (`test/storage_manager_test.cpp`).
+8. **What if two nodes write the same key at the same time, or the network splits?**
+   Normally only the key's primary writes it, so concurrent writes are serialised there. In a partition, each side may consider a different node the primary and accept writes. When the partition heals, anti-entropy exchanges the versions and every copy keeps the one with the higher (HLC, node id), so all nodes converge on one value. The losing write is discarded: last-writer-wins, not a merge (test `SPLIT` in `cluster_test`).
 
 9. **How do you know it works without the hardware?**
-   The same code is compiled for the PC. A simulator runs four nodes with fake EEPROMs and a fake radio that can lose, duplicate and cut links. `make check` runs 31 C++ test programs, including a whole-cluster scenario for every hardware test (H2–H13), plus 27 Python tests of the Pi client. The hardware plan repeats them on the boards (`docs/HARDWARE_TEST_PLAN.md`).
+   The same code is compiled for the PC. A simulator runs four nodes with fake EEPROMs and a fake radio that can lose, duplicate and cut links. `make check` runs 31 C++ test programs, including a whole-cluster scenario for every hardware test (H2–H13), plus 34 Python tests (Pi client and the measurement script). The hardware plan repeats them on the boards (`docs/HARDWARE_TEST_PLAN.md`).
 
 10. **What are the limits, and what would you change for a bigger system?**
     * Four nodes with a fixed MAC table, one radio hop, and 64 keys per node (32 KB EEPROM).
     * Node A is a single point of failure for the Pi link (`docs/GATEWAY.md` describes a gateway that removes it).
     * For scale: dynamic membership (gossip), quorum reads/writes for tunable consistency, Merkle trees instead of full version tables, and multi-hop routing.
+
+### Hardware and engineering
+
+11. **Why an external AT24C256 EEPROM instead of the ESP32's own flash?**
+    * The EEPROM writes 64-byte pages with no erase step and is rated for 1,000,000 cycles per page. Flash must erase 4 KB sectors and is typically rated for about 100,000 cycles.
+    * Small, frequent records therefore fit the EEPROM, and crash reasoning is per page: a record is torn or not, never half a sector.
+    * It is separate from the firmware flash, so reflashing a board does not wipe its data.
+    * Costs: about 5 ms per page write (`eeprom.h:13-15`, `eeprom.cpp:28-47`) and only 32 KB, hence 64 keys per node.
+    * Measured wear: 8.5 years at the 30 s sensor period (`docs/RESULTS.md` §5).
+
+12. **Why ESP-NOW and not Wi-Fi?**
+    * ESP-NOW needs no access point, DHCP or connections. The boards talk directly, so the demo works anywhere, even without a campus network.
+    * A unicast costs about 1 ms with a MAC-level ACK, and broadcast is free for heartbeats and version tables.
+    * TCP over Wi-Fi would add its own retransmissions and hide losses from our reliability layer. Here the layer is ours and testable.
+    * Limits we designed around: 250-byte frames (`protocol.h:15`, so the protocol and the 192-byte value limit fit one frame), a single hop, and a fixed channel (`transport.cpp:22`).
+
+13. **Why replication factor 2 and not 3?**
+    * With 4 nodes of 64 key slots each, RF = 2 gives room for about 4 × 64 / 2 = 128 distinct keys. RF = 3 gives only about 85.
+    * RF = 2 already survives any single node failure without losing data, and a write costs one replication round trip.
+    * RF = 3 only pays off with quorum reads and writes (W = 2, R = 2), which the frozen protocol has no fields for.
+    * The price: if both owners of a key are down at once, that key is unavailable until one returns. Its data is still in their EEPROMs.
+
+14. **What breaks if you add a fifth node?**
+    * The algorithms don't: placement, membership, anti-entropy and GC loop over `node::MIN..node::MAX` (`node_id.h`, `membership.h:10-11`, `hash_ring.h:16-19`, `anti_entropy.cpp:399`), and the alive mask is 8 bits.
+    * What is static: `node::MAX = 4`, the MAC table (`transport.cpp:24-38`), the env per node in `platformio.ini`, the console's 4-letter view, and the sensor and Pi node maps.
+    * All five boards must be reflashed, because every node must compute the same ring. A mix of 4-node and 5-node images would disagree on placement.
+    * After the change about 1/5 of the keys belong to the new node, and anti-entropy hands them over automatically.
+    * Joining at run time would need a membership protocol (gossip) and a versioned ring.
+
+15. **What happens on a power loss in the middle of a write, at the hardware level?**
+    * A page write inside the AT24C256 takes up to 5 ms. If power drops then, that page's content is undefined.
+    * The design never relies on a page write being atomic. Each record (header, key, value, CRC-16) is written without its commit byte, read back and verified, and only then is the commit byte `0xA5` written (`storage.cpp:959-996`).
+    * At boot, recovery rebuilds the index from committed records with a valid CRC, and a torn last record is wiped (`storage.cpp:598`).
+    * Compaction writes into the other bank and switches by writing one of two superblock copies. The old bank stays authoritative until that switch.
+    * `test/storage_manager_test.cpp` cuts power after every single byte of an append and of a full compaction and checks every key. On the boards this is H12 (`HARDWARE_TEST_PLAN.md`).
+
+16. **Node A bridges to the Pi. Isn't that a single point of failure?**
+    * For the Pi, yes. If A is off, the Pi loses access, although the cluster keeps working and keeps all data.
+    * The bridge only turns Pi frames into ordinary client operations of A (`bridge.cpp:204`), so nothing else depends on A.
+    * We gave A the sensor whose driver never disables interrupts (the BH1750) so the Pi link is never held up.
+    * `docs/GATEWAY.md` describes the fix: a fifth board as a pure relay that forwards to any live node.
+
+17. **How do you make sure each board runs as the right node?**
+    * Node identity is the MAC address. Frames from unknown MACs are dropped (`transport.cpp:127-131`), and a node's id comes from the env it was flashed with.
+    * At boot each board prints its MAC, the env, and whether the MAC matches its table entry. On a mismatch it prints `MAC MISMATCH` and which env to flash instead (`main.cpp:144-254`).
+    * `scripts/read_macs.sh` produces the table from the boards.
+
+18. **Why a fixed channel 6 and only 8.5 dBm transmit power?**
+    * ESP-NOW peers must share a channel, and with no access point there is nothing to follow, so the channel is fixed (`transport.cpp:22`).
+    * 8.5 dBm (`transport.cpp:224`) is the usual fix for ESP32-C3 SuperMini boards: their antenna layout misbehaves at full power.
+    * The boards sit within 1–2 m, so range isn't needed, and lower power also means less current and fewer brown-out resets.
+
+19. **How do the sensors avoid disturbing the radio and the storage?**
+    * One node task owns the radio, storage and sampling, so nothing runs concurrently with a storage write.
+    * The DHT11 is read in its own low-priority task, every 2 s with ~5 ms interrupts off, on node D, not on the bridge.
+    * The sound sensor's interrupt handler only increments a counter.
+    * The BH1750 and the EEPROM share the I2C bus under a lock that an EEPROM write holds until its write cycle has finished (`src/platform/i2c_bus.h`).
+    * `BRINGUP.md` §4.8 measures the DHT11's effect: `bench 50` with its bit off vs on.
+    * A failing sensor never stalls anything. Its readings become `simulated` (fallback), or `STALE`/`ERROR` for the DHT11.
+
+20. **What did you measure, and how do the simulator and the hardware compare?**
+    * `scripts/measure.py` runs the same procedure against both, and the results are in `docs/RESULTS.md`.
+    * Simulator numbers:
+      * SET p95 about 14 ms;
+      * failure detected after 1.5–2.0 s (heartbeat timeout);
+      * a client reaches the new owner after about 3.4 s (one attempt deadline);
+      * a returning node is caught up and serving after a constant 5.5 s;
+      * 0 failed writes at 20 % frame loss (avg ~0.8 s);
+      * the hottest EEPROM page lasts about 8.5 years.
+    * The measurements also exposed a capacity limit: the 64-entry dedup table caps a node at about 20 writes per second in bursts.
+    * Hardware numbers sit beside these, with the reasons they differ: real EEPROM write time, ESP-NOW air time, USB detection delays, the 1.5 s boot delay.
