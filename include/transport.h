@@ -71,4 +71,7 @@ public:
     Stats stats() const;
 };
 
+// The MAC address the static table assigns to a node, or nullptr.
+const std::uint8_t* configured_mac(node::Id id);
+
 } // namespace transport

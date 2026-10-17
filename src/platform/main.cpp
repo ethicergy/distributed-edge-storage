@@ -16,6 +16,7 @@
 
 #include <cstdarg>
 #include <cstdio>
+#include <cstring>
 
 #include "bridge.h"
 #include "config.h"
@@ -33,6 +34,11 @@
 
 #ifndef EDGE_FAULT_INJECTION
 #define EDGE_FAULT_INJECTION 0
+#endif
+
+// PlatformIO env name, set in platformio.ini.
+#ifndef EDGE_ENV_NAME
+#define EDGE_ENV_NAME "unknown"
 #endif
 
 namespace {
@@ -125,6 +131,118 @@ void bridge_write(void*, const std::uint8_t* data, std::size_t length)
 bridge::Bridge pi_bridge(runtime, bridge_write, nullptr);
 
 // ------------------------------------------------------------------
+// Board identity (boot banner and `stats`)
+// ------------------------------------------------------------------
+
+char node_letter(node::Id id)
+{
+    return static_cast<char>('A' + id - node::MIN);
+}
+
+const char* reset_reason_name(esp_reset_reason_t reason)
+{
+    switch (reason) {
+        case ESP_RST_POWERON: return "power-on";
+        case ESP_RST_EXT: return "external reset pin";
+        case ESP_RST_SW: return "software restart";
+        case ESP_RST_PANIC: return "PANIC (exception or abort)";
+        case ESP_RST_INT_WDT: return "interrupt watchdog";
+        case ESP_RST_TASK_WDT: return "task watchdog";
+        case ESP_RST_WDT: return "other watchdog";
+        case ESP_RST_DEEPSLEEP: return "deep-sleep wake";
+        case ESP_RST_BROWNOUT: return "BROWNOUT";
+        case ESP_RST_SDIO: return "SDIO";
+        default: return "unknown";
+    }
+}
+
+void format_mac(const std::uint8_t* mac, char (&out)[18])
+{
+    std::snprintf(
+        out,
+        sizeof(out),
+        "%02X:%02X:%02X:%02X:%02X:%02X",
+        mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]
+    );
+}
+
+// Env, build time, reset reason, and whether this board's MAC is the
+// one the static table (transport.cpp) expects for NODE_ID.
+void print_identity(console::WriteFn write, void* write_context)
+{
+    char line[200];
+
+    std::snprintf(
+        line,
+        sizeof(line),
+        "env %s, built %s %s, reset reason: %s\n",
+        EDGE_ENV_NAME,
+        __DATE__,
+        __TIME__,
+        reset_reason_name(esp_reset_reason())
+    );
+    write(write_context, line);
+
+    std::uint8_t own_mac[transport::MAC_ADDRESS_SIZE] = {};
+    esp_read_mac(own_mac, ESP_MAC_WIFI_STA);
+
+    char own_text[18];
+    format_mac(own_mac, own_text);
+
+    const std::uint8_t* expected = transport::configured_mac(LOCAL_NODE_ID);
+
+    if (expected != nullptr &&
+        std::memcmp(own_mac, expected, transport::MAC_ADDRESS_SIZE) == 0) {
+        std::snprintf(
+            line,
+            sizeof(line),
+            "MAC %s matches the table entry for node %c\n",
+            own_text,
+            node_letter(LOCAL_NODE_ID)
+        );
+        write(write_context, line);
+        return;
+    }
+
+    char expected_text[18] = "none";
+
+    if (expected != nullptr) {
+        format_mac(expected, expected_text);
+    }
+
+    std::snprintf(
+        line,
+        sizeof(line),
+        "\n!!!!!!!! MAC MISMATCH !!!!!!!!\n"
+        "!!! this board is %s, the table entry for node %c is %s\n",
+        own_text,
+        node_letter(LOCAL_NODE_ID),
+        expected_text
+    );
+    write(write_context, line);
+
+    for (node::Id id = node::MIN; id <= node::MAX; ++id) {
+        const std::uint8_t* mac = transport::configured_mac(id);
+
+        if (mac != nullptr && std::memcmp(own_mac, mac, transport::MAC_ADDRESS_SIZE) == 0) {
+            std::snprintf(
+                line,
+                sizeof(line),
+                "!!! this MAC is node %c's entry: flash env node-%c instead\n",
+                node_letter(id),
+                static_cast<char>('a' + id - node::MIN)
+            );
+            write(write_context, line);
+        }
+    }
+
+    write(
+        write_context,
+        "!!! peers drop frames from unknown MACs: fix src/platform/transport.cpp or reflash\n\n"
+    );
+}
+
+// ------------------------------------------------------------------
 // Console hooks
 // ------------------------------------------------------------------
 
@@ -132,6 +250,8 @@ void print_platform_stats(void*, console::WriteFn write, void* write_context)
 {
     const transport::Stats radio_stats = radio.stats();
     char line[200];
+
+    print_identity(write, write_context);
 
     std::snprintf(
         line,
@@ -286,6 +406,8 @@ void setup()
         BRIDGE_ROLE ? " (Pi bridge)" : "",
         EDGE_FAULT_INJECTION ? " [fault injection build]" : ""
     );
+
+    print_identity(serial_write, nullptr);
 
     if (radio.begin(LOCAL_NODE_ID) != transport::Result::OK) {
         halt("ESP-NOW initialisation failed");
