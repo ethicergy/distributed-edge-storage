@@ -49,6 +49,9 @@ int main()
     run(cluster, console, "help");
     REQUIRE(contains("set <key> <value>"));
     REQUIRE(contains("fault <kind>"));
+    // The middle and end of the text arrive too (it once overflowed).
+    REQUIRE(contains("reboot                restart this node"));
+    REQUIRE(contains("stale <key> <node>"));
 
     run(cluster, console, "status");
     REQUIRE(contains("node B  state ACTIVE  view ABCD"));
@@ -96,8 +99,14 @@ int main()
     run(cluster, console, "dump");
     REQUIRE(contains("key(s); log"));
 
+    g_output.clear();
     run(cluster, console, "stats");
     REQUIRE(contains("repl    started"));
+    // The whole block arrives (it once overflowed printf's buffer).
+    REQUIRE(contains("resync tx "));
+    REQUIRE(contains("gc      orphans "));
+    REQUIRE(contains("client  ok "));
+    REQUIRE(contains("storage errors "));
 
     g_output.clear();
     run(cluster, console, "bench 20", 5000);

@@ -142,6 +142,13 @@ public:
         return highest;
     }
 
+    static constexpr std::size_t PAGE_COUNT = eeprom::SIZE_BYTES / eeprom::PAGE_SIZE;
+
+    std::uint64_t page_cycles(std::size_t page) const
+    {
+        return page < PAGE_COUNT ? page_cycles_[page] : 0;
+    }
+
     void copy_from(const FakeEeprom& other)
     {
         std::memcpy(memory_, other.memory_, sizeof(memory_));

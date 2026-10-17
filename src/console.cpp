@@ -226,7 +226,13 @@ void Console::execute(const char* input, std::uint64_t now_ms)
 
 void Console::cmd_help()
 {
-    printf(
+    if (write_ == nullptr) {
+        return;
+    }
+
+    // Written directly: the text is longer than printf's buffer.
+    write_(
+        write_context_,
         "status                node state, clock, view, storage summary\n"
         "members               liveness of every node (H1)\n"
         "ring <key>            primary/replica of a key\n"
@@ -246,7 +252,8 @@ void Console::cmd_help()
     );
 
 #if EDGE_FAULT_INJECTION
-    printf(
+    write_(
+        write_context_,
         "fault <kind> [n]      kinds: drop-req drop-ack drop-repl drop-repl-ack dup\n"
         "fault loss <percent>  drop that share of every frame sent (until 'fault clear')\n"
         "stale <key> <node>    send an outdated version of key to node (H10)\n"
@@ -614,32 +621,32 @@ void Console::cmd_stats()
     const ae::Counters& a = runtime_.ae_counters();
     const storage::Stats s = runtime_.storage().stats();
 
-    printf(
-        "radio   rx %lu (invalid %lu, spoofed %lu)  tx %lu (failed %lu)\n"
-        "hb      tx %lu  rx %lu   membership changes %lu\n"
-        "server  executed %lu  not-ready %lu  dedup replays %lu  suppressed %lu  table-full %lu\n"
-        "repl    started %lu  ok %lu  failed %lu  stale %lu   as replica: applied %lu stale %lu\n"
-        "ae      rounds %lu  chunks tx %lu rx %lu  tables %lu  pushes %lu  resync tx %lu applied %lu stale %lu\n"
-        "gc      orphans %lu  tombstones %lu  keys dropped %lu\n"
-        "client  ok %lu  failed %lu  attempts %lu  local %lu\n"
-        "storage errors %lu  compactions %lu (aborted %lu)  faults injected %lu\n",
+    // One printf per line: the whole block is longer than printf's
+    // buffer and would be cut off.
+    printf("radio   rx %lu (invalid %lu, spoofed %lu)  tx %lu (failed %lu)\n",
         (unsigned long)c.frames_rx, (unsigned long)c.frames_rx_invalid, (unsigned long)c.frames_rx_spoofed,
-        (unsigned long)c.frames_tx, (unsigned long)c.frames_tx_failed,
-        (unsigned long)c.heartbeats_tx, (unsigned long)c.heartbeats_rx, (unsigned long)c.membership_changes,
+        (unsigned long)c.frames_tx, (unsigned long)c.frames_tx_failed);
+    printf("hb      tx %lu  rx %lu   membership changes %lu\n",
+        (unsigned long)c.heartbeats_tx, (unsigned long)c.heartbeats_rx, (unsigned long)c.membership_changes);
+    printf("server  executed %lu  not-ready %lu  dedup replays %lu  suppressed %lu  table-full %lu\n",
         (unsigned long)c.requests_executed, (unsigned long)c.requests_rejected_not_ready,
-        (unsigned long)c.dedup_replays, (unsigned long)c.dedup_suppressed, (unsigned long)c.dedup_table_full,
+        (unsigned long)c.dedup_replays, (unsigned long)c.dedup_suppressed, (unsigned long)c.dedup_table_full);
+    printf("repl    started %lu  ok %lu  failed %lu  stale %lu   as replica: applied %lu stale %lu\n",
         (unsigned long)c.replications_started, (unsigned long)c.replications_ok,
         (unsigned long)c.replications_failed, (unsigned long)c.replications_stale,
-        (unsigned long)c.replicas_applied, (unsigned long)c.replicas_stale,
+        (unsigned long)c.replicas_applied, (unsigned long)c.replicas_stale);
+    printf("ae      rounds %lu  chunks tx %lu rx %lu  tables %lu  pushes %lu  resync tx %lu applied %lu stale %lu\n",
         (unsigned long)a.rounds_started, (unsigned long)a.chunks_sent, (unsigned long)a.chunks_received,
         (unsigned long)a.tables_completed, (unsigned long)a.pushes_queued,
-        (unsigned long)c.resync_tx, (unsigned long)c.resync_applied, (unsigned long)c.resync_stale,
-        (unsigned long)a.gc_orphans, (unsigned long)a.gc_tombstones, (unsigned long)s.keys_dropped,
+        (unsigned long)c.resync_tx, (unsigned long)c.resync_applied, (unsigned long)c.resync_stale);
+    printf("gc      orphans %lu  tombstones %lu  keys dropped %lu\n",
+        (unsigned long)a.gc_orphans, (unsigned long)a.gc_tombstones, (unsigned long)s.keys_dropped);
+    printf("client  ok %lu  failed %lu  attempts %lu  local %lu\n",
         (unsigned long)c.client_ops_ok, (unsigned long)c.client_ops_failed,
-        (unsigned long)c.client_attempts, (unsigned long)c.client_local_fast_path,
+        (unsigned long)c.client_attempts, (unsigned long)c.client_local_fast_path);
+    printf("storage errors %lu  compactions %lu (aborted %lu)  faults injected %lu\n",
         (unsigned long)c.storage_errors, (unsigned long)s.compactions_completed,
-        (unsigned long)s.compactions_aborted, (unsigned long)c.faults_injected
-    );
+        (unsigned long)s.compactions_aborted, (unsigned long)c.faults_injected);
 
     if (hooks_.print_platform_stats != nullptr) {
         hooks_.print_platform_stats(hooks_.context, write_, write_context_);

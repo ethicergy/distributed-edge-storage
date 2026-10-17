@@ -122,6 +122,43 @@ int main(int argc, char** argv)
     // Consoles and the bridge follow their node across reboots.
     edge::Runtime* bound[sim::NODE_COUNT] = {};
 
+    // `stats` prints EEPROM wear since the node's boot, like the boards
+    // (src/platform/main.cpp), so scripts/measure.py parses both.
+    struct WearHook {
+        sim::SimNode* node = nullptr;
+        std::uint64_t baseline[sim::FakeEeprom::PAGE_COUNT] = {};
+    };
+
+    static WearHook wear[sim::NODE_COUNT];
+
+    auto print_wear = [](void* context, console::WriteFn write, void* write_context) {
+        const WearHook& hook = *static_cast<WearHook*>(context);
+        std::uint64_t total = 0;
+        std::uint64_t hottest = 0;
+        std::size_t hottest_page = 0;
+
+        for (std::size_t page = 0; page < sim::FakeEeprom::PAGE_COUNT; ++page) {
+            const std::uint64_t writes = hook.node->eeprom.page_cycles(page) - hook.baseline[page];
+            total += writes;
+
+            if (writes > hottest) {
+                hottest = writes;
+                hottest_page = page;
+            }
+        }
+
+        char line[160];
+        std::snprintf(
+            line,
+            sizeof(line),
+            "eeprom page writes since boot: total %llu, hottest page %u with %llu (rated 1000000)\n",
+            static_cast<unsigned long long>(total),
+            static_cast<unsigned>(hottest_page),
+            static_cast<unsigned long long>(hottest)
+        );
+        write(write_context, line);
+    };
+
     auto rebind = [&] {
         for (node::Id id = node::MIN; id <= node::MAX; ++id) {
             const std::size_t i = id - node::MIN;
@@ -136,8 +173,18 @@ int main(int argc, char** argv)
 
             if (runtime != nullptr) {
                 runtime->set_log_level(g_quiet ? edge::LogLevel::OFF : edge::LogLevel::INFO);
+
+                wear[i].node = &cluster.node(id);
+                for (std::size_t page = 0; page < sim::FakeEeprom::PAGE_COUNT; ++page) {
+                    wear[i].baseline[page] = cluster.node(id).eeprom.page_cycles(page);
+                }
+
+                console::Hooks hooks{};
+                hooks.print_platform_stats = print_wear;
+                hooks.context = &wear[i];
+
                 consoles[i] = std::make_unique<console::Console>(
-                    *runtime, cluster.node(id).sampler.get(), console_write, nullptr);
+                    *runtime, cluster.node(id).sampler.get(), console_write, nullptr, hooks);
             }
 
             if (id == config::BRIDGE_NODE_ID) {
