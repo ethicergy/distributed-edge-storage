@@ -33,6 +33,24 @@ python3 -m edgekv watch --interval 30 --csv readings.csv
 
 `--port` defaults to `$EDGEKV_PORT` or `/dev/serial0`.
 
+`--raw-log FILE` appends every byte the frame decoder throws away to
+FILE (timestamp, reason, text and hex): node A's ROM boot text after a
+reset, noise, frames with a bad CRC (wrong baud rate), or a login
+prompt if the Pi's serial console is still on.
+
+```bash
+python3 -m edgekv --raw-log uart-raw.log watch --interval 5
+```
+
+Readings: A `temp` (DHT11), B `motion` (AM312 PIR: events per window,
+"last motion N s ago", `settling` after power-on), C `sound` (LM393:
+events per window, % of the window active), D `light` (BH1750). The
+CSV of `watch --csv` has the columns `read_at, node, kind, value, unit,
+sequence, sampled_at, simulated, last_motion_s, active_pct, settling`
+(the last three are empty where they do not apply; `last_motion_s` is
+counted back from `sampled_at`). Start a new CSV file when upgrading
+from the 8-column format.
+
 Exit codes: 0 success, 1 key not found, 2 the cluster refused the
 operation, 3 no answer from the bridge.
 

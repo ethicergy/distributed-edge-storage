@@ -11,6 +11,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from .client import EdgeKV, EdgeKVError
+from .rawlog import RawLog
 from .reading import Reading
 
 
@@ -23,15 +24,15 @@ CSV_HEADER = [
 def _value_and_detail(sample: Reading, when: Optional[datetime], now: datetime) -> str:
     if sample.kind == "motion":
         if sample.settling:
-            return f"{'':>11} {'':<5} settling (PIR warm-up)"
+            return f"{'':>11} {'':<6}  settling (PIR warm-up)"
         if sample.last_motion_s is None:
             detail = "no motion since boot"
         else:
             age = max(0.0, (now - when).total_seconds()) if when else 0.0
             detail = f"last motion {sample.last_motion_s + age:.0f} s ago"
-        return f"{sample.events:>11d} {sample.unit:<6} {detail}"
+        return f"{sample.events:>11d} {sample.unit:<6}  {detail}"
     if sample.kind == "sound":
-        return f"{sample.events:>11d} {sample.unit:<6} {sample.active_pct:.1f} % active"
+        return f"{sample.events:>11d} {sample.unit:<6}  {sample.active_pct:.1f} % active"
     return f"{sample.value:>11.3f} {sample.unit:<5}"
 
 
@@ -156,6 +157,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="serial port of the bridge node (default $EDGEKV_PORT or /dev/serial0)")
     parser.add_argument("--baud", type=int, default=115200)
     parser.add_argument("--timeout", type=float, default=10.0, help="seconds to wait for an answer")
+    parser.add_argument("--raw-log", metavar="FILE",
+                        help="append bytes the frame decoder discards (boot text, noise, bad frames) to FILE")
 
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -192,8 +195,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[List[str]] = None) -> int:
     args = build_parser().parse_args(argv)
 
+    raw_log = RawLog(args.raw_log) if args.raw_log else None
+
     try:
-        with EdgeKV(args.port, baudrate=args.baud, timeout=args.timeout) as kv:
+        with EdgeKV(args.port, baudrate=args.baud, timeout=args.timeout, raw_log=raw_log) as kv:
             return args.func(kv, args)
     except EdgeKVError as error:
         print(f"error: {error}", file=sys.stderr)
