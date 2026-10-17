@@ -160,7 +160,7 @@ k6 = "written-while-C-down"
 
 ## 7. Optional: 20 % packet loss (1 min)
 
-The boards have no random-loss switch, so this runs in the simulator on the laptop (`build/host/edge_sim`):
+With the normal images this runs in the simulator on the laptop (`build/host/edge_sim`):
 
 ```
 loss 0.2
@@ -179,7 +179,7 @@ bench: 50 sequential SETs on keys bench/0..7
 bench: 50 ok, 0 failed in 29513 ms; latency min 7 avg 590 max 4310 ms
 ```
 
-On boards flashed with the `-fi` images there is a deterministic alternative: `fault drop-ack 1` on the key's primary, then `set` from another node. The primary logs `duplicate, cached response replayed`.
+On boards flashed with the `-fi` images it runs on the hardware: `fault loss 20` on all four consoles, `bench 50` on A, then `fault clear` on all four. The measured numbers are in `docs/RESULTS.md` §3.
 
 **Idea:** lost packets are retransmitted with the same request id, and the receiver's dedup table replays the cached answer. Every write still executes exactly once (all 50 ok, latency goes up, no failures).
 
