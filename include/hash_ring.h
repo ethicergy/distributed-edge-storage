@@ -7,7 +7,11 @@
 
 namespace hash_ring {
 
-constexpr std::size_t VIRTUAL_NODES_PER_NODE = 4;
+// 64 points per node: all 12 primary->replica pairs occur, so a failed
+// node's load spreads over every survivor (4 points gave only 6
+// pairs: A was always replicated to B). Primary share per node is
+// 21-30 %, owner share <= 27 % (test/ring_balance_test.cpp).
+constexpr std::size_t VIRTUAL_NODES_PER_NODE = 64;
 
 constexpr std::size_t RING_POINT_COUNT =
     static_cast<std::size_t>(

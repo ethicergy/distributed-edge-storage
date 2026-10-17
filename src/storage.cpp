@@ -1,16 +1,13 @@
 #include "storage.h"
+#include "config.h"
 #include "eeprom.h"
 #include "storage_metadata.h"
 #include "storage_record.h"
-#include <Arduino.h>
 
 #include <cstring>
 
 namespace storage {
 namespace {
-
-constexpr uint8_t EEPROM_SDA_PIN = 8;
-constexpr uint8_t EEPROM_SCL_PIN = 9;
 
 constexpr uint16_t BANK_A_HEADER =
     metadata::BANK_A_BASE;
@@ -45,7 +42,46 @@ uint16_t bank_record_start(metadata::Bank bank)
     return bank_header_address(bank)
          + metadata::BANK_RECORD_OFFSET;
 }
+
+uint16_t bank_record_end(metadata::Bank bank)
+{
+    return static_cast<uint16_t>(
+        bank_header_address(bank) +
+        metadata::BANK_RECORD_AREA_END
+    );
 }
+
+metadata::Bank other_bank(metadata::Bank bank)
+{
+    return bank == metadata::Bank::A
+        ? metadata::Bank::B
+        : metadata::Bank::A;
+}
+
+// End of the region an interrupted append starting at address can
+// have touched.
+uint16_t torn_tail_limit(uint16_t address, uint16_t record_end)
+{
+    const size_t remaining =
+        static_cast<size_t>(record_end - address);
+
+    return remaining > record::MAX_RECORD_SIZE
+        ? static_cast<uint16_t>(address + record::MAX_RECORD_SIZE)
+        : record_end;
+}
+
+constexpr std::uint64_t slot_bit(std::size_t slot)
+{
+    return 1ULL << slot;
+}
+
+} // namespace
+
+StorageManager::StorageManager(eeprom::Device& device)
+    : eeprom_(device)
+{
+}
+
 int compare_versions(
     const Version& lhs,
     const Version& rhs
@@ -512,17 +548,12 @@ Result StorageManager::initialize_empty_store()
     return Result::OK;
 }
 
-bool StorageManager::erased_tail(
-    uint16_t address
+bool StorageManager::erased_range(
+    uint16_t address,
+    uint16_t end_address
 )
 {
     constexpr size_t CHUNK_SIZE = 64;
-
-    const uint16_t end_address =
-        static_cast<uint16_t>(
-            bank_header_address(active_bank_) +
-            metadata::BANK_RECORD_AREA_END
-        );
 
     uint8_t buffer[CHUNK_SIZE]{};
 
@@ -564,8 +595,10 @@ bool StorageManager::erased_tail(
     return true;
 }
 
-Result StorageManager::recover_active_bank()
+Result StorageManager::recover_active_bank(bool& torn_tail)
 {
+    torn_tail = false;
+
     // RAM index is rebuilt entirely from persistent records.
     std::memset(
         index_,
@@ -577,15 +610,41 @@ Result StorageManager::recover_active_bank()
         bank_record_start(active_bank_);
 
     const uint16_t record_end =
-        static_cast<uint16_t>(
-            bank_header_address(active_bank_) +
-            metadata::BANK_RECORD_AREA_END
-        );
+        bank_record_end(active_bank_);
 
     uint16_t current_address = record_start;
 
     uint32_t highest_sequence = 0;
     uint16_t committed_records = 0;
+
+    /*
+     * An interrupted append writes at most one record, so a torn
+     * tail is confined to MAX_RECORD_SIZE bytes after the last
+     * committed record, with only erased bytes behind it. Such a
+     * tail is wiped so the next append starts on erased bytes.
+     * Anything else that fails to decode is real corruption.
+     */
+    auto handle_bad_tail = [&]() -> Result {
+        const uint16_t limit =
+            torn_tail_limit(current_address, record_end);
+
+        if (!erased_range(limit, record_end)) {
+            return Result::CORRUPTED;
+        }
+
+        const Result clear_result =
+            clear_range(
+                current_address,
+                static_cast<size_t>(limit - current_address)
+            );
+
+        if (clear_result != Result::OK) {
+            return clear_result;
+        }
+
+        torn_tail = true;
+        return Result::OK;
+    };
 
     while (current_address < record_end) {
 
@@ -603,9 +662,22 @@ Result StorageManager::recover_active_bank()
             return map_eeprom_result(eeprom_result);
         }
 
-        // Known unused tail.
         if (probe[0] == 0xFF &&
             probe[1] == 0xFF) {
+
+            const uint16_t limit =
+                torn_tail_limit(current_address, record_end);
+
+            // Known unused tail, unless an append was torn after
+            // its first two bytes were still erased.
+            if (!erased_range(current_address, limit)) {
+                const Result tail_result = handle_bad_tail();
+
+                if (tail_result != Result::OK) {
+                    return tail_result;
+                }
+            }
+
             break;
         }
 
@@ -614,11 +686,17 @@ Result StorageManager::recover_active_bank()
             record::HEADER_SIZE
         ]{};
 
+        const size_t header_read =
+            static_cast<size_t>(record_end - current_address) <
+                    record::HEADER_SIZE
+                ? static_cast<size_t>(record_end - current_address)
+                : record::HEADER_SIZE;
+
         eeprom_result =
             eeprom_.read(
                 current_address,
                 header,
-                sizeof(header)
+                header_read
             );
 
         if (eeprom_result != eeprom::Result::OK) {
@@ -632,6 +710,7 @@ Result StorageManager::recover_active_bank()
             );
 
         const bool plausible_header =
+            header_read == record::HEADER_SIZE &&
             (header[0] == 0x52) &&
             (header[1] == 0x43) &&
             record_length >=
@@ -645,47 +724,42 @@ Result StorageManager::recover_active_bank()
                     record_end - current_address
                 );
 
-        if (!plausible_header) {
-            // If everything after this position is erased,
-            // this is an incomplete tail record.
-            if (erased_tail(current_address)) {
-                break;
-            }
-
-            return Result::CORRUPTED;
-        }
+        record::Record persistent_record{};
 
         uint8_t record_buffer[
             record::MAX_RECORD_SIZE
         ]{};
 
-        eeprom_result =
-            eeprom_.read(
-                current_address,
-                record_buffer,
-                record_length
-            );
+        bool decoded = false;
 
-        if (eeprom_result != eeprom::Result::OK) {
-            return map_eeprom_result(eeprom_result);
-        }
+        if (plausible_header) {
+            eeprom_result =
+                eeprom_.read(
+                    current_address,
+                    record_buffer,
+                    record_length
+                );
 
-        record::Record persistent_record{};
-
-        const Result decode_result =
-            record::deserialize(
-                record_buffer,
-                record_length,
-                persistent_record
-            );
-
-        if (decode_result != Result::OK) {
-            // Same tail-vs-middle distinction.
-            if (erased_tail(current_address)) {
-                break;
+            if (eeprom_result != eeprom::Result::OK) {
+                return map_eeprom_result(eeprom_result);
             }
 
-            return Result::CORRUPTED;
+            decoded =
+                record::deserialize(
+                    record_buffer,
+                    record_length,
+                    persistent_record
+                ) == Result::OK;
+        }
+
+        if (!decoded) {
+            const Result tail_result = handle_bad_tail();
+
+            if (tail_result != Result::OK) {
+                return tail_result;
+            }
+
+            break;
         }
 
         // Track physical sequence information.
@@ -763,10 +837,9 @@ Result StorageManager::recover_active_bank()
 
     record_count_ = committed_records;
 
-    next_sequence_ =
-        highest_sequence == 0
-            ? 1
-            : highest_sequence + 1;
+    if (highest_sequence + 1 > next_sequence_) {
+        next_sequence_ = highest_sequence + 1;
+    }
 
     return Result::OK;
 }
@@ -966,191 +1039,161 @@ Result StorageManager::append_record_to_bank(
     return Result::OK;
 }
 
-Result StorageManager::compact()
+/*
+ * Compaction
+ * ----------
+ * CLEARING   : erase the destination bank's record area a few pages
+ *              per step, then write its header (OPEN).
+ * COPYING    : copy the current record of one key per step. A key
+ *              written again after it was copied is copied again.
+ *              Keys marked for drop are skipped.
+ * FINALIZING : footer, header SEALED, then the superblock that makes
+ *              the destination authoritative (the atomic switch).
+ *
+ * Until the superblock commits, the source bank stays authoritative
+ * and keeps receiving appends, so a crash at any point loses nothing.
+ */
+
+bool StorageManager::compaction_active() const
+{
+    return compaction_.phase != CompactionPhase::IDLE;
+}
+
+bool StorageManager::compaction_needed() const
+{
+    if (!initialized_ || compaction_active()) {
+        return false;
+    }
+
+    if (free_log_bytes() < config::COMPACTION_TRIGGER_FREE_BYTES) {
+        return true;
+    }
+
+    if (drop_mask_ == 0) {
+        return false;
+    }
+
+    std::size_t used = 0;
+
+    for (std::size_t i = 0; i < MAX_LOGICAL_KEYS; ++i) {
+        if (index_[i].valid) {
+            ++used;
+        }
+    }
+
+    return used * 100 >=
+        MAX_LOGICAL_KEYS *
+            config::COMPACTION_INDEX_PRESSURE_PERCENT;
+}
+
+Result StorageManager::compaction_begin()
 {
     if (!initialized_) {
         return Result::NOT_INITIALIZED;
     }
 
-    const metadata::Bank source_bank =
-        active_bank_;
-
-    const metadata::Bank destination_bank =
-        source_bank == metadata::Bank::A
-            ? metadata::Bank::B
-            : metadata::Bank::A;
-
-    const uint32_t new_bank_generation =
-        active_bank_generation_ + 1;
-
-    const uint32_t new_superblock_generation =
-        superblock_generation_ + 1;
-
-    uint16_t destination_append_address =
-        bank_record_start(destination_bank);
-
-    uint32_t destination_next_sequence =
-        next_sequence_;
-
-    uint16_t new_record_count = 0;
-
-    // Temporary record-address map.
-    //
-    // We must NOT modify the RAM index until the new bank
-    // is completely committed. Otherwise a failed compaction
-    // could leave the index pointing at an incomplete bank.
-    uint16_t new_record_addresses[
-        MAX_LOGICAL_KEYS
-    ]{};
-
-    std::memset(
-        new_record_addresses,
-        0,
-        sizeof(new_record_addresses)
-    );
-
-    // --------------------------------------------------
-    // 1. Clear destination bank record area.
-    // --------------------------------------------------
-
-    Result result = clear_range(
-        bank_record_start(destination_bank),
-        metadata::BANK_RECORD_AREA_END -
-        metadata::BANK_RECORD_OFFSET
-    );
-
-    if (result != Result::OK) {
-        return result;
+    if (compaction_active()) {
+        return Result::OK;
     }
 
-    // --------------------------------------------------
-    // 2. Create destination bank as OPEN.
-    // --------------------------------------------------
+    compaction_ = Compaction{};
 
-    result = write_bank_header(
-        destination_bank,
-        metadata::BankState::OPEN,
-        new_bank_generation,
-        0,
-        metadata::BANK_RECORD_OFFSET
-    );
+    compaction_.phase = CompactionPhase::CLEARING;
+    compaction_.destination = other_bank(active_bank_);
+    compaction_.bank_generation = active_bank_generation_ + 1;
+    compaction_.superblock_generation = superblock_generation_ + 1;
+    compaction_.clear_cursor =
+        bank_record_start(compaction_.destination);
+    compaction_.append_address =
+        bank_record_start(compaction_.destination);
 
-    if (result != Result::OK) {
-        return result;
+    return Result::OK;
+}
+
+void StorageManager::abort_compaction()
+{
+    compaction_ = Compaction{};
+    ++compactions_aborted_;
+}
+
+Result StorageManager::copy_one_for_compaction(std::size_t slot)
+{
+    const IndexEntry& entry = index_[slot];
+
+    if (entry.state != State::LIVE &&
+        entry.state != State::TOMBSTONE) {
+        return Result::CORRUPTED;
     }
 
-    // --------------------------------------------------
-    // 3. Copy exactly one current record per logical key.
-    //
-    // This includes TOMBSTONE entries.
-    // --------------------------------------------------
+    uint8_t value_buffer[VALUE_MAX]{};
+    size_t value_length = 0;
 
-    for (std::size_t i = 0;
-         i < MAX_LOGICAL_KEYS;
-         ++i) {
-
-        const IndexEntry& entry =
-            index_[i];
-
-        if (!entry.valid) {
-            continue;
-        }
-
-        if (entry.state != State::LIVE &&
-            entry.state != State::TOMBSTONE) {
-            return Result::CORRUPTED;
-        }
-
-        uint8_t value_buffer[
-            VALUE_MAX
-        ]{};
-
-        size_t value_length = 0;
-
-        if (entry.state == State::LIVE) {
-
-            result = read_value(
-                entry,
-                value_buffer,
-                sizeof(value_buffer),
-                value_length
-            );
-
-            if (result != Result::OK) {
-                return result;
-            }
-
-        } else {
-
-            value_length = 0;
-        }
-
-        const Version version{
-            entry.version_hlc,
-            entry.version_origin
-        };
-
-        uint16_t destination_record_address = 0;
-
-        result = append_record_to_bank(
-            destination_bank,
-            destination_append_address,
-            destination_next_sequence,
-            KeyView{
-                entry.key,
-                entry.key_len
-            },
-            ValueView{
-                entry.state == State::LIVE
-                    ? value_buffer
-                    : nullptr,
-                value_length
-            },
-            version,
-            entry.state,
-            destination_record_address
+    if (entry.state == State::LIVE) {
+        const Result read_result = read_value(
+            entry,
+            value_buffer,
+            sizeof(value_buffer),
+            value_length
         );
 
-        if (result != Result::OK) {
-            return result;
+        if (read_result != Result::OK) {
+            return read_result;
         }
-
-        new_record_addresses[i] =
-            destination_record_address;
-
-        ++new_record_count;
     }
 
-    // --------------------------------------------------
-    // 4. Write footer for the completed destination bank.
-    // --------------------------------------------------
+    uint16_t destination_record_address = 0;
+
+    const Result result = append_record_to_bank(
+        compaction_.destination,
+        compaction_.append_address,
+        next_sequence_,
+        KeyView{entry.key, entry.key_len},
+        ValueView{
+            entry.state == State::LIVE ? value_buffer : nullptr,
+            value_length
+        },
+        Version{entry.version_hlc, entry.version_origin},
+        entry.state,
+        destination_record_address
+    );
+
+    if (result != Result::OK) {
+        return result;
+    }
+
+    compaction_.new_addresses[slot] = destination_record_address;
+    compaction_.copied_mask |= slot_bit(slot);
+    ++compaction_.record_count;
+
+    return Result::OK;
+}
+
+Result StorageManager::finalize_compaction()
+{
+    const metadata::Bank destination = compaction_.destination;
 
     const uint16_t destination_records_end =
         static_cast<uint16_t>(
-            destination_append_address -
-            bank_header_address(destination_bank)
+            compaction_.append_address -
+            bank_header_address(destination)
         );
 
-    result = write_bank_footer(
-        destination_bank,
-        new_bank_generation,
-        new_record_count,
+    Result result = write_bank_footer(
+        destination,
+        compaction_.bank_generation,
+        compaction_.record_count,
         destination_records_end
     );
 
     if (result != Result::OK) {
         return result;
     }
-
-    // --------------------------------------------------
-    // 5. Seal destination bank.
-    // --------------------------------------------------
 
     result = write_bank_header(
-        destination_bank,
+        destination,
         metadata::BankState::SEALED,
-        new_bank_generation,
-        new_record_count,
+        compaction_.bank_generation,
+        compaction_.record_count,
         destination_records_end
     );
 
@@ -1158,67 +1201,211 @@ Result StorageManager::compact()
         return result;
     }
 
-    // --------------------------------------------------
-    // 6. Publish the new bank through the new superblock.
-    //
-    // This is the atomic authority switch.
-    // --------------------------------------------------
-
-    const uint32_t highest_sequence =
-    destination_next_sequence == 0
-        ? 0
-        : destination_next_sequence - 1;
-
+    // The atomic authority switch.
     result = write_superblock(
-        new_superblock_generation,
-        destination_bank,
-        new_bank_generation,
-        highest_sequence,
-        new_record_count
+        compaction_.superblock_generation,
+        destination,
+        compaction_.bank_generation,
+        next_sequence_ == 0 ? 0 : next_sequence_ - 1,
+        compaction_.record_count
     );
 
     if (result != Result::OK) {
-        // Old bank remains authoritative because the new
-        // superblock was never committed.
+        // Old bank remains authoritative.
         return result;
     }
-    
 
-    // --------------------------------------------------
-    // 7. Only NOW update runtime state.
-    // --------------------------------------------------
-
-    for (std::size_t i = 0;
-         i < MAX_LOGICAL_KEYS;
-         ++i) {
-
+    // Only now update runtime state.
+    for (std::size_t i = 0; i < MAX_LOGICAL_KEYS; ++i) {
         if (!index_[i].valid) {
             continue;
         }
 
-        index_[i].record_address =
-            new_record_addresses[i];
+        if ((compaction_.copied_mask & slot_bit(i)) != 0) {
+            index_[i].record_address = compaction_.new_addresses[i];
+            continue;
+        }
+
+        // Not copied: only dropped keys get here.
+        index_[i] = IndexEntry{};
+        ++keys_dropped_;
     }
 
-    active_bank_ =
-        destination_bank;
+    // A drop requested after its key was already copied waits for
+    // the next compaction.
+    drop_mask_ &= compaction_.copied_mask;
 
-    superblock_generation_ =
-        new_superblock_generation;
+    active_bank_ = destination;
+    superblock_generation_ = compaction_.superblock_generation;
+    active_bank_generation_ = compaction_.bank_generation;
+    append_address_ = compaction_.append_address;
+    record_count_ = compaction_.record_count;
 
-    active_bank_generation_ =
-        new_bank_generation;
-
-    append_address_ =
-        destination_append_address;
-
-    next_sequence_ =
-        destination_next_sequence;
-
-    record_count_ =
-        new_record_count;
+    compaction_ = Compaction{};
+    ++compactions_completed_;
 
     return Result::OK;
+}
+
+Result StorageManager::compaction_step(bool& done)
+{
+    done = false;
+
+    if (!initialized_) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    switch (compaction_.phase) {
+        case CompactionPhase::IDLE:
+            done = true;
+            return Result::OK;
+
+        case CompactionPhase::CLEARING: {
+            const uint16_t end =
+                bank_record_end(compaction_.destination);
+
+            const size_t budget =
+                config::COMPACTION_CLEAR_PAGES_PER_STEP *
+                eeprom::PAGE_SIZE;
+
+            const size_t remaining =
+                static_cast<size_t>(end - compaction_.clear_cursor);
+
+            const size_t chunk =
+                remaining < budget ? remaining : budget;
+
+            if (chunk > 0) {
+                const Result clear_result =
+                    clear_range(compaction_.clear_cursor, chunk);
+
+                if (clear_result != Result::OK) {
+                    abort_compaction();
+                    return clear_result;
+                }
+
+                compaction_.clear_cursor =
+                    static_cast<uint16_t>(
+                        compaction_.clear_cursor + chunk
+                    );
+            }
+
+            if (compaction_.clear_cursor < end) {
+                return Result::OK;
+            }
+
+            const Result header_result = write_bank_header(
+                compaction_.destination,
+                metadata::BankState::OPEN,
+                compaction_.bank_generation,
+                0,
+                metadata::BANK_RECORD_OFFSET
+            );
+
+            if (header_result != Result::OK) {
+                abort_compaction();
+                return header_result;
+            }
+
+            compaction_.phase = CompactionPhase::COPYING;
+            return Result::OK;
+        }
+
+        case CompactionPhase::COPYING: {
+            for (std::size_t i = 0; i < MAX_LOGICAL_KEYS; ++i) {
+                if (!index_[i].valid ||
+                    (compaction_.copied_mask & slot_bit(i)) != 0 ||
+                    (drop_mask_ & slot_bit(i)) != 0) {
+                    continue;
+                }
+
+                const Result copy_result = copy_one_for_compaction(i);
+
+                if (copy_result != Result::OK) {
+                    abort_compaction();
+                    return copy_result;
+                }
+
+                return Result::OK;
+            }
+
+            /*
+             * Every key is copied. Finalize in this same step: a
+             * write landing between "all copied" and the switch would
+             * otherwise be mistaken for a dropped key.
+             */
+            compaction_.phase = CompactionPhase::FINALIZING;
+        }
+        // fall through
+
+        case CompactionPhase::FINALIZING: {
+            const Result result = finalize_compaction();
+
+            if (result != Result::OK) {
+                abort_compaction();
+                return result;
+            }
+
+            done = true;
+            return Result::OK;
+        }
+    }
+
+    return Result::CORRUPTED;
+}
+
+Result StorageManager::compact()
+{
+    Result result = compaction_begin();
+
+    if (result != Result::OK) {
+        return result;
+    }
+
+    bool done = false;
+
+    while (!done) {
+        result = compaction_step(done);
+
+        if (result != Result::OK) {
+            return result;
+        }
+    }
+
+    return Result::OK;
+}
+
+Result StorageManager::mark_drop(std::size_t slot)
+{
+    if (!initialized_) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    if (slot >= MAX_LOGICAL_KEYS || !index_[slot].valid) {
+        return Result::INVALID_ARGUMENT;
+    }
+
+    drop_mask_ |= slot_bit(slot);
+
+    return Result::OK;
+}
+
+bool StorageManager::drop_pending(std::size_t slot) const
+{
+    return slot < MAX_LOGICAL_KEYS &&
+           (drop_mask_ & slot_bit(slot)) != 0;
+}
+
+std::size_t StorageManager::free_log_bytes() const
+{
+    if (!initialized_) {
+        return 0;
+    }
+
+    const uint16_t end = bank_record_end(active_bank_);
+
+    return append_address_ >= end
+        ? 0
+        : static_cast<std::size_t>(end - append_address_);
 }
 
 Result StorageManager::apply(
@@ -1307,6 +1494,13 @@ Result StorageManager::apply(
             record_address
         );
 
+    if (append_result == Result::NO_SPACE &&
+        !compaction_active()) {
+        // The caller gets NO_SPACE for this write; the background
+        // compaction makes room for the next one.
+        (void)compaction_begin();
+    }
+
     if (append_result != Result::OK) {
         return append_result;
     }
@@ -1319,6 +1513,15 @@ Result StorageManager::apply(
         record_address,
         version
     );
+
+    const std::uint64_t bit =
+        slot_bit(static_cast<std::size_t>(target_index));
+
+    // A newer version revives a key that was marked for drop.
+    drop_mask_ &= ~bit;
+
+    // A running compaction must copy this key (again).
+    compaction_.copied_mask &= ~bit;
 
     return Result::OK;
 }
@@ -1502,15 +1705,16 @@ Result StorageManager::begin()
         return Result::OK;
     }
 
-    eeprom::Result eeprom_result =
-        eeprom_.begin(
-            EEPROM_SDA_PIN,
-            EEPROM_SCL_PIN
-        );
-
-    if (eeprom_result != eeprom::Result::OK) {
-        return map_eeprom_result(eeprom_result);
+    if (!eeprom_.ready()) {
+        return Result::NOT_INITIALIZED;
     }
+
+    std::memset(index_, 0, sizeof(index_));
+    drop_mask_ = 0;
+    compaction_ = Compaction{};
+    boot_kind_ = BootKind::NONE;
+
+    eeprom::Result eeprom_result = eeprom::Result::OK;
 
     uint8_t slot0[
         metadata::SUPERBLOCK_SIZE
@@ -1563,11 +1767,12 @@ Result StorageManager::begin()
     if (!valid0 && !valid1) {
         const Result result =
             initialize_empty_store();
-            Serial.println("Storage: no valid superblock, initializing fresh store");
+
         if (result != Result::OK) {
             return result;
         }
 
+        boot_kind_ = BootKind::FRESH_FORMAT;
         initialized_ = true;
         return Result::OK;
     }
@@ -1585,7 +1790,6 @@ Result StorageManager::begin()
     }
 
     active_bank_ = selected.active_bank;
-    Serial.println("Storage: valid superblock found, recovering existing store");
     superblock_generation_ = selected.generation;
     active_bank_generation_ =
         selected.active_bank_generation;
@@ -1594,8 +1798,6 @@ Result StorageManager::begin()
     record_count_ =
         selected.stored_record_count;
 
-    // For this checkpoint we only support
-    // reopening an empty persistent bank.
     uint8_t header_buffer[
         metadata::BANK_HEADER_SIZE
     ]{};
@@ -1647,20 +1849,59 @@ Result StorageManager::begin()
     }
 
     if ((header.state != metadata::BankState::OPEN &&
-     header.state != metadata::BankState::SEALED) ||
-    header.generation != selected.active_bank_generation ||
-    footer.generation != header.generation) {
-    return Result::CORRUPTED;
-}
-        const Result recovery_result =
-        recover_active_bank();
+         header.state != metadata::BankState::SEALED) ||
+        header.generation != selected.active_bank_generation ||
+        footer.generation != header.generation) {
+        return Result::CORRUPTED;
+    }
+
+    bool torn_tail = false;
+
+    const Result recovery_result =
+        recover_active_bank(torn_tail);
 
     if (recovery_result != Result::OK) {
         return recovery_result;
     }
 
-    
+    boot_kind_ = torn_tail
+        ? BootKind::RECOVERED_TORN_TAIL
+        : BootKind::RECOVERED;
 
+    initialized_ = true;
+    return Result::OK;
+}
+
+Result StorageManager::format()
+{
+    if (!eeprom_.ready()) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    initialized_ = false;
+
+    std::memset(index_, 0, sizeof(index_));
+    drop_mask_ = 0;
+    compaction_ = Compaction{};
+
+    // Invalidate both superblock slots first, so an interrupted
+    // format can never fall back to an old generation.
+    Result result = clear_range(
+        metadata::SUPERBLOCK_SLOT_0,
+        2 * metadata::SUPERBLOCK_SIZE
+    );
+
+    if (result != Result::OK) {
+        return result;
+    }
+
+    result = initialize_empty_store();
+
+    if (result != Result::OK) {
+        return result;
+    }
+
+    boot_kind_ = BootKind::FRESH_FORMAT;
     initialized_ = true;
     return Result::OK;
 }
@@ -1691,6 +1932,146 @@ Result StorageManager::max_persisted_hlc(Hlc& out) const
     }
 
     return Result::OK;
+}
+
+Result StorageManager::get_version(
+    KeyView key,
+    Version& version,
+    State& state
+) const
+{
+    version = Version{0, node::INVALID};
+    state = State::LIVE;
+
+    if (!initialized_) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    if (key.len == 0 || key.data == nullptr) {
+        return Result::INVALID_ARGUMENT;
+    }
+
+    if (key.len > KEY_MAX) {
+        return Result::KEY_TOO_LARGE;
+    }
+
+    const int index = find_index_entry(key);
+
+    if (index < 0) {
+        return Result::NOT_FOUND;
+    }
+
+    version = Version{
+        index_[index].version_hlc,
+        index_[index].version_origin
+    };
+
+    state = index_[index].state;
+
+    return Result::OK;
+}
+
+bool StorageManager::slot_info(
+    std::size_t slot,
+    EntryInfo& info
+) const
+{
+    if (!initialized_ ||
+        slot >= MAX_LOGICAL_KEYS ||
+        !index_[slot].valid) {
+        return false;
+    }
+
+    const IndexEntry& entry = index_[slot];
+
+    std::memcpy(info.key, entry.key, entry.key_len);
+    info.key_len = entry.key_len;
+    info.version = Version{entry.version_hlc, entry.version_origin};
+    info.state = entry.state;
+    info.value_len = entry.value_len;
+
+    return true;
+}
+
+int StorageManager::find_slot(KeyView key) const
+{
+    if (!initialized_ ||
+        key.len == 0 ||
+        key.len > KEY_MAX ||
+        key.data == nullptr) {
+        return -1;
+    }
+
+    return find_index_entry(key);
+}
+
+Result StorageManager::read_slot_value(
+    std::size_t slot,
+    std::uint8_t* value_out,
+    std::size_t value_capacity,
+    std::size_t& value_len
+)
+{
+    value_len = 0;
+
+    if (!initialized_) {
+        return Result::NOT_INITIALIZED;
+    }
+
+    if (slot >= MAX_LOGICAL_KEYS || !index_[slot].valid) {
+        return Result::NOT_FOUND;
+    }
+
+    return read_value(
+        index_[slot],
+        value_out,
+        value_capacity,
+        value_len
+    );
+}
+
+Stats StorageManager::stats() const
+{
+    Stats stats{};
+
+    for (std::size_t i = 0; i < MAX_LOGICAL_KEYS; ++i) {
+        if (!index_[i].valid) {
+            continue;
+        }
+
+        ++stats.slots_used;
+
+        if (index_[i].state == State::TOMBSTONE) {
+            ++stats.tombstones;
+        } else {
+            ++stats.live_keys;
+        }
+
+        if ((drop_mask_ & slot_bit(i)) != 0) {
+            ++stats.slots_pending_drop;
+        }
+    }
+
+    stats.log_capacity_bytes =
+        metadata::BANK_RECORD_AREA_END -
+        metadata::BANK_RECORD_OFFSET;
+
+    stats.log_free_bytes = free_log_bytes();
+
+    stats.log_used_bytes =
+        initialized_
+            ? stats.log_capacity_bytes - stats.log_free_bytes
+            : 0;
+
+    stats.compactions_completed = compactions_completed_;
+    stats.compactions_aborted = compactions_aborted_;
+    stats.keys_dropped = keys_dropped_;
+    stats.active_bank = static_cast<std::uint8_t>(active_bank_);
+    stats.superblock_generation = superblock_generation_;
+    stats.compaction_active = compaction_active();
+    stats.boot_kind = boot_kind_;
+
+    return stats;
 }
 
 } // namespace storage

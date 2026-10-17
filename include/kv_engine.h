@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "membership.h"
 #include "node_id.h"
 #include "placement.h"
 #include "protocol.h"
@@ -20,8 +19,11 @@ enum class Result : std::uint8_t {
     STORAGE_ERROR,
     NOT_RESPONSIBLE,
     STALE_VERSION,
-    NOT_READY
+    NOT_READY,
+    REPLICATION_FAILED
 };
+
+const char* to_string(Result result);
 
 struct OperationResponse {
     Result result = Result::INVALID_REQUEST;
@@ -31,8 +33,22 @@ struct OperationResponse {
 
     std::uint8_t value[storage::VALUE_MAX]{};
     std::uint16_t value_length = 0;
+
+    // Owners of the key in the view used to execute the request.
+    placement::Assignment assignment{node::INVALID, node::INVALID};
 };
 
+/*
+ * Applies SET/GET/DELETE and versioned replication data to the local
+ * Storage Manager. Knows placement (for the primary check) but not
+ * the radio, timing or request reliability.
+ *
+ * Version rule (docs/DESIGN.md, "Versions"): the PRIMARY assigns the
+ * version of a client mutation from its own HLC after merging the
+ * request's HLC, with version_origin = primary node id. A single
+ * clock never repeats a value, so versions are unique even when two
+ * nodes briefly both act as primary for a key.
+ */
 class Engine {
 public:
     Engine(
@@ -45,10 +61,27 @@ public:
 
     bool ready() const;
 
+    /*
+     * SET_REQ / GET_REQ / DEL_REQ on this node.
+     * NOT_RESPONSIBLE unless this node is the primary in `alive`.
+     * mutation_version is used for SET and DEL only.
+     */
     Result execute(
         const protocol::DecodedMessage& message,
-        const membership::Manager& membership,
-        std::uint64_t now_ms,
+        placement::AliveMask alive,
+        storage::Version mutation_version,
+        OperationResponse& response
+    ) const;
+
+    /*
+     * REPL_REQ (must carry FLAG_REPLICATED) or RESYNC_DATA:
+     * version = (header.hlc, header.origin_node_id), tombstone when
+     * FLAG_TOMBSTONE is set. Applied with last-writer-wins and no
+     * ownership check: a newer version is always safe to keep, and
+     * rejecting data during a membership change only loses it.
+     */
+    Result apply_versioned(
+        const protocol::DecodedMessage& message,
         OperationResponse& response
     ) const;
 
@@ -57,6 +90,7 @@ public:
 private:
     Result execute_set(
         const protocol::DecodedMessage& message,
+        storage::Version version,
         OperationResponse& response
     ) const;
 
@@ -67,17 +101,18 @@ private:
 
     Result execute_delete(
         const protocol::DecodedMessage& message,
+        storage::Version version,
         OperationResponse& response
     ) const;
 
-    Result map_storage_result(
+    static Result map_storage_result(
         storage::Result result
-    ) const;
+    );
 
-    void copy_key(
+    static void copy_key(
         protocol::KeyView key,
         OperationResponse& response
-    ) const;
+    );
 
     node::Id local_node_id_;
     storage::StorageManager& storage_;

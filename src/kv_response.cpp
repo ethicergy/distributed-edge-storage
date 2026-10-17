@@ -19,6 +19,9 @@ protocol::MessageType ResponseBuilder::response_type_for(
         case protocol::MessageType::DEL_REQ:
             return protocol::MessageType::DEL_ACK;
 
+        case protocol::MessageType::REPL_REQ:
+            return protocol::MessageType::REPL_ACK;
+
         default:
             return request_type;
     }
@@ -53,12 +56,16 @@ protocol::StatusCode ResponseBuilder::to_protocol_status(
         case Result::STALE_VERSION:
             return protocol::StatusCode::STALE_VERSION;
 
+        // A node that cannot serve yet (booting, storage offline)
+        // tells the client to use another owner.
         case Result::NOT_READY:
-            return protocol::StatusCode::STORAGE_ERROR;
+            return protocol::StatusCode::NOT_RESPONSIBLE;
 
-        default:
-            return protocol::StatusCode::INVALID_REQUEST;
+        case Result::REPLICATION_FAILED:
+            return protocol::StatusCode::REPLICATION_FAILED;
     }
+
+    return protocol::StatusCode::INVALID_REQUEST;
 }
 
 bool ResponseBuilder::build_payload(
@@ -130,6 +137,20 @@ bool ResponseBuilder::build_payload(
             ) == protocol::Result::OK;
         }
 
+        case protocol::MessageType::REPL_ACK: {
+            const protocol::ReplicationAckPayload payload{
+                status,
+                key
+            };
+
+            return protocol::serialize_replication_ack(
+                payload,
+                output,
+                output_capacity,
+                payload_length
+            ) == protocol::Result::OK;
+        }
+
         default:
             return false;
     }
@@ -169,7 +190,8 @@ bool ResponseBuilder::build(
     if (
         response_type != protocol::MessageType::SET_ACK &&
         response_type != protocol::MessageType::GET_RESP &&
-        response_type != protocol::MessageType::DEL_ACK
+        response_type != protocol::MessageType::DEL_ACK &&
+        response_type != protocol::MessageType::REPL_ACK
     ) {
         return false;
     }
@@ -209,7 +231,12 @@ bool ResponseBuilder::build(
 
         request_header.origin_node_id,
         local_node_id,
-        request_header.origin_node_id,
+
+        // A REPL_ACK goes back to the primary that sent the REPL_REQ;
+        // client responses go to the request's origin.
+        response_type == protocol::MessageType::REPL_ACK
+            ? request_header.sender_node_id
+            : request_header.origin_node_id,
 
         0,
 

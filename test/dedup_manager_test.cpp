@@ -370,8 +370,113 @@ static void test_invalid_identity()
     );
 }
 
+static void test_in_progress_reclaimed_after_timeout()
+{
+    request::DedupManager manager(10000, 3000);
+
+    assert(manager.begin());
+
+    const auto id =
+        identity(node::B, 7);
+
+    assert(
+        manager.begin_request(id, 100) ==
+        request::DedupResult::NEW_REQUEST
+    );
+
+    // Still protected just before the timeout.
+    assert(
+        manager.begin_request(id, 3099) ==
+        request::DedupResult::DUPLICATE_IN_PROGRESS
+    );
+
+    // Leaked entry is reclaimed; the slot is free again.
+    manager.expire(3100);
+
+    assert(manager.active_count() == 0);
+
+    assert(
+        manager.begin_request(id, 3100) ==
+        request::DedupResult::NEW_REQUEST
+    );
+
+    // A completed entry still follows the retention timer.
+    const std::uint8_t response[] = {1, 2, 3};
+
+    assert(
+        manager.complete_request(
+            id,
+            response,
+            sizeof(response),
+            3200
+        ) == request::DedupResult::NEW_REQUEST
+    );
+
+    manager.expire(3200 + 9999);
+    assert(manager.active_count() == 1);
+
+    manager.expire(3200 + 10000);
+    assert(manager.active_count() == 0);
+}
+
+static void test_eviction_under_pressure()
+{
+    request::DedupManager manager(10000, 0, 3000);
+
+    assert(manager.begin());
+
+    const std::uint8_t response[] = {9};
+
+    // Fill the table with completed entries at t = 0..N-1.
+    for (std::uint32_t i = 0;
+         i < request::MAX_DEDUP_ENTRIES;
+         ++i) {
+
+        const auto id = identity(node::A, 1000 + i);
+
+        assert(manager.begin_request(id, i) ==
+               request::DedupResult::NEW_REQUEST);
+
+        assert(manager.complete_request(id, response, 1, i) ==
+               request::DedupResult::NEW_REQUEST);
+    }
+
+    // Too young to evict: a retry could still arrive.
+    assert(manager.begin_request(identity(node::B, 1), 2999) ==
+           request::DedupResult::TABLE_FULL);
+
+    // The oldest entry (completed at t=0) is now evictable.
+    assert(manager.begin_request(identity(node::B, 1), 3000) ==
+           request::DedupResult::NEW_REQUEST);
+
+    request::DedupState state{};
+
+    assert(manager.get_state(identity(node::A, 1000), state, 3000) ==
+           request::DedupResult::UNKNOWN_REQUEST);
+
+    // The next-oldest one is still cached.
+    assert(manager.get_state(identity(node::A, 1001), state, 3000) ==
+           request::DedupResult::DUPLICATE_COMPLETED);
+
+    // IN_PROGRESS entries are never evicted.
+    request::DedupManager busy(10000, 0, 1);
+    assert(busy.begin());
+
+    for (std::uint32_t i = 0;
+         i < request::MAX_DEDUP_ENTRIES;
+         ++i) {
+        assert(busy.begin_request(identity(node::C, 1 + i), 0) ==
+               request::DedupResult::NEW_REQUEST);
+    }
+
+    assert(busy.begin_request(identity(node::D, 1), 100000) ==
+           request::DedupResult::TABLE_FULL);
+}
+
 int main()
 {
+    test_eviction_under_pressure();
+    test_in_progress_reclaimed_after_timeout();
     test_new_request();
     test_duplicate_in_progress();
     test_completion_and_replay();

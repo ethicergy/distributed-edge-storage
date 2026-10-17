@@ -253,6 +253,38 @@ Hlc Clock::on_receive(Hlc remote_hlc)
     return value_;
 }
 
+void Clock::adopt_physical(Hlc remote_hlc)
+{
+    if (!initialized_) {
+        return;
+    }
+
+    const std::uint64_t remote_physical = physical(remote_hlc);
+    const std::uint64_t local_physical = physical_now_ms();
+
+    if (remote_physical <= local_physical) {
+        return;
+    }
+
+    const std::uint64_t gap = remote_physical - local_physical;
+
+    if (physical_offset_ms_ > PHYSICAL_MASK - gap) {
+        physical_offset_ms_ = PHYSICAL_MASK;
+        return;
+    }
+
+    physical_offset_ms_ += gap;
+}
+
+std::uint64_t Clock::physical_now() const
+{
+    if (!initialized_) {
+        return 0;
+    }
+
+    return physical_now_ms();
+}
+
 bool Clock::ready() const
 {
     return initialized_;

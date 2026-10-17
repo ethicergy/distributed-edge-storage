@@ -3,12 +3,17 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "config.h"
 #include "request_identity.h"
 
 namespace request {
 
-constexpr std::size_t MAX_DEDUP_ENTRIES = 16;
-constexpr std::size_t MAX_RESPONSE_SIZE = 250;
+constexpr std::size_t MAX_DEDUP_ENTRIES =
+    config::MAX_DEDUP_ENTRIES;
+// Cached responses are acknowledgements (SET_ACK, DEL_ACK, REPL_ACK):
+// 22-byte header + status + key length + key <= 56 bytes. GET
+// responses are never cached (reads are idempotent).
+constexpr std::size_t MAX_RESPONSE_SIZE = 64;
 
 constexpr std::uint64_t DEFAULT_DEDUP_RETENTION_MS =
     10000;
@@ -32,9 +37,22 @@ enum class DedupResult : std::uint8_t {
 
 class DedupManager {
 public:
+    /*
+     * in_progress_timeout_ms == 0 keeps IN_PROGRESS entries until
+     * they are completed or removed. A non-zero value reclaims an
+     * IN_PROGRESS entry that has been open for that long, so a code
+     * path that forgets to complete a request cannot leak the slot.
+     *
+     * evict_after_ms != 0: when the table is full, the oldest
+     * COMPLETED entry older than this is reused for a new request.
+     * Set it to the longest time a sender can still retransmit, so an
+     * evicted entry can no longer see a retry.
+     */
     explicit DedupManager(
         std::uint64_t retention_ms =
-            DEFAULT_DEDUP_RETENTION_MS
+            DEFAULT_DEDUP_RETENTION_MS,
+        std::uint64_t in_progress_timeout_ms = 0,
+        std::uint64_t evict_after_ms = 0
     );
 
     bool begin();
@@ -92,6 +110,7 @@ private:
 
         std::uint8_t response_length = 0;
 
+        std::uint64_t started_at_ms = 0;
         std::uint64_t completed_at_ms = 0;
     };
 
@@ -101,12 +120,18 @@ private:
 
     int find_free() const;
 
+    int find_evictable(
+        std::uint64_t now_ms
+    ) const;
+
     bool expired(
         const Entry& entry,
         std::uint64_t now_ms
     ) const;
 
     std::uint64_t retention_ms_;
+    std::uint64_t in_progress_timeout_ms_;
+    std::uint64_t evict_after_ms_;
 
     Entry entries_[MAX_DEDUP_ENTRIES]{};
 

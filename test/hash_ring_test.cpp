@@ -37,10 +37,10 @@ int main()
         ++owner_counts[point.owner];
     }
 
-    assert(owner_counts[node::A] == 4);
-    assert(owner_counts[node::B] == 4);
-    assert(owner_counts[node::C] == 4);
-    assert(owner_counts[node::D] == 4);
+    assert(owner_counts[node::A] == hash_ring::VIRTUAL_NODES_PER_NODE);
+    assert(owner_counts[node::B] == hash_ring::VIRTUAL_NODES_PER_NODE);
+    assert(owner_counts[node::C] == hash_ring::VIRTUAL_NODES_PER_NODE);
+    assert(owner_counts[node::D] == hash_ring::VIRTUAL_NODES_PER_NODE);
 
     for (
         std::size_t i = 1;

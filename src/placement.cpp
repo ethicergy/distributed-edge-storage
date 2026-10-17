@@ -20,6 +20,22 @@ bool Resolver::ready() const
     return initialized_;
 }
 
+AliveMask alive_mask(
+    const membership::Manager& membership,
+    std::uint64_t now_ms
+)
+{
+    AliveMask mask = 0;
+
+    for (node::Id id = node::MIN; id <= node::MAX; ++id) {
+        if (membership.is_alive(id, now_ms)) {
+            mask = static_cast<AliveMask>(mask | mask_of(id));
+        }
+    }
+
+    return mask;
+}
+
 bool Resolver::locate(
     const std::uint8_t* key,
     std::size_t key_length,
@@ -28,6 +44,27 @@ bool Resolver::locate(
     Assignment& result
 ) const
 {
+    return locate(
+        key,
+        key_length,
+        alive_mask(membership, now_ms),
+        result
+    );
+}
+
+bool Resolver::locate(
+    const std::uint8_t* key,
+    std::size_t key_length,
+    AliveMask alive,
+    Assignment& result
+) const
+{
+    auto is_alive = [alive](node::Id id) {
+        return id >= node::MIN &&
+               id <= node::MAX &&
+               (alive & mask_of(id)) != 0;
+    };
+
     if (!initialized_) {
         return false;
     }
@@ -74,12 +111,7 @@ bool Resolver::locate(
         const hash_ring::VirtualPoint& point =
             ring_.point(index);
 
-        if (
-            membership.is_alive(
-                point.owner,
-                now_ms
-            )
-        ) {
+        if (is_alive(point.owner)) {
             result.primary = point.owner;
             break;
         }
@@ -110,10 +142,7 @@ bool Resolver::locate(
 
         if (
             point.owner != result.primary &&
-            membership.is_alive(
-                point.owner,
-                now_ms
-            )
+            is_alive(point.owner)
         ) {
             result.replica = point.owner;
             break;

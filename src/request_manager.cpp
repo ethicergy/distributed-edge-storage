@@ -111,9 +111,13 @@ Result Manager::submit(
         return Result::INVALID_ARGUMENT;
     }
 
+    /*
+     * destination == identity.origin is allowed: a primary may
+     * replicate to a replica that is also the client of the
+     * original request.
+     */
     if (destination < node::MIN ||
-        destination > node::MAX ||
-        destination == identity.origin) {
+        destination > node::MAX) {
 
         return Result::INVALID_ARGUMENT;
     }

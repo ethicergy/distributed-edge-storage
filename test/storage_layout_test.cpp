@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
+#include "../sim/fake_eeprom.h"
 #include "storage.h"
 
 using namespace storage;
@@ -22,14 +23,13 @@ int main() {
         "Unexpected RAM index size"
     );
 
-    // The object must be constructible with its default state.
-    StorageManager storage;
+    // The object is constructed on a device and is not ready until
+    // begin() succeeds (behaviour is covered by storage_manager_test).
+    sim::FakeEeprom device;
+    StorageManager storage(device);
 
-    // begin() is intentionally not called yet because EEPROM-backed
-    // initialization belongs to the later implementation phase.
-    //
-    // The object existing successfully is the only runtime check here.
-    (void)storage;
+    assert(!storage.ready());
+    assert(StorageManager::slot_capacity() == MAX_LOGICAL_KEYS);
 
     assert(MAX_LOGICAL_KEYS == 64);
     assert(KEY_MAX == 32);

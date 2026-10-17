@@ -502,8 +502,73 @@ static void test_immediate_send_failure_still_retries()
     );
 }
 
+/*
+ * A primary replicates to a replica that may also be the client of
+ * the original request, so destination == identity.origin is valid.
+ */
+static void test_destination_may_equal_origin()
+{
+    request::Manager manager;
+
+    assert(
+        manager.begin() ==
+        request::Result::OK
+    );
+
+    const std::uint8_t packet[] = {0x01};
+    bool initial_send_ok = false;
+
+    assert(
+        manager.submit(
+            make_identity(node::C, 42),
+            node::C,
+            packet,
+            sizeof(packet),
+            0,
+            fake_send,
+            nullptr,
+            initial_send_ok
+        ) == request::Result::OK
+    );
+
+    assert(initial_send_ok);
+    assert(last_destination == node::C);
+
+    // Invalid destinations are still rejected.
+    assert(
+        manager.submit(
+            make_identity(node::C, 43),
+            node::INVALID,
+            packet,
+            sizeof(packet),
+            0,
+            fake_send,
+            nullptr,
+            initial_send_ok
+        ) == request::Result::INVALID_ARGUMENT
+    );
+
+    assert(
+        manager.submit(
+            make_identity(node::C, 44),
+            node::BROADCAST,
+            packet,
+            sizeof(packet),
+            0,
+            fake_send,
+            nullptr,
+            initial_send_ok
+        ) == request::Result::INVALID_ARGUMENT
+    );
+
+    send_count = 0;
+    retry_count = 0;
+    last_destination = node::INVALID;
+}
+
 int main()
 {
+    test_destination_may_equal_origin();
     test_basic_completion();
     test_retry_schedule();
     test_deadline();

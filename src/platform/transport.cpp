@@ -4,8 +4,16 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <esp_idf_version.h>
 #include <esp_now.h>
 #include <esp_wifi.h>
+
+// The ESP-NOW callback signatures below are those of ESP-IDF 4.4
+// (Arduino-ESP32 core 2.0.x). IDF 5 changed them; platformio.ini pins
+// the platform so an upgrade cannot silently break reception.
+#if ESP_IDF_VERSION_MAJOR >= 5
+#error "transport.cpp targets ESP-IDF 4.4 / Arduino-ESP32 2.0.x; update the ESP-NOW callbacks before upgrading"
+#endif
 
 namespace transport {
 
@@ -35,6 +43,15 @@ constexpr std::uint8_t MAC_BROADCAST[] = {
 
 bool initialized = false;
 node::Id local_node_id = node::INVALID;
+
+// Written by the Wi-Fi task (callbacks), read by the node task.
+// Aligned 32-bit accesses are atomic on RV32.
+volatile std::uint32_t rx_frames = 0;
+volatile std::uint32_t rx_queue_overflows = 0;
+volatile std::uint32_t rx_unknown_mac = 0;
+
+std::uint32_t tx_ok[node::MAX - node::MIN + 1] = {};
+std::uint32_t tx_failed[node::MAX - node::MIN + 1] = {};
 
 QueueHandle_t rx_queue = nullptr;
 QueueHandle_t tx_status_queue = nullptr;
@@ -107,8 +124,16 @@ void on_receive(
         return;
     }
 
+    const node::Id source = node_from_mac(mac_addr);
+
+    if (source == node::INVALID) {
+        ++rx_unknown_mac;
+        return;
+    }
+
     ReceivedFrame frame{};
 
+    frame.source_node = source;
     frame.length = static_cast<std::uint8_t>(data_len);
 
     std::memcpy(
@@ -123,12 +148,12 @@ void on_receive(
         MAC_ADDRESS_SIZE
     );
 
-    // Never block the ESP-NOW callback.
-    (void)xQueueSend(
-        rx_queue,
-        &frame,
-        0
-    );
+    ++rx_frames;
+
+    // Never block the ESP-NOW callback (rule R3).
+    if (xQueueSend(rx_queue, &frame, 0) != pdTRUE) {
+        ++rx_queue_overflows;
+    }
 }
 void on_send(
     const std::uint8_t* mac_addr,
@@ -384,5 +409,38 @@ bool EspNowTransport::receive_send_status(
     ) == pdTRUE;
 }
 
+
+void EspNowTransport::drain_send_status()
+{
+    SendStatus status{};
+
+    while (receive_send_status(status)) {
+        if (status.destination < node::MIN || status.destination > node::MAX) {
+            continue;
+        }
+
+        if (status.success) {
+            ++tx_ok[status.destination - node::MIN];
+        } else {
+            ++tx_failed[status.destination - node::MIN];
+        }
+    }
+}
+
+Stats EspNowTransport::stats() const
+{
+    Stats stats{};
+
+    stats.rx_frames = rx_frames;
+    stats.rx_queue_overflows = rx_queue_overflows;
+    stats.rx_unknown_mac = rx_unknown_mac;
+
+    for (std::size_t i = 0; i < node::MAX - node::MIN + 1; ++i) {
+        stats.tx_status_ok[i] = tx_ok[i];
+        stats.tx_status_failed[i] = tx_failed[i];
+    }
+
+    return stats;
+}
 
 } // namespace transport

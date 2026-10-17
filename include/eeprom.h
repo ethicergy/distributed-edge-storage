@@ -24,7 +24,33 @@ enum class Result : std::uint8_t {
     WRITE_TIMEOUT
 };
 
-class AT24C256 {
+/*
+ * Byte-addressable persistent memory as seen by the Storage Manager.
+ *
+ * The firmware uses AT24C256 below. Host tests and the cluster
+ * simulator use an in-RAM implementation (sim/fake_eeprom.h) that
+ * can also inject power loss in the middle of a write.
+ */
+class Device {
+public:
+    virtual ~Device() = default;
+
+    virtual Result read(
+        std::uint16_t address,
+        std::uint8_t* buffer,
+        std::size_t length
+    ) = 0;
+
+    virtual Result write(
+        std::uint16_t address,
+        const std::uint8_t* data,
+        std::size_t length
+    ) = 0;
+
+    virtual bool ready() const = 0;
+};
+
+class AT24C256 final : public Device {
 public:
     Result begin(
         std::uint8_t sda_pin,
@@ -35,15 +61,15 @@ public:
         std::uint16_t address,
         std::uint8_t* buffer,
         std::size_t length
-    );
+    ) override;
 
     Result write(
         std::uint16_t address,
         const std::uint8_t* data,
         std::size_t length
-    );
+    ) override;
 
-    bool ready() const;
+    bool ready() const override;
 
 private:
     bool initialized_ = false;

@@ -3,11 +3,13 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "config.h"
 #include "request_identity.h"
 
 namespace request {
 
-constexpr std::size_t MAX_PENDING_REQUESTS = 8;
+constexpr std::size_t MAX_PENDING_REQUESTS =
+    config::MAX_PENDING_REQUESTS;
 constexpr std::size_t MAX_PACKET_SIZE = 250;
 
 constexpr std::uint64_t DEFAULT_INITIAL_TIMEOUT_MS = 500;

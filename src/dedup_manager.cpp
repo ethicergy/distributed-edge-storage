@@ -5,9 +5,13 @@
 namespace request {
 
 DedupManager::DedupManager(
-    std::uint64_t retention_ms
+    std::uint64_t retention_ms,
+    std::uint64_t in_progress_timeout_ms,
+    std::uint64_t evict_after_ms
 )
-    : retention_ms_(retention_ms)
+    : retention_ms_(retention_ms),
+      in_progress_timeout_ms_(in_progress_timeout_ms),
+      evict_after_ms_(evict_after_ms)
 {
 }
 
@@ -67,11 +71,52 @@ int DedupManager::find_free() const
     return -1;
 }
 
+int DedupManager::find_evictable(
+    std::uint64_t now_ms
+) const
+{
+    if (evict_after_ms_ == 0) {
+        return -1;
+    }
+
+    int oldest = -1;
+
+    for (std::size_t i = 0;
+         i < MAX_DEDUP_ENTRIES;
+         ++i) {
+
+        const Entry& entry = entries_[i];
+
+        if (entry.state != DedupState::COMPLETED ||
+            now_ms < entry.completed_at_ms ||
+            now_ms - entry.completed_at_ms < evict_after_ms_) {
+            continue;
+        }
+
+        if (oldest < 0 ||
+            entry.completed_at_ms <
+                entries_[oldest].completed_at_ms) {
+            oldest = static_cast<int>(i);
+        }
+    }
+
+    return oldest;
+}
+
 bool DedupManager::expired(
     const Entry& entry,
     std::uint64_t now_ms
 ) const
 {
+    if (entry.state ==
+        DedupState::IN_PROGRESS) {
+
+        return in_progress_timeout_ms_ != 0 &&
+               now_ms >= entry.started_at_ms &&
+               (now_ms - entry.started_at_ms) >=
+                   in_progress_timeout_ms_;
+    }
+
     if (entry.state !=
         DedupState::COMPLETED) {
 
@@ -130,7 +175,11 @@ DedupResult DedupManager::begin_request(
         }
     }
 
-    const int slot = find_free();
+    int slot = find_free();
+
+    if (slot < 0) {
+        slot = find_evictable(now_ms);
+    }
 
     if (slot < 0) {
         return DedupResult::TABLE_FULL;
@@ -143,6 +192,7 @@ DedupResult DedupManager::begin_request(
     entry.identity = identity;
     entry.state =
         DedupState::IN_PROGRESS;
+    entry.started_at_ms = now_ms;
 
     return DedupResult::NEW_REQUEST;
 }
@@ -337,8 +387,8 @@ void DedupManager::expire(
         Entry& entry =
             entries_[i];
 
-        if (entry.state !=
-            DedupState::COMPLETED) {
+        if (entry.state ==
+            DedupState::FREE) {
 
             continue;
         }

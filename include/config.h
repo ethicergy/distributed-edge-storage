@@ -1,0 +1,229 @@
+#pragma once
+
+/*
+ * Single home for every timing and capacity parameter (rule R8).
+ *
+ * Values are starting points chosen from the protocol design and
+ * from the host cluster simulation. Retune them from hardware
+ * measurements (docs/HARDWARE_TEST_PLAN.md, "Tuning"), and keep the
+ * static_asserts at the bottom of this file green: they encode the
+ * ordering rules between the timeouts (audit item 5.4).
+ */
+
+#include <cstddef>
+#include <cstdint>
+
+namespace config {
+
+// ---------------------------------------------------------------
+// Membership
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t HEARTBEAT_INTERVAL_MS = 500;
+
+// A peer is dead when nothing was heard for this long.
+constexpr std::uint32_t MEMBERSHIP_TIMEOUT_MS = 2000;
+
+// ---------------------------------------------------------------
+// Boot / rejoin gate (decision D6)
+//
+// BOOTING : silent (no heartbeats), listen for peers, merge HLC.
+// CATCHUP : broadcast our version table so peers push newer data.
+// ACTIVE  : heartbeat, serve as primary/replica.
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t BOOT_LISTEN_MS =
+    MEMBERSHIP_TIMEOUT_MS + HEARTBEAT_INTERVAL_MS;
+
+constexpr std::uint32_t CATCHUP_DURATION_MS = 3000;
+
+// Number of full version-table broadcasts during CATCHUP.
+constexpr std::uint8_t CATCHUP_TABLE_ROUNDS = 2;
+
+// ---------------------------------------------------------------
+// Request reliability: client -> primary
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t CLIENT_INITIAL_TIMEOUT_MS = 600;
+constexpr std::uint32_t CLIENT_MAX_RETRY_TIMEOUT_MS = 1200;
+constexpr std::uint8_t CLIENT_MAX_RETRANSMISSIONS = 3;
+constexpr std::uint32_t CLIENT_ATTEMPT_DEADLINE_MS = 3000;
+
+// A logical client operation may make several attempts (new
+// request identity each time) after NOT_RESPONSIBLE, STALE_VERSION
+// or an attempt deadline.
+constexpr std::uint8_t CLIENT_MAX_ATTEMPTS = 5;
+// Backoff before attempt n is n * this; the sum over all attempts
+// (4 s) outlasts a membership timeout, so a client that hit a node
+// which just died or rebooted gets a fresh view before giving up.
+constexpr std::uint32_t CLIENT_ATTEMPT_BACKOFF_MS = 400;
+
+// ---------------------------------------------------------------
+// Request reliability: primary -> replica (REPL_REQ)
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t REPL_INITIAL_TIMEOUT_MS = 300;
+constexpr std::uint32_t REPL_MAX_RETRY_TIMEOUT_MS = 600;
+constexpr std::uint8_t REPL_MAX_RETRANSMISSIONS = 3;
+constexpr std::uint32_t REPL_DEADLINE_MS = 1500;
+
+// Worst-case time the primary spends on its own work for one
+// request (decode, EEPROM append with verify, response build).
+constexpr std::uint32_t PRIMARY_PROCESSING_BUDGET_MS = 500;
+
+// ---------------------------------------------------------------
+// Dedup
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t DEDUP_RETENTION_MS = 6000;
+
+// Under table pressure, a COMPLETED entry this old may be reused:
+// no sender retransmits after its attempt deadline.
+constexpr std::uint32_t DEDUP_EVICT_AFTER_MS = CLIENT_ATTEMPT_DEADLINE_MS + 250;
+
+// An IN_PROGRESS entry older than this is reclaimed (leak guard).
+constexpr std::uint32_t DEDUP_IN_PROGRESS_TIMEOUT_MS =
+    REPL_DEADLINE_MS + PRIMARY_PROCESSING_BUDGET_MS + 1000;
+
+// ---------------------------------------------------------------
+// Capacities
+// ---------------------------------------------------------------
+
+constexpr std::size_t MAX_PENDING_REQUESTS = 12;
+constexpr std::size_t MAX_DEDUP_ENTRIES = 64;
+constexpr std::size_t MAX_CLIENT_OPS = 8;
+constexpr std::size_t MAX_PENDING_REPLICATIONS = 8;
+
+// ---------------------------------------------------------------
+// Anti-entropy
+// ---------------------------------------------------------------
+
+constexpr std::uint32_t AE_PERIOD_MS = 10000;
+
+// Gap between two anti-entropy packets (table chunks or pushes),
+// so a sync round never floods the radio.
+constexpr std::uint32_t AE_PACKET_SPACING_MS = 40;
+
+constexpr std::size_t AE_PUSH_QUEUE_DEPTH = 24;
+
+// A peer's version-table report is used for garbage collection
+// only while it is this fresh.
+constexpr std::uint32_t AE_REPORT_MAX_AGE_MS = 3 * AE_PERIOD_MS;
+
+// Tombstones are kept at least this long (HLC physical ms) and
+// until every node confirmed it (decision D8).
+constexpr std::uint64_t TOMBSTONE_GC_MIN_AGE_MS = 10ULL * 60ULL * 1000ULL;
+
+// ---------------------------------------------------------------
+// Storage lifecycle
+// ---------------------------------------------------------------
+
+// Start a background compaction when the active bank has less
+// free log space than this.
+constexpr std::size_t COMPACTION_TRIGGER_FREE_BYTES = 3072;
+
+// Also compact early when GC has dropped keys and the index is
+// this full (percent).
+constexpr std::size_t COMPACTION_INDEX_PRESSURE_PERCENT = 75;
+
+// EEPROM pages cleared per compaction step (64 bytes each, about
+// 5 ms per page on the AT24C256).
+constexpr std::size_t COMPACTION_CLEAR_PAGES_PER_STEP = 2;
+
+// A storage that fails recovery with CORRUPTED is reformatted and
+// repopulated from the replicas by anti-entropy.
+constexpr bool STORAGE_AUTO_FORMAT_ON_CORRUPTION = true;
+
+// ---------------------------------------------------------------
+// Sensors (simulated sources until the real sensors are wired)
+// ---------------------------------------------------------------
+
+// EEPROM wear scales with the write rate. Measured in the 2 h soak
+// (test/cluster_test.cpp H13, hottest page): 10 s -> ~3 years to the
+// AT24C256's 1M-cycle rating, 30 s -> ~10 years. The console command
+// `sensor period <ms>` changes it at run time (demos).
+constexpr std::uint32_t SENSOR_PERIOD_MS = 30000;
+constexpr std::uint8_t SENSOR_HISTORY_SLOTS = 4;
+
+// ---------------------------------------------------------------
+// Raspberry Pi bridge (decision D7)
+// ---------------------------------------------------------------
+
+#ifndef EDGE_BRIDGE_NODE_ID
+#define EDGE_BRIDGE_NODE_ID 1
+#endif
+
+constexpr std::uint8_t BRIDGE_NODE_ID = EDGE_BRIDGE_NODE_ID;
+constexpr std::uint32_t BRIDGE_BAUD = 115200;
+constexpr std::uint8_t BRIDGE_UART_RX_PIN = 20;
+constexpr std::uint8_t BRIDGE_UART_TX_PIN = 21;
+constexpr std::size_t BRIDGE_MAX_INFLIGHT = 4;
+
+// ---------------------------------------------------------------
+// Hardware
+// ---------------------------------------------------------------
+
+constexpr std::uint8_t EEPROM_SDA_PIN = 8;
+constexpr std::uint8_t EEPROM_SCL_PIN = 9;
+
+constexpr std::size_t RADIO_RX_QUEUE_DEPTH = 16;
+
+// ---------------------------------------------------------------
+// Ordering rules (audit 5.4)
+// ---------------------------------------------------------------
+
+// The primary must be able to answer REPLICATION_FAILED before the
+// client gives up on the attempt.
+static_assert(
+    REPL_DEADLINE_MS + PRIMARY_PROCESSING_BUDGET_MS <
+        CLIENT_ATTEMPT_DEADLINE_MS,
+    "replication deadline + primary work must fit in one client attempt"
+);
+
+// A retry of an attempt must still find its dedup entry.
+static_assert(
+    DEDUP_RETENTION_MS > CLIENT_ATTEMPT_DEADLINE_MS &&
+        DEDUP_EVICT_AFTER_MS > CLIENT_ATTEMPT_DEADLINE_MS &&
+        DEDUP_EVICT_AFTER_MS > REPL_DEADLINE_MS,
+    "dedup entries must outlive a sender's last retransmission"
+);
+
+// An IN_PROGRESS entry may only be reclaimed after the request
+// could no longer be running.
+static_assert(
+    DEDUP_IN_PROGRESS_TIMEOUT_MS >
+        REPL_DEADLINE_MS + PRIMARY_PROCESSING_BUDGET_MS,
+    "IN_PROGRESS reclaim must not race a live replication"
+);
+
+static_assert(
+    CLIENT_INITIAL_TIMEOUT_MS < CLIENT_ATTEMPT_DEADLINE_MS &&
+        REPL_INITIAL_TIMEOUT_MS < REPL_DEADLINE_MS,
+    "first retransmission must happen before the deadline"
+);
+
+// Heartbeats must arrive several times per membership timeout.
+static_assert(
+    MEMBERSHIP_TIMEOUT_MS >= 3 * HEARTBEAT_INTERVAL_MS,
+    "membership timeout must cover at least three heartbeats"
+);
+
+static_assert(
+    CLIENT_ATTEMPT_BACKOFF_MS *
+            (CLIENT_MAX_ATTEMPTS * (CLIENT_MAX_ATTEMPTS - 1) / 2) >
+        MEMBERSHIP_TIMEOUT_MS + HEARTBEAT_INTERVAL_MS,
+    "client attempts must span a membership change"
+);
+
+static_assert(
+    BOOT_LISTEN_MS > MEMBERSHIP_TIMEOUT_MS,
+    "boot listen window must exceed one membership timeout"
+);
+
+static_assert(
+    MAX_PENDING_REQUESTS >= MAX_CLIENT_OPS &&
+        MAX_PENDING_REQUESTS >= MAX_PENDING_REPLICATIONS,
+    "request tables must hold every client op / replication"
+);
+
+} // namespace config

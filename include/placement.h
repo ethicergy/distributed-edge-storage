@@ -14,6 +14,25 @@ struct Assignment {
     node::Id replica;
 };
 
+// Bit (id - node::MIN) set = node considered alive.
+using AliveMask = std::uint8_t;
+
+constexpr AliveMask mask_of(node::Id id)
+{
+    return static_cast<AliveMask>(1u << (id - node::MIN));
+}
+
+AliveMask alive_mask(
+    const membership::Manager& membership,
+    std::uint64_t now_ms
+);
+
+inline bool is_owner(const Assignment& assignment, node::Id id)
+{
+    return id != node::INVALID &&
+           (assignment.primary == id || assignment.replica == id);
+}
+
 class Resolver {
 public:
     bool begin();
@@ -25,6 +44,14 @@ public:
         std::size_t key_length,
         const membership::Manager& membership,
         std::uint64_t now_ms,
+        Assignment& result
+    ) const;
+
+    // Same placement rule for an explicit set of live nodes.
+    bool locate(
+        const std::uint8_t* key,
+        std::size_t key_length,
+        AliveMask alive,
         Assignment& result
     ) const;
 

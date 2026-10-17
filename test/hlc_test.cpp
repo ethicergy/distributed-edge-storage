@@ -185,8 +185,36 @@ static void test_logical_overflow()
     assert(logical(value) == 0);
 }
 
+static void test_adopt_physical()
+{
+    fake_now_ms = 50;
+    advance_before_next_return = false;
+
+    Clock clock(fake_physical_now);
+    assert(clock.begin(0));
+
+    // A remote clock 10 s ahead pulls the physical part forward.
+    clock.adopt_physical(make(10050, 3));
+    assert(clock.physical_now() == 10050);
+
+    const Hlc merged = clock.on_receive(make(10050, 3));
+    assert(physical(merged) == 10050);
+    assert(logical(merged) == 4);
+
+    // Local time now advances from the adopted base.
+    fake_now_ms = 60;
+    const Hlc later = clock.on_local_event();
+    assert(physical(later) == 10060);
+    assert(logical(later) == 0);
+
+    // A remote clock that is behind never moves us backwards.
+    clock.adopt_physical(make(500, 0));
+    assert(clock.physical_now() == 10060);
+}
+
 int main()
 {
+    test_adopt_physical();
     test_encoding();
     test_comparison();
     test_reboot_anchor();

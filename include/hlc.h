@@ -11,7 +11,13 @@ constexpr std::uint8_t LOGICAL_BITS = 16;
 constexpr std::uint16_t LOGICAL_MAX = 0xFFFFu;
 constexpr std::uint64_t PHYSICAL_MASK = (1ULL << 48) - 1ULL;
 
-constexpr std::uint64_t MAX_REMOTE_DRIFT_MS = 60000;
+/*
+ * No remote-drift rejection: the physical part is uptime based
+ * (millis + offset), so legitimate clocks of different boards can
+ * differ by hours. Rejecting "far ahead" clocks would permanently
+ * split a cluster whose halves booted at different times.
+ * See docs/DESIGN.md, "Clocks".
+ */
 
 constexpr Hlc make(
     std::uint64_t physical_ms,
@@ -40,6 +46,18 @@ public:
     Hlc now() const;
     Hlc on_local_event();
     Hlc on_receive(Hlc remote_hlc);
+
+    /*
+     * Pull the local physical clock forward to a remote clock that
+     * is ahead of it (never backwards). After this, the physical
+     * parts of all nodes track the most advanced clock in the
+     * cluster, so versions created on different boards are ordered
+     * by real time instead of by uptime. Call before on_receive().
+     */
+    void adopt_physical(Hlc remote_hlc);
+
+    // Physical milliseconds of this clock right now (with offset).
+    std::uint64_t physical_now() const;
 
     bool ready() const;
 
