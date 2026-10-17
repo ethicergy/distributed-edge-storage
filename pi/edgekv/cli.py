@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import re
 import sys
 import time
 from datetime import datetime
@@ -12,6 +13,7 @@ from typing import List, Optional
 
 from .client import EdgeKV, EdgeKVError
 from .rawlog import RawLog
+from . import reading
 from .reading import Reading
 
 
@@ -87,11 +89,20 @@ def cmd_set(kv: EdgeKV, args) -> int:
     return 0
 
 
+SENSOR_KEY = re.compile(r"^[sh]/([A-D])/")
+
+
 def cmd_get(kv: EdgeKV, args) -> int:
     value = kv.get(args.key.encode())
     if value is None:
         print("(not found)")
         return 1
+    # Sensor keys (s/<node>/<kind>, h/<node>/<kind>/<slot>): same line as `sensors`.
+    match = SENSOR_KEY.match(args.key)
+    sample = reading.decode(value) if match else None
+    if sample is not None:
+        print(_format_reading(match.group(1), sample, kv))
+        return 0
     print(_value_text(value))
     return 0
 

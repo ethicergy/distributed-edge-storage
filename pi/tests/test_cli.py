@@ -97,6 +97,40 @@ class CsvTest(unittest.TestCase):
         )
 
 
+class GetTest(unittest.TestCase):
+    class KV(FakeKV):
+        def __init__(self, value):
+            self.value = value
+
+        def get(self, key):
+            return self.value
+
+    def run_get(self, key, value):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = cli.cmd_get(self.KV(value), type("Args", (), {"key": key})())
+        return code, out.getvalue().strip()
+
+    def test_sensor_keys_are_decoded_like_sensors(self):
+        raw = struct.pack(">BBBBIiQ", 1, 1, 0, 0, 7, 23202, 1000 << 16)
+        code, line = self.run_get("s/D/temp", raw)
+        self.assertEqual(code, 0)
+        self.assertEqual(line, cli._format_reading("D", reading.decode(raw), FakeKV()).strip())
+        self.assertIn("23.202 degC", line)
+
+        motion = struct.pack(">BBBBIiQi", 2, 5, 0, 0, 3, 2000, 1000 << 16, 12)
+        _, line = self.run_get("h/B/motion/3", motion)
+        self.assertTrue(line.startswith("B  motion"))
+        self.assertIn("2 events", line)
+
+    def test_other_values_unchanged(self):
+        self.assertEqual(self.run_get("greeting", b"hello world"), (0, "hello world"))
+        self.assertEqual(self.run_get("blob", b"\x00\x01"), (0, "0x0001"))
+        # A sensor-looking key whose value is not a reading stays raw text.
+        self.assertEqual(self.run_get("s/A/note", b"just text"), (0, "just text"))
+        self.assertEqual(self.run_get("k", None), (1, "(not found)"))
+
+
 class PortErrorTest(unittest.TestCase):
     def run_cli(self, argv):
         err = io.StringIO()
