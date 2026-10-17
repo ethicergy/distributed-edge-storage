@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edgekv"
+version = "1.0.0"
+description = "Raspberry Pi client for the 4-node ESP32-C3 edge-kv cluster"
+requires-python = ">=3.8"
+dependencies = ["pyserial>=3.4"]
+
+[project.scripts]
+edgekv = "edgekv.cli:main"
+
+[tool.setuptools]
+packages = ["edgekv"]
