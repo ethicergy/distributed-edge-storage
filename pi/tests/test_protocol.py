@@ -88,6 +88,13 @@ class ReadingTest(unittest.TestCase):
         self.assertIsNone(reading.decode(b"\x01" + data[1:]))
         self.assertIsNone(reading.decode(struct.pack(">BBBBIiQi", 2, 9, 0, 0, 1, 0, 0, 0)))
 
+        stale = reading.decode(struct.pack(">BBBBIiQ", 1, 1, 0x04, 0, 9, 21500, 5))
+        self.assertTrue(stale.stale)
+        self.assertFalse(stale.error)
+        self.assertEqual(stale.status, "stale")
+        error = reading.decode(struct.pack(">BBBBIiQ", 1, 1, 0x08, 0, 9, 0, 5))
+        self.assertEqual(error.status, "error")
+
         # Level kinds stay v1, without aux.
         level = reading.decode(struct.pack(">BBBBIiQ", 1, 4, 0, 0, 1, 320000, 5))
         self.assertIsNone(level.aux)

@@ -115,6 +115,7 @@ struct ValueAttempts {
     std::uint32_t ok = 0;
     std::uint32_t failed = 0;
     std::int32_t last_good_milli = 0; // valid when ok > 0
+    std::uint64_t last_good_ms = 0;   // when it was read (node clock), valid when ok > 0
 };
 
 class ValueInput {
@@ -126,25 +127,35 @@ public:
 };
 
 /*
- * A level sensor read outside the node task (DHT11, node A). Keeps the
- * last good value through failed attempts and counts them; read()
- * fails only until the first good value.
+ * A level sensor read outside the node task (DHT11). Failed attempts
+ * are counted and keep the last good value, for stale_ms. After that,
+ * readings carry READING_FLAG_STALE (still the last good value), or
+ * READING_FLAG_ERROR with value 0 if there was no good read since the
+ * first poll. read() fails (no reading) only during the first stale_ms
+ * while no value exists yet. Never replaced by simulated values
+ * (fallback_allowed() is false).
  */
 class LatestValueSource final : public Source {
 public:
-    LatestValueSource(Kind kind, ValueInput& input);
+    LatestValueSource(Kind kind, ValueInput& input, std::uint32_t stale_ms = config::DHT_STALE_MS);
 
     bool begin() override { return input_.begin(); }
     Kind kind() const override { return kind_; }
     bool simulated() const override { return false; }
+    void poll(std::uint64_t now_ms) override;
     bool read(std::uint64_t now_ms, Sample& sample) override;
     std::uint32_t failures() const override { return failures_; }
+    bool fallback_allowed() const override { return false; }
 
 private:
     Kind kind_;
     ValueInput& input_;
+    std::uint32_t stale_ms_;
+    bool started_ = false;
+    std::uint64_t start_ms_ = 0;
     bool have_value_ = false;
     std::int32_t last_good_milli_ = 0;
+    std::uint64_t last_good_ms_ = 0;
     std::uint32_t failures_ = 0;
 };
 
@@ -152,8 +163,9 @@ private:
  * The per-node switch with a safety net: uses `real` when given and
  * its begin() succeeded; after config::SENSOR_FALLBACK_AFTER_FAILURES
  * failed reads in a row it serves the simulated source (flagged
- * simulated) until the real one reads again. real == nullptr: always
- * simulated.
+ * simulated) until the real one reads again, unless the real source
+ * forbids that (fallback_allowed(): the DHT11 reports stale / error
+ * instead). real == nullptr: always simulated.
  */
 class FallbackSource final : public Source {
 public:

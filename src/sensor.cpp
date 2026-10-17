@@ -145,7 +145,9 @@ std::size_t format_value(
     int written = 0;
     const long events = static_cast<long>(value_milli / 1000);
 
-    if (kind == Kind::MOTION && (flags & READING_FLAG_SETTLING)) {
+    if (flags & READING_FLAG_ERROR) {
+        written = std::snprintf(out, capacity, "ERROR (no good %s read since boot)", kind_key(kind));
+    } else if (kind == Kind::MOTION && (flags & READING_FLAG_SETTLING)) {
         written = std::snprintf(out, capacity, "settling (PIR warm-up)");
     } else if (kind == Kind::MOTION && aux == AUX_NONE) {
         written = std::snprintf(out, capacity, "%ld events, no motion since boot", events);
@@ -169,11 +171,12 @@ std::size_t format_value(
         written = std::snprintf(
             out,
             capacity,
-            "%s%ld.%03ld %s",
+            "%s%ld.%03ld %s%s",
             (value_milli < 0 && whole == 0) ? "-" : "",
             whole,
             frac,
-            kind_unit(kind)
+            kind_unit(kind),
+            (flags & READING_FLAG_STALE) ? " STALE (last good value, no good read lately)" : ""
         );
     }
 
@@ -456,7 +459,7 @@ void Sampler::tick(std::uint64_t now_ms)
     const Reading reading{
         source_.kind(),
         static_cast<std::uint8_t>(
-            (sample.flags & READING_FLAG_SETTLING) |
+            (sample.flags & ~READING_FLAG_SIMULATED) |
             (source_.simulated() ? READING_FLAG_SIMULATED : 0)
         ),
         sequence_,

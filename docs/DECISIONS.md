@@ -81,7 +81,7 @@ Reading encoding, big-endian like the protocol. v1 (20 bytes) for
 level kinds, v2 (24 bytes) for event kinds:
 
 ```
-0 format (1 or 2) | 1 kind | 2 flags (bit0 simulated, bit1 settling) | 3 reserved 0
+0 format (1 or 2) | 1 kind | 2 flags (bit0 simulated, bit1 settling, bit2 stale, bit3 error) | 3 reserved 0
 4..7  sequence  (u32)
 8..11 value in thousandths of the unit (i32)
 12..19 HLC of the sample (u64)

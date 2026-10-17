@@ -164,6 +164,10 @@ constexpr std::uint8_t BH1750_I2C_ADDRESS = 0x23;
 
 // DHT11: at most 1 Hz. Read by its own task, never by the node task.
 constexpr std::uint32_t DHT11_READ_INTERVAL_MS = 2000;
+// No good DHT11 read for this long: readings are flagged stale (last
+// good value) or error (none since boot). Never replaced by simulated
+// values.
+constexpr std::uint32_t DHT_STALE_MS = 10000;
 
 // AM312: OUT stays high ~2 s per detection, so polling every 100 ms
 // catches each one. After power-on it needs to settle; until then
@@ -266,6 +270,8 @@ static_assert(
 );
 
 static_assert(DHT11_READ_INTERVAL_MS >= 1000, "the DHT11 allows at most one read per second");
+
+static_assert(DHT_STALE_MS > DHT11_READ_INTERVAL_MS, "allow at least one DHT11 read before calling it stale");
 
 static_assert(PIR_POLL_INTERVAL_MS <= 500, "poll several times per ~2 s PIR pulse");
 

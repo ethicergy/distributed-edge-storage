@@ -898,20 +898,24 @@ struct FakeMic final : sensor::DigitalInput {
 };
 
 struct FakeDht final : sensor::ValueInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
     std::uint32_t attempts = 0;
 
     bool begin() override { return true; }
 
-    // One attempt per take(); every third one fails.
+    // One attempt per take(); every third one fails, and from t0 + 26 s
+    // on the sensor is dead.
     sensor::ValueAttempts take() override
     {
         sensor::ValueAttempts out{};
 
-        if (++attempts % 3 == 0) {
+        if (++attempts % 3 == 0 || cluster->now() - t0 >= 26000) {
             out.failed = 1;
         } else {
             out.ok = 1;
             out.last_good_milli = 21500;
+            out.last_good_ms = cluster->now();
         }
 
         return out;
@@ -957,6 +961,8 @@ std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, st
     switch (id) {
         case node::A: {
             auto dht = std::make_unique<FakeDht>();
+            dht->cluster = &cluster;
+            dht->t0 = t0;
             rig->real = std::make_unique<sensor::LatestValueSource>(sensor::Kind::TEMPERATURE, *dht);
             rig->value_input = std::move(dht);
             break;
@@ -1073,7 +1079,7 @@ void real_sensor_logic_end_to_end()
     CHECK(read_latest(cluster, node::A, reading));
     CHECK(reading.kind == sensor::Kind::TEMPERATURE);
     CHECK(reading.value_milli == 21500);
-    CHECK(!(reading.flags & sensor::READING_FLAG_SIMULATED));
+    CHECK(reading.flags == 0);
     CHECK(cluster.node(node::A).source->failures() >= 1);
     CHECK(cluster.node(node::A).sampler->stats().read_errors == 0);
 
@@ -1083,6 +1089,15 @@ void real_sensor_logic_end_to_end()
     CHECK(reading.flags & sensor::READING_FLAG_SIMULATED);
     CHECK(cluster.node(node::D).source->simulated());
     CHECK(cluster.node(node::D).source->failures() >= config::SENSOR_FALLBACK_AFTER_FAILURES);
+
+    // A's DHT dies at t0 + 26 s. More than DHT_STALE_MS later its
+    // readings are flagged stale, keep the last good value, and are
+    // never replaced by simulated values.
+    cluster.run_for(t0 + 26000 + config::DHT_STALE_MS + 2 * RIG_PERIOD_MS - cluster.now());
+    CHECK(read_latest(cluster, node::A, reading));
+    CHECK(reading.flags == sensor::READING_FLAG_STALE);
+    CHECK(reading.value_milli == 21500);
+    CHECK(!cluster.node(node::A).source->simulated());
 }
 
 int main(int argc, char** argv)

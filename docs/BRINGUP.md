@@ -311,7 +311,7 @@ That isn't built and needs your OK.
 * So the node task never waits on the DHT. Radio frames arriving in those ~5 ms are held by the Wi-Fi hardware and the RX queue.
 * The node task only calls `take()`, which swaps counters under a spinlock.
 * `LatestValueSource` (`sensor_sources.h:133`) keeps the last good value through failed reads and counts them. `status` shows them as `read failures`.
-* Limitation: if a DHT that had worked is unplugged, it keeps reporting its last good value. The growing `read failures` count is the only sign. Say if you want a stale timeout.
+* Staleness: after `DHT_STALE_MS = 10000` (`config.h`) without a good read, readings carry the `STALE` flag and keep the last good value. With no good read since boot they carry `ERROR` with value 0. Both show in `sensors` / `get`, the Pi text output and the CSV `status` column. The DHT11 is never replaced by simulated values (`fallback_allowed()` is false).
 
 **AM312 (B).**
 * `PirInput` (`sensors.cpp:113`): `INPUT_PULLDOWN`, so an unplugged sensor reads as "no motion".

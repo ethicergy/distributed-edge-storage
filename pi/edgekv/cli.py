@@ -17,11 +17,15 @@ from .reading import Reading
 
 CSV_HEADER = [
     "read_at", "node", "kind", "value", "unit", "sequence", "sampled_at", "simulated",
-    "last_motion_s", "active_pct", "settling",
+    "last_motion_s", "active_pct", "status",
 ]
 
 
 def _value_and_detail(sample: Reading, when: Optional[datetime], now: datetime) -> str:
+    if sample.error:
+        return f"{'':>11} {'':<6}  ERROR: no good {sample.kind} read since boot"
+    if sample.stale:
+        return f"{sample.value:>11.3f} {sample.unit:<5}  STALE: last good value, no good read lately"
     if sample.kind == "motion":
         if sample.settling:
             return f"{'':>11} {'':<6}  settling (PIR warm-up)"
@@ -56,7 +60,7 @@ def _csv_row(now: datetime, node: str, sample: Reading, kv: EdgeKV) -> List[str]
         str(int(sample.simulated)),
         "" if last_motion is None else str(last_motion),
         "" if active is None else f"{active:.1f}",
-        str(int(sample.settling)) if sample.kind == "motion" else "",
+        sample.status,
     ]
 
 

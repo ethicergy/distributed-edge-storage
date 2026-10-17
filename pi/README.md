@@ -46,9 +46,11 @@ Readings: A `temp` (DHT11), B `motion` (AM312 PIR: events per window,
 "last motion N s ago", `settling` after power-on), C `sound` (LM393:
 events per window, % of the window active), D `light` (BH1750). The
 CSV of `watch --csv` has the columns `read_at, node, kind, value, unit,
-sequence, sampled_at, simulated, last_motion_s, active_pct, settling`
-(the last three are empty where they do not apply; `last_motion_s` is
-counted back from `sampled_at`). Start a new CSV file when upgrading
+sequence, sampled_at, simulated, last_motion_s, active_pct, status`.
+`last_motion_s` and `active_pct` are empty where they do not apply;
+`last_motion_s` is counted back from `sampled_at`. `status` is `ok`,
+`settling` (PIR warm-up), `stale` (DHT11: no good read for 10 s, value
+is the last good one) or `error` (DHT11: no good read since boot). Start a new CSV file when upgrading
 from the 8-column format.
 
 Exit codes: 0 success, 1 key not found, 2 the cluster refused the

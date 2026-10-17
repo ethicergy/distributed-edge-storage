@@ -25,6 +25,8 @@ READING_FORMAT = 0x01
 READING_FORMAT_AUX = 0x02
 FLAG_SIMULATED = 0x01
 FLAG_SETTLING = 0x02
+FLAG_STALE = 0x04  # no good hardware read lately; value is the last good one
+FLAG_ERROR = 0x08  # no good hardware read since boot; value meaningless
 AUX_NONE = -1
 HISTORY_SLOTS = 4
 
@@ -52,10 +54,22 @@ class Reading:
     simulated: bool
     aux: Optional[int] = None
     settling: bool = False
+    stale: bool = False
+    error: bool = False
 
     @property
     def hlc_ms(self) -> int:
         return hlc_physical_ms(self.hlc)
+
+    @property
+    def status(self) -> str:
+        if self.error:
+            return "error"
+        if self.stale:
+            return "stale"
+        if self.settling:
+            return "settling"
+        return "ok"
 
     @property
     def events(self) -> Optional[int]:
@@ -89,6 +103,7 @@ def decode(data: bytes) -> Optional[Reading]:
     return Reading(
         name, unit, value_milli / 1000.0, sequence, hlc,
         bool(flags & FLAG_SIMULATED), aux, bool(flags & FLAG_SETTLING),
+        bool(flags & FLAG_STALE), bool(flags & FLAG_ERROR),
     )
 
 

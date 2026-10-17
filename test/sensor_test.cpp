@@ -128,6 +128,12 @@ void test_format_value()
     REQUIRE(std::string(text) == "5 events, 37.5 % active");
 
     REQUIRE(sensor::format_value(sensor::Kind::SOUND, 5000, 37540, 0, text, 4) == 0);
+
+    sensor::format_value(sensor::Kind::TEMPERATURE, 21500, 0, sensor::READING_FLAG_STALE, text, sizeof(text));
+    REQUIRE(std::string(text) == "21.500 degC STALE (last good value, no good read lately)");
+
+    sensor::format_value(sensor::Kind::TEMPERATURE, 0, 0, sensor::READING_FLAG_ERROR, text, sizeof(text));
+    REQUIRE(std::string(text) == "ERROR (no good temp read since boot)");
 }
 
 void test_keys()

@@ -144,14 +144,22 @@ bool SoundSource::read(std::uint64_t now_ms, Sample& sample)
 // LatestValueSource
 // ------------------------------------------------------------------
 
-LatestValueSource::LatestValueSource(Kind kind, ValueInput& input)
-    : kind_(kind), input_(input)
+LatestValueSource::LatestValueSource(Kind kind, ValueInput& input, std::uint32_t stale_ms)
+    : kind_(kind), input_(input), stale_ms_(stale_ms)
 {
+}
+
+void LatestValueSource::poll(std::uint64_t now_ms)
+{
+    if (!started_) {
+        started_ = true;
+        start_ms_ = now_ms;
+    }
 }
 
 bool LatestValueSource::read(std::uint64_t now_ms, Sample& sample)
 {
-    (void)now_ms;
+    poll(now_ms);
 
     const ValueAttempts attempts = input_.take();
     failures_ += attempts.failed;
@@ -159,14 +167,26 @@ bool LatestValueSource::read(std::uint64_t now_ms, Sample& sample)
     if (attempts.ok > 0) {
         have_value_ = true;
         last_good_milli_ = attempts.last_good_milli;
-    }
-
-    if (!have_value_) {
-        return false;
+        last_good_ms_ = attempts.last_good_ms;
     }
 
     sample = Sample{};
-    sample.value_milli = last_good_milli_;
+
+    if (have_value_) {
+        sample.value_milli = last_good_milli_;
+
+        if (now_ms > last_good_ms_ && now_ms - last_good_ms_ > stale_ms_) {
+            sample.flags = READING_FLAG_STALE;
+        }
+
+        return true;
+    }
+
+    if (now_ms - start_ms_ <= stale_ms_) {
+        return false; // no read yet; not an error so soon after boot
+    }
+
+    sample.flags = READING_FLAG_ERROR;
     return true;
 }
 
@@ -183,9 +203,11 @@ bool FallbackSource::begin()
 {
     simulated_.begin();
 
+    // A source that must never be replaced (DHT11) stays in charge even
+    // if begin() failed; it then reports errors itself.
     real_ok_ = real_ != nullptr &&
                real_->kind() == simulated_.kind() &&
-               real_->begin();
+               (real_->begin() || !real_->fallback_allowed());
 
     using_simulated_ = !real_ok_;
     return true;
@@ -214,6 +236,10 @@ bool FallbackSource::read(std::uint64_t now_ms, Sample& sample)
     }
 
     ++failures_;
+
+    if (!real_->fallback_allowed()) {
+        return false;
+    }
 
     if (consecutive_failures_ < fallback_after_) {
         ++consecutive_failures_;

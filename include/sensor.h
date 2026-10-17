@@ -51,7 +51,8 @@ Kind kind_for_node(node::Id id);
  *   0      format version: 0x01 (level kinds, 20 bytes) or
  *          0x02 (event kinds, 24 bytes)
  *   1      kind
- *   2      flags (bit 0: simulated source, bit 1: sensor settling)
+ *   2      flags (bit 0: simulated source, bit 1: sensor settling,
+ *          bit 2: stale, bit 3: error; see READING_FLAG_*)
  *   3      reserved (0)
  *   4..7   sequence number (u32, per node, survives reboots)
  *   8..11  value in thousandths of the unit (i32)
@@ -70,6 +71,11 @@ constexpr std::size_t READING_MAX_SIZE = READING_SIZE_AUX;
 constexpr std::uint8_t READING_FLAG_SIMULATED = 0x01;
 // MOTION: the PIR is still in its post-power-on settle time; value 0.
 constexpr std::uint8_t READING_FLAG_SETTLING = 0x02;
+// No good hardware read for config::DHT_STALE_MS: value is the last
+// good one.
+constexpr std::uint8_t READING_FLAG_STALE = 0x04;
+// No good hardware read since boot: value is meaningless (0).
+constexpr std::uint8_t READING_FLAG_ERROR = 0x08;
 constexpr std::int32_t AUX_NONE = -1;
 
 struct Reading {
@@ -106,7 +112,7 @@ std::size_t history_key(node::Id id, Kind kind, std::uint32_t sequence, char* ou
 struct Sample {
     std::int32_t value_milli = 0; // thousandths of the unit
     std::int32_t aux = 0;         // event kinds, see the wire format
-    std::uint8_t flags = 0;       // READING_FLAG_SETTLING; SIMULATED comes from simulated()
+    std::uint8_t flags = 0;       // SETTLING / STALE / ERROR; SIMULATED comes from simulated()
 };
 
 class Source {
@@ -127,6 +133,10 @@ public:
     // Failed hardware reads so far, including ones hidden by keeping
     // the last good value (shown by `status`).
     virtual std::uint32_t failures() const { return 0; }
+
+    // Whether a FallbackSource may serve simulated values in place of
+    // this one when it fails.
+    virtual bool fallback_allowed() const { return true; }
 };
 
 /*

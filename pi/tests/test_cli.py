@@ -46,6 +46,15 @@ class FormatTest(unittest.TestCase):
         self.assertIn("37.5 % active", line)
         self.assertIn("simulated", line)
 
+    def test_stale_and_error(self):
+        line = cli._format_reading("D", sample(1, reading.FLAG_STALE, 21500), FakeKV(), NOW)
+        self.assertIn("21.500 degC", line)
+        self.assertIn("STALE", line)
+        self.assertNotIn("simulated", line)
+
+        line = cli._format_reading("D", sample(1, reading.FLAG_ERROR, 0), FakeKV(), NOW)
+        self.assertIn("ERROR: no good temp read since boot", line)
+
     def test_missing(self):
         self.assertEqual(cli._format_reading("D", None, FakeKV(), NOW), "D  (no reading yet)")
 
@@ -59,14 +68,20 @@ class CsvTest(unittest.TestCase):
     def test_columns(self):
         r = self.row(sample(1, 0, 23202))
         self.assertEqual((r["kind"], r["value"], r["unit"]), ("temp", "23.202", "degC"))
-        self.assertEqual((r["last_motion_s"], r["active_pct"], r["settling"]), ("", "", ""))
+        self.assertEqual((r["last_motion_s"], r["active_pct"], r["status"]), ("", "", "ok"))
         self.assertEqual(r["sampled_at"], (NOW - timedelta(seconds=30)).astimezone().isoformat(timespec="seconds"))
 
         r = self.row(sample(5, 0, 2000, 12))
-        self.assertEqual((r["kind"], r["value"], r["last_motion_s"], r["settling"]), ("motion", "2.000", "12", "0"))
+        self.assertEqual((r["kind"], r["value"], r["last_motion_s"], r["status"]), ("motion", "2.000", "12", "ok"))
 
         r = self.row(sample(5, reading.FLAG_SETTLING, 0, 0))
-        self.assertEqual((r["last_motion_s"], r["settling"]), ("", "1"))
+        self.assertEqual((r["last_motion_s"], r["status"]), ("", "settling"))
+
+        r = self.row(sample(1, reading.FLAG_STALE, 21500))
+        self.assertEqual((r["value"], r["status"]), ("21.500", "stale"))
+
+        r = self.row(sample(1, reading.FLAG_ERROR, 0))
+        self.assertEqual(r["status"], "error")
 
         r = self.row(sample(6, reading.FLAG_SIMULATED, 5000, 37500))
         self.assertEqual((r["kind"], r["active_pct"], r["simulated"]), ("sound", "37.5", "1"))

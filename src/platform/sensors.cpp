@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include "i2c_bus.h"
+#include "platform_time.h"
 #include "sensor_sources.h"
 
 namespace platform_sensors {
@@ -88,6 +89,7 @@ private:
             } else {
                 ++attempts_.ok;
                 attempts_.last_good_milli = static_cast<std::int32_t>(std::lround(celsius * 1000.0f));
+                attempts_.last_good_ms = platform_time::now_ms();
             }
 
             portEXIT_CRITICAL(&lock_);

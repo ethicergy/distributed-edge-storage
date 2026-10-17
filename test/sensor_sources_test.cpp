@@ -47,11 +47,12 @@ public:
         return out;
     }
 
-    void attempt(bool ok, std::int32_t value = 0)
+    void attempt(bool ok, std::int32_t value = 0, std::uint64_t at_ms = 0)
     {
         if (ok) {
             ++pending.ok;
             pending.last_good_milli = value;
+            pending.last_good_ms = at_ms;
         } else {
             ++pending.failed;
         }
@@ -258,10 +259,11 @@ void test_latest_value_keeps_last_good()
     REQUIRE(!source.read(0, sample));
     REQUIRE(source.failures() == 1);
 
-    dht.attempt(true, 21500);
-    dht.attempt(true, 21700);
+    dht.attempt(true, 21500, 1000);
+    dht.attempt(true, 21700, 2000);
     REQUIRE(source.read(2000, sample));
     REQUIRE(sample.value_milli == 21700);
+    REQUIRE(sample.flags == 0);
 
     // Failures keep the last good value and are counted.
     dht.attempt(false);
@@ -273,6 +275,97 @@ void test_latest_value_keeps_last_good()
     // No attempt finished in this window: still the last good value.
     REQUIRE(source.read(5000, sample));
     REQUIRE(sample.value_milli == 21700);
+    REQUIRE(sample.flags == 0);
+}
+
+void test_latest_value_stale_and_error()
+{
+    sensor::Sample sample{};
+
+    // Last good read at 2000; DHT_STALE_MS (10 s) later the reading is
+    // stale but keeps the last good value.
+    {
+        FakeValueInput dht;
+        sensor::LatestValueSource source(sensor::Kind::TEMPERATURE, dht, 10000);
+        REQUIRE(source.begin());
+        source.poll(0);
+
+        dht.attempt(true, 22100, 2000);
+        REQUIRE(source.read(2000, sample));
+        REQUIRE(sample.flags == 0);
+
+        dht.attempt(false);
+        dht.attempt(false);
+        REQUIRE(source.read(12000, sample));
+        REQUIRE(sample.flags == 0); // exactly 10 s: not yet
+
+        dht.attempt(false);
+        REQUIRE(source.read(12001, sample));
+        REQUIRE(sample.flags == sensor::READING_FLAG_STALE);
+        REQUIRE(sample.value_milli == 22100);
+        REQUIRE(source.failures() == 3);
+
+        // A good read clears it.
+        dht.attempt(true, 22300, 14000);
+        REQUIRE(source.read(14000, sample));
+        REQUIRE(sample.flags == 0);
+        REQUIRE(sample.value_milli == 22300);
+    }
+
+    // Never a good read: no reading for the first 10 s, then error.
+    {
+        FakeValueInput dht;
+        sensor::LatestValueSource source(sensor::Kind::TEMPERATURE, dht, 10000);
+        REQUIRE(source.begin());
+        source.poll(500);
+
+        dht.attempt(false);
+        REQUIRE(!source.read(5000, sample));
+        REQUIRE(!source.read(10500, sample));
+
+        REQUIRE(source.read(10501, sample));
+        REQUIRE(sample.flags == sensor::READING_FLAG_ERROR);
+        REQUIRE(sample.value_milli == 0);
+    }
+}
+
+void test_fallback_never_replaces_dht()
+{
+    // Even with many failed reads in a row, a source that forbids
+    // fallback is never replaced by simulated values.
+    FakeValueInput dht;
+    sensor::LatestValueSource real(sensor::Kind::TEMPERATURE, dht, 10000);
+    sensor::SimulatedSource simulated(sensor::Kind::TEMPERATURE, 1);
+    sensor::FallbackSource source(&real, simulated, 3);
+    REQUIRE(source.begin());
+    REQUIRE(source.real_enabled());
+
+    sensor::Sample sample{};
+
+    for (std::uint64_t t = 0; t <= 10000; t += 1000) {
+        REQUIRE(!source.read(t, sample));
+        REQUIRE(!source.simulated());
+    }
+
+    REQUIRE(source.read(11000, sample));
+    REQUIRE(!source.simulated());
+    REQUIRE(sample.flags == sensor::READING_FLAG_ERROR);
+
+    // begin() failing does not hand it to the simulated source either.
+    class FailingInput final : public sensor::ValueInput {
+    public:
+        bool begin() override { return false; }
+        sensor::ValueAttempts take() override { return {}; }
+    } broken;
+
+    sensor::LatestValueSource dead(sensor::Kind::TEMPERATURE, broken, 10000);
+    sensor::FallbackSource guarded(&dead, simulated, 3);
+    REQUIRE(guarded.begin());
+    REQUIRE(guarded.real_enabled());
+    REQUIRE(!guarded.read(0, sample));
+    REQUIRE(guarded.read(20000, sample));
+    REQUIRE(!guarded.simulated());
+    REQUIRE(sample.flags == sensor::READING_FLAG_ERROR);
 }
 
 void test_fallback_switch()
@@ -383,6 +476,8 @@ int main()
     test_sound_events_and_duty();
     test_sound_edges_wrap_and_gap();
     test_latest_value_keeps_last_good();
+    test_latest_value_stale_and_error();
+    test_fallback_never_replaces_dht();
     test_fallback_switch();
     test_real_sensor_mask();
 
