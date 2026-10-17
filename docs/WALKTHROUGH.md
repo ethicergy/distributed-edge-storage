@@ -155,7 +155,7 @@ If C's EEPROM was wiped or corrupted, the same steps rebuild it from scratch (`S
 
 ## 5. Likely examiner questions
 
-Questions 1–10 are about the distributed-systems design, 11–20 about the hardware and engineering.
+Questions 1–10 are about the distributed-systems design, 11–21 about the hardware and engineering.
 
 ### Design
 
@@ -261,3 +261,17 @@ Questions 1–10 are about the distributed-systems design, 11–20 about the har
       * the hottest EEPROM page lasts about 8.5 years.
     * The measurements also exposed a capacity limit: the 64-entry dedup table caps a node at about 20 writes per second in bursts.
     * Hardware numbers sit beside these, with the reasons they differ: real EEPROM write time, ESP-NOW air time, USB detection delays, the 1.5 s boot delay.
+
+21. **What's the throughput limit, and why?**
+    * About **20 writes per second per node** in sustained bursts, set by the dedup window, not by the radio or the EEPROM.
+    * Every SET/DEL, and every replication a node receives, takes an entry in its dedup table so a retransmission is answered from the cache instead of running again. The table holds **64 ids** (`MAX_DEDUP_ENTRIES`, `config.h:93`).
+    * A completed entry may be reused only after **3.25 s** (`DEDUP_EVICT_AFTER_MS` = attempt deadline 3 s + 250 ms, `config.h:82`), so 64 / 3.25 s ≈ 20 mutations per second.
+    * Beyond that the node answers `STORAGE_ERROR` ("dedup table full", `node_runtime.cpp:537`). The client backs off (400 ms × attempt) and retries.
+    * Measured: sequential console SETs hit it in **2 of 400 operations**. Those succeeded on the 4th attempt after about 2.4 s; the other 398 needed one attempt (`docs/RESULTS.md` §1 and §6).
+    * Why not just shorten the window: an entry must outlive the sender's last retransmission, or a late duplicate would execute twice. The `static_assert` at `config.h:223-228` enforces this.
+    * The real knob is the table size: each entry holds a cached reply of up to 64 bytes (`dedup_manager.h:16`), about 85 B in all, so 64 more entries cost about 5 KB of RAM.
+    * The other limits are far higher:
+      * an EEPROM page write takes ~5 ms (a few hundred writes/s);
+      * an ESP-NOW frame takes about 1 ms;
+      * each node runs at most 8 client operations at once (`config.h:94`).
+
