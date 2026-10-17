@@ -1,0 +1,152 @@
+# Decisions
+
+The project audit listed decisions only the project owner could
+make. The owner delegated all of them; this file records
+what was decided and why, so each one can be revisited deliberately.
+
+| # | Decision | Summary |
+|---|----------|---------|
+| D0 | Spec document | `include/protocol.h` + `docs/DESIGN.md` are the spec |
+| D1 | Sensors | simulated sources behind `sensor::Source` until real parts are chosen |
+| D2 | I2C sharing | no I2C sensor yet; rule for when one is added |
+| D3 | Data model | latest key + 4-slot history ring per node, 20-byte big-endian reading |
+| D4 | Timestamps | HLC in the reading; the Pi converts with the bridge's clock offset |
+| D5 | Replica failure | write committed on the primary, reported REPLICATION_FAILED / UNDER_REPLICATED, repaired by anti-entropy; accepted with one live node |
+| D6 | Reads after rejoin | primary-only reads behind a boot/catch-up gate |
+| D7 | Bridge | node A, UART1 GPIO20/21, Python CLI with CSV logging |
+| D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
+
+---
+
+## D0 — Specification
+
+The "master architecture v3" document named in the early planning notes is not in
+the repository. The frozen protocol is therefore `include/protocol.h`
+(unchanged), and system behaviour is specified by `docs/DESIGN.md`
+together with the tests that enforce it. If the original document
+turns up, add it under `docs/` and reconcile any difference explicitly.
+
+## D1 — The four sensors
+
+The parts are not described anywhere. Instead of inventing hardware,
+every node runs a `sensor::SimulatedSource`:
+
+| node | kind | unit | simulated range |
+|---|---|---|---|
+| A | temperature | °C | 22.5 ± 3.5 |
+| B | humidity | %RH | 48 ± 15 |
+| C | pressure | hPa | 1013 ± 5 |
+| D | light | lux | 320 ± 330 |
+
+Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
+`simulated` flag so simulated data can never be mistaken for real
+measurements.
+
+**To add a real sensor:** implement `sensor::Source` (`begin`, `kind`,
+`simulated() -> false`, `read(now, value_milli)`) and construct it
+instead of `SimulatedSource` in `src/platform/main.cpp`. If the kind
+differs from the table above, add it to `sensor::Kind` and to
+`pi/edgekv/reading.py`. Nothing else changes: the sampler, key schema,
+replication and the Pi client stay as they are.
+
+## D2 — Sensors on I2C
+
+There is only one hardware I2C controller on the ESP32-C3 and the
+EEPROM uses it (SDA GPIO8, SCL GPIO9). No I2C sensor exists yet, so
+rule R1 stands unchanged. When one is added:
+
+* preferred: put it on the same bus. The node task is the only task
+  that touches either device, so no mutex is needed as long as the
+  sensor driver is called from `Source::read` (it is). Amend R1 to
+  "only the node task drives I2C".
+* if a driver needs its own task or interrupt-driven transfers, add a
+  bus-owner mutex around `eeprom::AT24C256` and the driver.
+
+## D3 — Sensor data model
+
+Option (a) + (b) from the prompt:
+
+* `s/<node>/<kind>` holds the latest reading (overwritten);
+* `h/<node>/<kind>/<seq % 4>` is a 4-slot history ring.
+
+That is 5 keys per sensor, 20 in the cluster, about 10 per node with
+RF = 2: well inside the 64-key budget, leaving room for user keys.
+
+Reading encoding v1, 20 bytes, big-endian like the protocol:
+
+```
+0 format (1) | 1 kind | 2 flags (bit0 simulated) | 3 reserved 0
+4..7  sequence  (u32)
+8..11 value in thousandths of the unit (i32)
+12..19 HLC of the sample (u64)
+```
+
+The sequence survives reboots: at start-up the sampler reads its own
+latest key back from the cluster and continues from it.
+
+## D4 — Timestamps
+
+Nodes have no wall clock. Each reading carries the HLC of its sample;
+the HLC's physical part is a cluster-wide millisecond clock (all nodes
+adopt the most advanced one, see DESIGN §5). Every bridge answer carries
+the bridge's current HLC, from which the Pi computes
+`offset = pi_wall_ms - hlc_physical_ms` and converts sample times
+(`EdgeKV.wall_time`). Accuracy is the UART round trip plus clock drift
+since the sample: well under a second. No protocol change was needed.
+
+## D5 — Writes when the replica fails, or no second node is alive
+
+The primary writes locally first, then replicates. If the replica
+answers an error or does not answer within 1.5 s, or no other node is
+alive, the client gets **REPLICATION_FAILED**, defined as:
+
+> the write is committed and durable on the primary; anti-entropy will
+> copy it to the replica when one is reachable.
+
+The client API reports it as `UNDER_REPLICATED`, a committed write;
+the Pi CLI prints "OK (under-replicated)". There is no rollback (no
+earlier state to roll back to in an LWW append log), and refusing
+writes with one live node would make the store unusable exactly when a
+sensor most needs to record. If the replica answers STALE_VERSION the
+write lost to a newer version and the client is told so (it retries
+with a fresh version), see DESIGN §6.
+
+## D6 — Reads after a rejoin
+
+Primary-only reads, protected by a gate: a rebooting node stays silent
+(no heartbeats, so nobody routes to it) for one membership timeout,
+then announces its version table while peers push everything it owns
+and lacks, and only then heartbeats and serves. Reading both owners and
+taking the newer version was rejected: GET_RESP carries no version, and
+the frozen protocol has no field for one.
+
+Verified by `cluster_test H7H8`: the old primary rejoins holding a stale
+value while a client reads continuously; the stale value is never
+returned.
+
+## D7 — Raspberry Pi bridge
+
+* Bridge = node A (`EDGE_BRIDGE_NODE_ID` in `platformio.ini`), UART1 on
+  GPIO20 (RX) / GPIO21 (TX), 115200 8N1.
+* Pi software: Python 3 + pyserial (`pi/`): library `edgekv.EdgeKV`
+  and CLI `python3 -m edgekv` with `ping`, `set`, `get`, `del`,
+  `sensors`, `history`, `watch [--csv FILE]` (logging to CSV).
+* A dashboard was not built: the CSV log feeds any plotting tool, and
+  the CLI covers the acceptance test (H14).
+
+## D8 — Garbage collection
+
+Implemented, conservatively:
+
+* **Tombstones** are dropped only when at least 10 minutes old (HLC
+  time), all four nodes are alive, and every other node's latest
+  complete version table shows no copy or a version at least as new.
+  10 minutes is far beyond any retry or in-flight replication, so
+  nothing can bring the key back.
+* **Orphan copies** (a key this node held while standing in for a dead
+  owner) are dropped once both current owners report a version at least
+  as new.
+
+Both are local, physical drops applied by the next compaction; no
+record is written. Without this the 64-key index would fill
+permanently with tombstones and orphans (audit 5.9).

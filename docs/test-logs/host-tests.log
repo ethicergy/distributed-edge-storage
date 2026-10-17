@@ -1,0 +1,82 @@
+# Host test run — 2026-10-16T22:25:33+05:30
+# git HEAD 57f201c + working tree; g++ (Debian 15.2.0-17) 15.2.0; Python 3.14.6
+
+test_bad_crc_resync (test_framing.FramingTest.test_bad_crc_resync) ... ok
+test_bogus_length_then_idle (test_framing.FramingTest.test_bogus_length_then_idle) ... ok
+test_crc_check_value (test_framing.FramingTest.test_crc_check_value) ... ok
+test_limits (test_framing.FramingTest.test_limits) ... ok
+test_noise_and_split_delivery (test_framing.FramingTest.test_noise_and_split_delivery) ... ok
+test_shared_vector (test_framing.FramingTest.test_shared_vector) ... ok
+test_header_layout (test_protocol.ProtocolTest.test_header_layout) ... ok
+test_parse_ack (test_protocol.ProtocolTest.test_parse_ack) ... ok
+test_parse_get_response (test_protocol.ProtocolTest.test_parse_get_response) ... ok
+test_ping_is_broadcast (test_protocol.ProtocolTest.test_ping_is_broadcast) ... ok
+test_rejects (test_protocol.ProtocolTest.test_rejects) ... ok
+test_decode (test_protocol.ReadingTest.test_decode) ... ok
+test_keys (test_protocol.ReadingTest.test_keys) ... ok
+test_set_get_delete_and_sensors_with_node_down (test_sim_integration.SimulatorIntegrationTest.test_set_get_delete_and_sensors_with_node_down) ...   PASS  bridge_test
+  PASS  cluster_test
+  PASS  consistent_hash_test
+  PASS  console_test
+  PASS  dedup_manager_test
+  PASS  hash_ring_test
+  PASS  heartbeat_test
+  PASS  hlc_test
+  PASS  kv_engine_test
+  PASS  membership_test
+  PASS  placement_test
+  PASS  protocol_header_test
+  PASS  protocol_message_decode_test
+  PASS  protocol_message_validation_test
+  PASS  protocol_packet_test
+  PASS  protocol_replication_request_test
+  PASS  protocol_set_request_test
+  PASS  protocol_simple_payload_test
+  PASS  reliable_packet_test
+  PASS  request_identity_test
+  PASS  request_manager_test
+  PASS  ring_balance_test
+  PASS  sensor_test
+  PASS  storage_layout_test
+  PASS  storage_manager_test
+  PASS  storage_metadata_test
+  PASS  storage_record_crc_test
+  PASS  storage_record_test
+  PASS  storage_version_test
+  PASS  uart_frame_test
+----------------------------------------
+  30 passed, 0 failed
+ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 7.527s
+
+OK
+
+## cluster scenarios
+  H2   PASS
+  H3   PASS
+  H4   PASS
+  H5   PASS
+  H6   PASS
+  H7H8 PASS
+  H9   PASS
+  H10  PASS
+  RACE PASS
+  H11  PASS
+  H11F PASS
+  H12  PASS
+  SPLIT PASS
+  LOSS PASS
+  GC   PASS
+    soak: 5 reboots, sampler ok 1918 / degraded 0 / failed 0, compactions 18, storage errors 0
+    wear: hottest EEPROM page 28 cycles in 2.0 h -> 8.2 years to 1M cycles
+  H13  PASS
+Cluster tests: PASS
+
+## ring balance
+node 1: primary 24.9 %, owner 25.0 %
+node 2: primary 30.6 %, owner 27.1 %
+node 3: primary 21.6 %, owner 24.8 %
+node 4: primary 23.0 %, owner 23.1 %
+Ring balance tests: PASS
