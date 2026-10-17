@@ -25,6 +25,8 @@
 #include "node_runtime.h"
 #include "platform_time.h"
 #include "sensor.h"
+#include "sensor_sources.h"
+#include "sensors.h"
 #include "storage.h"
 #include "transport.h"
 
@@ -93,9 +95,18 @@ edge::Runtime runtime(
     platform_time::now_ms
 );
 
-sensor::SimulatedSource sensor_source(
+constexpr bool REAL_SENSOR = sensor::real_sensor_enabled(LOCAL_NODE_ID);
+
+sensor::SimulatedSource simulated_sensor(
     sensor::kind_for_node(LOCAL_NODE_ID),
     0xC0FFEEu + LOCAL_NODE_ID
+);
+
+// config::REAL_SENSOR_NODES picks the real driver; the simulated source
+// stands in while it is off or failing.
+sensor::FallbackSource sensor_source(
+    REAL_SENSOR ? platform_sensors::real_source(LOCAL_NODE_ID) : nullptr,
+    simulated_sensor
 );
 
 sensor::Sampler sampler(runtime, sensor_source);
@@ -423,7 +434,16 @@ void setup()
         halt("node runtime failed to start (storage?)");
     }
 
+    // After the EEPROM: the BH1750 shares its I2C bus.
     sampler.begin();
+
+    Serial.printf(
+        "sensor %s: %s\n",
+        sensor::kind_key(sensor_source.kind()),
+        sensor_source.real_enabled() ? "hardware"
+            : REAL_SENSOR ? "hardware did not start, using the SIMULATED source"
+            : "simulated (REAL_SENSOR_NODES)"
+    );
 
     if (BRIDGE_ROLE) {
         bridge_uart.begin(

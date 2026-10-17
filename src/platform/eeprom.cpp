@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "i2c_bus.h"
+
 namespace eeprom {
 
 namespace {
@@ -50,6 +52,8 @@ Result AT24C256::begin(
 ) {
     initialized_ = false;
 
+    i2c_bus::Lock lock;
+
     if (!Wire.begin(sda_pin, scl_pin)) {
         return Result::I2C_ERROR;
     }
@@ -90,6 +94,9 @@ Result AT24C256::read(
     if (length == 0) {
         return Result::OK;
     }
+
+    // Held for the whole transfer, write cycles included (i2c_bus.h).
+    i2c_bus::Lock lock;
 
     std::size_t remaining = length;
     std::uint16_t current_address = address;
@@ -173,6 +180,9 @@ Result AT24C256::write(
     if (length == 0) {
         return Result::OK;
     }
+
+    // Held for the whole transfer, write cycles included (i2c_bus.h).
+    i2c_bus::Lock lock;
 
     std::size_t remaining = length;
     std::uint16_t current_address = address;
