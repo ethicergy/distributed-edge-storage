@@ -300,7 +300,7 @@ void Console::cmd_status(std::uint64_t now_ms)
         sensor::format_value(kind, s.last_value_milli, s.last_aux, s.last_flags, last, sizeof(last));
 
         printf(
-            "sensor %s (%s): %s, %lu samples, last %s seq %lu, %lu ok, %lu under-replicated, %lu failed\n",
+            "sensor %s (%s): %s, %lu samples, last %s seq %lu, %lu ok, %lu under-replicated, %lu failed, %lu read failures\n",
             sensor::kind_key(kind),
             sampler_->source().simulated() ? "simulated" : "hardware",
             sampler_->enabled() ? "on" : "off",
@@ -309,7 +309,8 @@ void Console::cmd_status(std::uint64_t now_ms)
             static_cast<unsigned long>(s.last_sequence),
             static_cast<unsigned long>(s.writes_ok),
             static_cast<unsigned long>(s.writes_under_replicated),
-            static_cast<unsigned long>(s.writes_failed)
+            static_cast<unsigned long>(s.writes_failed),
+            static_cast<unsigned long>(sampler_->source().failures())
         );
     }
 }

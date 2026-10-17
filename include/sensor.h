@@ -10,8 +10,9 @@
 /*
  * Sensor acquisition path (work plan P7, decisions D1/D3/D4).
  *
- * Until the real sensors are wired, every node runs a
- * SimulatedSource that produces a plausible signal. A real driver only has to implement
+ * Every node runs a SimulatedSource unless config::REAL_SENSOR_NODES
+ * enables its real sensor (sensor_sources.h, behind a FallbackSource
+ * that reverts to the simulated one if the hardware fails). A real driver only has to implement
  * sensor::Source; nothing else changes.
  *
  * Data model (D3, option a + b):
@@ -122,6 +123,10 @@ public:
 
     // The window since the previous read. False: no value this time.
     virtual bool read(std::uint64_t now_ms, Sample& sample) = 0;
+
+    // Failed hardware reads so far, including ones hidden by keeping
+    // the last good value (shown by `status`).
+    virtual std::uint32_t failures() const { return 0; }
 };
 
 /*

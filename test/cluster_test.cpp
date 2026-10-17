@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <random>
 #include <iostream>
 #include <string>
@@ -16,6 +17,7 @@
 
 #include "cluster.h"
 #include "sensor.h"
+#include "sensor_sources.h"
 #include "test_support.h"
 
 using edge::ClientStatus;
@@ -849,6 +851,240 @@ void h13_sensor_soak()
     }
 }
 
+// ------------------------------------------------------------------
+// SENSORS: the real-sensor logic on every node over fake inputs driven
+// by cluster time: A DHT11-style latest value with failed reads, B PIR
+// (settling, then two detections), C sound (two claps), D a broken
+// BH1750 behind the fallback switch. Readings are read back through
+// the cluster like any client would.
+// ------------------------------------------------------------------
+namespace {
+
+constexpr std::uint32_t RIG_PERIOD_MS = 4000;
+constexpr std::uint32_t RIG_PIR_SETTLE_MS = 8000;
+
+struct FakePir final : sensor::DigitalInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
+
+    bool begin() override { return true; }
+
+    bool level() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return (t >= 10000 && t < 12000) || (t >= 14000 && t < 16000);
+    }
+};
+
+struct FakeMic final : sensor::DigitalInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
+
+    bool begin() override { return true; }
+
+    // Active-low DO: low while a clap is above the threshold.
+    bool level() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return !((t >= 11000 && t < 11100) || (t >= 13000 && t < 13300));
+    }
+
+    // What the ISR would have counted: 3 chattering edges, then 1.
+    std::uint32_t edges() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return (t >= 11000) + (t >= 11020) + (t >= 11040) + (t >= 13000);
+    }
+};
+
+struct FakeDht final : sensor::ValueInput {
+    std::uint32_t attempts = 0;
+
+    bool begin() override { return true; }
+
+    // One attempt per take(); every third one fails.
+    sensor::ValueAttempts take() override
+    {
+        sensor::ValueAttempts out{};
+
+        if (++attempts % 3 == 0) {
+            out.failed = 1;
+        } else {
+            out.ok = 1;
+            out.last_good_milli = 21500;
+        }
+
+        return out;
+    }
+};
+
+struct BrokenLight final : sensor::Source {
+    std::uint32_t failed = 0;
+
+    bool begin() override { return true; }
+    sensor::Kind kind() const override { return sensor::Kind::LIGHT; }
+    bool simulated() const override { return false; }
+
+    bool read(std::uint64_t, sensor::Sample&) override
+    {
+        ++failed;
+        return false;
+    }
+
+    std::uint32_t failures() const override { return failed; }
+};
+
+// Owns a node's inputs and sources; behaves as the top source.
+struct Rig final : sensor::Source {
+    std::unique_ptr<sensor::DigitalInput> input;
+    std::unique_ptr<sensor::ValueInput> value_input;
+    std::unique_ptr<sensor::Source> real;
+    std::unique_ptr<sensor::Source> simulated_source;
+    std::unique_ptr<sensor::FallbackSource> top;
+
+    bool begin() override { return top->begin(); }
+    sensor::Kind kind() const override { return top->kind(); }
+    bool simulated() const override { return top->simulated(); }
+    void poll(std::uint64_t now_ms) override { top->poll(now_ms); }
+    bool read(std::uint64_t now_ms, sensor::Sample& sample) override { return top->read(now_ms, sample); }
+    std::uint32_t failures() const override { return top->failures(); }
+};
+
+std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, std::uint64_t t0)
+{
+    auto rig = std::make_unique<Rig>();
+
+    switch (id) {
+        case node::A: {
+            auto dht = std::make_unique<FakeDht>();
+            rig->real = std::make_unique<sensor::LatestValueSource>(sensor::Kind::TEMPERATURE, *dht);
+            rig->value_input = std::move(dht);
+            break;
+        }
+        case node::B: {
+            auto pir = std::make_unique<FakePir>();
+            pir->cluster = &cluster;
+            pir->t0 = t0;
+            rig->real = std::make_unique<sensor::MotionSource>(*pir, RIG_PIR_SETTLE_MS);
+            rig->input = std::move(pir);
+            break;
+        }
+        case node::C: {
+            auto mic = std::make_unique<FakeMic>();
+            mic->cluster = &cluster;
+            mic->t0 = t0;
+            rig->real = std::make_unique<sensor::SoundSource>(*mic, false);
+            rig->input = std::move(mic);
+            break;
+        }
+        default:
+            rig->real = std::make_unique<BrokenLight>();
+            break;
+    }
+
+    rig->simulated_source = std::make_unique<sensor::SimulatedSource>(sensor::kind_for_node(id), 7u + id);
+    rig->top = std::make_unique<sensor::FallbackSource>(rig->real.get(), *rig->simulated_source);
+    return rig;
+}
+
+bool read_sensor_key(Cluster& cluster, const std::string& key, sensor::Reading& reading)
+{
+    const sim::OpOutcome get = cluster.get(node::A, key);
+    return get.status == ClientStatus::OK &&
+           sensor::decode(reinterpret_cast<const std::uint8_t*>(get.value.data()), get.value.size(), reading);
+}
+
+bool read_latest(Cluster& cluster, node::Id id, sensor::Reading& reading)
+{
+    char key[storage::KEY_MAX + 1];
+    sensor::latest_key(id, sensor::kind_for_node(id), key, sizeof(key));
+    return read_sensor_key(cluster, key, reading);
+}
+
+// Sum of events over the history ring (the last SENSOR_HISTORY_SLOTS windows).
+std::int32_t history_events(Cluster& cluster, node::Id id, std::int32_t* windows_with_events_and_activity = nullptr)
+{
+    std::int32_t events = 0;
+
+    for (std::uint32_t slot = 0; slot < config::SENSOR_HISTORY_SLOTS; ++slot) {
+        char key[storage::KEY_MAX + 1];
+        sensor::history_key(id, sensor::kind_for_node(id), slot, key, sizeof(key));
+
+        sensor::Reading reading{};
+        CHECK(read_sensor_key(cluster, key, reading));
+        CHECK(!(reading.flags & sensor::READING_FLAG_SIMULATED));
+        events += reading.value_milli / 1000;
+
+        if (windows_with_events_and_activity != nullptr && reading.value_milli > 0 && reading.aux > 0) {
+            ++*windows_with_events_and_activity;
+        }
+    }
+
+    return events;
+}
+
+} // namespace
+
+void real_sensor_logic_end_to_end()
+{
+    Cluster cluster(31, g_verbose);
+    Scope scope(cluster);
+
+    const std::uint64_t t0 = cluster.now();
+    cluster.source_factory = [&cluster, t0](node::Id id) { return make_rig(cluster, id, t0); };
+    cluster.enable_sensors(RIG_PERIOD_MS);
+    CHECK(cluster.start_all());
+
+    // B's first sample comes before the PIR settled.
+    CHECK(cluster.run_until(
+        [&] {
+            sensor::Reading reading{};
+            return read_latest(cluster, node::B, reading);
+        },
+        10000
+    ));
+
+    sensor::Reading reading{};
+    CHECK(read_latest(cluster, node::B, reading));
+    CHECK(reading.kind == sensor::Kind::MOTION);
+    CHECK(reading.flags == sensor::READING_FLAG_SETTLING);
+    CHECK(reading.value_milli == 0);
+
+    // Run past both detections and both claps (t0 + 10..16 s).
+    cluster.run_for(t0 + 24000 - cluster.now());
+
+    // B: two detections in the last four windows; the latest reading
+    // dates the last one (ended at t0 + 16 s).
+    CHECK(history_events(cluster, node::B) == 2);
+    CHECK(read_latest(cluster, node::B, reading));
+    CHECK(reading.flags == 0);
+    CHECK(reading.aux >= 0 && reading.aux <= 8);
+
+    // C: three chattering edges + one = two claps, each window with
+    // events also shows activity.
+    std::int32_t active_windows = 0;
+    CHECK(history_events(cluster, node::C, &active_windows) == 2);
+    CHECK(active_windows >= 1);
+    CHECK(read_latest(cluster, node::C, reading));
+    CHECK(reading.kind == sensor::Kind::SOUND);
+
+    // A: every third DHT read fails; the last good value is kept and
+    // the failures are counted.
+    CHECK(read_latest(cluster, node::A, reading));
+    CHECK(reading.kind == sensor::Kind::TEMPERATURE);
+    CHECK(reading.value_milli == 21500);
+    CHECK(!(reading.flags & sensor::READING_FLAG_SIMULATED));
+    CHECK(cluster.node(node::A).source->failures() >= 1);
+    CHECK(cluster.node(node::A).sampler->stats().read_errors == 0);
+
+    // D: the broken BH1750 is replaced by the simulated source.
+    CHECK(read_latest(cluster, node::D, reading));
+    CHECK(reading.kind == sensor::Kind::LIGHT);
+    CHECK(reading.flags & sensor::READING_FLAG_SIMULATED);
+    CHECK(cluster.node(node::D).source->simulated());
+    CHECK(cluster.node(node::D).source->failures() >= config::SENSOR_FALLBACK_AFTER_FAILURES);
+}
+
 int main(int argc, char** argv)
 {
     std::string only;
@@ -883,6 +1119,7 @@ int main(int argc, char** argv)
         {"LOSS", lossy_radio},
         {"GC", garbage_collection},
         {"H13", h13_sensor_soak},
+        {"SENSORS", real_sensor_logic_end_to_end},
     };
 
     for (const Scenario& scenario : scenarios) {

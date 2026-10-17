@@ -145,6 +145,39 @@ constexpr bool STORAGE_AUTO_FORMAT_ON_CORRUPTION = true;
 constexpr std::uint32_t SENSOR_PERIOD_MS = 30000;
 constexpr std::uint8_t SENSOR_HISTORY_SLOTS = 4;
 
+// Nodes that use their real sensor: bit (id - 1), A = 0x01 ... D = 0x08.
+// 0 = every node simulated. Set a node's bit only after its module
+// was checked on its own on a board (docs/BRINGUP.md, Phase 4).
+constexpr std::uint8_t REAL_SENSOR_NODES = 0x00;
+
+// A real sensor that fails this many reads in a row is replaced by
+// the simulated source (readings flagged simulated) until it reads
+// again.
+constexpr std::uint8_t SENSOR_FALLBACK_AFTER_FAILURES = 3;
+
+// Sensor pins, ESP32-C3 SuperMini (see sensor_pin_ok below).
+constexpr std::uint8_t DHT11_PIN = 4;      // node A, DHT11 module DATA
+constexpr std::uint8_t PIR_PIN = 4;        // node B, AM312 OUT
+constexpr std::uint8_t SOUND_DO_PIN = 4;   // node C, LM393 DO
+// Node D's BH1750 shares the EEPROM bus (EEPROM_SDA_PIN/SCL_PIN), ADDR low.
+constexpr std::uint8_t BH1750_I2C_ADDRESS = 0x23;
+
+// DHT11: at most 1 Hz. Read by its own task, never by the node task.
+constexpr std::uint32_t DHT11_READ_INTERVAL_MS = 2000;
+
+// AM312: OUT stays high ~2 s per detection, so polling every 100 ms
+// catches each one. After power-on it needs to settle; until then
+// readings are flagged settling. Measure on the bench and adjust.
+constexpr std::uint32_t PIR_POLL_INTERVAL_MS = 100;
+constexpr std::uint32_t PIR_SETTLE_MS = 30000;
+
+// LM393 DO level while the sound is above the knob setting. Many
+// boards are active-low (their DO LED lights when DO pulls low).
+constexpr bool SOUND_ACTIVE_HIGH = false;
+// Edges closer together than this are one sound event (a clap makes
+// the comparator chatter for tens of ms).
+constexpr std::uint32_t SOUND_EVENT_GAP_MS = 150;
+
 // ---------------------------------------------------------------
 // Raspberry Pi bridge (decision D7)
 // ---------------------------------------------------------------
@@ -219,6 +252,24 @@ static_assert(
     BOOT_LISTEN_MS > MEMBERSHIP_TIMEOUT_MS,
     "boot listen window must exceed one membership timeout"
 );
+
+// SuperMini header GPIOs, minus strapping pins 2/8/9 (8/9 carry I2C),
+// USB 18/19 and the bridge UART 20/21.
+constexpr bool sensor_pin_ok(std::uint8_t pin)
+{
+    return pin <= 10 && pin != 2 && pin != 8 && pin != 9;
+}
+
+static_assert(
+    sensor_pin_ok(DHT11_PIN) && sensor_pin_ok(PIR_PIN) && sensor_pin_ok(SOUND_DO_PIN),
+    "sensor pins must avoid strapping pins 2/8/9, USB 18/19 and UART 20/21"
+);
+
+static_assert(DHT11_READ_INTERVAL_MS >= 1000, "the DHT11 allows at most one read per second");
+
+static_assert(PIR_POLL_INTERVAL_MS <= 500, "poll several times per ~2 s PIR pulse");
+
+static_assert(REAL_SENSOR_NODES <= 0x0F, "REAL_SENSOR_NODES has one bit per node A..D");
 
 static_assert(
     MAX_PENDING_REQUESTS >= MAX_CLIENT_OPS &&

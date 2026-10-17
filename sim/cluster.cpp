@@ -278,10 +278,16 @@ void Cluster::boot(SimNode& node)
     node.source.reset();
 
     if (sensor_period_ms_ != 0) {
-        node.source = std::make_unique<sensor::SimulatedSource>(
-            sensor::kind_for_node(node.id),
-            0xC0FFEEu + node.id
-        );
+        if (source_factory) {
+            node.source = source_factory(node.id);
+        }
+
+        if (!node.source) {
+            node.source = std::make_unique<sensor::SimulatedSource>(
+                sensor::kind_for_node(node.id),
+                0xC0FFEEu + node.id
+            );
+        }
         node.sampler = std::make_unique<sensor::Sampler>(*node.runtime, *node.source);
         node.sampler->set_period(sensor_period_ms_);
         node.sampler->begin();
