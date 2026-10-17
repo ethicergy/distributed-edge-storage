@@ -635,6 +635,64 @@ void lossy_radio()
 }
 
 // ------------------------------------------------------------------
+// TXLOSS: the on-board loss fault ('fault loss <percent>', -fi images)
+// at 20 % on every node: writes still commit and read back, nothing is
+// applied twice, and the injected drops are counted.
+// ------------------------------------------------------------------
+void injected_tx_loss()
+{
+    Cluster cluster(33, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).faults().tx_loss_percent = 20;
+    }
+
+    std::uint32_t executed_before = 0;
+
+    for (node::Id id : ALL) {
+        executed_before += cluster.runtime(id).counters().requests_executed;
+    }
+
+    const int sets = 30;
+
+    for (int i = 0; i < sets; ++i) {
+        const std::string key = "txloss-" + std::to_string(i);
+        const node::Id from = static_cast<node::Id>(node::MIN + i % 4);
+
+        const sim::OpOutcome set = cluster.set(from, key, "v" + std::to_string(i));
+        CHECK(set.completed);
+        CHECK(edge::write_committed(set.status));
+    }
+
+    std::uint32_t executed = 0;
+    std::uint32_t injected = 0;
+
+    for (node::Id id : ALL) {
+        executed += cluster.runtime(id).counters().requests_executed;
+        injected += cluster.runtime(id).counters().faults_injected;
+        CHECK(cluster.runtime(id).counters().faults_injected > 0);
+    }
+
+    // Exactly once: one execution per SET, retries were deduplicated.
+    // Only a whole-attempt timeout makes a new request (idempotent).
+    CHECK(executed - executed_before >= static_cast<std::uint32_t>(sets));
+    CHECK(executed - executed_before <= static_cast<std::uint32_t>(sets) + 3);
+    CHECK(injected > 20);
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).faults() = edge::Faults{};
+    }
+
+    for (int i = 0; i < sets; ++i) {
+        const sim::OpOutcome get = cluster.get(node::A, "txloss-" + std::to_string(i));
+        CHECK(get.status == ClientStatus::OK);
+        CHECK(get.value == "v" + std::to_string(i));
+    }
+}
+
+// ------------------------------------------------------------------
 // Garbage collection (D8): a tombstone confirmed by all nodes and
 // older than TOMBSTONE_GC_MIN_AGE_MS disappears everywhere; an
 // orphan copy left on a temporary replica is dropped after hand-back.
@@ -1133,6 +1191,7 @@ int main(int argc, char** argv)
         {"H12", h12_power_cycle_persistence},
         {"SPLIT", split_brain_converges},
         {"LOSS", lossy_radio},
+        {"TXLOSS", injected_tx_loss},
         {"GC", garbage_collection},
         {"H13", h13_sensor_soak},
         {"SENSORS", real_sensor_logic_end_to_end},

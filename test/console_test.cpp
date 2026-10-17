@@ -107,6 +107,15 @@ int main()
     run(cluster, console, "fault drop-ack 1");
     REQUIRE(contains("fault armed"));
 
+    g_output.clear();
+    run(cluster, console, "fault loss 10");
+    REQUIRE(contains("frame loss 10 % on every frame this node sends"));
+    REQUIRE(cluster.runtime(node::B).faults().tx_loss_percent == 10);
+    run(cluster, console, "fault loss 101");
+    REQUIRE(contains("usage: fault"));
+    run(cluster, console, "fault clear");
+    REQUIRE(cluster.runtime(node::B).faults().tx_loss_percent == 0);
+
     run(cluster, console, "frobnicate");
     REQUIRE(contains("unknown command 'frobnicate'"));
 

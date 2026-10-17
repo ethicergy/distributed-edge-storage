@@ -300,6 +300,19 @@ void print_platform_stats(void*, console::WriteFn write, void* write_context)
     );
     write(write_context, line);
 
+    std::uint16_t hottest_page = 0;
+    const std::uint32_t hottest = eeprom_chip.hottest_page_writes(hottest_page);
+
+    std::snprintf(
+        line,
+        sizeof(line),
+        "eeprom page writes since boot: total %lu, hottest page %u with %lu (rated 1000000)\n",
+        static_cast<unsigned long>(eeprom_chip.total_page_writes()),
+        static_cast<unsigned>(hottest_page),
+        static_cast<unsigned long>(hottest)
+    );
+    write(write_context, line);
+
     if (BRIDGE_ROLE) {
         const bridge::Stats& b = pi_bridge.stats();
         const uart::DecoderStats& d = pi_bridge.decoder_stats();

@@ -297,6 +297,7 @@ bool Runtime::begin(std::uint64_t now_ms, std::uint32_t random_seed)
 
     counters_ = Counters{};
     last_view_ = 0;
+    loss_rng_ = random_seed != 0 ? random_seed : 0x9E3779B9u;
     started_ = true;
 
     enter_state(NodeState::BOOTING, now_ms);
@@ -1117,6 +1118,10 @@ bool Runtime::send(
 {
     ++counters_.frames_tx;
 
+    if (lose_frame()) {
+        return true; // lost in the air: the sender cannot tell
+    }
+
     const bool ok = link_.unicast(destination, data, length);
 
     if (!ok) {
@@ -1124,6 +1129,36 @@ bool Runtime::send(
     }
 
     return ok;
+}
+
+bool Runtime::broadcast(const std::uint8_t* data, std::size_t length)
+{
+    if (lose_frame()) {
+        return true;
+    }
+
+    return link_.broadcast(data, length);
+}
+
+bool Runtime::lose_frame()
+{
+#if EDGE_FAULT_INJECTION
+    if (faults_.tx_loss_percent == 0) {
+        return false;
+    }
+
+    // xorshift32
+    loss_rng_ ^= loss_rng_ << 13;
+    loss_rng_ ^= loss_rng_ >> 17;
+    loss_rng_ ^= loss_rng_ << 5;
+
+    if (loss_rng_ % 100u < faults_.tx_loss_percent) {
+        ++counters_.faults_injected;
+        return true;
+    }
+#endif
+
+    return false;
 }
 
 bool Runtime::reliable_send(
@@ -1767,7 +1802,7 @@ void Runtime::tick_heartbeat(std::uint64_t now_ms)
     ++counters_.heartbeats_tx;
     ++counters_.frames_tx;
 
-    if (!link_.broadcast(out.data, out.length)) {
+    if (!broadcast(out.data, out.length)) {
         ++counters_.frames_tx_failed;
     }
 }
@@ -1850,7 +1885,7 @@ void Runtime::tick_anti_entropy(std::uint64_t now_ms)
                 if (packet::build_version_table(local_node_id_, clock_.now(), table, out)) {
                     ++counters_.frames_tx;
 
-                    if (!link_.broadcast(out.data, out.length)) {
+                    if (!broadcast(out.data, out.length)) {
                         ++counters_.frames_tx_failed;
                     }
                 }

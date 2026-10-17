@@ -71,8 +71,13 @@ public:
 
     bool ready() const override;
 
+    // Wear since boot: completed page writes (one write cycle each).
+    std::uint32_t total_page_writes() const;
+    std::uint32_t hottest_page_writes(std::uint16_t& page) const;
+
 private:
     bool initialized_ = false;
+    std::uint32_t page_writes_[SIZE_BYTES / PAGE_SIZE] = {};
 };
 
 } // namespace eeprom

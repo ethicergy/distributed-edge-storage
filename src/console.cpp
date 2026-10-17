@@ -248,6 +248,7 @@ void Console::cmd_help()
 #if EDGE_FAULT_INJECTION
     printf(
         "fault <kind> [n]      kinds: drop-req drop-ack drop-repl drop-repl-ack dup\n"
+        "fault loss <percent>  drop that share of every frame sent (until 'fault clear')\n"
         "stale <key> <node>    send an outdated version of key to node (H10)\n"
     );
 #endif
@@ -683,10 +684,14 @@ void Console::cmd_fault(const char* input)
         faults.drop_repl_acks = count;
     } else if (std::strcmp(args, "dup") == 0) {
         faults.duplicate_client_requests = count;
+    } else if (std::strcmp(args, "loss") == 0 && count_text[0] != '\0' && parsed >= 0 && parsed <= 100) {
+        faults.tx_loss_percent = count;
+        printf("frame loss %u %% on every frame this node sends\n", static_cast<unsigned>(count));
+        return;
     } else if (std::strcmp(args, "clear") == 0) {
         faults = edge::Faults{};
     } else {
-        printf("usage: fault drop-req|drop-ack|drop-repl|drop-repl-ack|dup|clear [n]\n");
+        printf("usage: fault drop-req|drop-ack|drop-repl|drop-repl-ack|dup|clear [n] | fault loss <percent>\n");
         return;
     }
 

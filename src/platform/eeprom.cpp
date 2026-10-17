@@ -235,6 +235,8 @@ Result AT24C256::write(
             return wait_result;
         }
 
+        ++page_writes_[current_address / PAGE_SIZE];
+
         current_address =
             static_cast<std::uint16_t>(
                 current_address + chunk
@@ -249,6 +251,30 @@ Result AT24C256::write(
 
 bool AT24C256::ready() const {
     return initialized_;
+}
+
+std::uint32_t AT24C256::total_page_writes() const {
+    std::uint32_t total = 0;
+
+    for (std::uint32_t writes : page_writes_) {
+        total += writes;
+    }
+
+    return total;
+}
+
+std::uint32_t AT24C256::hottest_page_writes(std::uint16_t& page) const {
+    std::uint32_t highest = 0;
+    page = 0;
+
+    for (std::uint16_t i = 0; i < SIZE_BYTES / PAGE_SIZE; ++i) {
+        if (page_writes_[i] > highest) {
+            highest = page_writes_[i];
+            page = i;
+        }
+    }
+
+    return highest;
 }
 
 } // namespace eeprom

@@ -169,6 +169,9 @@ struct Faults {
     std::uint8_t drop_repl_requests;    // first transmission only
     std::uint8_t drop_repl_acks;
     std::uint8_t duplicate_client_requests;
+    // Random loss of every outgoing frame (unicast and broadcast), in
+    // percent; stays until cleared. Measures loss tolerance on boards.
+    std::uint8_t tx_loss_percent;
 };
 
 class Runtime {
@@ -495,6 +498,11 @@ private:
 
     Counters counters_{};
     Faults faults_{};
+    std::uint32_t loss_rng_ = 1;
+
+    // Fault injection: drop this outgoing frame (tx_loss_percent).
+    bool lose_frame();
+    bool broadcast(const std::uint8_t* data, std::size_t length);
 
     LogFn log_ = nullptr;
     void* log_context_ = nullptr;
