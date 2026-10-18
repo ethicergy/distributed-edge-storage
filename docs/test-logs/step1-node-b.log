@@ -1,0 +1,11 @@
+# Step 1 (no EEPROM), node B = board label 3, 14:63:93:C5:C3:1C, port 5-3 hub
+# Sun 18 16:05, env node-b (normal image). Timestamps: seconds since the port was opened.
+[  0.12s] load:0x403cc710,len:0x90c
+[  0.12s] load:0x403ce710,len:0x2624
+[  0.12s] entry 0x403cc710
+[  1.73s]
+[  1.73s] edge-kv firmware, node B
+[  1.73s] env node-b, built Oct 17 2026 13:36:10, reset reason: unknown
+[  1.73s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  1.73s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)
+[  6.77s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)

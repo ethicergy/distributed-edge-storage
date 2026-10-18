@@ -12,7 +12,7 @@ Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to branch
 | B. MAC reader | `scripts/read_macs.sh` | Runs `esptool.py read_mac` on each `/dev/ttyACM*` (or the ports you list) and prints `MAC_A`…`MAC_D` blocks in the format of `transport.cpp:24-38`. |
 
 * The build time is the compile time of `main.cpp`. PlatformIO rebuilds that file only when it changes, so after edits to other files the time can be older than the image.
-* The banner prints about 1.5 s after reset (`main.cpp:412`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again.
+* The banner prints about 1.5 s after reset (`main.cpp:412`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again. Without an EEPROM `stats` does not answer (the board halts before the console starts); press RST with the monitor open instead.
 * The MAC table itself is unchanged.
 
 ---
@@ -24,7 +24,7 @@ Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to branch
 | Board target | `esp32-c3-devkitm-1`: 4 MB flash, QIO, 160 MHz | `platformio.ini:18`; `~/.platformio/platforms/espressif32/boards/esp32-c3-devkitm-1.json` | OK for SuperMini (ESP32-C3FH4, 4 MB). If a board boot-loops right after flashing, the proposed fix is `board_build.flash_mode = dio`. It is **not applied**. |
 | Core / IDF | espressif32@7.1.3 → Arduino-ESP32 2.0.17, IDF 4.4. The build stops on IDF ≥ 5. | `platformio.ini:17`, `transport.cpp:14-16` | Keep the pin. |
 | USB console | `Serial` is USB-Serial-JTAG CDC (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`), 115200, 4 KB TX buffer | `platformio.ini:27-28`, `main.cpp:405-410` | Correct for SuperMini. Shows up as `/dev/ttyACM*`, VID:PID 303a:1001. |
-| Monitor reset | The monitor does not toggle RTS/DTR | `platformio.ini:21-22` | Opening the monitor does not reset the board. |
+| Monitor reset | No `monitor_rts`/`monitor_dtr` settings, so the monitor leaves both lines asserted | `platformio.ini:21-22` | Opening the monitor does not reset the board (checked on node D, Sun 18). The earlier `monitor_rts = 0`/`monitor_dtr = 0` **did** reset it on every open: DTR goes low before RTS, and that moment is the USB-Serial-JTAG reset condition (BRINGUP_LOG problem 1). The first open after a while shows a burst of old output buffered on the board (4 KB TX buffer). |
 | I2C (EEPROM) | SDA GPIO8, SCL GPIO9, 400 kHz | `config.h:166-167`, `eeprom.h:14`, `eeprom.cpp:57-61` | 8 and 9 are strapping pins. See 2b; acceptable with pull-ups. |
 | EEPROM | AT24C256 at 0x50, 32 KB, 64-byte pages, write completion by ACK polling up to 10 ms | `eeprom.h:8-16`, `eeprom.cpp:28-47`, `eeprom.cpp:191-232` | Matches the datasheet (see 2b). |
 | EEPROM missing | Halts and prints `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | `main.cpp:427-429`, `main.cpp:393-399` | Useful as a wiring test. |

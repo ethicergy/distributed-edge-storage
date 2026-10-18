@@ -1,0 +1,15 @@
+# Step 1 (no EEPROM), node A = board label 1, 14:63:93:C5:D0:18, port 1-1 direct
+# Sun 18 16:00, env node-a (normal image), captured with pyserial right after upload.
+# Timestamps: seconds since the port was opened. `stats` sent after boot: no reply (console never starts, see BRINGUP_LOG problem 2).
+[  1.21s] mode:DIO, clock div:1
+[  1.21s] load:0x3fcd5810,len:0x438
+[  1.21s] load:0x403cc710,len:0x90c
+[  1.21s] load:0x403ce710,len:0x2624
+[  1.21s] entry 0x403cc710
+[  1.72s]
+[  1.72s] edge-kv firmware, node A (Pi bridge)
+[  1.72s] env node-a, built Oct 17 2026 14:23:19, reset reason: unknown
+[  1.72s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  6.75s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)
+[  6.75s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)
+[ 11.67s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)

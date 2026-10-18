@@ -16,8 +16,8 @@ Pre-filled from BRINGUP §3.5 / §4.7. Fill in the right-hand columns as you go.
 | id | milestone | planned slot | planned h | started | finished | actual h | status | evidence (logs, photos) | who |
 |---|---|---|---|---|---|---|---|---|---|
 | M0 | WSL usbipd + dialout + udev; Pi SD card + UART config (§3.2) | Sat 17 evening | 1.0 | | | | | | |
-| M1 | Step 0: read MACs, label boards, compare with `transport.cpp:24-38` | Sun 18 AM | 0.5 | | | | | | |
-| M2 | Step 1: one board, no EEPROM (banner, MAC check, FATAL) | Sun 18 AM | 0.5 | | | | | | |
+| M1 | Step 0: read MACs, label boards, compare with `transport.cpp:24-38` | Sun 18 AM | 0.5 | Sun 18 15:49 | Sun 18 15:56 | 0.1 | done | all 4 attached via `usbipd --auto-attach`; by-id MACs match the table, no edit. Labels: 1=A (`C5:D0:18`, port 1-1), 2=D (`C5:C1:9C`, hub 5-2), 3=B (`C5:C3:1C`, hub 5-3), 4=C (`C8:A3:08`, hub 5-4) | |
+| M2 | Step 1: one board, no EEPROM (banner, MAC check, FATAL) | Sun 18 AM | 0.5 | Sun 18 15:58 | Sun 18 16:06 | 0.1 | done (late slot) | done on all four, one at a time, normal images (`check_images.sh`: FI compiled out). Every banner: right env, `MAC … matches the table entry`, then FATAL every 5 s. `step1-node-{a,b,c,d}.log`. Problems 1–3 | |
 | M3 | Step 2: EEPROM on one board (fresh format, set/get across power cycle) | Sun 18 AM | 1.0 | | | | | | |
 | M4 | Step 3: two nodes (view `AB--`, `set k20` served by A) | Sun 18 AM | 0.5 | | | | | | |
 | M5 | Step 4: four nodes, pre-flight, **H1**, **H2**, H3 | Sun 18 AM | 1.5 | | | | | | |
@@ -47,9 +47,9 @@ One row per problem, even small ones: a wrong cable counts. Write the symptom as
 | # | time | step / test | symptom (exact) | cause | fix | time spent (h) | photo / log | who |
 |---|---|---|---|---|---|---|---|---|
 | e.g. | Sun 18 10:42 | M3 / step 2 | `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | SDA and SCL swapped on the breadboard | swapped GPIO8/9 wires; checked pull-ups 4.7 kΩ with meter | 0.2 | `18-1042-step2-eeprom.jpg` | NS |
-| 1 | | | | | | | | |
-| 2 | | | | | | | | |
-| 3 | | | | | | | | |
+| 1 | Sun 18 16:02 | M2 / step 1 | opening the console (`pio device monitor -e node-a`, and pyserial with DTR/RTS set low) reboots the board: ROM boot text + banner each time | `monitor_rts = 0`/`monitor_dtr = 0` make miniterm drive DTR low then RTS low after Linux asserted both on open; DTR low + RTS high for an instant is the USB-Serial-JTAG reset condition. Opening with both lines left asserted does **not** reset (checked). BRINGUP.md Phase 2 "Monitor reset" row was wrong | dropped the two `monitor_*` lines from `platformio.ini` (comment left in their place); re-tested at 16:15 with `pio device monitor -e node-d`, opened twice: no ROM text, no banner, FATAL loop continues. First open shows a burst of old buffered FATAL lines. BRINGUP.md Phase 2 row corrected | 0.2 | `step1-node-a.log` | |
+| 2 | Sun 18 16:01 | M2 / step 1 | `stats` gets no reply on a bare board | `halt()` in `setup()` (`main.cpp:427-429`) loops before the console/node task starts. Expected; but BRINGUP.md:15 ("type `stats` to see the identity lines again") does not hold without EEPROM | banner captured instead by opening the port (which resets, problem 1) | 0.0 | | |
+| 3 | Sun 18 16:01 | M2 / step 1 | `reset reason: unknown` after upload and after console open | the reset comes from the USB-Serial-JTAG peripheral; IDF 4.4's `esp_reset_reason_t` has no USB value, so it maps to `ESP_RST_UNKNOWN` | none needed: on these boards `unknown` = USB/host reset. Power-on, PANIC, BROWNOUT, WDT still report by name | 0.0 | | |
 | 4 | | | | | | | | |
 | 5 | | | | | | | | |
 | 6 | | | | | | | | |
@@ -64,7 +64,7 @@ Plan changes and why. Examples: cutting H9, keeping a sensor simulated, retuning
 
 | time | decision | reason | alternatives considered | who |
 |---|---|---|---|---|
-| | | | | |
+| Sun 18 16:15 | removed `monitor_rts = 0`/`monitor_dtr = 0` from `platformio.ini` | they made every monitor open reboot the node (problem 1), which would wipe RAM state in the middle of fault tests | keep them and treat each open as a reboot; open the port with our own pyserial script | |
 | | | | | |
 
 ## 4. End-of-day summary
