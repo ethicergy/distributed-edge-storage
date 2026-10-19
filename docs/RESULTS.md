@@ -49,6 +49,15 @@ Procedure details:
 | `catchup_view` | C: power-on → A's view includes C again | 5501 ms | | C heartbeats only once ACTIVE, so this matches `catchup`. On boards it is measured from the port reappearing (after USB enumeration), so it reads lower than `catchup`. |
 | `keys_repaired` | keys written while C was down, readable from C afterwards | 10/10 written while down served by C afterwards; resync applied 10, repair log lines 10 | | Anti-entropy push during CATCHUP (2 version-table rounds). Expect 10/10 on both. More `resync applied` than 10 on boards means sensor keys were repaired too. |
 
+## 2b. Power cycle, one node (manual check, BRINGUP step 2)
+
+Not driven by `measure.py`: read from `status` before and after unplugging node A (`docs/test-logs/step2-node-a.log`).
+
+| id | metric | simulator | hardware | why they differ |
+|---|---|---|---|---|
+| `hlc_reboot` | HLC after a power cycle continues from the last persisted version instead of restarting at 0 | `test/hlc_test.cpp` `test_reboot_anchor`: timer 100 ms, persisted 1000 ms → clock reads 1000 | **pass.** Before: uptime 37 s, `hlc 37466.0`. Unplug ~07:01, replug. After: uptime 73 s, `hlc 466675.0`, `reset reason: power-on` | Same rule on both (`node_runtime.cpp:271-275`, `hlc.cpp:43-47`): the clock starts at or above the newest persisted version. After the cycle the timer had restarted (73 s), but the HLC was 466.7 s, i.e. the ~393 s the node ran before the unplug plus the time since boot. Without this, new writes after a reboot would carry older timestamps than the ones on disk and lose to them. Sensor `seq` also continued (1 → 16). |
+| `persist_reboot` | key written before a power cycle readable after it | storage crash tests (`test/storage_manager_test.cpp`) | **pass.** `set x 1` → unplug/replug → `storage recovered: 6 live`, `x = "1"`, storage errors 0 | Also rules out WP high on this module (writes would silently vanish). |
+
 ## 3. Loss tolerance (`fault loss`, `bench 50`; boards need the `-fi` images)
 
 | id | metric | simulator | hardware | why they differ |

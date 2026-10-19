@@ -1,0 +1,79 @@
+# Step 2 (EEPROM on one board), node A = board label 1, 14:63:93:C5:D0:18
+# Mon 19. 06:54:21-06:54:32 flashed node-a (normal image, built 06:54:24) over the user's I2C scanner sketch; auto-reset worked.
+# Boot output of the first boot not captured (no reader attached while it printed); `status` reports the boot result.
+# 06:55:08 console opened without reset (no FATAL in 5 s before). Timestamps: seconds since this port open.
+[  0.00s port open]
+[  0.51s >>> status]
+[  0.56s] > status
+[  0.56s] node A  state ACTIVE  view A---  uptime 37s
+[  0.56s] hlc 37466.0
+[  0.56s] storage fresh format: 3 live, 0 tombstones, 3/64 keys, log 220/16064 bytes, bank A, 0 compactions
+[  0.56s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  0.56s] sensor light (simulated): on, 2 samples, last 389.756 lux seq 1, 0 ok, 4 under-replicated, 0 failed, 0 read failures
+[  4.51s >>> set x 1]
+[  4.57s] > set x 1
+[  4.57s]     40.161 [A] SET_REQ x stored without replica (no other node alive)
+[  4.57s] SET x: UNDER_REPLICATED (served by A, 1 attempt(s), 0 ms)
+[  8.54s >>> get x]
+[  8.59s] > get x
+[  8.59s] x = "1"
+[  8.59s]    (served by A, 1 attempt(s), 0 ms)
+[ 12.56s >>> stats]
+[ 12.57s] > stats
+[ 12.57s] radio   rx 0 (invalid 0, spoofed 0)  tx 94 (failed 0)
+[ 12.57s] hb      tx 89  rx 0   membership changes 1
+[ 12.57s] server  executed 7  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[ 12.57s] repl    started 0  ok 0  failed 0  stale 0   as replica: applied 0 stale 0
+[ 12.57s] ae      rounds 5  chunks tx 5 rx 0  tables 0  pushes 0  resync tx 0 applied 0 stale 0
+[ 12.57s] gc      orphans 0  tombstones 0  keys dropped 0
+[ 12.57s] client  ok 7  failed 0  attempts 7  local 7
+[ 12.57s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[ 12.57s] env node-a, built Oct 19 2026 06:54:24, reset reason: unknown
+[ 12.57s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[ 12.57s] esp-now rx 0  queue overflows 0  unknown MAC 0
+[ 12.57s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[ 12.57s] esp-now tx -> C: 0 delivered, 0 failed (MAC-layer ACK)
+[ 12.57s] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+[ 12.57s] heap free 176936 (min 168212)  node task stack headroom 13208 bytes
+[ 12.57s] eeprom page writes since boot: total 522, hottest page 11 with 7 (rated 1000000)
+[ 12.62s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+
+# Power cycle: user unplugged board 1, ~5 s, replugged into port 1-1 (by-id link re-created 07:01).
+# 07:02:28 console opened without reset. The first 'status' was mixed with echoed boot text (BRINGUP_LOG problem 5).
+[  0.01s port open]
+[  0.51s >>> status]
+[  0.56s] > edge-kv firmwar.795 [A] state -status
+[  0.56s] unknown command 'edge-kv' (try 'help')
+[  4.54s >>> get x]
+[  4.59s] > get x
+[  4.59s] x = "1"
+[  4.59s]    (served by A, 1 attempt(s), 0 ms)
+[  8.56s >>> stats]
+[  8.57s] > stats
+[  8.57s] radio   rx 0 (invalid 0, spoofed 0)  tx 91 (failed 0)
+[  8.57s] hb      tx 83  rx 0   membership changes 1
+[  8.57s] server  executed 6  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  8.57s] repl    started 0  ok 0  failed 0  stale 0   as replica: applied 0 stale 0
+[  8.57s] ae      rounds 4  chunks tx 8 rx 0  tables 0  pushes 0  resync tx 0 applied 0 stale 0
+[  8.57s] gc      orphans 0  tombstones 0  keys dropped 0
+[  8.57s] client  ok 6  failed 0  attempts 6  local 6
+[  8.57s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  8.57s] env node-a, built Oct 19 2026 06:54:24, reset reason: power-on
+[  8.57s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  8.57s] esp-now rx 0  queue overflows 0  unknown MAC 0
+[  8.57s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  8.57s] esp-now tx -> C: 0 delivered, 0 failed (MAC-layer ACK)
+[  8.57s] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+[  8.57s] heap free 176936 (min 168212)  node task stack headroom 13208 bytes
+[  8.57s] eeprom page writes since boot: total 12, hottest page 33 with 3 (rated 1000000)
+[  8.62s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+
+# 07:03:04 status again:
+[  0.00s port open]
+[  0.51s >>> status]
+[  0.56s] > status
+[  0.56s] node A  state ACTIVE  view A---  uptime 73s
+[  0.56s] hlc 466675.0
+[  0.56s] storage recovered: 6 live, 0 tombstones, 6/64 keys, log 1897/16064 bytes, bank A, 0 compactions
+[  0.56s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  0.56s] sensor light (simulated): on, 3 samples, last 390.034 lux seq 16, 0 ok, 6 under-replicated, 0 failed, 0 read failures
