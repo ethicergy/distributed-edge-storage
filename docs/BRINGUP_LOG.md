@@ -1,5 +1,35 @@
 # Bring-up log
 
+## RESUME HERE (paused Mon 19 09:22)
+
+Paused because board 3 (node B) has loose **3V3 and GND** header pins and needs soldering (problem 6). The GPIO6 workaround (D10) does not help while GND is loose.
+
+**Boards** (by-id `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_<MAC>-if00`; all attached with `usbipd --auto-attach`):
+
+| label | node | MAC / hub port | image | EEPROM | state |
+|---|---|---|---|---|---|
+| 1 | A (Pi bridge) | `14:63:93:C5:D0:18` / 1-1 | `node-a`, built Mon 09:08:48 (= `c7d0735`) | wired, passed step 2 + power cycle | ACTIVE, view `A-CD`; Pi not connected yet |
+| 3 | B | `14:63:93:C5:C3:1C` / 5-3 | `node-b`, built Mon 07:13:41 (**old**: no D10, no echo guard) | **not wired** | FATAL loop; never joined |
+| 4 | C | `14:63:93:C8:A3:08` / 5-4 | `node-c`, built Mon 09:09:00 (= `c7d0735`) | wired, passed step 2 + power cycle | ACTIVE, view `A-CD` |
+| 2 | D | `14:63:93:C5:C1:9C` / 5-2 | `node-d`, built Mon 09:09:05 (= `c7d0735`) | wired, passed step 2 + power cycle | ACTIVE, view `A-CD`; passed unplug/rejoin/repair |
+
+**Committed and pushed** (`hw-bringup`): monitor no longer resets boards (`f85e49e`); EEPROM 0x58 guard + problem 4 (`b81c370`); step 2 on A, HLC across reboot (`f3b5e1c`); A+C, A+C+D tests (`2a9730f`); D10 GPIO6 power for B (`142b8fe`); console echo guard (`c7d0735`); this section and the 09:05/09:12 decision rows.
+
+**Milestones:** M1-M4 done (M4 with A + C). M5 partial: three-node set/get and D's failure/rejoin passed; formal H1-H3 not run. Next planned: M6 (Pi bridge, H14), M7 (`measure.py` baseline).
+
+**Before any `measure.py` run:** the echo guard drops console input for 1 s after a port opens with output waiting, so `measure.py` must wait ~1.2 s after opening (or re-opening) each port before its first command. Not changed yet.
+
+**Next step (a): B soldered.**
+1. 3V3 fixed: real fix of D10. Remove `-DEDGE_EEPROM_POWER_PIN=6` from `node-b`/`node-b-fi` in `platformio.ini`, change `scripts/check_images.sh` to expect no GPIO power on any image, mark D10 superseded; `make check`, `make firmware`. (Only GND fixed, 3V3 still loose: keep D10 and wire VCC to GPIO6 instead.)
+2. Unplugged: wire B's EEPROM by silkscreen (3V3 → VCC, GND, 8 → SDA, 9 → SCL, A0-A2/WP → GND); plug into 5-3.
+3. Flash `node-b` to B's by-id path. Step 2 as on C/D: no FATAL, `storage fresh format`, `set`/`get`; power cycle: banner present (on GPIO6: not stuck in download mode), `storage recovered`, `reset reason: power-on`.
+4. Four nodes: `members` shows `ABCD` on all four; B catches up (`dump` on B lists the keys it owns, e.g. `k4`, `k9`, `k14`, `k20`; check with `ring`); `ring k4`/`ring k9` show B as owner again. Then M5's formal H1-H3, then M6.
+
+**Next step (b): B still broken.** Run the rest on A, C, D (the "option 3" plan):
+1. `measure.py --nodes A,C,D` (writer/bench origin from the live nodes) plus the ~1.2 s open wait; re-run the simulator column with B off so both columns are three-node.
+2. DEMO.md, RESULTS.md, HARDWARE_TEST_PLAN (H2, H9, H11 use B) rewritten for three nodes; B's motion sensor out of the plan (no PIR move).
+3. Then M5 (H1-H3 on A, C, D) and M6 (Pi bridge, H14).
+
 Fill this in **during** bring-up, not afterwards. It is the evidence for timeline adherence, problem-solving and individual contribution. Plan and step numbers refer to `docs/BRINGUP.md` (schedule §3.5, steps §3.4, sensors §4.6–4.8) and test ids to `docs/HARDWARE_TEST_PLAN.md`.
 
 Conventions:
@@ -52,7 +82,7 @@ One row per problem, even small ones: a wrong cable counts. Write the symptom as
 | 3 | Sun 18 16:01 | M2 / step 1 | `reset reason: unknown` after upload and after console open | the reset comes from the USB-Serial-JTAG peripheral; IDF 4.4's `esp_reset_reason_t` has no USB value, so it maps to `ESP_RST_UNKNOWN` | none needed: on these boards `unknown` = USB/host reset. Power-on, PANIC, BROWNOUT, WDT still report by name | 0.0 | | |
 | 4 | Sun 18 17:18 | M3 / step 2 | board 1 (A) with EEPROM wired: `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s; boots normally (banner, MAC match) | open. Throwaway I2C diag (scratchpad, not in repo): SDA and SCL both read high with internal pull-down (external pull-ups present) and are not held low; address scan 1-126 at 100 kHz finds **no device** on SDA 8/SCL 9 or swapped (0x50: NACK, Wire error 2). So the bus is idle and pulled up but the chip never ACKs. **Resolved (Mon 19, before 06:50):** most likely a pin-order mismatch or a bad contact in the first direct wiring (module header order differs from the SuperMini's) | rewired on a breadboard following each module's silkscreen. Every module then answers alone at 0x50 and 0x58 (0x58 = the chip's ID/security block). Pull-ups are on the modules, 9.84 kΩ on SDA and SCL (measured), so not a pull-up problem. GY-302 BH1750 also seen at 0x23 on board 1. BRINGUP.md: wire by silkscreen, 0x58 never written; driver guarded at compile time (`eeprom.h`, `config.h`) | | | NS |
 | 5 | Mon 19 07:02 | M3 / step 2 | first console command after the replug: `> edge-kv firmwar.795 [A] state -status` → `unknown command 'edge-kv' (try 'help')` | the node **received** pieces of its own boot text as console input. Most likely the new tty starts in cooked mode with ECHO on, and the board's buffered boot output arrives before the reader switches it to raw, so Linux echoes it back. Afterwards the port reads `-echo -icanon` (raw). Not proven which opener raced; ModemManager is inactive | none in code yet. No boot line parses as a harmful command (only `sensor light: …`, which `sensor` ignores). Rule: open ports only with `pio device monitor` or pyserial, **never `cat`/`echo` on the tty**: in cooked mode every reply line is echoed back as a command (`unknown command …` feeding itself). After a replug, send one empty line before the first real command. 08:38 on D the echo produced **two** commands (`edge-kv`, a fragment `se`): fragments can start mid-word, so `reset reason: power-on` could in principle arrive as `set reason: power-on` and write a junk key. **Fixed Mon 19 09:10** (separate commit): the console discards input for 1 s (`CONSOLE_INPUT_HOLD_MS`) after boot and whenever buffered USB output starts draining after a stall of 200 ms or more (the board cannot see the port open, only its backlog draining). It then prints `console: ignored N character(s) …`. Checked on C: a command typed 0.3 s after opening is ignored with that notice, the next one runs. Limits: (1) commands typed within 1 s of opening are dropped, so scripts must wait ~1.2 s after opening a port (measure.py does not yet); (2) a backlog of 64 bytes or less sits in the USB hardware FIFO, which the guard cannot see, so a very short echo can still get through | 0.1 | `step2-node-a.log` | |
-| 6 | Mon 19 (before 07:49) | M4 / step 3, board 3 (B) | B's EEPROM could not be powered reliably: the SuperMini's 3V3 header pin is loose | loose 3V3 header pin on board 3 (B); no soldering iron on site | **deferred.** Board 3 left as it is (normal image `node-b`, FATAL loop, no EEPROM). Tests continue with A, C, D; B counts as a failed member, so writes to keys B owns report UNDER_REPLICATED or are handed off (correct behaviour, D5). GPIO6-power workaround not started (only on request) | | | NS |
+| 6 | Mon 19 (before 07:49) | M4 / step 3, board 3 (B) | B's EEPROM could not be powered reliably: the SuperMini's 3V3 header pin is loose | loose 3V3 header pin on board 3 (B); no soldering iron on site | **deferred.** Board 3 left as it is (normal image `node-b`, FATAL loop, no EEPROM). Tests continue with A, C, D; B counts as a failed member, so writes to keys B owns report UNDER_REPLICATED or are handed off (correct behaviour, D5). GPIO6-power workaround not started (only on request). **Mon 09:05** workaround built (D10, `142b8fe`). **Mon 09:22 paused again:** B's GND header pin is loose as well, so GPIO6 cannot help; waiting for soldering | | | NS |
 | 7 | | | | | | | | |
 | 8 | | | | | | | | |
 | 9 | | | | | | | | |
@@ -66,6 +96,8 @@ Plan changes and why. Examples: cutting H9, keeping a sensor simulated, retuning
 |---|---|---|---|---|
 | Sun 18 16:15 | removed `monitor_rts = 0`/`monitor_dtr = 0` from `platformio.ini` | they made every monitor open reboot the node (problem 1), which would wipe RAM state in the middle of fault tests | keep them and treat each open as a reboot; open the port with our own pyserial script | |
 | Mon 19 07:13 | reflashed B, C, D (normal images) from `f3b5e1c` before their EEPROMs are wired; banners `built Oct 19 2026 07:13:24/41/56`, MACs match. Node A's image (built 06:54:24, after `b81c370`) has the same firmware source: no change to `src/`, `include/` or `platformio.ini` since `b81c370` | every hardware log from step 3 on comes from one firmware source | leave B-D on the Oct 17 images (same runtime behaviour, only the address checks differ) | NS |
+| Mon 19 09:05 | B un-deferred: EEPROM VCC from GPIO6 (D10, `142b8fe`), only in the node-b images | no soldering iron; avoids running the demo, measure.py and the sensor plan on three nodes | keep B down and move to three nodes (docs + `measure.py --nodes`); move the PIR to D | NS |
+| Mon 19 09:12 | echo guard in the console (`c7d0735`); A, C, D reflashed with it (built 09:08-09:09) | problem 5 could turn echoed boot fragments into commands | leave it and send an empty line after each replug | NS |
 
 ## 4. End-of-day summary
 
