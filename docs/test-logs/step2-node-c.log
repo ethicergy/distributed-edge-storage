@@ -1,0 +1,96 @@
+# Step 2 (EEPROM), node C = board label 4, 14:63:93:C8:A3:08, hub port 5-4. Mon 19.
+# EEPROM wired by the user (silkscreen; A0-A2, WP to GND), board plugged in 07:47 (by-id link time).
+# Timestamps: seconds since each port open. Console opened without reset; first line empty (BRINGUP_LOG problem 5).
+# 07:49:16
+[  0.01s port open]
+[  0.31s >>> ]
+[  0.36s] > edge-kv firmwar entry for node
+[  0.36s] unknown command 'edge-kv' (try 'help')
+[  3.33s >>> status]
+[  3.38s] > status
+[  3.38s] node C  state ACTIVE  view A-C-  uptime 91s
+[  3.38s] hlc 3241943.0
+[  3.38s] storage fresh format: 10 live, 0 tombstones, 10/64 keys, log 989/16064 bytes, bank A, 0 compactions
+[  3.38s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.38s] sensor sound (simulated): on, 3 samples, last 3 events, 1.8 % active seq 2, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+[  8.12s >>> set y 2]
+[  8.17s] > set y 2
+[  8.17s] SET y: OK (served by C, 1 attempt(s), 28 ms)
+[ 11.13s >>> get y]
+[ 11.19s] > get y
+[ 11.19s] y = "2"
+[ 11.19s]    (served by C, 1 attempt(s), 0 ms)
+[  0.00s port open]
+# 07:49:42
+[  0.30s >>> stats]
+[  0.31s] > stats
+[  0.31s] radio   rx 275 (invalid 0, spoofed 0)  tx 267 (failed 0)
+[  0.31s] hb      tx 215  rx 220   membership changes 1
+[  0.31s] server  executed 11  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  0.31s] repl    started 9  ok 9  failed 0  stale 0   as replica: applied 8 stale 0
+[  0.31s] ae      rounds 13  chunks tx 27 rx 24  tables 11  pushes 0  resync tx 0 applied 6 stale 0
+[  0.31s] gc      orphans 0  tombstones 0  keys dropped 0
+[  0.31s] client  ok 11  failed 0  attempts 11  local 7
+[  0.31s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  0.36s] env node-c, built Oct 19 2026 07:13:56, reset reason: power-on
+[  0.36s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  0.36s] esp-now rx 275  queue overflows 0  unknown MAC 0
+[  0.36s] esp-now tx -> A: 25 delivered, 0 failed (MAC-layer ACK)
+[  0.36s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  0.36s] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+[  0.36s] heap free 178912 (min 169964)  node task stack headroom 13336 bytes
+[  0.36s] eeprom page writes since boot: total 571, hottest page 11 with 7 (rated 1000000)
+[  2.32s >>> dump]
+[  2.34s] > dump
+[  2.34s]   v=3248646.1@C  s/A/light = 534.412 lux  (seq 109, sampled at hlc 3248644, simulated)
+[  2.34s]   v=3218645.2@A  h/A/light/0 = 571.027 lux  (seq 108, sampled at hlc 3218644, simulated)
+[  2.34s]   v=3248645.2@A  h/A/light/1 = 534.412 lux  (seq 109, sampled at hlc 3248644, simulated)
+[  2.34s]   v=40148.1@A  x = "1"
+[  2.34s]   v=3158645.2@A  h/A/light/2 = 594.679 lux  (seq 106, sampled at hlc 3158644, simulated)
+[  2.34s]   v=3188645.2@A  h/A/light/3 = 555.079 lux  (seq 107, sampled at hlc 3188644, simulated)
+[  2.39s]   v=3263754.1@C  s/C/sound = 4 events, 1.9 % active  (seq 3, sampled at hlc 3263754, simulated)
+[  2.39s]   v=3173787.1@A  h/C/sound/0 = 0 events, 0.0 % active  (seq 0, sampled at hlc 3173754, simulated)
+[  2.39s]   v=3203786.1@A  h/C/sound/1 = 1 events, 0.5 % active  (seq 1, sampled at hlc 3203754, simulated)
+[  2.39s]   v=3233783.1@A  h/C/sound/2 = 3 events, 1.8 % active  (seq 2, sampled at hlc 3233754, simulated)
+[  2.39s]   v=3245024.1@C  y = "2"
+[  2.39s]   v=3263783.1@A  h/C/sound/3 = 4 events, 1.9 % active  (seq 3, sampled at hlc 3263754, simulated)
+[  2.39s] 12 key(s); log 1244/16064 bytes used
+
+# Power cycle (WP check): user unplugged C, replugged into 5-4 (by-id link 07:59). 07:59:59:
+[  0.01s port open]
+[  0.31s >>> ]
+[  0.36s] > edge-kv firmwar entry for node
+[  0.36s] unknown command 'edge-kv' (try 'help')
+[  2.82s >>> status]
+[  2.87s] > status
+[  2.87s] node C  state ACTIVE  view A-C-  uptime 42s
+[  2.87s] hlc 3883965.0
+[  2.87s] storage recovered: 12 live, 0 tombstones, 12/64 keys, log 5796/16064 bytes, bank A, 0 compactions
+[  2.87s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  2.87s] sensor sound (simulated): on, 1 samples, last 0 events, 0.0 % active seq 22, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.33s >>> get y]
+[  5.38s] > get y
+[  5.38s] y = "2"
+[  5.38s]    (served by C, 1 attempt(s), 0 ms)
+[  7.84s >>> get x]
+[  7.89s] > get x
+[  7.89s] x = "1"
+[  7.89s]    (served by C, 1 attempt(s), 0 ms)
+[ 10.35s >>> stats]
+[ 10.36s] > stats
+[ 10.36s] radio   rx 117 (invalid 0, spoofed 0)  tx 110 (failed 0)
+[ 10.36s] hb      tx 86  rx 95   membership changes 1
+[ 10.36s] server  executed 5  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[ 10.36s] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 2 stale 0
+[ 10.36s] ae      rounds 6  chunks tx 18 rx 14  tables 4  pushes 0  resync tx 0 applied 2 stale 0
+[ 10.36s] gc      orphans 0  tombstones 0  keys dropped 0
+[ 10.36s] client  ok 5  failed 0  attempts 5  local 4
+[ 10.36s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[ 10.41s] env node-c, built Oct 19 2026 07:13:56, reset reason: power-on
+[ 10.41s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[ 10.41s] esp-now rx 117  queue overflows 0  unknown MAC 0
+[ 10.41s] esp-now tx -> A: 6 delivered, 0 failed (MAC-layer ACK)
+[ 10.41s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[ 10.41s] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+[ 10.41s] heap free 178912 (min 170088)  node task stack headroom 13336 bytes
+[ 10.41s] eeprom page writes since boot: total 18, hottest page 94 with 3 (rated 1000000)

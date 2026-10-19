@@ -1,0 +1,189 @@
+# Step 3 (two nodes), A + C, B deferred (loose 3V3 pin, BRINGUP_LOG problem 6), D no EEPROM. Mon 19.
+# Keys chosen with 'ring' (scan of k1..k24 on A at 08:00:32, below): k11 owned by A+C; k6 by C+B; k4 by B+C.
+# 08:00:32 ring scan on A:
+[  0.61s] > ring k1
+[  0.61s] key 'k1' hash 983d80c1
+[  0.61s]   all nodes up : primary C, replica A
+[  0.61s]   current view : primary C, replica A
+[  0.86s] > ring k2
+[  0.86s] key 'k2' hash 953d7c08
+[  0.86s]   all nodes up : primary D, replica C
+[  0.86s]   current view : primary C, replica A
+[  1.11s] > ring k3
+[  1.11s] key 'k3' hash 963d7d9b
+[  1.11s]   all nodes up : primary D, replica C
+[  1.11s]   current view : primary C, replica A
+[  1.37s] > ring k4
+[  1.37s] key 'k4' hash 9b3d857a
+[  1.37s]   all nodes up : primary B, replica C
+[  1.37s]   current view : primary C, replica A
+[  1.62s] > ring k5
+[  1.62s] key 'k5' hash 9c3d870d
+[  1.62s]   all nodes up : primary B, replica C
+[  1.62s]   current view : primary C, replica A
+[  1.87s] > ring k6
+[  1.87s] key 'k6' hash 993d8254
+[  1.87s]   all nodes up : primary C, replica B
+[  1.87s]   current view : primary C, replica A
+[  2.12s] > ring k7
+[  2.12s] key 'k7' hash 9a3d83e7
+[  2.12s]   all nodes up : primary B, replica C
+[  2.12s]   current view : primary C, replica A
+[  2.38s] > ring k8
+[  2.38s] key 'k8' hash 8f3d7296
+[  2.38s]   all nodes up : primary A, replica D
+[  2.38s]   current view : primary A, replica C
+[  2.63s] > ring k9
+[  2.63s] key 'k9' hash 903d7429
+[  2.63s]   all nodes up : primary B, replica D
+[  2.63s]   current view : primary A, replica C
+[  2.88s] > ring k10
+[  2.88s] key 'k10' hash 99d1fb63
+[  2.88s]   all nodes up : primary B, replica C
+[  2.88s]   current view : primary C, replica A
+[  3.13s] > ring k11
+[  3.13s] key 'k11' hash 98d1f9d0
+[  3.13s]   all nodes up : primary A, replica C
+[  3.13s]   current view : primary A, replica C
+[  3.38s] > ring k12
+[  3.38s] key 'k12' hash 9bd1fe89
+[  3.38s]   all nodes up : primary C, replica B
+[  3.38s]   current view : primary C, replica A
+[  3.64s] > ring k13
+[  3.64s] key 'k13' hash 9ad1fcf6
+[  3.64s]   all nodes up : primary B, replica C
+[  3.64s]   current view : primary C, replica A
+[  3.89s] > ring k14
+[  3.89s] key 'k14' hash 9dd201af
+[  3.89s]   all nodes up : primary B, replica A
+[  3.89s]   current view : primary A, replica C
+[  4.14s] > ring k15
+[  4.14s] key 'k15' hash 9cd2001c
+[  4.14s]   all nodes up : primary C, replica B
+[  4.14s]   current view : primary C, replica A
+[  4.39s] > ring k16
+[  4.39s] key 'k16' hash 9fd204d5
+[  4.39s]   all nodes up : primary A, replica C
+[  4.39s]   current view : primary A, replica C
+[  4.65s] > ring k17
+[  4.65s] key 'k17' hash 9ed20342
+[  4.65s]   all nodes up : primary B, replica A
+[  4.65s]   current view : primary A, replica C
+[  4.90s] > ring k18
+[  4.90s] key 'k18' hash a1d207fb
+[  4.90s]   all nodes up : primary D, replica B
+[  4.90s]   current view : primary C, replica A
+[  5.15s] > ring k19
+[  5.15s] key 'k19' hash a0d20668
+[  5.15s]   all nodes up : primary C, replica D
+[  5.15s]   current view : primary C, replica A
+[  5.40s] > ring k20
+[  5.40s] key 'k20' hash 27ca8c28
+[  5.40s]   all nodes up : primary A, replica B
+[  5.40s]   current view : primary A, replica C
+[  5.65s] > ring k21
+[  5.65s] key 'k21' hash 28ca8dbb
+[  5.65s]   all nodes up : primary B, replica D
+[  5.65s]   current view : primary C, replica A
+[  5.91s] > ring k22
+[  5.91s] key 'k22' hash 29ca8f4e
+[  5.91s]   all nodes up : primary B, replica D
+[  5.91s]   current view : primary C, replica A
+[  6.16s] > ring k23
+[  6.16s] key 'k23' hash 2aca90e1
+[  6.16s]   all nodes up : primary B, replica D
+[  6.16s]   current view : primary C, replica A
+[  6.41s] > ring k24
+[  6.41s] key 'k24' hash 2bca9274
+[  6.41s]   all nodes up : primary D, replica C
+[  6.41s]   current view : primary C, replica A
+
+# 08:00:59 A:
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.31s >>> members]
+[  2.36s] > members
+[  2.36s]   A  self    ACTIVE
+[  2.36s]   B  never heard
+[  2.36s]   C  alive   last heard 231 ms ago, 1504 heartbeats
+[  2.36s]   D  never heard
+[  6.12s >>> ring k11]
+[  6.17s] > ring k11
+[  6.17s] key 'k11' hash 98d1f9d0
+[  6.17s]   all nodes up : primary A, replica C
+[  6.17s]   current view : primary A, replica C
+[  8.13s >>> set k11 hello-ac]
+[  8.18s] > set k11 hello-ac
+
+# 08:01:08 C:
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.31s >>> members]
+[  2.36s] > members
+[  2.36s]   A  alive   last heard 276 ms ago, 210 heartbeats
+[  2.36s]   B  never heard
+[  2.36s]   C  self    ACTIVE
+[  2.36s]   D  never heard
+[  4.32s >>> get k11]
+[  4.37s] > get k11
+[  4.37s] k11 = "hello-ac"
+[  4.37s]    (served by A, 1 attempt(s), 5 ms)
+[  6.33s >>> ring k6]
+[  6.38s] > ring k6
+[  6.38s] key 'k6' hash 993d8254
+[  6.38s]   all nodes up : primary C, replica B
+[  6.38s]   current view : primary C, replica A
+[  8.34s >>> set k6 cb-key]
+[  8.39s] > set k6 cb-key
+[  8.39s] SET k6: OK (served by C, 1 attempt(s), 27 ms)
+[ 10.35s >>> ring k4]
+[ 10.40s] > ring k4
+[ 10.40s] key 'k4' hash 9b3d857a
+[ 10.40s]   all nodes up : primary B, replica C
+[ 10.40s]   current view : primary C, replica A
+[ 12.35s >>> set k4 b-key]
+[ 12.41s] > set k4 b-key
+[ 12.41s] SET k4: OK (served by C, 1 attempt(s), 21 ms)
+
+# 08:01:23 A (the SET k11 reply was printed after the previous session closed):
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.31s >>> get k6]
+[  2.36s] SET k11: OK (served by A, 1 attempt(s), 24 ms)
+[  2.36s] > get k6
+[  2.36s] k6 = "cb-key"
+[  2.36s]    (served by C, 1 attempt(s), 6 ms)
+[  4.33s >>> get k4]
+[  4.39s] > get k4
+[  4.39s] k4 = "b-key"
+[  4.39s]    (served by C, 1 attempt(s), 6 ms)
+[  6.34s >>> stats]
+[  6.34s] > stats
+[  6.34s] radio   rx 1958 (invalid 0, spoofed 0)  tx 8111 (failed 0)
+[  6.34s] hb      tx 7148  rx 1560   membership changes 6
+[  6.34s] server  executed 243  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  6.34s] repl    started 54  ok 54  failed 0  stale 0   as replica: applied 56 stale 0
+[  6.34s] ae      rounds 358  chunks tx 789 rx 232  tables 79  pushes 8  resync tx 8 applied 0 stale 0
+[  6.34s] gc      orphans 0  tombstones 0  keys dropped 0
+[  6.34s] client  ok 245  failed 0  attempts 245  local 216
+[  6.35s] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+[  6.35s] env node-a, built Oct 19 2026 06:54:24, reset reason: power-on
+[  6.35s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  6.35s] esp-now rx 1958  queue overflows 0  unknown MAC 0
+[  6.35s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  6.35s] esp-now tx -> C: 174 delivered, 0 failed (MAC-layer ACK)
+[  6.35s] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+[  6.35s] heap free 176936 (min 168212)  node task stack headroom 13208 bytes
+[  6.35s] eeprom page writes since boot: total 1385, hottest page 263 with 7 (rated 1000000)
+[  6.40s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+
+# 08:01:43 A:
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.31s >>> status]
+[  1.36s] > status
+[  1.36s] node A  state ACTIVE  view A-C-  uptime 3592s
+[  1.36s] hlc 3985810.0
+[  1.36s] storage recovered: 15 live, 0 tombstones, 15/64 keys, log 5629/16064 bytes, bank B, 1 compactions
+[  1.36s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  1.36s] sensor light (simulated): on, 120 samples, last 261.894 lux seq 133, 54 ok, 186 under-replicated, 0 failed, 0 read failures
