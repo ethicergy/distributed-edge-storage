@@ -8,11 +8,11 @@ Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to branch
 
 | change | where | what it does |
 |---|---|---|
-| A. Boot identity | `src/platform/main.cpp:144-254`, called at `main.cpp:421` and from `stats` (`main.cpp:265`); `transport::configured_mac()` in `include/transport.h:74-75` and `src/platform/transport.cpp:188-191`; `EDGE_ENV_NAME` set by `platformio.ini:29-30` | Prints the env name, build time, `esp_reset_reason()` as text, and the board's STA MAC. Says whether the MAC matches the table entry for `NODE_ID`. On a mismatch it prints a `MAC MISMATCH` block and, if the MAC belongs to another node, which env to flash instead. |
+| A. Boot identity | `src/platform/main.cpp:145-265`, called at `main.cpp:464` and from `stats` (`main.cpp:276`); `transport::configured_mac()` in `include/transport.h:74-75` and `src/platform/transport.cpp:188-191`; `EDGE_ENV_NAME` set by `platformio.ini:29-30` | Prints the env name, build time, `esp_reset_reason()` as text, and the board's STA MAC. Says whether the MAC matches the table entry for `NODE_ID`. On a mismatch it prints a `MAC MISMATCH` block and, if the MAC belongs to another node, which env to flash instead. |
 | B. MAC reader | `scripts/read_macs.sh` | Runs `esptool.py read_mac` on each `/dev/ttyACM*` (or the ports you list) and prints `MAC_A`…`MAC_D` blocks in the format of `transport.cpp:24-38`. |
 
 * The build time is the compile time of `main.cpp`. PlatformIO rebuilds that file only when it changes, so after edits to other files the time can be older than the image.
-* The banner prints about 1.5 s after reset (`main.cpp:412`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again. Without an EEPROM `stats` does not answer (the board halts before the console starts); press RST with the monitor open instead.
+* The banner prints about 1.5 s after reset (`main.cpp:455`). Under WSL the port usually re-attaches later than that, so you may miss it. Type `stats` to see the identity lines again. Without an EEPROM `stats` does not answer (the board halts before the console starts); press RST with the monitor open instead.
 * The MAC table itself is unchanged.
 
 ---
@@ -23,19 +23,19 @@ Day 2 = Mon 19 Oct, Day 3 = Tue 20 Oct (demo). Line numbers refer to branch
 |---|---|---|---|
 | Board target | `esp32-c3-devkitm-1`: 4 MB flash, QIO, 160 MHz | `platformio.ini:18`; `~/.platformio/platforms/espressif32/boards/esp32-c3-devkitm-1.json` | OK for SuperMini (ESP32-C3FH4, 4 MB). If a board boot-loops right after flashing, the proposed fix is `board_build.flash_mode = dio`. It is **not applied**. |
 | Core / IDF | espressif32@7.1.3 → Arduino-ESP32 2.0.17, IDF 4.4. The build stops on IDF ≥ 5. | `platformio.ini:17`, `transport.cpp:14-16` | Keep the pin. |
-| USB console | `Serial` is USB-Serial-JTAG CDC (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`), 115200, 4 KB TX buffer | `platformio.ini:27-28`, `main.cpp:405-410` | Correct for SuperMini. Shows up as `/dev/ttyACM*`, VID:PID 303a:1001. |
+| USB console | `Serial` is USB-Serial-JTAG CDC (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`), 115200, 4 KB TX buffer | `platformio.ini:27-28`, `main.cpp:446-451` | Correct for SuperMini. Shows up as `/dev/ttyACM*`, VID:PID 303a:1001. |
 | Monitor reset | No `monitor_rts`/`monitor_dtr` settings, so the monitor leaves both lines asserted | `platformio.ini:21-22` | Opening the monitor does not reset the board (checked on node D, Sun 18). The earlier `monitor_rts = 0`/`monitor_dtr = 0` **did** reset it on every open: DTR goes low before RTS, and that moment is the USB-Serial-JTAG reset condition (BRINGUP_LOG problem 1). The first open after a while shows a burst of old output buffered on the board (4 KB TX buffer). |
 | I2C (EEPROM) | SDA GPIO8, SCL GPIO9, 400 kHz | `config.h:166-167`, `eeprom.h:14`, `eeprom.cpp:57-61` | 8 and 9 are strapping pins. See 2b; acceptable with pull-ups. |
 | EEPROM | AT24C256 at 0x50, 32 KB, 64-byte pages, write completion by ACK polling up to 10 ms | `eeprom.h:8-16`, `eeprom.cpp:28-47`, `eeprom.cpp:191-232` | Matches the datasheet (see 2b). |
-| EEPROM missing | Halts and prints `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | `main.cpp:427-429`, `main.cpp:393-399` | Useful as a wiring test. |
-| Pi bridge | Node A only. UART1, RX GPIO20, TX GPIO21, 115200 8N1 | `platformio.ini:32`, `config.h:152-160`, `main.cpp:114`, `main.cpp:449-458` | 20/21 are the UART0 pins and get ROM boot text (see 2b). |
+| EEPROM missing | Halts and prints `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s | `main.cpp:472-474`, `main.cpp:434-440` | Useful as a wiring test. |
+| Pi bridge | Node A only. UART1, RX GPIO20, TX GPIO21, 115200 8N1 | `platformio.ini:32`, `config.h:152-160`, `main.cpp:115`, `main.cpp:493-503` | 20/21 are the UART0 pins and get ROM boot text (see 2b). |
 | ESP-NOW | STA mode, no modem sleep, fixed channel 6, unencrypted peers | `transport.cpp:222-230`, `transport.cpp:266`, `transport.cpp:290`, `transport.cpp:22` | OK. Nothing else on the demo site needs to be on channel 6. |
 | TX power | 8.5 dBm, hard-coded, not in `config.h` | `transport.cpp:224` | This is already the usual SuperMini fix (see 2b). |
-| MAC table | Hard-coded `MAC_A`…`MAC_D`. Frames from unknown MACs are dropped and counted. | `transport.cpp:24-38`, `transport.cpp:127-131`, `main.cpp:285-290` (`stats`: `unknown MAC`) | Each board must match its row (see 2b). |
+| MAC table | Hard-coded `MAC_A`…`MAC_D`. Frames from unknown MACs are dropped and counted. | `transport.cpp:24-38`, `transport.cpp:127-131`, `main.cpp:296-301` (`stats`: `unknown MAC`) | Each board must match its row (see 2b). |
 | LEDs / buttons | None used by the firmware (no `pinMode`/`digitalWrite` under `src/`) | grep | The GPIO8 LED flickers with I2C traffic. That's harmless. |
-| Sensors | Real drivers for DHT11 / AM312 / LM393 / BH1750 exist but are off: `REAL_SENSOR_NODES = 0x00`, so every node runs `SimulatedSource` and readings are flagged `simulated` | `config.h:151`, `main.cpp:98-115`, `src/platform/sensors.cpp` | Phase 4. |
+| Sensors | Real drivers for DHT11 / AM312 / LM393 / BH1750 exist but are off: `REAL_SENSOR_NODES = 0x00`, so every node runs `SimulatedSource` and readings are flagged `simulated` | `config.h:151`, `main.cpp:99-116`, `src/platform/sensors.cpp` | Phase 4. |
 | Power | No supply assumption in code. IDF brown-out detector on (`CONFIG_ESP32C3_BROWNOUT_DET 1`, level 7). Storage is crash-safe (A/B banks, CRC, torn-tail discard). Corrupted storage is reformatted and refilled by anti-entropy. | `…/framework-arduinoespressif32/tools/sdk/esp32c3/*/include/sdkconfig.h`; `config.h:135`; `test/storage_manager_test.cpp` | Power each board from USB. Brown-outs now show up as `reset reason: BROWNOUT`. |
-| Node task | 16 KB stack, priority 3, yields 1 tick per loop | `main.cpp:57-58`, `main.cpp:387` | Check `stats` → `stack headroom` on hardware. |
+| Node task | 16 KB stack, priority 3, yields 1 tick per loop | `main.cpp:58-59`, `main.cpp:411` | Check `stats` → `stack headroom` on hardware. |
 | Pi side | `/dev/serial0` by default (`$EDGEKV_PORT` overrides). Serial login console must be off. | `pi/README.md:10-12`, `pi/README.md:34` | Bluetooth / Pi 5 notes in Phase 3.2. |
 
 ---
@@ -55,13 +55,13 @@ The port keeps the same VID:PID but may come back under a different `/dev/ttyACM
 * The LED is wired from 3V3 through a resistor to GPIO8 (active low). With SDA high it carries no current. With SDA low it draws a fraction of a mA. It doesn't load the bus enough to matter at 400 kHz. The core's own default I2C pins for this chip are 8/9 (`variants/esp32c3/pins_arduino.h:19-20`).
 * Strapping: GPIO9 low at reset means download mode, and GPIO8 must be high for download boot. External pull-ups to 3.3 V keep both pins in the right state.
 * Don't press BOOT while the board is running. It shorts SCL to ground in the middle of a transaction. The log is crash-safe, but don't rely on it.
-* If the bus gives trouble anyway, use SDA GPIO6 / SCL GPIO7. That means editing `config.h:166-167` and the hard-coded text in `main.cpp:428`. **Not applied.**
+* If the bus gives trouble anyway, use SDA GPIO6 / SCL GPIO7. That means editing `config.h:166-167` and the hard-coded text in `main.cpp:473`. **Not applied.**
 
 **UART0 boot noise to the Pi.**
 * The ROM prints about 300 bytes of ASCII on GPIO21 at every reset of node A.
 * The Pi decoder hunts for `AA 55`, then checks the length and CRC-8 (`pi/edgekv/framing.py:59-83`). 0xAA never occurs in ASCII.
 * I fed the actual ROM banner followed by one frame into `framing.Decoder`. Result: 1 frame decoded, 0 CRC errors. Existing tests cover noise, CRC errors and bogus lengths (`pi/tests/test_framing.py:24-46`).
-* The firmware never starts UART0. `Serial1.begin(…, 20, 21)` (`main.cpp:449`) re-routes both pins to UART1 through the GPIO matrix. After that, UART0 output (IDF error logs, panics) no longer reaches the Pi.
+* The firmware never starts UART0. `Serial1.begin(…, 20, 21)` (`main.cpp:494`) re-routes both pins to UART1 through the GPIO matrix. After that, UART0 output (IDF error logs, panics) no longer reaches the Pi.
 * The second-stage bootloader is silent (`CONFIG_BOOTLOADER_LOG_LEVEL 0`).
 
 **ESP-NOW range.**
@@ -87,7 +87,7 @@ scripts/read_macs.sh /dev/ttyACM1          # one board
 ls -l /dev/serial/by-id/                   # USB serial number is usually the MAC as well
 ```
 
-The STA MAC printed by esptool is the address ESP-NOW sends from. The banner reads the same one (`main.cpp:198`).
+The STA MAC printed by esptool is the address ESP-NOW sends from. The banner reads the same one (`main.cpp:209`).
 
 **AT24C256.**
 
@@ -205,6 +205,7 @@ Every node (A, B, C, D):
 | GPIO9 | SCL |
 | — | A0, A1, A2 → GND (jumpers), WP → GND |
 | — | Match pins **by the silkscreen labels** on both boards, not by header position |
+| **node B only** (D10) | VCC from **GPIO6** instead of 3V3 (B's 3V3 pin is loose). Only the `node-b`/`node-b-fi` images drive GPIO6. Never wire another board this way. |
 | 3V3 via 4.7 kΩ → GPIO8, and 3V3 via 4.7 kΩ → GPIO9 | only if the module has no pull-ups |
 
 Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):
@@ -264,7 +265,7 @@ E = essential for the demo, N = nice to have, D = drop first. Hours are bench ti
 
 | # | risk | mitigation |
 |---|---|---|
-| 1 | Board/MAC mismatch. Nothing talks, or nodes impersonate each other. | Step 0 before anything else. The banner flags mismatches (`main.cpp:182-254`). Label the boards. `stats` → `unknown MAC`. |
+| 1 | Board/MAC mismatch. Nothing talks, or nodes impersonate each other. | Step 0 before anything else. The banner flags mismatches (`main.cpp:183-265`). Label the boards. `stats` → `unknown MAC`. |
 | 2 | WSL USB passthrough eats hours: 4 boards re-enumerating on every reset. | `--auto-attach`, by-id paths, one board per fixed port. Fall back to Windows esptool or flashing from the Pi (3.2) after 30 min of trouble. |
 | 3 | The integrated firmware has never run on a board (`STATUS.md:67-70`): stack, timing or USB-output bugs, and panics not visible on USB. | One board first (step 1). Check `reset reason` and stack headroom in `stats`. USB-UART adapter on GPIO21. Budget half of Day 1 PM as slack. The sim (`build/host/edge_sim`) is the demo fallback for the distributed-systems part. |
 | 4 | Pi UART misconfigured (console on, mini-UART, Pi 5 naming), so the bridge is silent. | Loopback test first. `stats` bridge counters on A. The USB-UART adapter on the laptop can run `python3 -m edgekv --port /dev/ttyUSB0 ping` against node A's GPIO20/21, which takes the Pi out of the equation. |
@@ -344,7 +345,7 @@ The bridge node A gets the BH1750 because its driver never disables interrupts. 
 | Source interface: `Sample`, `poll()`, `failures()` | `include/sensor.h:106-130` |
 | Logic: `MotionSource`, `SoundSource`, `LatestValueSource`, `FallbackSource`, `real_sensor_enabled()` | `include/sensor_sources.h`, `src/sensor_sources.cpp` |
 | Per-node switch | `config.h:151` `REAL_SENSOR_NODES` (A 0x01, B 0x02, C 0x04, D 0x08); fallback after `SENSOR_FALLBACK_AFTER_FAILURES = 3` (`:156`) |
-| Wiring in the firmware | `main.cpp:98-115` (FallbackSource around `platform_sensors::real_source()`), boot line `sensor <kind>: hardware / simulated` (`main.cpp:440-447`) |
+| Wiring in the firmware | `main.cpp:99-116` (FallbackSource around `platform_sensors::real_source()`), boot line `sensor <kind>: hardware / simulated` (`main.cpp:485-491`) |
 | Pi | `pi/edgekv/reading.py:31-42` (kinds, v2 decode, `NODE_SENSORS`), `cli.py:18` (CSV gets trailing columns `last_motion_s, active_pct, settling`), `--raw-log` (`pi/edgekv/rawlog.py`) |
 
 ### 4.5 Host coverage (`make check`)
@@ -430,7 +431,7 @@ What to expect: no measurable difference. A 5 ms gap holds back at most one or t
 |---|---|---|
 | Paste the real MACs | `src/platform/transport.cpp:24-38` | if step 0 shows a difference |
 | `board_build.flash_mode = dio` | `platformio.ini` `[env]` | only if a SuperMini boot-loops after flashing |
-| I2C on GPIO6/7 | `config.h:166-167`, `main.cpp:428` | only if 8/9 misbehave |
+| I2C on GPIO6/7 | `config.h:166-167`, `main.cpp:473` | only if 8/9 misbehave |
 | `RADIO_TX_POWER_QDBM` in config | `config.h`, `transport.cpp:224` | if range needs tuning |
 | Set `REAL_SENSOR_NODES` bits | `config.h:151` | per module, after its check (4.6) |
 | LM393 AO peak-to-peak | `sensor_sources`, `sensors.cpp` | only if the module has AO (4.2) |

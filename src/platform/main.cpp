@@ -11,6 +11,7 @@
  */
 
 #include <Arduino.h>
+#include <driver/gpio.h>
 #include <esp_random.h>
 #include <esp_system.h>
 
@@ -193,6 +194,16 @@ void print_identity(console::WriteFn write, void* write_context)
         reset_reason_name(esp_reset_reason())
     );
     write(write_context, line);
+
+    if (config::EEPROM_POWER_PIN != config::NO_EEPROM_POWER_PIN) {
+        std::snprintf(
+            line,
+            sizeof(line),
+            "EEPROM power: GPIO%u (workaround D10, VCC not on 3V3)\n",
+            static_cast<unsigned>(config::EEPROM_POWER_PIN)
+        );
+        write(write_context, line);
+    }
 
     std::uint8_t own_mac[transport::MAC_ADDRESS_SIZE] = {};
     esp_read_mac(own_mac, ESP_MAC_WIFI_STA);
@@ -401,6 +412,25 @@ void node_task(void*)
     }
 }
 
+// D10: on node B the EEPROM's VCC comes from a GPIO. Drive it high at
+// full strength before the first I2C access. Nothing reconfigures the
+// pin afterwards (config.h checks it is no I2C or sensor pin).
+void power_eeprom()
+{
+    if (config::EEPROM_POWER_PIN == config::NO_EEPROM_POWER_PIN) {
+        return;
+    }
+
+    const auto pin = static_cast<gpio_num_t>(config::EEPROM_POWER_PIN);
+
+    gpio_reset_pin(pin);
+    gpio_set_drive_capability(pin, GPIO_DRIVE_CAP_3);
+    gpio_set_level(pin, 1);
+    gpio_set_direction(pin, GPIO_MODE_OUTPUT);
+
+    delay(config::EEPROM_POWER_SETTLE_MS);
+}
+
 [[noreturn]] void halt(const char* reason)
 {
     for (;;) {
@@ -436,6 +466,8 @@ void setup()
     if (radio.begin(LOCAL_NODE_ID) != transport::Result::OK) {
         halt("ESP-NOW initialisation failed");
     }
+
+    power_eeprom();
 
     if (eeprom_chip.begin(config::EEPROM_SDA_PIN, config::EEPROM_SCL_PIN) != eeprom::Result::OK) {
         halt("AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)");

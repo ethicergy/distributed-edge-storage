@@ -16,6 +16,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D7 | Bridge | node A, UART1 GPIO20/21, Python CLI with CSV logging |
 | D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
 | D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
+| D10 | Node B's EEPROM supply | workaround: VCC from GPIO6 driven high (node-b images only); real fix is resoldering B's 3V3 pin |
 
 ---
 
@@ -180,3 +181,35 @@ Not adding a fallback keeps the measured EEPROM behaviour (write
 cycles, wear, crash safety) the only storage path, and a missing
 EEPROM stays a loud FATAL instead of silently degrading. Revisit only
 if a module fails during the demo window and no spare is left.
+
+## D10 — Node B's EEPROM powered from GPIO6 (workaround)
+
+Board B's 3V3 header pin is loose and there is no soldering iron on
+site (BRINGUP_LOG problem 6). Without B the cluster runs on three
+nodes, which changes the demo, the measurements and the sensor plan.
+Instead, B's EEPROM takes its VCC from GPIO6:
+
+* `-DEDGE_EEPROM_POWER_PIN=6` only in `node-b` and `node-b-fi`
+  (`platformio.ini`); every other image keeps VCC on 3V3.
+  `scripts/check_images.sh` checks this on the banner text.
+* `setup()` drives the pin high at the strongest drive setting
+  (`GPIO_DRIVE_CAP_3`), waits `EEPROM_POWER_SETTLE_MS` = 10 ms, then
+  starts I2C. Nothing reconfigures the pin afterwards.
+  `config.h` refuses, at compile time, a pin that is a strapping pin,
+  USB/UART, I2C or a sensor pin.
+* B's banner and `stats` print `EEPROM power: GPIO6`, so a log always
+  shows which supply a board used.
+
+Why it is enough: the AT24C256 draws about 3 mA at most while writing
+and microamps in standby, well within a GPIO's drive. The pin sits
+low (unpowered EEPROM) only from reset until `setup()` reaches the
+EEPROM, before the store is touched.
+
+Risk to check on the board: until GPIO6 is driven, the module's
+pull-ups connect SDA/SCL to an unpowered VCC. GPIO9 is a strapping
+pin, and low at reset means download mode, so B must still print its
+banner after a power cycle with the EEPROM wired. If it does not,
+fall back to running without B.
+
+**Real fix:** resolder B's 3V3 header pin, wire VCC back to 3V3 and
+drop the flag from the two node-b envs.

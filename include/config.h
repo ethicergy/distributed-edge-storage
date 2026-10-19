@@ -292,4 +292,32 @@ static_assert(
     "BH1750 must not use an EEPROM address (0x50-0x57 data, 0x58-0x5F ID block)"
 );
 
+// ---------------------------------------------------------------
+// EEPROM supply from a GPIO (decision D10, node B only)
+// ---------------------------------------------------------------
+
+// Board B's 3V3 header pin is loose, so its EEPROM VCC is fed from a
+// GPIO driven high (platformio.ini sets EDGE_EEPROM_POWER_PIN=6 for
+// node-b and node-b-fi only). NO_EEPROM_POWER_PIN: VCC on 3V3.
+constexpr std::uint8_t NO_EEPROM_POWER_PIN = 0xFF;
+
+#ifdef EDGE_EEPROM_POWER_PIN
+constexpr std::uint8_t EEPROM_POWER_PIN = EDGE_EEPROM_POWER_PIN;
+#else
+constexpr std::uint8_t EEPROM_POWER_PIN = NO_EEPROM_POWER_PIN;
+#endif
+
+// Settle time after driving the pin high, before the first I2C access.
+constexpr std::uint32_t EEPROM_POWER_SETTLE_MS = 10;
+
+// Same rules as a sensor pin, and it must not be any pin in use.
+static_assert(
+    EEPROM_POWER_PIN == NO_EEPROM_POWER_PIN ||
+        (sensor_pin_ok(EEPROM_POWER_PIN) &&
+         EEPROM_POWER_PIN != EEPROM_SDA_PIN && EEPROM_POWER_PIN != EEPROM_SCL_PIN &&
+         EEPROM_POWER_PIN != PIR_PIN && EEPROM_POWER_PIN != SOUND_DO_PIN &&
+         EEPROM_POWER_PIN != DHT11_PIN),
+    "EEPROM power pin must be a free header GPIO (0-10 minus 2/8/9, not I2C or a sensor pin)"
+);
+
 } // namespace config
