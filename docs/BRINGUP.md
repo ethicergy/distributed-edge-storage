@@ -94,9 +94,11 @@ The STA MAC printed by esptool is the address ESP-NOW sends from. The banner rea
 | check | expected | code |
 |---|---|---|
 | address | 0x50: A0, A1, A2 to GND (module jumpers) | `eeprom.h:8` |
+| ID block | A scan shows the chip at **0x50 and 0x58** (seen on every module, Mon 19). 0x58 is the chip's ID/security block. The driver must **never write 0x58**: on parts with a lockable ID page a write there may lock it permanently. A `static_assert` in `eeprom.h` keeps the driver at 0x50-0x57, and one in `config.h` keeps the BH1750 off 0x50-0x5F (with ADDR high it would be 0x5C) | `eeprom.h` (end), `config.h` (end) |
 | WP | GND (a high WP silently blocks writes; ACK polling still passes) | n/a |
 | supply | 3.3 V from the SuperMini 3V3 pin. **Never 5 V**, because the module's pull-ups would then pull SDA/SCL to 5 V | n/a |
-| pull-ups | The driver relies on external pull-ups. `Wire.begin()` only enables the ~45 kΩ internal ones, too weak for 400 kHz. Check with power off: resistance from SDA to VCC and from SCL to VCC should be 2–10 kΩ. If not, add 4.7 kΩ to 3V3. | `eeprom.cpp:57-61` |
+| wiring | Wire **by the module's silkscreen labels, not by header position**: the pin order differs between modules and from the SuperMini. A first direct wiring by position gave the FATAL and no device at any address (BRINGUP_LOG problem 4). | n/a |
+| pull-ups | Our modules have them fitted: 9.84 kΩ on SDA and SCL (measured). The driver relies on external pull-ups. `Wire.begin()` only enables the ~45 kΩ internal ones, too weak for 400 kHz. Check with power off: resistance from SDA to VCC and from SCL to VCC should be 2–10 kΩ. If not, add 4.7 kΩ to 3V3. | `eeprom.cpp:57-61` |
 | write cycle | Datasheet tWR = 5 ms max. The driver polls for ACK every 1 ms up to 10 ms (2× margin) | `eeprom.h:15`, `eeprom.cpp:28-47` |
 | pages | 64 B. Writes are split at page boundaries. Reads are 64 B chunks (Wire buffer 128). | `eeprom.h:13,16`, `eeprom.cpp:191-232`, `eeprom.cpp:105-156` |
 
@@ -202,6 +204,7 @@ Every node (A, B, C, D):
 | GPIO8 | SDA |
 | GPIO9 | SCL |
 | — | A0, A1, A2 → GND (jumpers), WP → GND |
+| — | Match pins **by the silkscreen labels** on both boards, not by header position |
 | 3V3 via 4.7 kΩ → GPIO8, and 3V3 via 4.7 kΩ → GPIO9 | only if the module has no pull-ups |
 
 Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):

@@ -15,6 +15,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D6 | Reads after rejoin | primary-only reads behind a boot/catch-up gate |
 | D7 | Bridge | node A, UART1 GPIO20/21, Python CLI with CSV logging |
 | D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
+| D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
 
 ---
 
@@ -160,3 +161,22 @@ Implemented, conservatively:
 Both are local, physical drops applied by the next compaction; no
 record is written. Without this the 64-key index would fill
 permanently with tombstones and orphans (audit 5.9).
+
+## D9 — No storage fallback, no lower I2C clock
+
+On the first board the AT24C256 did not answer at any address
+(BRINGUP_LOG problem 4). Two code changes were considered:
+
+* **Flash-backed fallback:** keep the store in the ESP32-C3's own
+  flash when the EEPROM is missing, instead of halting.
+* **Lower I2C clock** (100 kHz instead of 400 kHz) in case of a
+  marginal bus.
+
+Neither was needed. After rewiring by the module silkscreen every
+module answers at 0x50 (and 0x58, its ID block) with the 9.84 kΩ
+pull-ups fitted on the modules. The scan that diagnosed it already ran
+at 100 kHz and still saw nothing, so the clock was never the cause.
+Not adding a fallback keeps the measured EEPROM behaviour (write
+cycles, wear, crash safety) the only storage path, and a missing
+EEPROM stays a loud FATAL instead of silently degrading. Revisit only
+if a module fails during the demo window and no spare is left.

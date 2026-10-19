@@ -285,4 +285,11 @@ static_assert(
     "request tables must hold every client op / replication"
 );
 
+// Node A's BH1750 shares the EEPROM bus. With ADDR high it would sit at
+// 0x5C, inside the EEPROM's 0x58-0x5F ID block (eeprom.h): keep ADDR low.
+static_assert(
+    (BH1750_I2C_ADDRESS & 0xF0) != 0x50,
+    "BH1750 must not use an EEPROM address (0x50-0x57 data, 0x58-0x5F ID block)"
+);
+
 } // namespace config
