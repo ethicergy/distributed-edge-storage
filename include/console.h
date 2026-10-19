@@ -37,6 +37,11 @@ public:
     // Feed received characters (handles CR/LF and backspace).
     void on_char(char c, std::uint64_t now_ms);
 
+    // Discard received characters, and any partial line, until
+    // now_ms + duration_ms (BRINGUP_LOG problem 5: a host opening the
+    // port can echo the board's own output back as input).
+    void hold_input(std::uint64_t now_ms, std::uint32_t duration_ms);
+
     // Execute one command line.
     void execute(const char* line, std::uint64_t now_ms);
 
@@ -100,6 +105,9 @@ private:
 
     char line_[256]{};
     std::size_t line_length_ = 0;
+
+    std::uint64_t hold_until_ms_ = 0;
+    std::uint32_t held_chars_ = 0;
 
     Bench bench_{};
 };

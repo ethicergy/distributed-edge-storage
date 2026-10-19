@@ -56,6 +56,7 @@ static_assert(
 constexpr bool BRIDGE_ROLE = LOCAL_NODE_ID == config::BRIDGE_NODE_ID;
 
 constexpr std::uint32_t NODE_TASK_STACK_BYTES = 16384;
+constexpr int USB_TX_BUFFER_BYTES = 4096;
 constexpr UBaseType_t NODE_TASK_PRIORITY = 3;
 
 // ------------------------------------------------------------------
@@ -365,6 +366,36 @@ console::Console operator_console(runtime, &sampler, serial_write, nullptr, cons
 // Node task
 // ------------------------------------------------------------------
 
+// Problem 5: when a host opens the port, the output buffered while
+// nobody read it drains, and the host's tty may echo it back as
+// console input. A drain that follows a stall of CONSOLE_TX_STALL_MS
+// or more is taken as the port opening, and input is held.
+class PortOpenGuard {
+public:
+    void poll(std::uint64_t now_ms)
+    {
+        const int free_bytes = Serial.availableForWrite();
+
+        if (free_bytes > last_free_ &&
+            stalled_since_ms_ != 0 &&
+            now_ms - stalled_since_ms_ >= config::CONSOLE_TX_STALL_MS) {
+            operator_console.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
+        }
+
+        if (free_bytes >= USB_TX_BUFFER_BYTES) {
+            stalled_since_ms_ = 0;
+        } else if (free_bytes > last_free_ || stalled_since_ms_ == 0) {
+            stalled_since_ms_ = now_ms;
+        }
+
+        last_free_ = free_bytes;
+    }
+
+private:
+    int last_free_ = USB_TX_BUFFER_BYTES;
+    std::uint64_t stalled_since_ms_ = 0;
+};
+
 StaticTask_t node_task_control;
 StackType_t node_task_stack[NODE_TASK_STACK_BYTES / sizeof(StackType_t)];
 
@@ -372,6 +403,10 @@ void node_task(void*)
 {
     transport::ReceivedFrame frame{};
     std::uint8_t bridge_buffer[64];
+    PortOpenGuard port_guard;
+
+    // Characters that arrived during setup() may be echoed boot text.
+    operator_console.hold_input(platform_time::now_ms(), config::CONSOLE_INPUT_HOLD_MS);
 
     for (;;) {
         const std::uint64_t now = platform_time::now_ms();
@@ -381,6 +416,8 @@ void node_task(void*)
         }
 
         radio.drain_send_status();
+
+        port_guard.poll(now);
 
         while (Serial.available() > 0) {
             operator_console.on_char(static_cast<char>(Serial.read()), now);
@@ -447,7 +484,7 @@ void setup()
     // Room for a whole `stats` / `dump` answer. With no USB host
     // attached the core discards output instead of blocking, so a
     // board on battery power never stalls on logging.
-    Serial.setTxBufferSize(4096);
+    Serial.setTxBufferSize(USB_TX_BUFFER_BYTES);
 #endif
 
     Serial.begin(115200);

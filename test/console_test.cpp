@@ -87,6 +87,34 @@ int main()
     cluster.run_for(300);
     REQUIRE(contains("SET typed: OK"));
 
+    // Input hold (problem 5): echoed text is discarded, not executed,
+    // including a partial line typed before the hold started.
+    g_output.clear();
+    for (char c : std::string("sta")) {
+        console.on_char(c, cluster.now());
+    }
+    console.hold_input(cluster.now(), 1000);
+    for (char c : std::string("set echoed junk\r")) {
+        console.on_char(c, cluster.now());
+    }
+    cluster.run_for(500);
+    REQUIRE(!contains("SET echoed"));
+    REQUIRE(!contains("console: ignored"));  // reported only once the hold ends
+    cluster.run_for(600);
+    REQUIRE(contains("console: ignored 19 character(s)"));
+    REQUIRE(!contains("SET echoed"));
+
+    g_output.clear();
+    cluster.run_for(100);
+    REQUIRE(!contains("console: ignored"));  // reported once
+    for (char c : std::string("tus\r")) {
+        console.on_char(c, cluster.now());
+    }
+    cluster.run_for(300);
+    REQUIRE(contains("unknown command 'tus'"));  // "sta" did not survive the hold
+    run(cluster, console, "get echoed");
+    REQUIRE(contains("GET echoed: NOT_FOUND"));
+
     g_output.clear();
     cluster.run_for(5000);
     run(cluster, console, "sensors", 1000);

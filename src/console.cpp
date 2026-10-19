@@ -131,6 +131,11 @@ void Console::print_banner()
 
 void Console::on_char(char c, std::uint64_t now_ms)
 {
+    if (now_ms < hold_until_ms_) {
+        ++held_chars_;
+        return;
+    }
+
     if (c == '\r' || c == '\n') {
         if (line_length_ == 0) {
             return;
@@ -761,8 +766,28 @@ void Console::cmd_bench(const char* args, std::uint64_t now_ms)
     printf("bench: %ld sequential SETs on keys bench/0..7\n", count);
 }
 
+void Console::hold_input(std::uint64_t now_ms, std::uint32_t duration_ms)
+{
+    if (line_length_ > 0) {
+        held_chars_ += static_cast<std::uint32_t>(line_length_);
+        line_length_ = 0;
+    }
+
+    if (now_ms + duration_ms > hold_until_ms_) {
+        hold_until_ms_ = now_ms + duration_ms;
+    }
+}
+
 void Console::tick(std::uint64_t now_ms)
 {
+    if (held_chars_ > 0 && now_ms >= hold_until_ms_) {
+        printf(
+            "console: ignored %lu character(s) received while the port was opening; type the command again\n",
+            static_cast<unsigned long>(held_chars_)
+        );
+        held_chars_ = 0;
+    }
+
     if (!bench_.active || bench_.waiting) {
         return;
     }
