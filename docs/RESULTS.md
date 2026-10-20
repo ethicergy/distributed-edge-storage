@@ -57,6 +57,7 @@ Not driven by `measure.py`: read from `status` before and after unplugging node 
 |---|---|---|---|---|
 | `hlc_reboot` | HLC after a power cycle continues from the last persisted version instead of restarting at 0 | `test/hlc_test.cpp` `test_reboot_anchor`: timer 100 ms, persisted 1000 ms → clock reads 1000 | **pass.** Before: uptime 37 s, `hlc 37466.0`. Unplug ~07:01, replug. After: uptime 73 s, `hlc 466675.0`, `reset reason: power-on` | Same rule on both (`node_runtime.cpp:271-275`, `hlc.cpp:43-47`): the clock starts at or above the newest persisted version. After the cycle the timer had restarted (73 s), but the HLC was 466.7 s, i.e. the ~393 s the node ran before the unplug plus the time since boot. Without this, new writes after a reboot would carry older timestamps than the ones on disk and lose to them. Sensor `seq` also continued (1 → 16). |
 | `persist_reboot` | key written before a power cycle readable after it | storage crash tests (`test/storage_manager_test.cpp`) | **pass.** `set x 1` → unplug/replug → `storage recovered: 6 live`, `x = "1"`, storage errors 0 | Also rules out WP high on this module (writes would silently vanish). |
+| `h11_format_refill` | H11-style: `format yes` on B, keys refilled by anti-entropy | `test/cluster_test.cpp` and the simulator (`format yes` on a node, `keys_repaired` above) | **pass.** Before: 39 keys on B = 32 owned (3 tombstones) + 7 stand-in copies; every key also on its other owner. After: **32/32 owned keys back at the same version, 0 missing, 0 extra**, stand-in copies gone. `format yes` 13:43:50 → `storage formatted` + `BOOTING` 2.07 s → `CATCHUP` 2.52 s → last repair 3.42 s → `ACTIVE` 5.55 s; first `dump` after ACTIVE matched. 35 repairs from A 10, C 13, D 12 | Erasing the EEPROM takes ~2 s, the refill itself under 1 s (all pushes in the first CATCHUP round); ACTIVE is then fixed by `CATCHUP_DURATION_MS` (3 s). Samplers were off so versions stayed fixed. The refilled set includes foreign keys from B's module (BRINGUP_LOG problem 7). Log `docs/test-logs/H11-node-b.log` |
 
 ## 3. Loss tolerance (`fault loss`, `bench 50`; boards need the `-fi` images)
 
@@ -70,6 +71,8 @@ Not driven by `measure.py`: read from `status` before and after unplugging node 
 | `loss20_retries` | extra client attempts / duplicates answered from the dedup cache | 8 extra client attempts, 40 duplicate requests answered from cache | | |
 
 ## 4. Sensors (after the overnight soak)
+
+**Informal data point, Tue 20 13:32 (not a soak):** the boards did not run unattended overnight. All four reported `reset reason: power-on` with uptimes of 4-10 min (A 572 s, B 425 s, C 240 s, D 486 s): they were powered up again around 13:22-13:28 when re-attached. Counters since that boot: storage errors 0 on all four; hottest EEPROM page 7 (A, page 262), 8 (B, page 8), 5 (C, page 363), 11 (D, page 65) writes; compactions A 1, B 1, C 0, D 2; 0 failed ESP-NOW sends on any link; heap and stack headroom unchanged from Mon (stack 13.2-13.5 KB free). Log: `docs/test-logs/tue20-1332-state.log`. The overnight soak (H13, M10) is still to do.
 
 The simulator column is the 2-hour soak of `cluster_test H13`: all four nodes, 30 s period, a reboot every 20 min.
 

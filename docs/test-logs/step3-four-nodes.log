@@ -1,0 +1,937 @@
+# Four nodes A B C D. Tue 20 13:44-13:48.
+
+# node A, 13:44:44 (sensor on, members, status, stats, dump):
+[  0.00s port open]
+[  1.51s >>> sensor on]
+[  1.56s] > sensor on
+[  1.56s] sampler on
+[  2.72s >>> members]
+[  2.77s] > members
+[  2.77s]   A  self    ACTIVE
+[  2.77s]   B  alive   last heard 307 ms ago, 2104 heartbeats
+[  2.77s]   C  alive   last heard 244 ms ago, 1947 heartbeats
+[  2.77s]   D  alive   last heard 353 ms ago, 2422 heartbeats
+[  3.93s >>> status]
+[  3.98s] > status
+[  3.98s] node A  state ACTIVE  view ABCD  uptime 1324s
+[  3.98s] hlc 10413755.0
+[  3.98s] storage recovered: 40 live, 1 tombstones, 41/64 keys, log 6396/16064 bytes, bank B, 1 compactions
+[  3.98s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  3.98s] sensor light (simulated): on, 39 samples, last 464.230 lux seq 343, 70 ok, 8 under-replicated, 0 failed, 0 read failures
+[  5.14s >>> stats]
+[  5.14s] > stats
+[  5.14s] radio   rx 9565 (invalid 0, spoofed 0)  tx 4034 (failed 0)
+[  5.14s] hb      tx 2644  rx 6488   membership changes 12
+[  5.14s] server  executed 48  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.14s] repl    started 38  ok 38  failed 0  stale 0   as replica: applied 92 stale 0
+[  5.14s] ae      rounds 132  chunks tx 1111 rx 2856  tables 310  pushes 92  resync tx 92 applied 31 stale 3
+[  5.14s] gc      orphans 28  tombstones 2  keys dropped 17
+[  5.14s] client  ok 79  failed 0  attempts 79  local 35
+[  5.14s] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+[  5.14s] env node-a, built Oct 19 2026 09:08:48, reset reason: power-on
+[  5.14s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  5.14s] esp-now rx 9565  queue overflows 0  unknown MAC 0
+[  5.14s] esp-now tx -> B: 81 delivered, 0 failed (MAC-layer ACK)
+[  5.14s] esp-now tx -> C: 65 delivered, 0 failed (MAC-layer ACK)
+[  5.14s] esp-now tx -> D: 133 delivered, 0 failed (MAC-layer ACK)
+[  5.14s] heap free 176920 (min 168196)  node task stack headroom 13192 bytes
+[  5.14s] eeprom page writes since boot: total 1072, hottest page 262 with 7 (rated 1000000)
+[  5.19s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[  6.35s >>> dump]
+[  6.36s] > dump
+[  6.36s]   v=10411335.1@C  s/A/light = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  6.36s]   v=10144034.1@D  h/A/light/0 = 104.527 lux  (seq 340, sampled at hlc 10144030, simulated)
+[  6.36s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  6.36s]   v=40148.1@A  x = "1"
+[  6.36s]   v=10204031.2@A  h/A/light/2 = 198.811 lux  (seq 342, sampled at hlc 10204030, simulated)
+[  6.36s]   v=10411333.2@A  h/A/light/3 = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  6.38s]   v=10199797.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 220, sampled at hlc 10199794, simulated)
+[  6.38s]   v=10229797.1@D  h/C/sound/1 = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  6.38s]   v=3245024.1@C (drop pending)  y = "2"
+[  6.38s]   v=10174035.1@D (drop pending)  h/A/light/1 = 179.738 lux  (seq 341, sampled at hlc 10174030, simulated)
+[  6.38s]   v=3957822.1@C (drop pending)  k6 = "cb-key"
+[  6.38s]   v=3948021.1@A  k11 = "hello-ac"
+[  6.38s]   v=10139812.1@D (drop pending)  h/C/sound/2 = 0 events, 0.0 % active  (seq 218, sampled at hlc 10139794, simulated)
+[  6.39s]   v=3962062.1@C (drop pending)  k4 = "b-key"
+[  6.39s]   v=10146505.1@D  h/D/temp/0 = 19.477 degC  (seq 120, sampled at hlc 10146489, simulated)
+[  6.39s]   v=6193158.1@A  z = "3"
+[  6.39s]   v=10176509.1@A  h/D/temp/1 = 20.293 degC  (seq 121, sampled at hlc 10176489, simulated)
+[  6.39s]   v=10206507.1@B  h/D/temp/2 = 20.095 degC  (seq 122, sampled at hlc 10206489, simulated)
+[  6.39s]   v=10236504.1@B  h/D/temp/3 = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  6.41s]   v=10169811.1@D (drop pending)  h/C/sound/3 = 0 events, 0.0 % active  (seq 219, sampled at hlc 10169794, simulated)
+[  6.41s]   v=6674842.1@A  k8 = "down-6"
+[  6.41s]   v=6677147.1@A (drop pending)  k9 = "down-7"
+[  6.41s]   v=0.400@A (drop pending)  humidity = "60"
+[  6.41s]   v=5249.0@C (drop pending)  phase6_wire_4101553140_000 = "distributed"
+[  6.41s]   v=9900928.1@A  kb1 = "from-b"
+[  6.41s]   v=0.1020@A  cmp_sensor = "30"
+[  6.41s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  6.41s]   v=8496.0@A  phase6_100 = "99"
+[  6.41s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  6.41s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  6.43s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  6.43s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  6.43s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  6.43s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  6.48s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  6.48s]   v=10082556.1@D  h/B/motion/2 = 0 events, last motion 42 s before the sample  (seq 26, sampled at hlc 10082551, simulated)
+[  6.48s] 41 key(s); log 6396/16064 bytes used
+
+# node B, 13:44:44 (sensor on, members, status, stats, dump):
+[  0.00s port open]
+[  1.51s >>> sensor on]
+[  1.56s] > sensor on
+[  1.56s] sampler on
+[  2.72s >>> members]
+[  2.77s] > members
+[  2.77s]   A  alive   last heard 58 ms ago, 447 heartbeats
+[  2.77s]   B  self    ACTIVE
+[  2.77s]   C  alive   last heard 382 ms ago, 475 heartbeats
+[  2.77s]   D  alive   last heard 490 ms ago, 474 heartbeats
+[  3.93s >>> status]
+[  3.98s] > status
+[  3.98s] node B  state ACTIVE  view ABCD  uptime 242s
+[  3.98s] hlc 10420392.0
+[  3.98s] storage fresh format: 29 live, 3 tombstones, 32/64 keys, log 1805/16064 bytes, bank A, 0 compactions
+[  3.98s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.98s] sensor motion (simulated): on, 3 samples, last 3 events, last motion 130 s before the sample seq 30, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.14s >>> stats]
+[  5.14s] > stats
+[  5.14s] radio   rx 2186 (invalid 0, spoofed 0)  tx 684 (failed 0)
+[  5.14s] hb      tx 463  rx 1410   membership changes 8
+[  5.14s] server  executed 8  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.14s] repl    started 7  ok 7  failed 0  stale 0   as replica: applied 0 stale 0
+[  5.14s] ae      rounds 27  chunks tx 202 rx 677  tables 66  pushes 0  resync tx 0 applied 41 stale 39
+[  5.14s] gc      orphans 7  tombstones 6  keys dropped 0
+[  5.14s] client  ok 8  failed 0  attempts 8  local 2
+[  5.19s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  5.19s] env node-b, built Oct 20 2026 13:34:25, reset reason: power-on
+[  5.19s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  5.19s] esp-now rx 2191  queue overflows 5  unknown MAC 0
+[  5.19s] esp-now tx -> A: 2 delivered, 0 failed (MAC-layer ACK)
+[  5.19s] esp-now tx -> C: 8 delivered, 0 failed (MAC-layer ACK)
+[  5.19s] esp-now tx -> D: 9 delivered, 0 failed (MAC-layer ACK)
+[  5.19s] heap free 178896 (min 170072)  node task stack headroom 13304 bytes
+[  5.19s] eeprom page writes since boot: total 644, hottest page 11 with 7 (rated 1000000)
+[  6.35s >>> dump]
+[  6.37s] > dump
+[  6.37s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  6.37s]   v=10229795.2@B  s/C/sound = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  6.37s]   v=10174035.1@D  h/A/light/1 = 179.738 lux  (seq 341, sampled at hlc 10174030, simulated)
+[  6.37s]   v=3245024.1@C  y = "2"
+[  6.37s]   v=3957822.1@C  k6 = "cb-key"
+[  6.37s]   v=10139812.1@D  h/C/sound/2 = 0 events, 0.0 % active  (seq 218, sampled at hlc 10139794, simulated)
+[  6.37s]   v=3962062.1@C  k4 = "b-key"
+[  6.38s]   v=10169811.1@D  h/C/sound/3 = 0 events, 0.0 % active  (seq 219, sampled at hlc 10169794, simulated)
+[  6.38s]   v=10236492.1@B  s/D/temp = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  6.38s]   v=10193677.1@B  h/B/motion/0 = 0 events, no motion since boot  (seq 28, sampled at hlc 10193676, simulated)
+[  6.38s]   v=6677147.1@A  k9 = "down-7"
+[  6.38s]   v=10176509.1@A  h/D/temp/1 = 20.293 degC  (seq 121, sampled at hlc 10176489, simulated)
+[  6.38s]   v=6670241.1@C  k18 = "down-4"
+[  6.38s]   v=10206507.1@B  h/D/temp/2 = 20.095 degC  (seq 122, sampled at hlc 10206489, simulated)
+[  6.40s]   v=10112552.2@B  h/B/motion/3 = 2 events, last motion 27 s before the sample  (seq 27, sampled at hlc 10112551, simulated)
+[  6.40s]   v=10236504.1@B  h/D/temp/3 = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  6.40s]   v=0.400@A  humidity = "60"
+[  6.40s]   v=0.303@A  temp = "55"
+[  6.40s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  6.40s]   v=9900928.1@A  kb1 = "from-b"
+[  6.40s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  6.40s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  6.40s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  6.42s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  6.42s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  6.42s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  6.42s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  6.42s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  6.42s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  6.42s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  6.42s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  6.42s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  6.47s] 32 key(s); log 1805/16064 bytes used
+
+# node C, 13:44:44 (sensor on, members, status, stats, dump):
+[  0.00s port open]
+[  1.51s >>> sensor on]
+[  1.56s] > sensor on
+[  1.56s] sampler on
+[  2.72s >>> members]
+[  2.77s] > members
+[  2.77s]   A  alive   last heard 178 ms ago, 1980 heartbeats
+[  2.77s]   B  alive   last heard 66 ms ago, 1854 heartbeats
+[  2.77s]   C  self    ACTIVE
+[  2.77s]   D  alive   last heard 111 ms ago, 1982 heartbeats
+[  3.93s >>> status]
+[  3.98s] > status
+[  3.98s] node C  state ACTIVE  view ABCD  uptime 1000s
+[  3.98s] hlc 10427014.0
+[  3.98s] storage recovered: 45 live, 2 tombstones, 47/64 keys, log 11429/16064 bytes, bank B, 0 compactions
+[  3.98s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.98s] sensor sound (simulated): on, 28 samples, last 4 events, 0.5 % active seq 222, 56 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.16s >>> stats]
+[  5.17s] > stats
+[  5.17s] radio   rx 8614 (invalid 0, spoofed 0)  tx 3113 (failed 0)
+[  5.17s] hb      tx 1989  rx 5830   membership changes 9
+[  5.17s] server  executed 62  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.17s] repl    started 60  ok 60  failed 0  stale 0   as replica: applied 16 stale 0
+[  5.17s] ae      rounds 101  chunks tx 886 rx 2551  tables 280  pushes 43  resync tx 43 applied 24 stale 14
+[  5.17s] gc      orphans 28  tombstones 0  keys dropped 0
+[  5.17s] client  ok 57  failed 0  attempts 57  local 0
+[  5.22s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  5.22s] env node-c, built Oct 19 2026 09:09:00, reset reason: power-on
+[  5.22s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  5.22s] esp-now rx 8614  queue overflows 0  unknown MAC 0
+[  5.22s] esp-now tx -> A: 60 delivered, 0 failed (MAC-layer ACK)
+[  5.22s] esp-now tx -> B: 112 delivered, 0 failed (MAC-layer ACK)
+[  5.22s] esp-now tx -> D: 66 delivered, 0 failed (MAC-layer ACK)
+[  5.22s] heap free 178896 (min 170072)  node task stack headroom 13304 bytes
+[  5.22s] eeprom page writes since boot: total 288, hottest page 363 with 5 (rated 1000000)
+[  6.39s >>> dump]
+[  6.41s] > dump
+[  6.41s]   v=10411335.1@C  s/A/light = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  6.41s]   v=40148.1@A  x = "1"
+[  6.41s]   v=10229795.2@B (drop pending)  s/C/sound = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  6.41s]   v=3245024.1@C  y = "2"
+[  6.41s]   v=3948021.1@A  k11 = "hello-ac"
+[  6.41s]   v=3957822.1@C  k6 = "cb-key"
+[  6.41s]   v=3962062.1@C  k4 = "b-key"
+[  6.41s]   v=10236492.1@B (drop pending)  s/D/temp = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  6.41s]   v=6193158.1@A  z = "3"
+[  6.43s]   v=6663219.1@C  k2 = "down-1"
+[  6.43s]   v=8250896.1@D (drop pending)  h/A/light/0 = 344.729 lux  (seq 276, sampled at hlc 8250889, simulated)
+[  6.43s]   v=8168657.1@D (drop pending)  h/A/light/1 = 386.407 lux  (seq 273, sampled at hlc 8168647, simulated)
+[  6.43s]   v=8198648.2@A (drop pending)  h/A/light/2 = 329.638 lux  (seq 274, sampled at hlc 8198647, simulated)
+[  6.43s]   v=8228648.2@A (drop pending)  h/A/light/3 = 255.983 lux  (seq 275, sampled at hlc 8228647, simulated)
+[  6.44s]   v=8246568.1@D (drop pending)  h/C/sound/0 = 1 events, 0.7 % active  (seq 168, sampled at hlc 8246549, simulated)
+[  6.44s]   v=8156560.1@D (drop pending)  h/C/sound/1 = 1 events, 0.5 % active  (seq 165, sampled at hlc 8156531, simulated)
+[  6.44s]   v=8186551.1@D (drop pending)  h/C/sound/2 = 3 events, 1.8 % active  (seq 166, sampled at hlc 8186531, simulated)
+[  6.44s]   v=8216550.1@D (drop pending)  h/C/sound/3 = 4 events, 1.9 % active  (seq 167, sampled at hlc 8216531, simulated)
+[  6.44s]   v=8192417.1@D (drop pending)  h/D/temp/0 = 25.034 degC  (seq 60, sampled at hlc 8192402, simulated)
+[  6.46s]   v=8222421.1@A (drop pending)  h/D/temp/1 = 24.982 degC  (seq 61, sampled at hlc 8222402, simulated)
+[  6.46s]   v=8252419.1@A (drop pending)  h/D/temp/2 = 25.725 degC  (seq 62, sampled at hlc 8252402, simulated)
+[  6.46s]   v=8162425.1@A (drop pending)  h/D/temp/3 = 25.342 degC  (seq 59, sampled at hlc 8162402, simulated)
+[  6.46s]   v=6665607.1@C  k3 = "down-2"
+[  6.46s]   v=6667924.1@C  k24 = "down-3"
+[  6.46s]   v=6670241.1@C (drop pending)  k18 = "down-4"
+[  6.46s]   v=6672538.1@C  k19 = "down-5"
+[  6.46s]   v=0.303@A  temp = "55"
+[  6.46s]   v=0.1050@A  cmp_marker = "DONE"
+[  6.47s]   v=10417971.1@C  s/B/motion = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  6.47s]   v=10193677.1@B  h/B/motion/0 = 0 events, no motion since boot  (seq 28, sampled at hlc 10193676, simulated)
+[  6.47s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  6.47s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  6.47s]   v=10223694.1@C  h/B/motion/1 = 3 events, last motion 20 s before the sample  (seq 29, sampled at hlc 10223676, simulated)
+[  6.47s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  6.49s]   v=10112552.2@B  h/B/motion/3 = 2 events, last motion 27 s before the sample  (seq 27, sampled at hlc 10112551, simulated)
+[  6.49s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  6.49s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  6.49s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  6.49s]   v=5248.0@C (drop pending)  phase6_wire_3215_000 = "distributed"
+[  6.49s]   v=5250.0@C (drop pending)  phase6_wire_795334085_028 = "distributed"
+[  6.49s]   v=5249.0@C (drop pending)  phase6_wire_1596117061_000 = "distributed"
+[  6.54s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  6.54s]   v=5248.0@C (drop pending)  phase6_wire_3320_000 = "distributed"
+[  6.54s]   v=5249.0@C (drop pending)  phase6_wire_3216_000 = "distributed"
+[  6.54s]   v=5249.0@C (drop pending)  phase6_wire_4258761444_000 = "distributed"
+[  6.54s]   v=5251.0@C (drop pending)  phase6_wire_3923394165_000 = "distributed"
+[  6.54s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  6.54s] 47 key(s); log 11429/16064 bytes used
+
+# node D, 13:44:44 (sensor on, members, status, stats, dump):
+[  0.00s port open]
+[  1.53s >>> sensor on]
+[  1.58s] > sensor on
+[  1.58s] sampler on
+[  2.75s >>> members]
+[  2.81s] > members
+[  2.81s]   A  alive   last heard 265 ms ago, 2466 heartbeats
+[  2.81s]   B  alive   last heard 152 ms ago, 2171 heartbeats
+[  2.81s]   C  alive   last heard 89 ms ago, 1983 heartbeats
+[  2.81s]   D  self    ACTIVE
+[  3.97s >>> status]
+[  4.03s] > status
+[  4.03s] node D  state ACTIVE  view ABCD  uptime 1247s
+[  4.03s] hlc 10433597.0
+[  4.03s] storage recovered: 43 live, 3 tombstones, 46/64 keys, log 3758/16064 bytes, bank B, 3 compactions
+[  4.03s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  4.03s] sensor temp (simulated): on, 36 samples, last 22.927 degC seq 124, 72 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.19s >>> stats]
+[  5.20s] > stats
+[  5.20s] radio   rx 9870 (invalid 0, spoofed 0)  tx 3984 (failed 0)
+[  5.20s] hb      tx 2484  rx 6634   membership changes 9
+[  5.20s] server  executed 58  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.20s] repl    started 56  ok 56  failed 0  stale 0   as replica: applied 137 stale 0
+[  5.20s] ae      rounds 126  chunks tx 1126 rx 2872  tables 321  pushes 80  resync tx 80 applied 59 stale 10
+[  5.20s] gc      orphans 41  tombstones 4  keys dropped 25
+[  5.20s] client  ok 73  failed 0  attempts 73  local 15
+[  5.20s] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+[  5.20s] env node-d, built Oct 19 2026 09:09:05, reset reason: power-on
+[  5.20s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  5.20s] esp-now rx 9870  queue overflows 0  unknown MAC 0
+[  5.20s] esp-now tx -> A: 107 delivered, 0 failed (MAC-layer ACK)
+[  5.20s] esp-now tx -> B: 191 delivered, 0 failed (MAC-layer ACK)
+[  5.20s] esp-now tx -> C: 76 delivered, 0 failed (MAC-layer ACK)
+[  5.20s] heap free 179040 (min 170216)  node task stack headroom 13304 bytes
+[  5.20s] eeprom page writes since boot: total 2603, hottest page 273 with 14 (rated 1000000)
+[  6.41s >>> dump]
+[  6.43s] > dump
+[  6.43s]   v=10144034.1@D  h/A/light/0 = 104.527 lux  (seq 340, sampled at hlc 10144030, simulated)
+[  6.43s]   v=10174035.1@D  h/A/light/1 = 179.738 lux  (seq 341, sampled at hlc 10174030, simulated)
+[  6.43s]   v=10204031.2@A  h/A/light/2 = 198.811 lux  (seq 342, sampled at hlc 10204030, simulated)
+[  6.43s]   v=10411333.2@A  h/A/light/3 = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  6.43s]   v=10424589.1@B  s/C/sound = 4 events, 0.5 % active  (seq 222, sampled at hlc 10424588, simulated)
+[  6.44s]   v=10199797.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 220, sampled at hlc 10199794, simulated)
+[  6.44s]   v=10229797.1@D  h/C/sound/1 = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  6.44s]   v=10424604.1@B  h/C/sound/2 = 4 events, 0.5 % active  (seq 222, sampled at hlc 10424588, simulated)
+[  6.44s]   v=10169811.1@D  h/C/sound/3 = 0 events, 0.0 % active  (seq 219, sampled at hlc 10169794, simulated)
+[  6.44s]   v=10431176.1@B  s/D/temp = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  6.46s]   v=10431175.1@D  h/D/temp/0 = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  6.46s]   v=10417971.1@C  s/B/motion = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  6.46s]   v=10193677.1@B (drop pending)  h/B/motion/0 = 0 events, no motion since boot  (seq 28, sampled at hlc 10193676, simulated)
+[  6.46s]   v=10223694.1@C  h/B/motion/1 = 3 events, last motion 20 s before the sample  (seq 29, sampled at hlc 10223676, simulated)
+[  6.46s]   v=6663219.1@C  k2 = "down-1"
+[  6.46s]   v=6674842.1@A  k8 = "down-6"
+[  6.46s]   v=6677147.1@A  k9 = "down-7"
+[  6.47s]   v=6665607.1@C  k3 = "down-2"
+[  6.47s]   v=6667924.1@C  k24 = "down-3"
+[  6.47s]   v=6670241.1@C  k18 = "down-4"
+[  6.47s]   v=6672538.1@C  k19 = "down-5"
+[  6.47s]   v=10417971.1@D  h/B/motion/2 = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  6.47s]   v=10112552.2@B (drop pending)  h/B/motion/3 = 2 events, last motion 27 s before the sample  (seq 27, sampled at hlc 10112551, simulated)
+[  6.47s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  6.48s]   v=10176509.1@A (drop pending)  h/D/temp/1 = 20.293 degC  (seq 121, sampled at hlc 10176489, simulated)
+[  6.48s]   v=10206507.1@B (drop pending)  h/D/temp/2 = 20.095 degC  (seq 122, sampled at hlc 10206489, simulated)
+[  6.48s]   v=10236504.1@B (drop pending)  h/D/temp/3 = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  6.48s]   v=9900928.1@A (drop pending)  kb1 = "from-b"
+[  6.48s]   v=0.1020@A  cmp_sensor = "30"
+[  6.48s]   v=0.303@A (drop pending)  temp = "55"
+[  6.48s]   v=0.1050@A  cmp_marker = "DONE"
+[  6.48s]   v=0.400@A  humidity = "60"
+[  6.48s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  6.50s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  6.50s]   v=8496.0@A  phase6_100 = "99"
+[  6.50s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  6.50s]   v=5248.0@C (drop pending)  phase6_wire_3849341009_010 = "distributed"
+[  6.50s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  6.50s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  6.50s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  6.50s]   v=5249.0@C (drop pending)  phase6_wire_1656710395_000 = "distributed"
+[  6.50s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  6.50s]   v=5249.0@C (drop p
+
+# node D dump again:
+[  0.00s port open]
+[  1.51s >>> dump]
+[  1.53s] > dump
+[  1.53s]   v=10441335.1@D  h/A/light/0 = 506.398 lux  (seq 344, sampled at hlc 10441332, simulated)
+[  1.53s]   v=10174035.1@D  h/A/light/1 = 179.738 lux  (seq 341, sampled at hlc 10174030, simulated)
+[  1.53s]   v=10204031.2@A  h/A/light/2 = 198.811 lux  (seq 342, sampled at hlc 10204030, simulated)
+[  1.53s]   v=10411333.2@A  h/A/light/3 = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  1.53s]   v=10424589.1@B  s/C/sound = 4 events, 0.5 % active  (seq 222, sampled at hlc 10424588, simulated)
+[  1.54s]   v=10199797.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 220, sampled at hlc 10199794, simulated)
+[  1.54s]   v=10229797.1@D  h/C/sound/1 = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  1.54s]   v=10424604.1@B  h/C/sound/2 = 4 events, 0.5 % active  (seq 222, sampled at hlc 10424588, simulated)
+[  1.54s]   v=10169811.1@D  h/C/sound/3 = 0 events, 0.0 % active  (seq 219, sampled at hlc 10169794, simulated)
+[  1.54s]   v=10431176.1@B  s/D/temp = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  1.56s]   v=10431175.1@D  h/D/temp/0 = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  1.56s]   v=10447971.1@C  s/B/motion = 0 events, last motion 160 s before the sample  (seq 31, sampled at hlc 10447967, simulated)
+[  1.56s]   v=10193677.1@B (drop pending)  h/B/motion/0 = 0 events, no motion since boot  (seq 28, sampled at hlc 10193676, simulated)
+[  1.56s]   v=10223694.1@C  h/B/motion/1 = 3 events, last motion 20 s before the sample  (seq 29, sampled at hlc 10223676, simulated)
+[  1.56s]   v=6663219.1@C  k2 = "down-1"
+[  1.56s]   v=6674842.1@A  k8 = "down-6"
+[  1.56s]   v=6677147.1@A  k9 = "down-7"
+[  1.57s]   v=6665607.1@C  k3 = "down-2"
+[  1.57s]   v=6667924.1@C  k24 = "down-3"
+[  1.57s]   v=6670241.1@C  k18 = "down-4"
+[  1.57s]   v=6672538.1@C  k19 = "down-5"
+[  1.57s]   v=10417971.1@D  h/B/motion/2 = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  1.57s]   v=10112552.2@B (drop pending)  h/B/motion/3 = 2 events, last motion 27 s before the sample  (seq 27, sampled at hlc 10112551, simulated)
+[  1.57s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  1.58s]   v=10176509.1@A (drop pending)  h/D/temp/1 = 20.293 degC  (seq 121, sampled at hlc 10176489, simulated)
+[  1.58s]   v=10206507.1@B (drop pending)  h/D/temp/2 = 20.095 degC  (seq 122, sampled at hlc 10206489, simulated)
+[  1.58s]   v=10236504.1@B (drop pending)  h/D/temp/3 = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  1.58s]   v=9900928.1@A (drop pending)  kb1 = "from-b"
+[  1.58s]   v=0.1020@A  cmp_sensor = "30"
+[  1.58s]   v=0.303@A (drop pending)  temp = "55"
+[  1.58s]   v=0.1050@A  cmp_marker = "DONE"
+[  1.58s]   v=0.400@A  humidity = "60"
+[  1.58s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  1.60s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  1.60s]   v=8496.0@A  phase6_100 = "99"
+[  1.60s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  1.60s]   v=5248.0@C (drop pending)  phase6_wire_3849341009_010 = "distributed"
+[  1.60s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  1.60s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  1.60s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  1.60s]   v=5249.0@C (drop pending)  phase6_wire_1656710395_000 = "distributed"
+[  1.60s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  1.65s]   v=5249.0@C (drop pending)  phase6_wire_3259223076_010 = "distributed"
+[  1.65s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  1.65s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  1.65s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  1.65s] 46 key(s); log 3873/16064 bytes used
+
+# ring of every key on any node, on B:
+[  0.00s port open]
+[  1.52s >>> ring cmp_deleted]
+[  1.57s] > ring cmp_deleted
+[  1.57s] key 'cmp_deleted' hash beb03e35
+[  1.57s]   all nodes up : primary D, replica B
+[  1.57s]   current view : primary D, replica B
+[  1.82s >>> ring cmp_marker]
+[  1.87s] > ring cmp_marker
+[  1.87s] key 'cmp_marker' hash 2d4bbba2
+[  1.87s]   all nodes up : primary D, replica C
+[  1.87s]   current view : primary D, replica C
+[  2.12s >>> ring cmp_sensor]
+[  2.18s] > ring cmp_sensor
+[  2.18s] key 'cmp_sensor' hash 6fd00416
+[  2.18s]   all nodes up : primary A, replica D
+[  2.18s]   current view : primary A, replica D
+[  2.43s >>> ring h/A/light/0]
+[  2.48s] > ring h/A/light/0
+[  2.48s] key 'h/A/light/0' hash 90ad5d67
+[  2.48s]   all nodes up : primary D, replica A
+[  2.48s]   current view : primary D, replica A
+[  2.73s >>> ring h/A/light/1]
+[  2.78s] > ring h/A/light/1
+[  2.78s] key 'h/A/light/1' hash 8fad5bd4
+[  2.78s]   all nodes up : primary B, replica D
+[  2.78s]   current view : primary B, replica D
+[  3.03s >>> ring h/A/light/2]
+[  3.09s] > ring h/A/light/2
+[  3.09s] key 'h/A/light/2' hash 92ad608d
+[  3.09s]   all nodes up : primary A, replica D
+[  3.09s]   current view : primary A, replica D
+[  3.34s >>> ring h/A/light/3]
+[  3.39s] > ring h/A/light/3
+[  3.39s] key 'h/A/light/3' hash 91ad5efa
+[  3.39s]   all nodes up : primary A, replica D
+[  3.39s]   current view : primary A, replica D
+[  3.64s >>> ring h/B/motion/0]
+[  3.69s] > ring h/B/motion/0
+[  3.69s] key 'h/B/motion/0' hash deb9647e
+[  3.69s]   all nodes up : primary B, replica C
+[  3.69s]   current view : primary B, replica C
+[  3.94s >>> ring h/B/motion/1]
+[  4.00s] > ring h/B/motion/1
+[  4.00s] key 'h/B/motion/1' hash dfb96611
+[  4.00s]   all nodes up : primary C, replica D
+[  4.00s]   current view : primary C, replica D
+[  4.25s >>> ring h/B/motion/2]
+[  4.30s] > ring h/B/motion/2
+[  4.30s] key 'h/B/motion/2' hash dcb96158
+[  4.30s]   all nodes up : primary D, replica A
+[  4.30s]   current view : primary D, replica A
+[  4.55s >>> ring h/B/motion/3]
+[  4.60s] > ring h/B/motion/3
+[  4.60s] key 'h/B/motion/3' hash ddb962eb
+[  4.60s]   all nodes up : primary B, replica C
+[  4.60s]   current view : primary B, replica C
+[  4.85s >>> ring h/C/sound/0]
+[  4.91s] > ring h/C/sound/0
+[  4.91s] key 'h/C/sound/0' hash 2649dfbe
+[  4.91s]   all nodes up : primary D, replica A
+[  4.91s]   current view : primary D, replica A
+[  5.16s >>> ring h/C/sound/1]
+[  5.21s] > ring h/C/sound/1
+[  5.21s] key 'h/C/sound/1' hash 2749e151
+[  5.21s]   all nodes up : primary D, replica A
+[  5.21s]   current view : primary D, replica A
+[  5.46s >>> ring h/C/sound/2]
+[  5.51s] > ring h/C/sound/2
+[  5.51s] key 'h/C/sound/2' hash 2449dc98
+[  5.51s]   all nodes up : primary B, replica D
+[  5.51s]   current view : primary B, replica D
+[  5.77s >>> ring h/C/sound/3]
+[  5.82s] > ring h/C/sound/3
+[  5.82s] key 'h/C/sound/3' hash 2549de2b
+[  5.82s]   all nodes up : primary B, replica D
+[  5.82s]   current view : primary B, replica D
+[  6.07s >>> ring h/D/temp/0]
+[  6.12s] > ring h/D/temp/0
+[  6.12s] key 'h/D/temp/0' hash 8096d3d4
+[  6.12s]   all nodes up : primary D, replica A
+[  6.12s]   current view : primary D, replica A
+[  6.37s >>> ring h/D/temp/1]
+[  6.42s] > ring h/D/temp/1
+[  6.42s] key 'h/D/temp/1' hash 8196d567
+[  6.42s]   all nodes up : primary A, replica B
+[  6.42s]   current view : primary A, replica B
+[  6.68s >>> ring h/D/temp/2]
+[  6.73s] > ring h/D/temp/2
+[  6.73s] key 'h/D/temp/2' hash 8296d6fa
+[  6.73s]   all nodes up : primary B, replica A
+[  6.73s]   current view : primary B, replica A
+[  6.98s >>> ring h/D/temp/3]
+[  7.03s] > ring h/D/temp/3
+[  7.03s] key 'h/D/temp/3' hash 8396d88d
+[  7.03s]   all nodes up : primary B, replica A
+[  7.03s]   current view : primary B, replica A
+[  7.28s >>> ring hlc_probe]
+[  7.34s] > ring hlc_probe
+[  7.34s] key 'hlc_probe' hash f8f67edf
+[  7.34s]   all nodes up : primary A, replica D
+[  7.34s]   current view : primary A, replica D
+[  7.59s >>> ring humidity]
+[  7.64s] > ring humidity
+[  7.64s] key 'humidity' hash 25c5b9a0
+[  7.64s]   all nodes up : primary B, replica D
+[  7.64s]   current view : primary B, replica D
+[  7.90s >>> ring k11]
+[  7.95s] > ring k11
+[  7.95s] key 'k11' hash 98d1f9d0
+[  7.95s]   all nodes up : primary A, replica C
+[  7.95s]   current view : primary A, replica C
+[  8.21s >>> ring k18]
+[  8.26s] > ring k18
+[  8.26s] key 'k18' hash a1d207fb
+[  8.26s]   all nodes up : primary D, replica B
+[  8.26s]   current view : primary D, replica B
+[  8.52s >>> ring k19]
+[  8.57s] > ring k19
+[  8.57s] key 'k19' hash a0d20668
+[  8.57s]   all nodes up : primary C, replica D
+[  8.57s]   current view : primary C, replica D
+[  8.82s >>> ring k2]
+[  8.88s] > ring k2
+[  8.88s] key 'k2' hash 953d7c08
+[  8.88s]   all nodes up : primary D, replica C
+[  8.88s]   current view : primary D, replica C
+[  9.13s >>> ring k24]
+[  9.18s] > ring k24
+[  9.18s] key 'k24' hash 2bca9274
+[  9.18s]   all nodes up : primary D, replica C
+[  9.18s]   current view : primary D, replica C
+[  9.44s >>> ring k3]
+[  9.49s] > ring k3
+[  9.49s] key 'k3' hash 963d7d9b
+[  9.49s]   all nodes up : primary D, replica C
+[  9.49s]   current view : primary D, replica C
+[  9.74s >>> ring k4]
+[  9.80s] > ring k4
+[  9.80s] key 'k4' hash 9b3d857a
+[  9.80s]   all nodes up : primary B, replica C
+[  9.80s]   current view : primary B, replica C
+[ 10.05s >>> ring k6]
+[ 10.10s] > ring k6
+[ 10.10s] key 'k6' hash 993d8254
+[ 10.10s]   all nodes up : primary C, replica B
+[ 10.10s]   current view : primary C, replica B
+[ 10.36s >>> ring k8]
+[ 10.41s] > ring k8
+[ 10.41s] key 'k8' hash 8f3d7296
+[ 10.41s]   all nodes up : primary A, replica D
+[ 10.41s]   current view : primary A, replica D
+[ 10.66s >>> ring k9]
+[ 10.72s] > ring k9
+[ 10.72s] key 'k9' hash 903d7429
+[ 10.72s]   all nodes up : primary B, replica D
+[ 10.72s]   current view : primary B, replica D
+[ 10.97s >>> ring kb1]
+[ 11.02s] > ring kb1
+[ 11.02s] key 'kb1' hash 28041a8b
+[ 11.02s]   all nodes up : primary A, replica B
+[ 11.02s]   current view : primary A, replica B
+[ 11.28s >>> ring phase6_100]
+[ 11.33s] > ring phase6_100
+[ 11.33s] key 'phase6_100' hash 6f31adea
+[ 11.33s]   all nodes up : primary D, replica A
+[ 11.33s]   current view : primary D, replica A
+[ 11.58s >>> ring phase6_wire_1596117061_000]
+[ 11.64s] > ring phase6_wire_1596117061_000
+[ 11.64s] key 'phase6_wire_1596117061_000' hash 042e87f5
+[ 11.64s]   all nodes up : primary B, replica A
+[ 11.64s]   current view : primary B, replica A
+[ 11.89s >>> ring phase6_wire_1656710395_000]
+[ 11.94s] > ring phase6_wire_1656710395_000
+[ 11.94s] key 'phase6_wire_1656710395_000' hash 08b9eecf
+[ 11.94s]   all nodes up : primary B, replica A
+[ 11.94s]   current view : primary B, replica A
+[ 12.19s >>> ring phase6_wire_1715376659_000]
+[ 12.25s] > ring phase6_wire_1715376659_000
+[ 12.25s] key 'phase6_wire_1715376659_000' hash 182e28ba
+[ 12.25s]   all nodes up : primary A, replica C
+[ 12.25s]   current view : primary A, replica C
+[ 12.50s >>> ring phase6_wire_1799184098_004]
+[ 12.55s] > ring phase6_wire_1799184098_004
+[ 12.55s] key 'phase6_wire_1799184098_004' hash 775cc39e
+[ 12.55s]   all nodes up : primary A, replica C
+[ 12.55s]   current view : primary A, replica C
+[ 12.81s >>> ring phase6_wire_2020787800_000]
+[ 12.86s] > ring phase6_wire_2020787800_000
+[ 12.86s] key 'phase6_wire_2020787800_000' hash 3ccb4758
+[ 12.86s]   all nodes up : primary D, replica C
+[ 12.86s]   current view : primary D, replica C
+[ 13.11s >>> ring phase6_wire_2117106867_000]
+[ 13.16s] > ring phase6_wire_2117106867_000
+[ 13.16s] key 'phase6_wire_2117106867_000' hash 1ac02b3d
+[ 13.16s]   all nodes up : primary C, replica A
+[ 13.16s]   current view : primary C, replica A
+[ 13.42s >>> ring phase6_wire_245014700_010]
+[ 13.47s] > ring phase6_wire_245014700_010
+[ 13.47s] key 'phase6_wire_245014700_010' hash 773a1e24
+[ 13.47s]   all nodes up : primary C, replica A
+[ 13.47s]   current view : primary C, replica A
+[ 13.72s >>> ring phase6_wire_3115246074_010]
+[ 13.78s] > ring phase6_wire_3115246074_010
+[ 13.78s] key 'phase6_wire_3115246074_010' hash 11f24498
+[ 13.78s]   all nodes up : primary A, replica C
+[ 13.78s]   current view : primary A, replica C
+[ 14.03s >>> ring phase6_wire_3215_000]
+[ 14.08s] > ring phase6_wire_3215_000
+[ 14.08s] key 'phase6_wire_3215_000' hash 5cf60323
+[ 14.08s]   all nodes up : primary B, replica A
+[ 14.08s]   current view : primary B, replica A
+[ 14.33s >>> ring phase6_wire_3216_000]
+[ 14.39s] > ring phase6_wire_3216_000
+[ 14.39s] key 'phase6_wire_3216_000' hash 2a15701a
+[ 14.39s]   all nodes up : primary B, replica D
+[ 14.39s]   current view : primary B, replica D
+[ 14.64s >>> ring phase6_wire_3259223076_010]
+[ 14.69s] > ring phase6_wire_3259223076_010
+[ 14.69s] key 'phase6_wire_3259223076_010' hash 0954b4d8
+[ 14.69s]   all nodes up : primary B, replica A
+[ 14.69s]   current view : primary B, replica A
+[ 14.94s >>> ring phase6_wire_3320_000]
+[ 14.99s] > ring phase6_wire_3320_000
+[ 14.99s] key 'phase6_wire_3320_000' hash 551b5338
+[ 14.99s]   all nodes up : primary B, replica D
+[ 14.99s]   current view : primary B, replica D
+[ 15.25s >>> ring phase6_wire_3321_000]
+[ 15.30s] > ring phase6_wire_3321_000
+[ 15.30s] key 'phase6_wire_3321_000' hash 722aec1b
+[ 15.30s]   all nodes up : primary A, replica D
+[ 15.30s]   current view : primary A, replica D
+[ 15.55s >>> ring phase6_wire_3849341009_010]
+[ 15.61s] > ring phase6_wire_3849341009_010
+[ 15.61s] key 'phase6_wire_3849341009_010' hash 280727e4
+[ 15.61s]   all nodes up : primary A, replica B
+[ 15.61s]   current view : primary A, replica B
+[ 15.86s >>> ring phase6_wire_3923394165_000]
+[ 15.91s] > ring phase6_wire_3923394165_000
+[ 15.91s] key 'phase6_wire_3923394165_000' hash 2b0de089
+[ 15.91s]   all nodes up : primary B, replica D
+[ 15.91s]   current view : primary B, replica D
+[ 16.16s >>> ring phase6_wire_4101553140_000]
+[ 16.21s] > ring phase6_wire_4101553140_000
+[ 16.21s] key 'phase6_wire_4101553140_000' hash 0eac6892
+[ 16.21s]   all nodes up : primary B, replica D
+[ 16.21s]   current view : primary B, replica D
+[ 16.47s >>> ring phase6_wire_4144886006_000]
+[ 16.52s] > ring phase6_wire_4144886006_000
+[ 16.52s] key 'phase6_wire_4144886006_000' hash 093f79a3
+[ 16.52s]   all nodes up : primary B, replica A
+[ 16.52s]   current view : primary B, replica A
+[ 16.77s >>> ring phase6_wire_4258761444_000]
+[ 16.82s] > ring phase6_wire_4258761444_000
+[ 16.82s] key 'phase6_wire_4258761444_000' hash 51c2915f
+[ 16.82s]   all nodes up : primary B, replica D
+[ 16.82s]   current view : primary B, replica D
+[ 17.08s >>> ring phase6_wire_760764433_000]
+[ 17.13s] > ring phase6_wire_760764433_000
+[ 17.13s] key 'phase6_wire_760764433_000' hash 4f104e4a
+[ 17.13s]   all nodes up : primary D, replica B
+[ 17.13s]   current view : primary D, replica B
+[ 17.38s >>> ring phase6_wire_795334085_028]
+[ 17.43s] > ring phase6_wire_795334085_028
+[ 17.43s] key 'phase6_wire_795334085_028' hash 017b164e
+[ 17.43s]   all nodes up : primary A, replica B
+[ 17.43s]   current view : primary A, replica B
+[ 17.68s >>> ring s/A/light]
+[ 17.74s] > ring s/A/light
+[ 17.74s] key 's/A/light' hash 97f17ed1
+[ 17.74s]   all nodes up : primary C, replica A
+[ 17.74s]   current view : primary C, replica A
+[ 17.99s >>> ring s/B/motion]
+[ 18.04s] > ring s/B/motion
+[ 18.04s] key 's/B/motion' hash a8053102
+[ 18.04s]   all nodes up : primary C, replica D
+[ 18.04s]   current view : primary C, replica D
+[ 18.29s >>> ring s/C/sound]
+[ 18.34s] > ring s/C/sound
+[ 18.34s] key 's/C/sound' hash 2b69e5b0
+[ 18.34s]   all nodes up : primary B, replica D
+[ 18.34s]   current view : primary B, replica D
+[ 18.59s >>> ring s/D/temp]
+[ 18.65s] > ring s/D/temp
+[ 18.65s] key 's/D/temp' hash b9b514a8
+[ 18.65s]   all nodes up : primary B, replica D
+[ 18.65s]   current view : primary B, replica D
+[ 18.90s >>> ring temp]
+[ 18.95s] > ring temp
+[ 18.95s] key 'temp' hash c01bbfc7
+[ 18.95s]   all nodes up : primary C, replica B
+[ 18.95s]   current view : primary C, replica B
+[ 19.20s >>> ring x]
+[ 19.25s] > ring x
+[ 19.25s] key 'x' hash fd0c5087
+[ 19.25s]   all nodes up : primary C, replica A
+[ 19.25s]   current view : primary C, replica A
+[ 19.50s >>> ring y]
+[ 19.56s] > ring y
+[ 19.56s] key 'y' hash fc0c4ef4
+[ 19.56s]   all nodes up : primary B, replica C
+[ 19.56s]   current view : primary B, replica C
+[ 19.81s >>> ring z]
+[ 19.86s] > ring z
+[ 19.86s] key 'z' hash ff0c53ad
+[ 19.86s]   all nodes up : primary A, replica C
+[ 19.86s]   current view : primary A, replica C
+
+# stand-in copies before compaction:
+keys where current owners != all-up owners: 0 []
+owner copies missing: 0 []
+A: 41 keys, 9 not owned by A: y (drop pending), h/A/light/1 (drop pending), k6 (drop pending), h/C/sound/2 (drop pending), k4 (drop pending), h/C/sound/3 (drop pending), k9 (drop pending), humidity (drop pending), phase6_wire_4101553140_000 (drop pending)
+B: 32 keys, 0 not owned by B: 
+C: 47 keys, 24 not owned by C: s/C/sound (drop pending), s/D/temp (drop pending), h/A/light/0 (drop pending), h/A/light/1 (drop pending), h/A/light/2 (drop pending), h/A/light/3 (drop pending), h/C/sound/0 (drop pending), h/C/sound/1 (drop pending), h/C/sound/2 (drop pending), h/C/sound/3 (drop pending), h/D/temp/0 (drop pending), h/D/temp/1 (drop pending), h/D/temp/2 (drop pending), h/D/temp/3 (drop pending), k18 (drop pending), phase6_wire_3215_000 (drop pending), phase6_wire_795334085_028 (drop pending), phase6_wire_1596117061_000 (drop pending), cmp_deleted (drop pending), phase6_wire_3320_000 (drop pending), phase6_wire_3216_000 (drop pending), phase6_wire_4258761444_000 (drop pending), phase6_wire_3923394165_000 (drop pending), phase6_wire_760764433_000 (drop pending)
+D: 46 keys, 11 not owned by D: h/B/motion/0 (drop pending), h/B/motion/3 (drop pending), phase6_wire_4144886006_000 (drop pending), h/D/temp/1 (drop pending), h/D/temp/2 (drop pending), h/D/temp/3 (drop pending), kb1 (drop pending), temp (drop pending), phase6_wire_3849341009_010 (drop pending), phase6_wire_1656710395_000 (drop pending), phase6_wire_3259223076_010 (drop pending)
+
+# compact on A (13:46:12):
+[  0.00s port open]
+[  1.52s >>> compact]
+[  1.58s] > compact
+[  1.58s] compaction requested
+[  1.58s]   1410.712 [A] compaction started (9218 bytes free)
+[  4.25s]   1413.384 [A] compaction #2 done: bank A, 31 keys, 14438 bytes free
+[  4.55s >>> status]
+[  4.61s] > status
+[  4.61s] node A  state ACTIVE  view ABCD  uptime 1413s
+[  4.61s] hlc 10502552.0
+[  4.61s] storage recovered: 31 live, 0 tombstones, 31/64 keys, log 1626/16064 bytes, bank A, 2 compactions
+[  4.61s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  4.61s] sensor light (simulated): on, 42 samples, last 557.340 lux seq 346, 76 ok, 8 under-replicated, 0 failed, 0 read failures
+[  7.57s >>> dump]
+[  7.59s] > dump
+[  7.59s]   v=10501367.1@C  s/A/light = 557.340 lux  (seq 346, sampled at hlc 10501364, simulated)
+[  7.59s]   v=10441335.1@D  h/A/light/0 = 506.398 lux  (seq 344, sampled at hlc 10441332, simulated)
+[  7.59s]   v=40148.1@A  x = "1"
+[  7.59s]   v=10501365.2@A  h/A/light/2 = 557.340 lux  (seq 346, sampled at hlc 10501364, simulated)
+[  7.59s]   v=10411333.2@A  h/A/light/3 = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  7.59s]   v=10484591.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 224, sampled at hlc 10484587, simulated)
+[  7.61s]   v=10229797.1@D  h/C/sound/1 = 6 events, 3.4 % active  (seq 221, sampled at hlc 10229794, simulated)
+[  7.61s]   v=3948021.1@A  k11 = "hello-ac"
+[  7.61s]   v=10431175.1@D  h/D/temp/0 = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  7.61s]   v=6193158.1@A  z = "3"
+[  7.61s]   v=10461178.1@A  h/D/temp/1 = 24.003 degC  (seq 125, sampled at hlc 10461173, simulated)
+[  7.61s]   v=10491192.1@B  h/D/temp/2 = 24.181 degC  (seq 126, sampled at hlc 10491173, simulated)
+[  7.61s]   v=10236504.1@B  h/D/temp/3 = 20.105 degC  (seq 123, sampled at hlc 10236489, simulated)
+[  7.63s]   v=6674842.1@A  k8 = "down-6"
+[  7.63s]   v=9900928.1@A  kb1 = "from-b"
+[  7.63s]   v=0.1020@A  cmp_sensor = "30"
+[  7.63s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  7.63s]   v=8496.0@A  phase6_100 = "99"
+[  7.63s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  7.63s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  7.63s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  7.63s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  7.63s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  7.63s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  7.68s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  7.68s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  7.68s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  7.68s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  7.68s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  7.68s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  7.68s]   v=10417971.1@D  h/B/motion/2 = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  7.68s] 31 key(s); log 1626/16064 bytes used
+[  8.53s]   1417.709 [A] anti-entropy: tombstone phase6_wire_4144886006_000 repaired from B
+
+# compact on C (13:46:12):
+[  0.01s port open]
+[  1.53s >>> compact]
+[  1.58s] > compact
+[  1.58s] compaction requested
+[  1.58s]   1082.072 [C] compaction started (4113 bytes free)
+[  4.04s]   1084.572 [C] compaction #1 done: bank A, 23 keys, 15011 bytes free
+[  4.54s >>> status]
+[  4.59s] > status
+[  4.60s] node C  state ACTIVE  view ABCD  uptime 1085s
+[  4.60s] hlc 10511679.0
+[  4.60s] storage recovered: 23 live, 0 tombstones, 23/64 keys, log 1053/16064 bytes, bank A, 1 compactions
+[  4.60s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  4.60s] sensor sound (simulated): on, 30 samples, last 0 events, 0.0 % active seq 224, 60 ok, 0 under-replicated, 0 failed, 0 read failures
+[  7.56s >>> dump]
+[  7.59s] > dump
+[  7.60s]   v=10501367.1@C  s/A/light = 557.340 lux  (seq 346, sampled at hlc 10501364, simulated)
+[  7.60s]   v=40148.1@A  x = "1"
+[  7.60s]   v=3245024.1@C  y = "2"
+[  7.60s]   v=3948021.1@A  k11 = "hello-ac"
+[  7.60s]   v=3957822.1@C  k6 = "cb-key"
+[  7.60s]   v=3962062.1@C  k4 = "b-key"
+[  7.60s]   v=6193158.1@A  z = "3"
+[  7.60s]   v=6663219.1@C  k2 = "down-1"
+[  7.60s]   v=6665607.1@C  k3 = "down-2"
+[  7.60s]   v=6667924.1@C  k24 = "down-3"
+[  7.60s]   v=6672538.1@C  k19 = "down-5"
+[  7.60s]   v=0.303@A  temp = "55"
+[  7.60s]   v=0.1050@A  cmp_marker = "DONE"
+[  7.61s]   v=10507972.1@C  s/B/motion = 3 events, last motion 12 s before the sample  (seq 33, sampled at hlc 10507967, simulated)
+[  7.61s]   v=10477969.1@B  h/B/motion/0 = 3 events, last motion 19 s before the sample  (seq 32, sampled at hlc 10477967, simulated)
+[  7.61s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  7.61s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  7.61s]   v=10507986.1@C  h/B/motion/1 = 3 events, last motion 12 s before the sample  (seq 33, sampled at hlc 10507967, simulated)
+[  7.61s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  7.66s]   v=10447969.1@B  h/B/motion/3 = 0 events, last motion 160 s before the sample  (seq 31, sampled at hlc 10447967, simulated)
+[  7.66s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  7.66s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  7.66s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  7.66s] 23 key(s); log 1053/16064 bytes used
+
+# compact on D (13:46:12):
+[  0.00s port open]
+[  1.51s >>> compact]
+[  1.56s] > compact
+[  1.56s] compaction requested
+[  1.56s]   1331.983 [D] compaction started (11440 bytes free)
+[  4.18s]   1334.661 [D] compaction #4 done: bank A, 33 keys, 14413 bytes free
+[  4.53s >>> status]
+[  4.58s] > status
+[  4.58s] node D  state ACTIVE  view ABCD  uptime 1335s
+[  4.58s] hlc 10520803.0
+[  4.58s] storage recovered: 33 live, 0 tombstones, 33/64 keys, log 1651/16064 bytes, bank A, 4 compactions
+[  4.58s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  4.58s] sensor temp (simulated): on, 38 samples, last 24.181 degC seq 126, 76 ok, 0 under-replicated, 0 failed, 0 read failures
+[  7.54s >>> dump]
+[  7.56s] > dump
+[  7.56s]   v=10441335.1@D  h/A/light/0 = 506.398 lux  (seq 344, sampled at hlc 10441332, simulated)
+[  7.56s]   v=10471336.1@B  h/A/light/1 = 569.885 lux  (seq 345, sampled at hlc 10471332, simulated)
+[  7.56s]   v=10501365.2@A  h/A/light/2 = 557.340 lux  (seq 346, sampled at hlc 10501364, simulated)
+[  7.56s]   v=10411333.2@A  h/A/light/3 = 464.230 lux  (seq 343, sampled at hlc 10411332, simulated)
+[  7.56s]   v=10514591.1@B  s/C/sound = 2 events, 2.0 % active  (seq 225, sampled at hlc 10514587, simulated)
+[  7.57s]   v=10484591.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 224, sampled at hlc 10484587, simulated)
+[  7.57s]   v=10514592.1@D  h/C/sound/1 = 2 events, 2.0 % active  (seq 225, sampled at hlc 10514587, simulated)
+[  7.57s]   v=10424604.1@B  h/C/sound/2 = 4 events, 0.5 % active  (seq 222, sampled at hlc 10424588, simulated)
+[  7.57s]   v=10454604.1@B  h/C/sound/3 = 3 events, 3.2 % active  (seq 223, sampled at hlc 10454587, simulated)
+[  7.57s]   v=10521177.1@B  s/D/temp = 24.092 degC  (seq 127, sampled at hlc 10521173, simulated)
+[  7.59s]   v=10431175.1@D  h/D/temp/0 = 22.927 degC  (seq 124, sampled at hlc 10431174, simulated)
+[  7.59s]   v=10507972.1@C  s/B/motion = 3 events, last motion 12 s before the sample  (seq 33, sampled at hlc 10507967, simulated)
+[  7.59s]   v=10507986.1@C  h/B/motion/1 = 3 events, last motion 12 s before the sample  (seq 33, sampled at hlc 10507967, simulated)
+[  7.59s]   v=6663219.1@C  k2 = "down-1"
+[  7.59s]   v=6674842.1@A  k8 = "down-6"
+[  7.59s]   v=6677147.1@A  k9 = "down-7"
+[  7.59s]   v=6665607.1@C  k3 = "down-2"
+[  7.59s]   v=6667924.1@C  k24 = "down-3"
+[  7.59s]   v=6670241.1@C  k18 = "down-4"
+[  7.59s]   v=6672538.1@C  k19 = "down-5"
+[  7.61s]   v=10417971.1@D  h/B/motion/2 = 3 events, last motion 130 s before the sample  (seq 30, sampled at hlc 10417968, simulated)
+[  7.61s]   v=0.1020@A  cmp_sensor = "30"
+[  7.61s]   v=0.1050@A  cmp_marker = "DONE"
+[  7.61s]   v=0.400@A  humidity = "60"
+[  7.61s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  7.61s]   v=8496.0@A  phase6_100 = "99"
+[  7.61s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  7.61s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  7.61s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  7.61s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  7.66s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  7.66s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  7.66s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  7.66s] 33 key(s); log 1704/16064 bytes used
+
+# after compaction:
+A: 31 keys (0 tombstones), not owned: 0 []
+B: 32 keys (3 tombstones), not owned: 0 []
+C: 23 keys (0 tombstones), not owned: 0 []
+D: 33 keys (0 tombstones), not owned: 0 []
+live keys: 58; owner copies missing: 0 []
+keys whose two owners disagree on version: 10 ['h/C/sound/1', 's/C/sound', 'h/C/sound/2', 'h/C/sound/3', 'h/B/motion/3', 'h/B/motion/0', 'h/D/temp/1', 's/D/temp', 'h/A/light/1', 'h/D/temp/2']
+
+# set/get from each node, keys owned by B (13:47:09):
+[  0.00s port open]
+[  1.51s >>> ring k4]
+[  1.57s] > ring k4
+[  1.57s] key 'k4' hash 9b3d857a
+[  1.57s]   all nodes up : primary B, replica C
+[  1.57s]   current view : primary B, replica C
+[  2.84s >>> set k4 from-a]
+[  2.89s] > set k4 from-a
+[  0.00s port open]
+[  1.53s >>> ring k14]
+[  1.58s] > ring k14
+[  1.58s] key 'k14' hash 9dd201af
+[  1.58s]   all nodes up : primary B, replica A
+[  1.58s]   current view : primary B, replica A
+[  2.84s >>> set k14 from-b]
+[  2.90s] > set k14 from-b
+[  2.90s] SET k14: OK (served by B, 1 attempt(s), 25 ms)
+[  0.00s port open]
+[  1.52s >>> ring k9]
+[  1.57s] > ring k9
+[  1.57s] key 'k9' hash 903d7429
+[  1.57s]   all nodes up : primary B, replica D
+[  1.57s]   current view : primary B, replica D
+[  2.83s >>> set k9 from-c]
+[  2.88s] > set k9 from-c
+[  2.88s] SET k9: OK (served by B, 1 attempt(s), 31 ms)
+[  0.00s port open]
+[  1.51s >>> ring k20]
+[  1.56s] > ring k20
+[  1.56s] key 'k20' hash 27ca8c28
+[  1.56s]   all nodes up : primary A, replica B
+[  1.56s]   current view : primary A, replica B
+[  2.82s >>> set k20 from-d]
+[  2.87s] > set k20 from-d
+[  0.00s port open]
+[  1.51s >>> get k4]
+[  1.56s] SET k20: OK (served by A, 1 attempt(s), 26 ms)
+[  1.56s] > get k4
+[  1.56s] k4 = "from-a"
+[  1.56s]    (served by B, 1 attempt(s), 6 ms)
+[  0.00s port open]
+[  1.51s >>> get k14]
+[  1.56s] > get k14
+[  1.56s] k14 = "from-b"
+[  1.56s]    (served by B, 1 attempt(s), 6 ms)
+[  0.00s port open]
+[  1.51s >>> get k9]
+[  1.56s] SET k4: OK (served by B, 1 attempt(s), 31 ms)
+[  1.56s] > get k9
+[  1.56s] k9 = "from-c"
+[  1.56s]    (served by B, 1 attempt(s), 6 ms)
+[  0.00s port open]
+[  1.51s >>> get k20]
+[  1.56s] > get k20
+[  1.56s] k20 = "from-d"
+[  1.56s]    (served by A, 1 attempt(s), 5 ms)
+[  2.84s >>> dump]
+[  2.86s] > dump
+[  2.86s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  2.86s]   v=10574590.1@B  s/C/sound = 0 events, 0.0 % active  (seq 227, sampled at hlc 10574587, simulated)
+[  2.86s]   v=10471336.1@B  h/A/light/1 = 569.885 lux  (seq 345, sampled at hlc 10471332, simulated)
+[  2.86s]   v=3245024.1@C  y = "2"
+[  2.86s]   v=3957822.1@C  k6 = "cb-key"
+[  2.86s]   v=10544605.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 226, sampled at hlc 10544587, simulated)
+[  2.86s]   v=10557409.1@B  k4 = "from-a"
+[  2.87s]   v=10574605.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 227, sampled at hlc 10574587, simulated)
+[  2.87s]   v=10581177.1@B  s/D/temp = 25.397 degC  (seq 129, sampled at hlc 10581173, simulated)
+[  2.87s]   v=10477969.1@B  h/B/motion/0 = 3 events, last motion 19 s before the sample  (seq 32, sampled at hlc 10477967, simulated)
+[  2.87s]   v=10567483.1@B  k9 = "from-c"
+[  2.87s]   v=10581178.1@A  h/D/temp/1 = 25.397 degC  (seq 129, sampled at hlc 10581173, simulated)
+[  2.87s]   v=6670241.1@C  k18 = "down-4"
+[  2.87s]   v=10491192.1@B  h/D/temp/2 = 24.181 degC  (seq 126, sampled at hlc 10491173, simulated)
+[  2.89s]   v=10567969.1@B  h/B/motion/3 = 2 events, last motion 27 s before the sample  (seq 35, sampled at hlc 10567967, simulated)
+[  2.89s]   v=10521189.1@B  h/D/temp/3 = 24.092 degC  (seq 127, sampled at hlc 10521173, simulated)
+[  2.89s]   v=0.400@A  humidity = "60"
+[  2.89s]   v=0.303@A  temp = "55"
+[  2.89s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  2.89s]   v=9900928.1@A  kb1 = "from-b"
+[  2.89s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  2.89s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  2.91s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  2.91s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  2.91s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  2.91s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  2.91s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  2.91s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  2.91s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  2.91s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  2.91s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  2.96s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  2.96s]   v=10562441.1@B  k14 = "from-b"
+[  2.96s]   v=10572577.1@A  k20 = "from-d"
+[  2.96s] 34 key(s); log 3304/16064 bytes used

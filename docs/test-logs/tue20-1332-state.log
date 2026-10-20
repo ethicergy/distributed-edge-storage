@@ -1,0 +1,246 @@
+# Tue 20 13:32, before touching anything: status + stats on A, C, D, then B (read-only).
+# All four by-id links re-created 13:29 (boards re-attached). Seconds since each port open.
+
+# node A:
+[  0.01s port open]
+[  1.01s] console: ignored 33 character(s) received while the port was opening; type the command again
+[  1.52s >>> status]
+[  1.57s] > status
+[  1.57s] node A  state ACTIVE  view ABCD  uptime 572s
+[  1.57s] hlc 9661605.0
+[  1.57s] storage recovered: 30 live, 1 tombstones, 31/64 keys, log 1808/16064 bytes, bank B, 1 compactions
+[  1.57s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.57s] sensor light (simulated): on, 19 samples, last 371.047 lux seq 323, 30 ok, 8 under-replicated, 0 failed, 0 read failures
+[  3.53s >>> stats]
+[  3.53s] > stats
+[  3.53s] radio   rx 3164 (invalid 0, spoofed 0)  tx 1757 (failed 0)
+[  3.53s] hb      tx 1142  rx 2143   membership changes 6
+[  3.53s] server  executed 31  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  3.53s] repl    started 22  ok 22  failed 0  stale 0   as replica: applied 35 stale 0
+[  3.53s] ae      rounds 57  chunks tx 483 rx 924  tables 104  pushes 55  resync tx 55 applied 20 stale 0
+[  3.53s] gc      orphans 16  tombstones 2  keys dropped 17
+[  3.53s] client  ok 39  failed 0  attempts 39  local 25
+[  3.54s] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+[  3.54s] env node-a, built Oct 19 2026 09:08:48, reset reason: power-on
+[  3.54s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  3.54s] esp-now rx 3164  queue overflows 0  unknown MAC 0
+[  3.54s] esp-now tx -> B: 36 delivered, 0 failed (MAC-layer ACK)
+[  3.54s] esp-now tx -> C: 22 delivered, 0 failed (MAC-layer ACK)
+[  3.54s] esp-now tx -> D: 74 delivered, 0 failed (MAC-layer ACK)
+[  3.54s] heap free 176920 (min 168196)  node task stack headroom 13192 bytes
+[  3.54s] eeprom page writes since boot: total 834, hottest page 262 with 7 (rated 1000000)
+[  3.59s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+
+# node C:
+[  0.01s port open]
+[  1.52s >>> status]
+[  1.52s] 
+[  1.52s] edge-kv firmware, node C
+[  1.52s] env node-c, built Oct 19 2026 09:09:00, reset reason: power-on
+[  1.52s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  1.52s]      1.970 [C] storage recovered: 26 live, 0 tombstones, 5707/16064 log bytes used
+[  1.52s]      1.973 [C] state -> BOOTING
+[  1.52s] sensor sound: simulated (REAL_SENSOR_NODES)
+[  1.52s] 
+[  1.52s] edge-kv node C  (4-node ESP-NOW KV store, RF=2)
+[  1.52s] type 'help' for commands
+[  1.52s]      1.974 [C] view: -BC-
+[  1.52s]      1.982 [C] view: ABC-
+[  1.52s]      2.051 [C] view: ABCD
+[  1.52s]      4.212 [C] state -> CATCHUP
+[  1.52s]      4.234 [C] anti-entropy: key s/A/light repaired from A
+[  1.52s]      4.428 [C] anti-entropy: key temp repaired from B
+[  1.52s]      4.437 [C] anti-entropy: key cmp_marker repaired from A
+[  1.52s]      4.452 [C] anti-entropy: key s/B/motion repaired from D
+[  1.52s]      4.474 [C] anti-entropy: key h/B/motion/0 repaired from D
+[  1.52s]      4.489 [C] anti-entropy: key phase6_wire_2117106867_000 repaired from A
+[  1.52s]      4.504 [C] anti-entropy: key phase6_wire_2020787800_000 repaired from B
+[  1.52s]      4.519 [C] anti-entropy: key h/B/motion/1 repaired from D
+[  1.52s]      4.534 [C] anti-entropy: key phase6_wire_245014700_010 repaired from A
+[  1.52s]      4.553 [C] anti-entropy: key h/B/motion/3 repaired from D
+[  1.52s]      4.567 [C] anti-entropy: key phase6_wire_3115246074_010 repaired from A
+[  1.52s]      4.595 [C] anti-entropy: key phase6_wire_1715376659_000 repaired from A
+[  1.52s]      4.634 [C] anti-entropy: key phase6_wire_1799184098_004 repaired from A
+[  1.52s]      7.212 [C] state -> ACTIVE
+[  1.52s]     17.213 [C] gc: 15 key(s) marked for drop (orphans 15, tombstones 0 total)
+[  1.52s] > status
+[  1.52s] node C  state ACTIVE  view ABCD  uptime 240s
+[  1.57s] hlc 9666734.0
+[  1.57s] storage recovered: 38 live, 0 tombstones, 38/64 keys, log 7714/16064 bytes, bank B, 0 compactions
+[  1.57s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  1.57s] sensor sound (simulated): on, 8 samples, last 2 events, 1.4 % active seq 202, 16 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.54s >>> stats]
+[  3.54s] > stats
+[  3.54s] radio   rx 2150 (invalid 0, spoofed 0)  tx 733 (failed 0)
+[  3.54s] hb      tx 470  rx 1433   membership changes 3
+[  3.54s] server  executed 18  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  3.54s] repl    started 18  ok 18  failed 0  stale 0   as replica: applied 4 stale 0
+[  3.54s] ae      rounds 26  chunks tx 206 rx 634  tables 64  pushes 0  resync tx 0 applied 13 stale 13
+[  3.54s] gc      orphans 15  tombstones 0  keys dropped 0
+[  3.54s] client  ok 17  failed 0  attempts 17  local 0
+[  3.60s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  3.60s] env node-c, built Oct 19 2026 09:09:00, reset reason: power-on
+[  3.60s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  3.60s] esp-now rx 2150  queue overflows 0  unknown MAC 0
+[  3.60s] esp-now tx -> A: 16 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] esp-now tx -> B: 27 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] esp-now tx -> D: 14 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] heap free 178896 (min 170072)  node task stack headroom 13544 bytes
+[  3.60s] eeprom page writes since boot: total 101, hottest page 363 with 5 (rated 1000000)
+
+# node D:
+[  0.01s port open]
+[  1.52s >>> status]
+[  1.52s] 
+[  1.52s] edge-kv firmware, node D
+[  1.52s] env node-d, built Oct 19 2026 09:09:05, reset reason: power-on
+[  1.52s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  1.52s]      1.866 [D] storage recovered: 21 live, 0 tombstones, 3449/16064 log bytes used
+[  1.52s]      1.869 [D] state -> BOOTING
+[  1.52s] sensor temp: simulated (REAL_SENSOR_NODES)
+[  1.52s] 
+[  1.52s] edge-kv node D  (4-node ESP-NOW KV store, RF=2)
+[  1.52s] type 'help' for commands
+[  1.52s]      1.869 [D] view: A--D
+[  1.52s]      4.207 [D] state -> CATCHUP
+[  1.52s]      4.232 [D] anti-entropy: key h/A/light/0 repaired from A
+[  1.53s]      4.270 [D] anti-entropy: key h/A/light/1 repaired from A
+[  1.53s]      4.308 [D] anti-entropy: key h/A/light/2 repaired from A
+[  1.53s]      4.348 [D] anti-entropy: key h/A/light/3 repaired from A
+[  1.53s]      4.391 [D] anti-entropy: key s/A/light repaired from A
+[  1.53s]      4.427 [D] anti-entropy: key x repaired from A
+[  1.53s]      4.464 [D] anti-entropy: key y repaired from A
+[  1.53s]      4.507 [D] anti-entropy: key k11 repaired from A
+[  1.53s]      4.544 [D] anti-entropy: key k6 repaired from A
+[  1.53s]      4.587 [D] anti-entropy: key k4 repaired from A
+[  1.53s]      4.624 [D] anti-entropy: key z repaired from A
+[  1.53s]      7.207 [D] state -> ACTIVE
+[  1.53s]     92.726 [D] anti-entropy: key cmp_sensor repaired from A
+[  1.53s]     92.735 [D] anti-entropy: key temp repaired from B
+[  1.53s]     92.767 [D] anti-entropy: key cmp_marker repaired from A
+[  1.53s]     92.775 [D] anti-entropy: key humidity repaired from B
+[  1.53s]     92.806 [D] anti-entropy: key hlc_probe repaired from A
+[  1.53s]     92.843 [D] anti-entropy: tombstone cmp_deleted repaired from B
+[  1.53s]     92.852 [D] anti-entropy: key phase6_100 repaired from A
+[  1.53s]     92.890 [D] anti-entropy: key phase6_wire_3321_000 repaired from A
+[  1.53s]     92.930 [D] anti-entropy: key phase6_wire_3215_000 repaired from A
+[  1.53s]     92.970 [D] anti-entropy: key phase6_wire_2117106867_000 repaired from A
+[  1.53s]     93.009 [D] anti-entropy: key phase6_wire_245014700_010 repaired from A
+[  1.53s]     93.024 [D] view: AB-D
+[  1.53s]     93.049 [D] anti-entropy: key phase6_wire_3115246074_010 repaired from A
+[  1.53s]     93.064 [D] anti-entropy: key phase6_wire_3320_000 repaired from B
+[  1.53s]     93.089 [D] anti-entropy: key phase6_wire_1715376659_000 repaired from A
+[  1.53s]     93.103 [D] anti-entropy: key phase6_wire_3216_000 repaired from B
+[  1.53s]     93.129 [D] anti-entropy: key phase6_wire_3849341009_010 repaired from A
+[  1.53s]     93.144 [D] anti-entropy: key phase6_wire_2020787800_000 repaired from B
+[  1.53s]     93.163 [D] anti-entropy: tombstone phase6_wire_4144886006_000 repaired from A
+[  1.53s]     93.209 [D] anti-entropy: key phase6_wire_1799184098_004 repaired from A
+[  1.53s]     93.249 [D] anti-entropy: key phase6_wire_795334085_028 repaired from A
+[  1.53s]     93.264 [D] anti-entropy: key phase6_wire_4258761444_000 repaired from B
+[  1.53s]     93.289 [D] anti-entropy: key phase6_wire_3923394165_000 repaired from B
+[  1.53s]     93.304 [D] anti-entropy: key phase6_wire_1596117061_000 repaired from A
+[  1.53s]     93.329 [D] anti-entropy: key phase6_wire_1656710395_000 repaired from A
+[  1.53s]     93.344 [D] anti-entropy: key phase6_wire_4101553140_000 repaired from B
+[  1.53s]     93.369 [D] anti-entropy: key phase6_wire_3259223076_010 repaired from A
+[  1.53s]     93.447 [D] anti-entropy: tombstone phase6_wire_760764433_000 repaired from B
+[  1.53s]     97.208 [D] gc: 9 key(s) marked for drop (orphans 9, tombstones 0 total)
+[  1.53s]     97.208 [D] compaction started (10053 bytes free)
+[  1.53s]    100.089 [D] compaction #1 done: bank B, 46 keys, 13697 bytes free
+[  1.53s]    107.208 [D] gc: 8 key(s) marked for drop (orphans 17, tombstones 0 total)
+[  1.53s]    107.208 [D] compaction started (13577 bytes free)
+[  1.53s]    109.995 [D] compaction #2 done: bank A, 40 keys, 14048 bytes free
+[  1.53s]    248.014 [D] view: ABCD
+[  1.53s]    257.208 [D] gc: 10 key(s) marked for drop (orphans 25, tombstones 2 total)
+[  1.53s] > status
+[  1.53s] node D  state ACTIVE  view ABCD  uptime 486s
+[  1.58s] hlc 9671795.0
+[  1.58s] storage recovered: 41 live, 2 tombstones, 43/64 keys, log 5793/16064 bytes, bank A, 2 compactions
+[  1.58s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  1.58s] sensor temp (simulated): on, 16 samples, last 24.295 degC seq 104, 32 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.55s >>> stats]
+[  3.55s] > stats
+[  3.55s] radio   rx 3390 (invalid 0, spoofed 0)  tx 1534 (failed 0)
+[  3.55s] hb      tx 962  rx 2233   membership changes 3
+[  3.55s] server  executed 27  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  3.55s] repl    started 25  ok 25  failed 0  stale 0   as replica: applied 55 stale 0
+[  3.55s] ae      rounds 50  chunks tx 415 rx 984  tables 111  pushes 33  resync tx 33 applied 38 stale 10
+[  3.55s] gc      orphans 25  tombstones 2  keys dropped 17
+[  3.55s] client  ok 33  failed 0  attempts 33  local 8
+[  3.60s] storage errors 0  compactions 2 (aborted 0)  faults injected 0
+[  3.60s] env node-d, built Oct 19 2026 09:09:05, reset reason: power-on
+[  3.60s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  3.60s] esp-now rx 3390  queue overflows 0  unknown MAC 0
+[  3.60s] esp-now tx -> A: 51 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] esp-now tx -> B: 80 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] esp-now tx -> C: 26 delivered, 0 failed (MAC-layer ACK)
+[  3.60s] heap free 179040 (min 170216)  node task stack headroom 13304 bytes
+[  3.60s] eeprom page writes since boot: total 1591, hottest page 65 with 11 (rated 1000000)
+
+# node B:
+[  0.01s port open]
+[  0.51s >>> ]
+[  2.53s >>> status]
+[  2.53s] 
+[  2.53s] edge-kv firmware, node B
+[  2.53s] env node-b, built Oct 19 2026 07:13:41, reset reason: power-on
+[  2.53s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  2.53s]      1.857 [B] storage recovered: 24 live, 3 tombstones, 3072/16064 log bytes used
+[  2.53s]      1.860 [B] state -> BOOTING
+[  2.53s] sensor motion: simulated (REAL_SENSOR_NODES)
+[  2.53s] 
+[  2.53s] edge-kv node B  (4-node ESP-NOW KV store, RF=2)
+[  2.53s] type 'help' for commands
+[  2.53s]      1.860 [B] view: -B--
+[  2.53s]      1.894 [B] view: -B-D
+[  2.53s]      1.965 [B] view: AB-D
+[  2.53s]      4.207 [B] state -> CATCHUP
+[  2.53s]      4.432 [B] anti-entropy: key h/A/light/1 repaired from D
+[  2.53s]      4.446 [B] anti-entropy: key s/A/light repaired from A
+[  2.53s]      4.472 [B] anti-entropy: key s/C/sound repaired from D
+[  2.53s]      4.512 [B] anti-entropy: key h/C/sound/2 repaired from D
+[  2.53s]      4.521 [B] anti-entropy: key x repaired from A
+[  2.53s]      4.552 [B] anti-entropy: key h/C/sound/3 repaired from D
+[  2.53s]      4.585 [B] anti-entropy: key y repaired from A
+[  2.53s]      4.600 [B] anti-entropy: key s/D/temp repaired from D
+[  2.53s]      4.633 [B] anti-entropy: key h/D/temp/1 repaired from D
+[  2.53s]      4.668 [B] anti-entropy: key k11 repaired from A
+[  2.53s]      4.680 [B] anti-entropy: key h/D/temp/2 repaired from D
+[  2.53s]      4.708 [B] anti-entropy: key k6 repaired from A
+[  2.53s]      4.723 [B] anti-entropy: key h/D/temp/3 repaired from D
+[  2.53s]      4.745 [B] anti-entropy: key k9 repaired from D
+[  2.53s]      4.758 [B] anti-entropy: key k4 repaired from A
+[  2.53s]      4.785 [B] anti-entropy: key k18 repaired from D
+[  2.53s]      4.798 [B] anti-entropy: key z repaired from A
+[  2.53s]      4.825 [B] anti-entropy: key k19 repaired from D
+[  2.53s]      4.958 [B] anti-entropy: key s/D/temp repaired from A
+[  2.53s]      6.323 [B] anti-entropy: key h/D/temp/3 repaired from D
+[  2.53s]      7.207 [B] state -> ACTIVE
+[  2.53s]     17.208 [B] gc: 10 key(s) marked for drop (orphans 10, tombstones 0 total)
+[  2.53s]    105.721 [B] compaction started (11425 bytes free)
+[  2.53s]    108.467 [B] compaction #1 done: bank A, 38 keys, 14164 bytes free
+[  2.53s]    162.200 [B] view: ABCD
+[  2.53s]    167.218 [B] gc: 10 key(s) marked for drop (orphans 17, tombstones 3 total)
+[  2.53s] > status
+[  2.53s] node B  state ACTIVE  view ABCD  uptime 425s
+[  2.53s] hlc 9697083.0
+[  2.58s] storage recovered: 35 live, 3 tombstones, 38/64 keys, log 4326/16064 bytes, bank A, 1 compactions
+[  2.58s] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[  2.58s] sensor motion (simulated): on, 14 samples, last 2 events, last motion 11 s before the sample seq 13, 28 ok, 0 under-replicated, 0 failed, 0 read failures
+[  4.55s >>> stats]
+[  4.55s] > stats
+[  4.55s] radio   rx 3372 (invalid 0, spoofed 0)  tx 1371 (failed 0)
+[  4.55s] hb      tx 841  rx 2217   membership changes 4
+[  4.55s] server  executed 46  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  4.55s] repl    started 45  ok 45  failed 0  stale 0   as replica: applied 10 stale 0
+[  4.55s] ae      rounds 44  chunks tx 370 rx 1001  tables 103  pushes 44  resync tx 44 applied 20 stale 18
+[  4.55s] gc      orphans 17  tombstones 3  keys dropped 10
+[  4.55s] client  ok 29  failed 0  attempts 29  local 7
+[  4.60s] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+[  4.60s] env node-b, built Oct 19 2026 07:13:41, reset reason: power-on
+[  4.60s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  4.60s] esp-now rx 3372  queue overflows 0  unknown MAC 0
+[  4.60s] esp-now tx -> A: 37 delivered, 0 failed (MAC-layer ACK)
+[  4.60s] esp-now tx -> C: 37 delivered, 0 failed (MAC-layer ACK)
+[  4.60s] esp-now tx -> D: 86 delivered, 0 failed (MAC-layer ACK)
+[  4.60s] heap free 178912 (min 170088)  node task stack headroom 13336 bytes
+[  4.60s] eeprom page writes since boot: total 826, hottest page 8 with 8 (rated 1000000)
