@@ -218,6 +218,11 @@ class SerialBackend(Backend):
     PORT_LOST = "<<port lost>>"
     PORT_BACK = "<<port back>>"
 
+    # The console discards input for 1 s after the port opens with output
+    # waiting (echo guard, BRINGUP_LOG problem 5), so nothing is sent
+    # until this long after each (re)open.
+    POST_OPEN_WAIT_S = 1.2
+
     def __init__(self, ports: Dict[str, str], baud: int = 115200) -> None:
         super().__init__()
         import serial  # pyserial
@@ -226,6 +231,7 @@ class SerialBackend(Backend):
         self._ports = ports
         self._baud = baud
         self._handles: Dict[str, object] = {}
+        self._opened_at: Dict[str, float] = {}
         self._events: Dict[str, "queue.Queue[Tuple[str, float]]"] = {n: queue.Queue() for n in ports}
         self._stop = False
         for node in ports:
@@ -245,6 +251,7 @@ class SerialBackend(Backend):
             except (OSError, self._serial.SerialException):
                 time.sleep(0.2)
                 continue
+            self._opened_at[node] = time.monotonic()
             self._handles[node] = handle
             if lost:
                 t = time.monotonic()
@@ -277,6 +284,9 @@ class SerialBackend(Backend):
         handle = self._handles.get(node)
         if handle is None:
             raise RuntimeError(f"node {node} console not connected")
+        wait = self._opened_at.get(node, 0.0) + self.POST_OPEN_WAIT_S - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
         handle.write((command + "\n").encode())
 
     def _wait_event(self, node: str, kind: str, prompt: str, timeout: float = 180) -> float:

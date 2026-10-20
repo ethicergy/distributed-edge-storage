@@ -19,7 +19,7 @@ A, C, D images come from the same firmware source as B's (`dd78c40` only changed
 
 **Milestones:** M1-M4 done. M5: four-node checks passed (members `ABCD`, catch-up, handed-off keys back, stand-in copies GC'd, set/get from every node); H1-H3 passed Tue 13:53. H11 passed early (format + refill on B). Next planned after M5: M6 (Pi bridge, H14), M7 (`measure.py` baseline).
 
-**Before any `measure.py` run:** it must wait ~1.2 s after opening (or re-opening) each port: the echo guard drops input for 1 s after a port opens with output waiting. Not changed yet.
+**`measure.py`** waits 1.2 s after opening (or re-opening) each port before its first command (`POST_OPEN_WAIT_S`, Tue 20). The echo guard can still drop commands mid-session (problem 5, Tue 20 14:00): decide before M7.
 
 **Next step:** M6 (Pi bridge, H14). M5 done Tue 13:53 (H1 on B with the problem-8 note). Decide problem 7 (foreign keys) first.
 

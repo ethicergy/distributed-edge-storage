@@ -99,6 +99,53 @@ class FillTest(unittest.TestCase):
 
 
 @unittest.skipUnless(os.path.exists(SIM), "simulator not built (make sim)")
+class BoardWaitTest(unittest.TestCase):
+    """Board consoles drop input for 1 s after the port opens (echo guard):
+    measure.py waits POST_OPEN_WAIT_S after every (re)open before sending."""
+
+    def test_first_command_waits_after_open(self):
+        import time
+        import types
+
+        writes = []
+
+        class FakeSerial:
+            def __init__(self, port, baud, timeout):
+                self.opened = time.monotonic()
+                self.timeout = timeout
+
+            def read(self, n):
+                time.sleep(self.timeout)
+                return b""
+
+            def write(self, data):
+                writes.append((time.monotonic() - self.opened, data))
+
+            def close(self):
+                pass
+
+        fake = types.ModuleType("serial")
+        fake.Serial = FakeSerial
+        fake.SerialException = OSError
+        saved = sys.modules.get("serial")
+        sys.modules["serial"] = fake
+        try:
+            backend = measure.SerialBackend({"A": "/dev/fake"})
+            backend.send("A", "status")
+            backend.send("A", "members")
+            backend.close()
+        finally:
+            if saved is None:
+                del sys.modules["serial"]
+            else:
+                sys.modules["serial"] = saved
+
+        self.assertEqual([d for _, d in writes], [b"status\n", b"members\n"])
+        self.assertGreaterEqual(writes[0][0], measure.SerialBackend.POST_OPEN_WAIT_S - 0.01)
+        # Only the first command after an open waits.
+        self.assertLess(writes[1][0] - writes[0][0], 0.2)
+
+
 class SimulatorRunTest(unittest.TestCase):
     def test_short_run_produces_every_metric(self):
         with tempfile.TemporaryDirectory() as tmp:
