@@ -14,6 +14,7 @@
 #include <driver/gpio.h>
 #include <esp_random.h>
 #include <esp_system.h>
+#include <hal/usb_serial_jtag_ll.h>
 
 #include <cstdarg>
 #include <cstdio>
@@ -119,9 +120,13 @@ HardwareSerial& bridge_uart = Serial1;
 // Output
 // ------------------------------------------------------------------
 
+// Problem 9: when the console last printed (see nudge_usb_tx).
+std::uint64_t usb_last_write_ms = 0;
+
 void serial_write(void*, const char* text)
 {
     Serial.print(text);
+    usb_last_write_ms = platform_time::now_ms();
 }
 
 void log_line(void*, const char* line)
@@ -134,6 +139,7 @@ void log_line(void*, const char* line)
         static_cast<unsigned long>(now % 1000),
         line
     );
+    usb_last_write_ms = now;
 }
 
 void bridge_write(void*, const std::uint8_t* data, std::size_t length)
@@ -377,6 +383,35 @@ bool usb_plugged()
 #endif
 }
 
+// BRINGUP_LOG problem 9: a short reply could stay on the board until the
+// next input arrived, seconds later. 20 ms after the last output, flush
+// the 64-byte hardware FIFO once (a partial packet is otherwise not
+// sent; this is what fixed it on the boards), and re-enable the "host
+// took the data" interrupt so the core's ISR sends what waits in its
+// buffer. The interrupt only while at least half the buffer is free:
+// with the port closed the buffer fills, and a "connected" core would
+// block each write for up to 100 ms.
+void nudge_usb_tx(std::uint64_t now_ms)
+{
+#if ARDUINO_USB_CDC_ON_BOOT && ARDUINO_USB_MODE
+    static std::uint64_t flushed_for_ms = 0;
+
+    // 20 ms after the last output: push out a partial packet still in
+    // the 64-byte hardware FIFO, once per burst of output.
+    if (usb_last_write_ms != 0 && usb_last_write_ms != flushed_for_ms &&
+        now_ms - usb_last_write_ms >= 20) {
+        usb_serial_jtag_ll_txfifo_flush();
+        flushed_for_ms = usb_last_write_ms;
+    }
+
+    const int free_bytes = Serial.availableForWrite();
+
+    if (free_bytes < USB_TX_BUFFER_BYTES && free_bytes >= USB_TX_BUFFER_BYTES / 2) {
+        usb_serial_jtag_ll_ena_intr_mask(USB_SERIAL_JTAG_INTR_SERIAL_IN_EMPTY);
+    }
+#endif
+}
+
 StaticTask_t node_task_control;
 StackType_t node_task_stack[NODE_TASK_STACK_BYTES / sizeof(StackType_t)];
 
@@ -423,6 +458,7 @@ void node_task(void*)
         runtime.tick(now);
         sampler.tick(now);
         operator_console.tick(now);
+        nudge_usb_tx(now);
 
         // Yield one tick; ESP-NOW frames queue up meanwhile.
         vTaskDelay(1);

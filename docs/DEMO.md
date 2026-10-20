@@ -11,7 +11,8 @@ The expected outputs below come from a full rehearsal in `build/host/edge_sim` o
 3. On every console: `sensor period 5000`, so readings change visibly. On B and D, `log off` to keep their consoles quiet. Keep A and C at the default `log info`: their log lines are part of the show.
 4. Check that the Pi's `python3 -m edgekv ping` prints `bridge is node A`.
 5. Doing step 7 on the boards? Flash the `-fi` images beforehand (`pio run -e node-a-fi -t upload …`, same for B–D). Otherwise step 7 uses the simulator.
-6. Run only one Pi command at a time. A second command while `watch` runs is refused with ``error: port busy: another edgekv command is using it, stop `watch` first``. Stop `watch` with Ctrl-C first.
+6. If a console reply seems missing, press Enter: the next input always brings out anything still waiting on the board (BRINGUP_LOG problem 9, fixed in the firmware since Tue 20).
+7. Run only one Pi command at a time. A second command while `watch` runs is refused with ``error: port busy: another edgekv command is using it, stop `watch` first``. Stop `watch` with Ctrl-C first.
 
 ## 1. The cluster is up (1 min)
 

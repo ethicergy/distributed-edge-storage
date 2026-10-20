@@ -237,8 +237,9 @@ class SerialBackend(Backend):
         self._opened_at: Dict[str, float] = {}
         self._events: Dict[str, "queue.Queue[Tuple[str, float]]"] = {n: queue.Queue() for n in ports}
         self._stop = False
-        for node in ports:
-            threading.Thread(target=self._reader, args=(node,), daemon=True).start()
+        self._threads = [threading.Thread(target=self._reader, args=(node,), daemon=True) for node in ports]
+        for thread in self._threads:
+            thread.start()
         deadline = time.monotonic() + 10
         while len(self._handles) < len(ports) and time.monotonic() < deadline:
             time.sleep(0.1)
@@ -268,7 +269,12 @@ class SerialBackend(Backend):
             buffer = b""
             try:
                 while not self._stop:
-                    data = handle.read(256)
+                    try:
+                        data = handle.read(256)
+                    except Exception:
+                        if self._stop:  # port closed by close()
+                            return
+                        raise
                     if not data:
                         continue
                     buffer += data
@@ -317,6 +323,10 @@ class SerialBackend(Backend):
 
     def close(self) -> None:
         self._stop = True
+        # Readers notice _stop within one read timeout (0.1 s); closing a
+        # port under a running read() raised tracebacks at exit.
+        for thread in self._threads:
+            thread.join(timeout=1.0)
         for handle in list(self._handles.values()):
             try:
                 handle.close()
