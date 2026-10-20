@@ -324,9 +324,9 @@ static_assert(
 // Console input guard (BRINGUP_LOG problem 5)
 // ---------------------------------------------------------------
 
-// Input is discarded for this long after boot and after the USB cable
-// is plugged in again (console::InputGuard): the host's tty can echo
-// the board's buffered output back before it switches to raw mode.
+// Input is discarded for this long after boot (console::InputGuard):
+// the host's tty can echo the board's buffered output back before it
+// switches to raw mode.
 constexpr std::uint32_t CONSOLE_INPUT_HOLD_MS = 1000;
 
 } // namespace config

@@ -844,13 +844,4 @@ void InputGuard::begin(std::uint64_t now_ms)
     console_.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
 }
 
-void InputGuard::poll(bool usb_plugged, std::uint64_t now_ms)
-{
-    if (usb_plugged && !plugged_) {
-        console_.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
-    }
-
-    plugged_ = usb_plugged;
-}
-
 } // namespace console

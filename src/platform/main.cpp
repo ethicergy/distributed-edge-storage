@@ -374,15 +374,6 @@ console::Console operator_console(runtime, &sampler, serial_write, nullptr, cons
 
 console::InputGuard input_guard(operator_console);
 
-bool usb_plugged()
-{
-#if ARDUINO_USB_CDC_ON_BOOT && ARDUINO_USB_MODE
-    return HWCDC::isPlugged();
-#else
-    return true;
-#endif
-}
-
 // BRINGUP_LOG problem 9: a short reply could stay on the board until the
 // next input arrived, seconds later. 20 ms after the last output, flush
 // the 64-byte hardware FIFO once (a partial packet is otherwise not
@@ -431,8 +422,6 @@ void node_task(void*)
         }
 
         radio.drain_send_status();
-
-        input_guard.poll(usb_plugged(), now);
 
         while (Serial.available() > 0) {
             operator_console.on_char(static_cast<char>(Serial.read()), now);
