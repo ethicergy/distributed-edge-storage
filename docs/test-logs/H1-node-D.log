@@ -1,0 +1,32 @@
+# H1 on node D, Tue 20 13:49: members twice, then stats. Seconds since port open.
+[  0.00s port open]
+[  1.51s >>> members]
+[  1.57s] > members
+[  1.57s]   A  alive   last heard 181 ms ago, 3018 heartbeats
+[  1.57s]   B  alive   last heard 119 ms ago, 2722 heartbeats
+[  1.57s]   C  alive   last heard 6 ms ago, 2537 heartbeats
+[  1.57s]   D  self    ACTIVE
+[  3.53s >>> members]
+[  3.58s] > members
+[  3.58s]   A  alive   last heard 203 ms ago, 3022 heartbeats
+[  3.58s]   B  alive   last heard 142 ms ago, 2726 heartbeats
+[  3.58s]   C  alive   last heard 30 ms ago, 2541 heartbeats
+[  3.58s]   D  self    ACTIVE
+[  5.54s >>> stats]
+[  5.54s] > stats
+[  5.54s] radio   rx 12203 (invalid 0, spoofed 0)  tx 4850 (failed 0)
+[  5.54s] hb      tx 3046  rx 8301   membership changes 9
+[  5.54s] server  executed 69  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.54s] repl    started 67  ok 67  failed 0  stale 0   as replica: applied 179 stale 0
+[  5.54s] ae      rounds 154  chunks tx 1349 rx 3456  tables 398  pushes 81  resync tx 81 applied 61 stale 10
+[  5.54s] gc      orphans 41  tombstones 6  keys dropped 38
+[  5.54s] client  ok 93  failed 0  attempts 93  local 17
+[  5.54s] storage errors 0  compactions 4 (aborted 0)  faults injected 0
+[  5.54s] env node-d, built Oct 19 2026 09:09:05, reset reason: power-on
+[  5.54s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  5.54s] esp-now rx 12203  queue overflows 0  unknown MAC 0
+[  5.54s] esp-now tx -> A: 130 delivered, 0 failed (MAC-layer ACK)
+[  5.54s] esp-now tx -> B: 234 delivered, 0 failed (MAC-layer ACK)
+[  5.54s] esp-now tx -> C: 91 delivered, 0 failed (MAC-layer ACK)
+[  5.54s] heap free 179040 (min 170216)  node task stack headroom 13304 bytes
+[  5.59s] eeprom page writes since boot: total 3359, hottest page 65 with 16 (rated 1000000)

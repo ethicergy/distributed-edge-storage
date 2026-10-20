@@ -1,0 +1,52 @@
+# H3 on node A, Tue 20 13:53:05: ring, stats, set k20 local, get k20, stats.
+[  0.00s port open]
+[  1.51s >>> ring k20]
+[  1.56s] > ring k20
+[  1.56s] key 'k20' hash 27ca8c28
+[  1.56s]   all nodes up : primary A, replica B
+[  1.56s]   current view : primary A, replica B
+[  2.12s >>> stats]
+[  2.12s] > stats
+[  2.12s] radio   rx 13642 (invalid 0, spoofed 0)  tx 5502 (failed 0)
+[  2.12s] hb      tx 3640  rx 9440   membership changes 12
+[  2.12s] server  executed 66  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  2.12s] repl    started 53  ok 53  failed 0  stale 0   as replica: applied 141 stale 0
+[  2.12s] ae      rounds 182  chunks tx 1479 rx 3875  tables 447  pushes 92  resync tx 92 applied 32 stale 4
+[  2.12s] gc      orphans 28  tombstones 3  keys dropped 27
+[  2.12s] client  ok 117  failed 0  attempts 117  local 43
+[  2.12s] storage errors 0  compactions 2 (aborted 0)  faults injected 0
+[  2.12s] env node-a, built Oct 19 2026 09:08:48, reset reason: power-on
+[  2.12s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  2.12s] esp-now rx 13642  queue overflows 0  unknown MAC 0
+[  2.12s] esp-now tx -> B: 108 delivered, 0 failed (MAC-layer ACK)
+[  2.12s] esp-now tx -> C: 99 delivered, 0 failed (MAC-layer ACK)
+[  2.12s] esp-now tx -> D: 176 delivered, 0 failed (MAC-layer ACK)
+[  2.12s] heap free 176920 (min 168196)  node task stack headroom 13192 bytes
+[  2.17s] eeprom page writes since boot: total 1853, hottest page 10 with 7 (rated 1000000)
+[  2.17s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[  2.72s >>> set k20 local]
+[  2.77s] > set k20 local
+[  2.77s] SET k20: OK (served by A, 1 attempt(s), 38 ms)
+[  3.33s >>> get k20]
+[  3.38s] > get k20
+[  3.38s] k20 = "local"
+[  3.38s]    (served by A, 1 attempt(s), 0 ms)
+[  3.93s >>> stats]
+[  3.93s] > stats
+[  3.93s] radio   rx 13654 (invalid 0, spoofed 0)  tx 5507 (failed 0)
+[  3.93s] hb      tx 3644  rx 9451   membership changes 12
+[  3.93s] server  executed 68  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  3.93s] repl    started 54  ok 54  failed 0  stale 0   as replica: applied 141 stale 0
+[  3.93s] ae      rounds 182  chunks tx 1479 rx 3875  tables 447  pushes 92  resync tx 92 applied 32 stale 4
+[  3.93s] gc      orphans 28  tombstones 3  keys dropped 27
+[  3.93s] client  ok 119  failed 0  attempts 119  local 45
+[  3.93s] storage errors 0  compactions 2 (aborted 0)  faults injected 0
+[  3.93s] env node-a, built Oct 19 2026 09:08:48, reset reason: power-on
+[  3.93s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  3.93s] esp-now rx 13654  queue overflows 0  unknown MAC 0
+[  3.93s] esp-now tx -> B: 109 delivered, 0 failed (MAC-layer ACK)
+[  3.93s] esp-now tx -> C: 99 delivered, 0 failed (MAC-layer ACK)
+[  3.93s] esp-now tx -> D: 176 delivered, 0 failed (MAC-layer ACK)
+[  3.93s] heap free 176920 (min 168196)  node task stack headroom 13192 bytes
+[  3.98s] eeprom page writes since boot: total 1856, hottest page 10 with 7 (rated 1000000)
+[  3.98s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0

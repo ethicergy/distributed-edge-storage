@@ -15,6 +15,7 @@ Evidence for the test matrix in docs/HARDWARE_TEST_PLAN.md.
 | `step2-node-b.log` | BRINGUP step 2 on node B (after resoldering), with the power cycle |
 | `H11-node-b.log` | H11-style: pre-format dumps and ring on every node, `format yes` on B, timed refill |
 | `step3-four-nodes.log` | four nodes: members, ring of every key, stand-in copies and their GC, set/get on B-owned keys from each node |
+| `H2.log` | H2 with one write per node (B k20, C k4, D k0, A k2) and the owners' dumps |
 | `H<n>-node-<x>.log` | serial log of node x during hardware test H<n> (docs/HARDWARE_TEST_PLAN.md) |
 | `H14-pi.log` | Raspberry Pi terminal output for H14 |
 
