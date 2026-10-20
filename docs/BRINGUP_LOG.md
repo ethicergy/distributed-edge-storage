@@ -23,6 +23,10 @@ All four run the same build (`06f45b1`, echo guard at boot and USB re-plug only)
 
 **Next step:** M7 done Tue 16:13 (latency + failover). Remaining measurements: loss (needs the `-fi` images, M12), sensors/wear (after the soak, M10/M11).
 
+**Optional, not scheduled:** a laptop-side logger that polls A's console `sensors` over USB and writes the same CSV as `edgekv watch` (estimate 2.5 h, no firmware change). Only if the Pi stays off for the demo and a CSV is wanted.
+
+**Now:** M9 real sensors, one module at a time (A BH1750 → D DHT11 + BRINGUP 4.8 → C LM393 → B AM312), then loss tests (-fi images), then an overnight soak with real sensors.
+
 **Committed and pushed** (`hw-bringup`), newest last: `f85e49e` monitor reset, `b81c370` 0x58 guard, `f3b5e1c` step 2 on A, `2a9730f` A+C / A+C+D, `142b8fe` D10 GPIO6, `c7d0735` echo guard (drain trigger), `0077669` pause, `dd78c40` D10 retired, `dc9de2e` four nodes + H11, `81eb8d3` H1-H3, `0a19939` H1-B accepted, `05f6954` measure.py open wait, `06f45b1` echo guard at boot/re-plug only, `9e25ea4` problem 7 resolved.
 
 ## 1. Milestones: planned vs actual
@@ -89,6 +93,8 @@ Plan changes and why. Examples: cutting H9, keeping a sensor simulated, retuning
 | Mon 19 09:12 | echo guard in the console (`c7d0735`); A, C, D reflashed with it (built 09:08-09:09) | problem 5 could turn echoed boot fragments into commands | leave it and send an empty line after each replug | NS |
 | Tue 20 14:52 | echo guard reworked (`06f45b1`: hold at boot and USB re-plug only); all four reflashed (B, C, D 14:47-14:48, A 14:52 after it was plugged back in) | the drain trigger discarded real commands mid-session (problem 10) | keep the drain trigger and make it stricter; look for the root cause of problem 9 first | NS |
 | Tue 20 14:40 | **M6 (Pi bridge) and H14 deferred**: the Pi is off until further notice | owner's decision | — | NS |
+| Tue 20 15:40 (accepted 16:25) | console input hold at boot only: the USB re-plug trigger removed (`3798192`). **Made without prior approval**; accepted afterwards, with the instruction to ask first next time | `HWCDC::isPlugged()` flickers mid-session and the trigger discarded 3-4 real commands per board in 5 min; on a USB-powered SuperMini a re-plug is a boot, which the boot hold covers | keep the re-plug trigger with a debounce | NS |
+| Tue 20 16:25 | no-Pi demo as one DEMO.md script (Pi steps optional, console equivalents); laptop CSV logger **not now** (optional, see RESUME HERE); M9 real sensors next, one module at a time: A BH1750, D DHT11, C LM393 (DO), B AM312 | the Pi stays off | — | NS |
 
 ## 4. End-of-day summary
 
