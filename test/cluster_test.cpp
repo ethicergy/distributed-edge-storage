@@ -1159,6 +1159,113 @@ void real_sensor_logic_end_to_end()
     CHECK(!cluster.node(node::D).source->simulated());
 }
 
+// ------------------------------------------------------------------
+// GC with staggered compaction (BRINGUP_LOG problem 11): on the boards
+// the nodes compact at different times. A node that has dropped a
+// GC-confirmed tombstone must not get it pushed back by a peer that
+// still holds it (drop pending), and a dropped tombstone must never
+// let an older live value come back.
+// ------------------------------------------------------------------
+static bool holds(Cluster& cluster, node::Id id, const std::string& key)
+{
+    return cluster.runtime(id).storage().find_slot(
+               storage::KeyView{reinterpret_cast<const std::uint8_t*>(key.data()), key.size()}) >= 0;
+}
+
+static bool holds_live(Cluster& cluster, node::Id id, const std::string& key)
+{
+    storage::Version version{};
+    storage::State state{};
+    return cluster.local_version(id, key, version, state) && state == storage::State::LIVE;
+}
+
+static bool drop_pending_everywhere(Cluster& cluster, const std::string& key)
+{
+    for (node::Id id : ALL) {
+        storage::StorageManager& store = cluster.runtime(id).storage();
+        const int slot = store.find_slot(
+            storage::KeyView{reinterpret_cast<const std::uint8_t*>(key.data()), key.size()});
+
+        if (slot >= 0 && !store.drop_pending(static_cast<std::size_t>(slot))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Compact one node at a time, a few anti-entropy rounds apart, and
+// check after each that the compacted nodes stay clean.
+static void compact_staggered(Cluster& cluster, const std::string& key)
+{
+    std::vector<node::Id> compacted;
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).request_compaction();
+        compacted.push_back(id);
+        cluster.run_for(3 * config::AE_PERIOD_MS);
+
+        for (node::Id done : compacted) {
+            CHECK(!holds(cluster, done, key));
+        }
+        for (node::Id any : ALL) {
+            CHECK(!holds_live(cluster, any, key));
+        }
+    }
+
+    cluster.run_for(6 * config::AE_PERIOD_MS);
+
+    for (node::Id id : ALL) {
+        CHECK(!holds(cluster, id, key));
+        CHECK(cluster.get(id, key).status == ClientStatus::NOT_FOUND);
+    }
+}
+
+static void tombstone_gc_staggered_compaction()
+{
+    Cluster cluster(25, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    const std::string key = cluster.key_owned_by("gc-stagger-", node::B, node::C);
+    CHECK(cluster.set(node::A, key, "x").status == ClientStatus::OK);
+    CHECK(cluster.del(node::A, key).status == ClientStatus::OK);
+
+    CHECK(cluster.run_until([&] { return drop_pending_everywhere(cluster, key); },
+                            config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS));
+
+    compact_staggered(cluster, key);
+}
+
+static void no_zombie_after_tombstone_gc()
+{
+    Cluster cluster(26, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    // C (replica) keeps the old live value while it is off for the delete.
+    const std::string key = cluster.key_owned_by("gc-zombie-", node::B, node::C);
+    CHECK(cluster.set(node::A, key, "old").status == ClientStatus::OK);
+    CHECK(cluster.local_value(node::C, key) == "old");
+
+    cluster.power_off(node::C);
+    cluster.run_for(config::MEMBERSHIP_TIMEOUT_MS + 500);
+    const ClientStatus deleted = cluster.del(node::A, key).status;
+    CHECK(deleted == ClientStatus::OK || deleted == ClientStatus::UNDER_REPLICATED);
+
+    // No GC while a node is down, however old the tombstone.
+    cluster.run_for(config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS);
+    CHECK(!drop_pending_everywhere(cluster, key));
+
+    cluster.power_on(node::C);
+    CHECK(cluster.run_until([&] { return cluster.converged(); }, 15000));
+    CHECK(!holds_live(cluster, node::C, key));
+
+    CHECK(cluster.run_until([&] { return drop_pending_everywhere(cluster, key); },
+                            config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS));
+
+    compact_staggered(cluster, key);
+}
+
 int main(int argc, char** argv)
 {
     std::string only;
@@ -1193,6 +1300,8 @@ int main(int argc, char** argv)
         {"LOSS", lossy_radio},
         {"TXLOSS", injected_tx_loss},
         {"GC", garbage_collection},
+        {"GCSTAG", tombstone_gc_staggered_compaction},
+        {"ZOMBIE", no_zombie_after_tombstone_gc},
         {"H13", h13_sensor_soak},
         {"SENSORS", real_sensor_logic_end_to_end},
     };

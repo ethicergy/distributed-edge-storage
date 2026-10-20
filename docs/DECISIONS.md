@@ -161,7 +161,11 @@ Implemented, conservatively:
   as new.
 
 Both are local, physical drops applied by the next compaction; no
-record is written. Without this the 64-key index would fill
+record is written. A `drop pending` entry is not pushed to a peer that
+lacks it: that peer has already dropped it, and pushing it back made
+GC ping-pong between nodes that compact at different times (found on
+the boards, BRINGUP_LOG problem 11; cluster scenarios `GCSTAG`,
+`ZOMBIE`). Without this the 64-key index would fill
 permanently with tombstones and orphans (audit 5.9).
 
 ## D9 — No storage fallback, no lower I2C clock
