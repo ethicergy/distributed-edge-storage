@@ -155,7 +155,7 @@ If C's EEPROM was wiped or corrupted, the same steps rebuild it from scratch (`S
 
 ## 5. Likely examiner questions
 
-Questions 1–10 are about the distributed-systems design, 11–21 about the hardware and engineering.
+Questions 1–10 are about the distributed-systems design, 11–22 about the hardware and engineering.
 
 ### Design
 
@@ -274,3 +274,11 @@ Questions 1–10 are about the distributed-systems design, 11–21 about the har
       * an EEPROM page write takes ~5 ms (a few hundred writes/s);
       * an ESP-NOW frame takes about 1 ms;
       * each node runs at most 8 client operations at once (`config.h:94`).
+
+22. **What happens if you plug in a disk from another cluster?**
+    * It happened: board B's EEPROM still held records from earlier tests. B recovered them as valid data (`storage recovered`), and anti-entropy copied them to their owners as the newest versions (BRINGUP_LOG problem 7).
+    * The store cannot tell: records carry a magic number, format version, CRC and HLC version, but nothing says which cluster wrote them (`storage_record.h`, `storage_metadata.h`).
+    * Real data is safe from *older* foreign records, because last-writer-wins keeps the newer version. The damage is foreign keys that did not exist here, and foreign records that happen to carry newer HLCs, which would overwrite real values.
+    * Fix in practice: `format yes` on every module at first install. We deleted the 20 live foreign keys. GC marked their tombstones once all four nodes had confirmed them, but compacting one node at a time let the others push the tombstones back (BRINGUP_LOG problem 11). They only disappeared when all four compacted at once: 0 foreign keys and 0 tombstones afterwards.
+    * Proper fix (DECISIONS D11, not implemented): a deployment id in the superblock and in heartbeats. Storage with another id is formatted at boot, and frames from another deployment are dropped. Not done because it changes the on-disk format on the day of the demo.
+

@@ -207,6 +207,7 @@ Every node (A, B, C, D):
 | GPIO9 | SCL |
 | — | A0, A1, A2 → GND (jumpers), WP → GND |
 | — | Match pins **by the silkscreen labels** on both boards, not by header position |
+| — | **`format yes` on every EEPROM module at first install**, before the node joins the cluster. A reused module keeps records from earlier tests, and the cluster accepts them as real data (BRINGUP_LOG problem 7, DECISIONS D11) |
 | 3V3 via 4.7 kΩ → GPIO8, and 3V3 via 4.7 kΩ → GPIO9 | only if the module has no pull-ups |
 
 Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):

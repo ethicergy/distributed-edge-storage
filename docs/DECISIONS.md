@@ -17,6 +17,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
 | D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
 | D10 | Node B's EEPROM supply | ~~workaround: VCC from GPIO6~~ **superseded Tue 20**: B resoldered, VCC on 3V3 like every node; the GPIO6 workaround was never used on the board |
+| D11 | Foreign data on a reused EEPROM | known limitation: no cluster identity in the storage format; rule: `format yes` at first install. Cluster id / format epoch is future work |
 
 ---
 
@@ -221,3 +222,37 @@ fall back to running without B.
 
 **Real fix:** resolder B's 3V3 header pin, wire VCC back to 3V3 and
 drop the flag from the two node-b envs.
+
+## D11 — Foreign data on a reused EEPROM (known limitation)
+
+**What happened:** board B's EEPROM module had been used in earlier
+development tests. When B joined, its old records (`temp`, `humidity`,
+`cmp_deleted`, `phase6_wire_*`) were recovered as valid data and
+anti-entropy copied them to their owners: 23 keys (20 live, 3
+tombstones), about a quarter of each node's 64-key index
+(BRINGUP_LOG problem 7). They were deleted by hand on Tue 20.
+
+**Why the store accepts them:** a record carries a magic number, a
+format version, a CRC and an HLC version (`storage_record.h`), and the
+superblock a generation and bank state (`storage_metadata.h`). Nothing
+says which cluster or deployment wrote it, so a module written by an
+earlier test is indistinguishable from one written by this cluster, and
+last-writer-wins treats its records like any other version.
+
+**Rule for now:** `format yes` on every module at first install
+(BRINGUP.md wiring sheet).
+
+**Future work, not implemented:** a deployment id in the superblock and
+in every record or heartbeat. A node whose storage carries a different
+id formats itself at boot instead of recovering; a frame from a node
+with a different id is dropped. The id has to be chosen per deployment
+(a build-time constant bumped for each install, or random at the first
+cluster formation): a hash of the MAC table would not have caught this
+case, because the earlier tests probably ran with the same four boards.
+
+**Why not now:** it changes the on-disk format (new `FORMAT_VERSION`),
+so all four EEPROMs would need reformatting and refilling, and the
+storage crash tests and the hardware logs would have to be redone on
+the day of the demo. The format-at-install rule removes the risk for
+this deployment.
+

@@ -16,6 +16,7 @@ Evidence for the test matrix in docs/HARDWARE_TEST_PLAN.md.
 | `H11-node-b.log` | H11-style: pre-format dumps and ring on every node, `format yes` on B, timed refill |
 | `step3-four-nodes.log` | four nodes: members, ring of every key, stand-in copies and their GC, set/get on B-owned keys from each node |
 | `H2.log` | H2 with one write per node (B k20, C k4, D k0, A k2) and the owners' dumps |
+| `problem7-foreign-keys.log` | deleting the foreign keys from B's module, tombstone GC, push-back after one-at-a-time compaction, simultaneous compaction |
 | `H<n>-node-<x>.log` | serial log of node x during hardware test H<n> (docs/HARDWARE_TEST_PLAN.md) |
 | `H14-pi.log` | Raspberry Pi terminal output for H14 |
 
