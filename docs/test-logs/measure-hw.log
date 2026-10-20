@@ -1,0 +1,1040 @@
+    3.021 [A] > status
+    3.021 [A] node A  state ACTIVE  view ABCD  uptime 350s
+    3.021 [A] hlc 18070900.0
+    3.021 [A] storage recovered: 47 live, 0 tombstones, 47/64 keys, log 5602/16064 bytes, bank B, 2 compactions
+    3.021 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.023 [B] > status
+    3.023 [B] node B  state ACTIVE  view ABCD  uptime 340s
+    3.023 [B] hlc 18070904.0
+    3.023 [B] storage recovered: 50 live, 0 tombstones, 50/64 keys, log 6021/16064 bytes, bank A, 2 compactions
+    3.023 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.026 [C] > status
+    3.026 [C] node C  state ACTIVE  view ABCD  uptime 329s
+    3.026 [C] hlc 18070906.0
+    3.026 [C] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 5487/16064 bytes, bank B, 1 compactions
+    3.026 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.028 [D] > status
+    3.028 [D] node D  state ACTIVE  view ABCD  uptime 710s
+    3.028 [D] hlc 18070909.0
+    3.028 [D] storage recovered: 57 live, 0 tombstones, 57/64 keys, log 6373/16064 bytes, bank B, 4 compactions
+    3.028 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.121 [A] sensor light (simulated): on, 12 samples, last 588.368 lux seq 501, 24 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.121 [A] > sensor off
+    3.121 [A] sampler off
+    3.123 [B] sensor motion (simulated): on, 11 samples, last 1 events, last motion 17 s before the sample seq 254, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.123 [B] > sensor off
+    3.123 [B] sampler off
+    3.126 [C] sensor sound (simulated): on, 11 samples, last 0 events, 0.0 % active seq 444, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.126 [C] > sensor off
+    3.126 [C] sampler off
+    3.128 [D] sensor temp (simulated): on, 23 samples, last 21.481 degC seq 345, 46 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.128 [D] > sensor off
+    3.128 [D] sampler off
+    3.222 [A] > set lat/A/0 v0
+    3.222 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 26 ms)
+    3.322 [A] > set lat/A/1 v1
+    3.322 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    3.423 [A] > set lat/A/2 v2
+    3.423 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 27 ms)
+    3.523 [A] > set lat/A/3 v3
+    3.523 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 32 ms)
+    3.624 [A] > set lat/A/4 v4
+    3.624 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 25 ms)
+    3.724 [A] > set lat/A/5 v5
+    3.724 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 33 ms)
+    3.825 [A] > set lat/A/6 v6
+    3.825 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 24 ms)
+    3.925 [A] > set lat/A/7 v7
+    3.925 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    4.026 [A] > set lat/A/0 v8
+    4.026 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 29 ms)
+    4.126 [A] > set lat/A/1 v9
+    4.126 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    4.227 [A] > set lat/A/2 v10
+    4.227 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 25 ms)
+    4.328 [A] > set lat/A/3 v11
+    4.328 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 34 ms)
+    4.429 [A] > set lat/A/4 v12
+    4.429 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 30 ms)
+    4.530 [A] > set lat/A/5 v13
+    4.530 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 28 ms)
+    4.631 [A] > set lat/A/6 v14
+    4.631 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 33 ms)
+    4.732 [A] > set lat/A/7 v15
+    4.732 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 26 ms)
+    4.833 [A] > set lat/A/0 v16
+    4.833 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 33 ms)
+    4.934 [A] > set lat/A/1 v17
+    4.934 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 26 ms)
+    5.035 [A] > set lat/A/2 v18
+    5.035 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 33 ms)
+    5.136 [A] > set lat/A/3 v19
+    5.136 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 27 ms)
+    5.237 [A] > set lat/A/4 v20
+    5.237 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 32 ms)
+    5.337 [A] > set lat/A/5 v21
+    5.337 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 32 ms)
+    5.438 [A] > set lat/A/6 v22
+    5.438 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 30 ms)
+    5.539 [A] > set lat/A/7 v23
+    5.539 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    5.639 [A] > set lat/A/0 v24
+    5.639 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 28 ms)
+    5.740 [A] > set lat/A/1 v25
+    5.740 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    5.841 [A] > set lat/A/2 v26
+    5.841 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 28 ms)
+    5.941 [A] > set lat/A/3 v27
+    5.941 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 28 ms)
+    6.042 [A] > set lat/A/4 v28
+    6.042 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 29 ms)
+    6.143 [A] > set lat/A/5 v29
+    6.143 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 30 ms)
+    6.243 [A] > set lat/A/6 v30
+    6.243 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 29 ms)
+    6.344 [A] > set lat/A/7 v31
+    6.344 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 34 ms)
+    6.445 [A] > set lat/A/0 v32
+    6.445 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 25 ms)
+    6.545 [A] > set lat/A/1 v33
+    6.545 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    6.646 [A] > set lat/A/2 v34
+    6.646 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 31 ms)
+    6.747 [A] > set lat/A/3 v35
+    6.747 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 25 ms)
+    6.847 [A] > set lat/A/4 v36
+    6.847 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 32 ms)
+    6.948 [A] > set lat/A/5 v37
+    6.948 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 25 ms)
+    7.049 [A] > set lat/A/6 v38
+    7.049 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 28 ms)
+    7.149 [A] > set lat/A/7 v39
+    7.149 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 29 ms)
+    7.250 [A] > set lat/A/0 v40
+    7.250 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 29 ms)
+    7.351 [A] > set lat/A/1 v41
+    7.351 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    7.452 [A] > set lat/A/2 v42
+    7.452 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 36 ms)
+    7.553 [A] > set lat/A/3 v43
+    7.553 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 30 ms)
+    7.654 [A] > set lat/A/4 v44
+    7.654 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 29 ms)
+    7.754 [A] > set lat/A/5 v45
+    7.754 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 33 ms)
+    7.855 [A] > set lat/A/6 v46
+    7.855 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 28 ms)
+    7.956 [A] > set lat/A/7 v47
+    7.956 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    8.056 [A] > set lat/A/0 v48
+    8.056 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 28 ms)
+    8.157 [A] > set lat/A/1 v49
+    8.157 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    8.257 [A] > get lat/A/0
+    8.257 [A] lat/A/0 = "v48"
+    8.257 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.359 [A] > get lat/A/1
+    8.359 [A] lat/A/1 = "v49"
+    8.359 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.459 [A] > get lat/A/2
+    8.459 [A] lat/A/2 = "v42"
+    8.459 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.560 [A] > get lat/A/3
+    8.560 [A] lat/A/3 = "v43"
+    8.560 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.661 [A] > get lat/A/4
+    8.661 [A] lat/A/4 = "v44"
+    8.661 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.762 [A] > get lat/A/5
+    8.762 [A] lat/A/5 = "v45"
+    8.762 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.863 [A] > get lat/A/6
+    8.863 [A] lat/A/6 = "v46"
+    8.863 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.964 [A] > get lat/A/7
+    8.964 [A] lat/A/7 = "v47"
+    8.964 [A]    (served by C, 1 attempt(s), 6 ms)
+    9.065 [A] > get lat/A/0
+    9.065 [A] lat/A/0 = "v48"
+    9.065 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.165 [A] > get lat/A/1
+    9.165 [A] lat/A/1 = "v49"
+    9.165 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.266 [A] > get lat/A/2
+    9.266 [A] lat/A/2 = "v42"
+    9.266 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.367 [A] > get lat/A/3
+    9.367 [A] lat/A/3 = "v43"
+    9.367 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.468 [A] > get lat/A/4
+    9.468 [A] lat/A/4 = "v44"
+    9.468 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.569 [A] > get lat/A/5
+    9.569 [A] lat/A/5 = "v45"
+    9.569 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.670 [A] > get lat/A/6
+    9.670 [A] lat/A/6 = "v46"
+    9.670 [A]    (served by D, 1 attempt(s), 8 ms)
+    9.770 [A] > get lat/A/7
+    9.770 [A] lat/A/7 = "v47"
+    9.770 [A]    (served by C, 1 attempt(s), 6 ms)
+    9.871 [A] > get lat/A/0
+    9.871 [A] lat/A/0 = "v48"
+    9.871 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.972 [A] > get lat/A/1
+    9.972 [A] lat/A/1 = "v49"
+    9.972 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.073 [A] > get lat/A/2
+   10.073 [A] lat/A/2 = "v42"
+   10.073 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.173 [A] > get lat/A/3
+   10.173 [A] lat/A/3 = "v43"
+   10.173 [A]    (served by D, 1 attempt(s), 6 ms)
+   10.274 [A] > get lat/A/4
+   10.274 [A] lat/A/4 = "v44"
+   10.274 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.374 [A] > get lat/A/5
+   10.374 [A] lat/A/5 = "v45"
+   10.374 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.475 [A] > get lat/A/6
+   10.475 [A] lat/A/6 = "v46"
+   10.475 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.575 [A] > get lat/A/7
+   10.575 [A] lat/A/7 = "v47"
+   10.575 [A]    (served by C, 1 attempt(s), 6 ms)
+   10.676 [A] > get lat/A/0
+   10.676 [A] lat/A/0 = "v48"
+   10.676 [A]    (served by D, 1 attempt(s), 6 ms)
+   10.776 [A] > get lat/A/1
+   10.776 [A] lat/A/1 = "v49"
+   10.776 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.877 [A] > get lat/A/2
+   10.877 [A] lat/A/2 = "v42"
+   10.877 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.977 [A] > get lat/A/3
+   10.977 [A] lat/A/3 = "v43"
+   10.977 [A]    (served by D, 1 attempt(s), 6 ms)
+   11.078 [A] > get lat/A/4
+   11.078 [A] lat/A/4 = "v44"
+   11.078 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.178 [A] > get lat/A/5
+   11.178 [A] lat/A/5 = "v45"
+   11.178 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.279 [A] > get lat/A/6
+   11.279 [A] lat/A/6 = "v46"
+   11.279 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.379 [A] > get lat/A/7
+   11.379 [A] lat/A/7 = "v47"
+   11.379 [A]    (served by C, 1 attempt(s), 6 ms)
+   11.480 [A] > get lat/A/0
+   11.480 [A] lat/A/0 = "v48"
+   11.480 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.580 [A] > get lat/A/1
+   11.580 [A] lat/A/1 = "v49"
+   11.580 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.681 [A] > get lat/A/2
+   11.681 [A] lat/A/2 = "v42"
+   11.681 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.782 [A] > get lat/A/3
+   11.782 [A] lat/A/3 = "v43"
+   11.782 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.882 [A] > get lat/A/4
+   11.882 [A] lat/A/4 = "v44"
+   11.882 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.982 [A] > get lat/A/5
+   11.982 [A] lat/A/5 = "v45"
+   11.982 [A]    (served by D, 1 attempt(s), 6 ms)
+   12.083 [A] > get lat/A/6
+   12.083 [A] lat/A/6 = "v46"
+   12.083 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.183 [A] > get lat/A/7
+   12.183 [A] lat/A/7 = "v47"
+   12.183 [A]    (served by C, 1 attempt(s), 6 ms)
+   12.284 [A] > get lat/A/0
+   12.284 [A] lat/A/0 = "v48"
+   12.284 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.384 [A] > get lat/A/1
+   12.384 [A] lat/A/1 = "v49"
+   12.384 [A]    (served by D, 1 attempt(s), 7 ms)
+   12.485 [A] > get lat/A/2
+   12.485 [A] lat/A/2 = "v42"
+   12.485 [A]    (served by D, 1 attempt(s), 6 ms)
+   12.585 [A] > get lat/A/3
+   12.585 [A] lat/A/3 = "v43"
+   12.585 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.686 [A] > get lat/A/4
+   12.686 [A] lat/A/4 = "v44"
+   12.686 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.787 [A] > get lat/A/5
+   12.787 [A] lat/A/5 = "v45"
+   12.787 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.888 [A] > get lat/A/6
+   12.888 [A] lat/A/6 = "v46"
+   12.888 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.989 [A] > get lat/A/7
+   12.989 [A] lat/A/7 = "v47"
+   12.989 [A]    (served by C, 1 attempt(s), 6 ms)
+   13.090 [A] > get lat/A/0
+   13.090 [A] lat/A/0 = "v48"
+   13.090 [A]    (served by D, 1 attempt(s), 5 ms)
+   13.191 [A] > get lat/A/1
+   13.191 [A] lat/A/1 = "v49"
+   13.191 [A]    (served by D, 1 attempt(s), 5 ms)
+   13.291 [B] > set lat/B/0 v0
+   13.291 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 26 ms)
+   13.392 [B] > set lat/B/1 v1
+   13.392 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 32 ms)
+   13.493 [B] > set lat/B/2 v2
+   13.493 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 30 ms)
+   13.594 [B] > set lat/B/3 v3
+   13.594 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 30 ms)
+   13.694 [B] > set lat/B/4 v4
+   13.694 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 30 ms)
+   13.796 [B] > set lat/B/5 v5
+   13.796 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 29 ms)
+   13.897 [B] > set lat/B/6 v6
+   13.897 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   13.997 [B] > set lat/B/7 v7
+   13.997 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 30 ms)
+   14.098 [B] > set lat/B/0 v8
+   14.098 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   14.199 [B] > set lat/B/1 v9
+   14.199 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 33 ms)
+   14.300 [B] > set lat/B/2 v10
+   14.300 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   14.401 [B] > set lat/B/3 v11
+   14.401 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 29 ms)
+   14.501 [B] > set lat/B/4 v12
+   14.501 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   14.602 [B] > set lat/B/5 v13
+   14.602 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 30 ms)
+   14.702 [B] > set lat/B/6 v14
+   14.702 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   14.803 [B] > set lat/B/7 v15
+   14.803 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 26 ms)
+   14.904 [B] > set lat/B/0 v16
+   14.904 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   15.005 [B] > set lat/B/1 v17
+   15.005 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 30 ms)
+   15.106 [B] > set lat/B/2 v18
+   15.106 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   15.207 [B] > set lat/B/3 v19
+   15.207 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 29 ms)
+   15.308 [B] > set lat/B/4 v20
+   15.308 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 30 ms)
+   15.409 [B] > set lat/B/5 v21
+   15.409 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 30 ms)
+   15.512 [B] > set lat/B/6 v22
+   15.512 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   15.613 [B] > set lat/B/7 v23
+   15.613 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 30 ms)
+   15.714 [B] > set lat/B/0 v24
+   15.714 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 30 ms)
+   15.815 [B] > set lat/B/1 v25
+   15.815 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 26 ms)
+   15.916 [B] > set lat/B/2 v26
+   15.916 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 32 ms)
+   16.017 [B] > set lat/B/3 v27
+   16.017 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 32 ms)
+   16.118 [B] > set lat/B/4 v28
+   16.118 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   16.219 [B] > set lat/B/5 v29
+   16.219 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 25 ms)
+   16.319 [B] > set lat/B/6 v30
+   16.319 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   16.420 [B] > set lat/B/7 v31
+   16.420 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 32 ms)
+   16.521 [B] > set lat/B/0 v32
+   16.521 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 27 ms)
+   16.622 [B] > set lat/B/1 v33
+   16.622 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 29 ms)
+   16.722 [B] > set lat/B/2 v34
+   16.722 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 30 ms)
+   16.824 [B] > set lat/B/3 v35
+   16.824 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 36 ms)
+   16.925 [B] > set lat/B/4 v36
+   16.925 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 34 ms)
+   17.026 [B] > set lat/B/5 v37
+   17.026 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 29 ms)
+   17.126 [B] > set lat/B/6 v38
+   17.126 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   17.227 [B] > set lat/B/7 v39
+   17.227 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 29 ms)
+   17.328 [B] > set lat/B/0 v40
+   17.328 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 30 ms)
+   17.429 [B] > set lat/B/1 v41
+   17.429 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 32 ms)
+   17.529 [B] > set lat/B/2 v42
+   17.529 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   17.630 [B] > set lat/B/3 v43
+   17.630 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 33 ms)
+   17.731 [B] > set lat/B/4 v44
+   17.731 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   17.832 [B] > set lat/B/5 v45
+   17.832 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 33 ms)
+   17.933 [B] > set lat/B/6 v46
+   17.933 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   18.034 [B] > set lat/B/7 v47
+   18.034 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 28 ms)
+   18.135 [B] > set lat/B/0 v48
+   18.135 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   18.236 [B] > set lat/B/1 v49
+   18.236 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 29 ms)
+   18.337 [B] > get lat/B/0
+   18.337 [B] lat/B/0 = "v48"
+   18.337 [B]    (served by D, 1 attempt(s), 9 ms)
+   18.438 [B] > get lat/B/1
+   18.438 [B] lat/B/1 = "v49"
+   18.438 [B]    (served by C, 1 attempt(s), 9 ms)
+   18.538 [B] > get lat/B/2
+   18.538 [B] lat/B/2 = "v42"
+   18.538 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.639 [B] > get lat/B/3
+   18.639 [B] lat/B/3 = "v43"
+   18.639 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.739 [B] > get lat/B/4
+   18.739 [B] lat/B/4 = "v44"
+   18.739 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.840 [B] > get lat/B/5
+   18.840 [B] lat/B/5 = "v45"
+   18.840 [B]    (served by D, 1 attempt(s), 6 ms)
+   18.940 [B] > get lat/B/6
+   18.940 [B] lat/B/6 = "v46"
+   18.940 [B]    (served by A, 1 attempt(s), 6 ms)
+   19.041 [B] > get lat/B/7
+   19.041 [B] lat/B/7 = "v47"
+   19.041 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.141 [B] > get lat/B/0
+   19.141 [B] lat/B/0 = "v48"
+   19.141 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.242 [B] > get lat/B/1
+   19.242 [B] lat/B/1 = "v49"
+   19.242 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.342 [B] > get lat/B/2
+   19.342 [B] lat/B/2 = "v42"
+   19.342 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.443 [B] > get lat/B/3
+   19.443 [B] lat/B/3 = "v43"
+   19.443 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.543 [B] > get lat/B/4
+   19.543 [B] lat/B/4 = "v44"
+   19.543 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.644 [B] > get lat/B/5
+   19.644 [B] lat/B/5 = "v45"
+   19.644 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.745 [B] > get lat/B/6
+   19.745 [B] lat/B/6 = "v46"
+   19.745 [B]    (served by A, 1 attempt(s), 6 ms)
+   19.846 [B] > get lat/B/7
+   19.846 [B] lat/B/7 = "v47"
+   19.846 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.947 [B] > get lat/B/0
+   19.947 [B] lat/B/0 = "v48"
+   19.947 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.047 [B] > get lat/B/1
+   20.047 [B] lat/B/1 = "v49"
+   20.047 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.148 [B] > get lat/B/2
+   20.148 [B] lat/B/2 = "v42"
+   20.148 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.249 [B] > get lat/B/3
+   20.249 [B] lat/B/3 = "v43"
+   20.249 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.349 [B] > get lat/B/4
+   20.349 [B] lat/B/4 = "v44"
+   20.349 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.450 [B] > get lat/B/5
+   20.450 [B] lat/B/5 = "v45"
+   20.450 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.551 [B] > get lat/B/6
+   20.551 [B] lat/B/6 = "v46"
+   20.551 [B]    (served by A, 1 attempt(s), 6 ms)
+   20.651 [B] > get lat/B/7
+   20.651 [B] lat/B/7 = "v47"
+   20.651 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.752 [B] > get lat/B/0
+   20.752 [B] lat/B/0 = "v48"
+   20.752 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.852 [B] > get lat/B/1
+   20.852 [B] lat/B/1 = "v49"
+   20.852 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.953 [B] > get lat/B/2
+   20.953 [B] lat/B/2 = "v42"
+   20.953 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.054 [B] > get lat/B/3
+   21.054 [B] lat/B/3 = "v43"
+   21.054 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.155 [B] > get lat/B/4
+   21.155 [B] lat/B/4 = "v44"
+   21.155 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.256 [B] > get lat/B/5
+   21.256 [B] lat/B/5 = "v45"
+   21.256 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.356 [B] > get lat/B/6
+   21.356 [B] lat/B/6 = "v46"
+   21.356 [B]    (served by A, 1 attempt(s), 6 ms)
+   21.458 [B] > get lat/B/7
+   21.458 [B] lat/B/7 = "v47"
+   21.458 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.560 [B] > get lat/B/0
+   21.560 [B] lat/B/0 = "v48"
+   21.560 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.661 [B] > get lat/B/1
+   21.661 [B] lat/B/1 = "v49"
+   21.661 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.764 [B] > get lat/B/2
+   21.764 [B] lat/B/2 = "v42"
+   21.764 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.865 [B] > get lat/B/3
+   21.865 [B] lat/B/3 = "v43"
+   21.865 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.966 [B] > get lat/B/4
+   21.966 [B] lat/B/4 = "v44"
+   21.966 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.069 [B] > get lat/B/5
+   22.069 [B] lat/B/5 = "v45"
+   22.069 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.172 [B] > get lat/B/6
+   22.172 [B] lat/B/6 = "v46"
+   22.172 [B]    (served by A, 1 attempt(s), 6 ms)
+   22.275 [B] > get lat/B/7
+   22.275 [B] lat/B/7 = "v47"
+   22.275 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.377 [B] > get lat/B/0
+   22.377 [B] lat/B/0 = "v48"
+   22.377 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.479 [B] > get lat/B/1
+   22.479 [B] lat/B/1 = "v49"
+   22.479 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.582 [B] > get lat/B/2
+   22.582 [B] lat/B/2 = "v42"
+   22.582 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.683 [B] > get lat/B/3
+   22.683 [B] lat/B/3 = "v43"
+   22.683 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.786 [B] > get lat/B/4
+   22.786 [B] lat/B/4 = "v44"
+   22.786 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.889 [B] > get lat/B/5
+   22.889 [B] lat/B/5 = "v45"
+   22.889 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.991 [B] > get lat/B/6
+   22.991 [B] lat/B/6 = "v46"
+   22.991 [B]    (served by A, 1 attempt(s), 6 ms)
+   23.094 [B] > get lat/B/7
+   23.094 [B] lat/B/7 = "v47"
+   23.094 [B]    (served by D, 1 attempt(s), 6 ms)
+   23.195 [B] > get lat/B/0
+   23.195 [B] lat/B/0 = "v48"
+   23.195 [B]    (served by D, 1 attempt(s), 7 ms)
+   23.296 [B] > get lat/B/1
+   23.296 [B] lat/B/1 = "v49"
+   23.296 [B]    (served by C, 1 attempt(s), 7 ms)
+   23.394 [C] > set lat/C/0 v0
+   23.394 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   23.496 [C] > set lat/C/1 v1
+   23.496 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   23.598 [C] > set lat/C/2 v2
+   23.598 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 29 ms)
+   23.699 [C] > set lat/C/3 v3
+   23.699 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   23.801 [C] > set lat/C/4 v4
+   23.801 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 32 ms)
+   23.902 [C] > set lat/C/5 v5
+   23.902 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 33 ms)
+   24.003 [C] > set lat/C/6 v6
+   24.003 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   24.104 [C] > set lat/C/7 v7
+   24.104 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   24.205 [C] > set lat/C/0 v8
+   24.205 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   24.306 [C] > set lat/C/1 v9
+   24.306 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 31 ms)
+   24.407 [C] > set lat/C/2 v10
+   24.407 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 32 ms)
+   24.508 [C] > set lat/C/3 v11
+   24.508 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   24.609 [C] > set lat/C/4 v12
+   24.609 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 32 ms)
+   24.709 [C] > set lat/C/5 v13
+   24.709 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 29 ms)
+   24.811 [C] > set lat/C/6 v14
+   24.811 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 29 ms)
+   24.912 [C] > set lat/C/7 v15
+   24.912 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 29 ms)
+   25.013 [C] > set lat/C/0 v16
+   25.013 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 30 ms)
+   25.114 [C] > set lat/C/1 v17
+   25.114 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   25.215 [C] > set lat/C/2 v18
+   25.215 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 30 ms)
+   25.316 [C] > set lat/C/3 v19
+   25.316 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   25.417 [C] > set lat/C/4 v20
+   25.417 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 30 ms)
+   25.518 [C] > set lat/C/5 v21
+   25.518 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 30 ms)
+   25.619 [C] > set lat/C/6 v22
+   25.619 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 26 ms)
+   25.721 [C] > set lat/C/7 v23
+   25.721 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 29 ms)
+   25.823 [C] > set lat/C/0 v24
+   25.823 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 29 ms)
+   25.924 [C] > set lat/C/1 v25
+   25.924 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 29 ms)
+   26.026 [C] > set lat/C/2 v26
+   26.026 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 29 ms)
+   26.127 [C] > set lat/C/3 v27
+   26.127 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   26.229 [C] > set lat/C/4 v28
+   26.229 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 30 ms)
+   26.329 [C] > set lat/C/5 v29
+   26.329 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 31 ms)
+   26.430 [C] > set lat/C/6 v30
+   26.430 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   26.530 [C] > set lat/C/7 v31
+   26.530 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   26.631 [C] > set lat/C/0 v32
+   26.631 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 30 ms)
+   26.732 [C] > set lat/C/1 v33
+   26.732 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 26 ms)
+   26.834 [C] > set lat/C/2 v34
+   26.834 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 30 ms)
+   26.935 [C] > set lat/C/3 v35
+   26.935 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 29 ms)
+   27.036 [C] > set lat/C/4 v36
+   27.036 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 31 ms)
+   27.137 [C] > set lat/C/5 v37
+   27.137 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 29 ms)
+   27.237 [C] > set lat/C/6 v38
+   27.237 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 31 ms)
+   27.338 [C] > set lat/C/7 v39
+   27.338 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 31 ms)
+   27.439 [C] > set lat/C/0 v40
+   27.439 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   27.540 [C] > set lat/C/1 v41
+   27.540 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 31 ms)
+   27.641 [C] > set lat/C/2 v42
+   27.641 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 32 ms)
+   27.741 [C] > set lat/C/3 v43
+   27.741 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 33 ms)
+   27.842 [C] > set lat/C/4 v44
+   27.842 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 28 ms)
+   27.943 [C] > set lat/C/5 v45
+   27.943 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 30 ms)
+   28.044 [C] > set lat/C/6 v46
+   28.044 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   28.145 [C] > set lat/C/7 v47
+   28.145 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   28.246 [C] > set lat/C/0 v48
+   28.246 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   28.346 [C] > set lat/C/1 v49
+   28.346 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   28.447 [C] > get lat/C/0
+   28.447 [C] lat/C/0 = "v48"
+   28.447 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.548 [C] > get lat/C/1
+   28.548 [C] lat/C/1 = "v49"
+   28.548 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.649 [C] > get lat/C/2
+   28.649 [C] lat/C/2 = "v42"
+   28.649 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.749 [C] > get lat/C/3
+   28.749 [C] lat/C/3 = "v43"
+   28.749 [C]    (served by B, 1 attempt(s), 7 ms)
+   28.850 [C] > get lat/C/4
+   28.850 [C] lat/C/4 = "v44"
+   28.850 [C]    (served by D, 1 attempt(s), 6 ms)
+   28.951 [C] > get lat/C/5
+   28.951 [C] lat/C/5 = "v45"
+   28.951 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.052 [C] > get lat/C/6
+   29.052 [C] lat/C/6 = "v46"
+   29.052 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.153 [C] > get lat/C/7
+   29.153 [C] lat/C/7 = "v47"
+   29.153 [C]    (served by D, 1 attempt(s), 7 ms)
+   29.254 [C] > get lat/C/0
+   29.254 [C] lat/C/0 = "v48"
+   29.254 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.355 [C] > get lat/C/1
+   29.355 [C] lat/C/1 = "v49"
+   29.355 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.456 [C] > get lat/C/2
+   29.456 [C] lat/C/2 = "v42"
+   29.456 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.557 [C] > get lat/C/3
+   29.557 [C] lat/C/3 = "v43"
+   29.557 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.657 [C] > get lat/C/4
+   29.657 [C] lat/C/4 = "v44"
+   29.657 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.758 [C] > get lat/C/5
+   29.758 [C] lat/C/5 = "v45"
+   29.758 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.860 [C] > get lat/C/6
+   29.860 [C] lat/C/6 = "v46"
+   29.860 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.964 [C] > get lat/C/7
+   29.964 [C] lat/C/7 = "v47"
+   29.964 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.066 [C] > get lat/C/0
+   30.066 [C] lat/C/0 = "v48"
+   30.066 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.167 [C] > get lat/C/1
+   30.167 [C] lat/C/1 = "v49"
+   30.167 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.269 [C] > get lat/C/2
+   30.269 [C] lat/C/2 = "v42"
+   30.269 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.370 [C] > get lat/C/3
+   30.370 [C] lat/C/3 = "v43"
+   30.370 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.471 [C] > get lat/C/4
+   30.471 [C] lat/C/4 = "v44"
+   30.471 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.572 [C] > get lat/C/5
+   30.572 [C] lat/C/5 = "v45"
+   30.572 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.673 [C] > get lat/C/6
+   30.673 [C] lat/C/6 = "v46"
+   30.673 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.775 [C] > get lat/C/7
+   30.775 [C] lat/C/7 = "v47"
+   30.775 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.876 [C] > get lat/C/0
+   30.876 [C] lat/C/0 = "v48"
+   30.876 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.978 [C] > get lat/C/1
+   30.978 [C] lat/C/1 = "v49"
+   30.978 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.079 [C] > get lat/C/2
+   31.079 [C] lat/C/2 = "v42"
+   31.079 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.180 [C] > get lat/C/3
+   31.180 [C] lat/C/3 = "v43"
+   31.180 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.282 [C] > get lat/C/4
+   31.282 [C] lat/C/4 = "v44"
+   31.282 [C]    (served by D, 1 attempt(s), 6 ms)
+   31.383 [C] > get lat/C/5
+   31.383 [C] lat/C/5 = "v45"
+   31.383 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.484 [C] > get lat/C/6
+   31.484 [C] lat/C/6 = "v46"
+   31.484 [C]    (served by D, 1 attempt(s), 6 ms)
+   31.585 [C] > get lat/C/7
+   31.585 [C] lat/C/7 = "v47"
+   31.585 [C]    (served by D, 1 attempt(s), 7 ms)
+   31.686 [C] > get lat/C/0
+   31.686 [C] lat/C/0 = "v48"
+   31.686 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.787 [C] > get lat/C/1
+   31.787 [C] lat/C/1 = "v49"
+   31.787 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.888 [C] > get lat/C/2
+   31.888 [C] lat/C/2 = "v42"
+   31.888 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.989 [C] > get lat/C/3
+   31.989 [C] lat/C/3 = "v43"
+   31.989 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.091 [C] > get lat/C/4
+   32.091 [C] lat/C/4 = "v44"
+   32.091 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.192 [C] > get lat/C/5
+   32.192 [C] lat/C/5 = "v45"
+   32.192 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.293 [C] > get lat/C/6
+   32.293 [C] lat/C/6 = "v46"
+   32.293 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.395 [C] > get lat/C/7
+   32.395 [C] lat/C/7 = "v47"
+   32.395 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.496 [C] > get lat/C/0
+   32.496 [C] lat/C/0 = "v48"
+   32.496 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.597 [C] > get lat/C/1
+   32.597 [C] lat/C/1 = "v49"
+   32.597 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.698 [C] > get lat/C/2
+   32.698 [C] lat/C/2 = "v42"
+   32.698 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.799 [C] > get lat/C/3
+   32.799 [C] lat/C/3 = "v43"
+   32.799 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.900 [C] > get lat/C/4
+   32.900 [C] lat/C/4 = "v44"
+   32.900 [C]    (served by D, 1 attempt(s), 8 ms)
+   33.001 [C] > get lat/C/5
+   33.001 [C] lat/C/5 = "v45"
+   33.001 [C]    (served by B, 1 attempt(s), 6 ms)
+   33.102 [C] > get lat/C/6
+   33.102 [C] lat/C/6 = "v46"
+   33.102 [C]    (served by D, 1 attempt(s), 6 ms)
+   33.203 [C] > get lat/C/7
+   33.203 [C] lat/C/7 = "v47"
+   33.203 [C]    (served by D, 1 attempt(s), 6 ms)
+   33.304 [C] > get lat/C/0
+   33.304 [C] lat/C/0 = "v48"
+   33.304 [C]    (served by B, 1 attempt(s), 10 ms)
+   33.405 [C] > get lat/C/1
+   33.405 [C] lat/C/1 = "v49"
+   33.405 [C]    (served by B, 1 attempt(s), 6 ms)
+   33.507 [D] > set lat/D/0 v0
+   33.507 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 27 ms)
+   33.608 [D] > set lat/D/1 v1
+   33.608 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 26 ms)
+   33.708 [D] > set lat/D/2 v2
+   33.708 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 30 ms)
+   33.809 [D] > set lat/D/3 v3
+   33.809 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 32 ms)
+   33.910 [D] > set lat/D/4 v4
+   33.910 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 34 ms)
+   34.010 [D] > set lat/D/5 v5
+   34.010 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 26 ms)
+   34.111 [D] > set lat/D/6 v6
+   34.111 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 30 ms)
+   34.212 [D] > set lat/D/7 v7
+   34.212 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 26 ms)
+   34.312 [D] > set lat/D/0 v8
+   34.312 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 22 ms)
+   34.413 [D] > set lat/D/1 v9
+   34.413 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 28 ms)
+   34.514 [D] > set lat/D/2 v10
+   34.514 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 27 ms)
+   34.614 [D] > set lat/D/3 v11
+   34.614 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 35 ms)
+   34.715 [D] > set lat/D/4 v12
+   34.715 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 26 ms)
+   34.816 [D] > set lat/D/5 v13
+   34.816 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 30 ms)
+   34.916 [D] > set lat/D/6 v14
+   34.916 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   35.017 [D] > set lat/D/7 v15
+   35.017 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 27 ms)
+   35.117 [D] > set lat/D/0 v16
+   35.117 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 28 ms)
+   35.218 [D] > set lat/D/1 v17
+   35.218 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 27 ms)
+   35.319 [D] > set lat/D/2 v18
+   35.319 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 31 ms)
+   35.419 [D] > set lat/D/3 v19
+   35.419 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 27 ms)
+   35.520 [D] > set lat/D/4 v20
+   35.520 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 33 ms)
+   35.620 [D] > set lat/D/5 v21
+   35.620 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 26 ms)
+   35.721 [D] > set lat/D/6 v22
+   35.721 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 29 ms)
+   35.821 [D] > set lat/D/7 v23
+   35.821 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 23 ms)
+   35.922 [D] > set lat/D/0 v24
+   35.922 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 29 ms)
+   36.023 [D] > set lat/D/1 v25
+   36.023 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 23 ms)
+   36.124 [D] > set lat/D/2 v26
+   36.124 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 35 ms)
+   36.224 [D] > set lat/D/3 v27
+   36.224 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 32 ms)
+   36.325 [D] > set lat/D/4 v28
+   36.325 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 36 ms)
+   36.426 [D] > set lat/D/5 v29
+   36.426 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 37 ms)
+   36.527 [D] > set lat/D/6 v30
+   36.527 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   36.629 [D] > set lat/D/7 v31
+   36.629 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 33 ms)
+   36.730 [D] > set lat/D/0 v32
+   36.730 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 30 ms)
+   36.831 [D] > set lat/D/1 v33
+   36.831 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 41 ms)
+   36.933 [D] > set lat/D/2 v34
+   36.933 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 56 ms)
+   37.034 [D] > set lat/D/3 v35
+   37.034 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 40 ms)
+   37.135 [D] > set lat/D/4 v36
+   37.135 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 32 ms)
+   37.236 [D] > set lat/D/5 v37
+   37.236 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 45 ms)
+   37.337 [D] > set lat/D/6 v38
+   37.337 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 24 ms)
+   37.438 [D] > set lat/D/7 v39
+   37.438 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 29 ms)
+   37.539 [D] > set lat/D/0 v40
+   37.539 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 27 ms)
+   37.639 [D] > set lat/D/1 v41
+   37.639 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 26 ms)
+   37.740 [D] > set lat/D/2 v42
+   37.740 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 29 ms)
+   37.841 [D] > set lat/D/3 v43
+   37.841 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 30 ms)
+   37.942 [D] > set lat/D/4 v44
+   37.942 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 34 ms)
+   38.043 [D] > set lat/D/5 v45
+   38.043 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 31 ms)
+   38.144 [D] > set lat/D/6 v46
+   38.144 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   38.245 [D] > set lat/D/7 v47
+   38.245 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 27 ms)
+   38.345 [D] > set lat/D/0 v48
+   38.345 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 26 ms)
+   38.446 [D] > set lat/D/1 v49
+   38.446 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 30 ms)
+   38.548 [D] > get lat/D/0
+   38.548 [D] lat/D/0 = "v48"
+   38.548 [D]    (served by D, 1 attempt(s), 0 ms)
+   38.648 [D] > get lat/D/1
+   38.648 [D] lat/D/1 = "v49"
+   38.648 [D]    (served by D, 1 attempt(s), 0 ms)
+   38.749 [D] > get lat/D/2
+   38.749 [D] lat/D/2 = "v42"
+   38.749 [D]    (served by B, 1 attempt(s), 6 ms)
+   38.850 [D] > get lat/D/3
+   38.850 [D] lat/D/3 = "v43"
+   38.850 [D]    (served by B, 1 attempt(s), 6 ms)
+   38.951 [D] > get lat/D/4
+   38.951 [D] lat/D/4 = "v44"
+   38.951 [D]    (served by C, 1 attempt(s), 6 ms)
+   39.052 [D] > get lat/D/5
+   39.052 [D] lat/D/5 = "v45"
+   39.052 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.153 [D] > get lat/D/6
+   39.153 [D] lat/D/6 = "v46"
+   39.153 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.253 [D] > get lat/D/7
+   39.253 [D] lat/D/7 = "v47"
+   39.253 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.354 [D] > get lat/D/0
+   39.354 [D] lat/D/0 = "v48"
+   39.354 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.455 [D] > get lat/D/1
+   39.455 [D] lat/D/1 = "v49"
+   39.455 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.556 [D] > get lat/D/2
+   39.556 [D] lat/D/2 = "v42"
+   39.556 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.657 [D] > get lat/D/3
+   39.657 [D] lat/D/3 = "v43"
+   39.657 [D]    (served by B, 1 attempt(s), 7 ms)
+   39.758 [D] > get lat/D/4
+   39.758 [D] lat/D/4 = "v44"
+   39.758 [D]    (served by C, 1 attempt(s), 6 ms)
+   39.859 [D] > get lat/D/5
+   39.859 [D] lat/D/5 = "v45"
+   39.859 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.959 [D] > get lat/D/6
+   39.959 [D] lat/D/6 = "v46"
+   39.959 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.060 [D] > get lat/D/7
+   40.060 [D] lat/D/7 = "v47"
+   40.060 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.161 [D] > get lat/D/0
+   40.161 [D] lat/D/0 = "v48"
+   40.161 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.262 [D] > get lat/D/1
+   40.262 [D] lat/D/1 = "v49"
+   40.262 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.363 [D] > get lat/D/2
+   40.363 [D] lat/D/2 = "v42"
+   40.363 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.464 [D] > get lat/D/3
+   40.464 [D] lat/D/3 = "v43"
+   40.464 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.565 [D] > get lat/D/4
+   40.565 [D] lat/D/4 = "v44"
+   40.565 [D]    (served by C, 1 attempt(s), 6 ms)
+   40.666 [D] > get lat/D/5
+   40.666 [D] lat/D/5 = "v45"
+   40.666 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.767 [D] > get lat/D/6
+   40.767 [D] lat/D/6 = "v46"
+   40.767 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.869 [D] > get lat/D/7
+   40.869 [D] lat/D/7 = "v47"
+   40.869 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.970 [D] > get lat/D/0
+   40.970 [D] lat/D/0 = "v48"
+   40.970 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.071 [D] > get lat/D/1
+   41.071 [D] lat/D/1 = "v49"
+   41.071 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.172 [D] > get lat/D/2
+   41.172 [D] lat/D/2 = "v42"
+   41.172 [D]    (served by B, 1 attempt(s), 6 ms)
+   41.273 [D] > get lat/D/3
+   41.273 [D] lat/D/3 = "v43"
+   41.273 [D]    (served by B, 1 attempt(s), 6 ms)
+   41.374 [D] > get lat/D/4
+   41.374 [D] lat/D/4 = "v44"
+   41.374 [D]    (served by C, 1 attempt(s), 6 ms)
+   41.475 [D] > get lat/D/5
+   41.475 [D] lat/D/5 = "v45"
+   41.475 [D]    (served by B, 1 attempt(s), 7 ms)
+   41.575 [D] > get lat/D/6
+   41.575 [D] lat/D/6 = "v46"
+   41.575 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.676 [D] > get lat/D/7
+   41.676 [D] lat/D/7 = "v47"
+   41.676 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.777 [D] > get lat/D/0
+   41.777 [D] lat/D/0 = "v48"
+   41.777 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.878 [D] > get lat/D/1
+   41.878 [D] lat/D/1 = "v49"
+   41.878 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.979 [D] > get lat/D/2
+   41.979 [D] lat/D/2 = "v42"
+   41.979 [D]    (served by B, 1 attempt(s), 9 ms)
+   42.081 [D] > get lat/D/3
+   42.081 [D] lat/D/3 = "v43"
+   42.081 [D]    (served by B, 1 attempt(s), 7 ms)
+   42.182 [D] > get lat/D/4
+   42.182 [D] lat/D/4 = "v44"
+   42.182 [D]    (served by C, 1 attempt(s), 6 ms)
+   42.282 [D] > get lat/D/5
+   42.282 [D] lat/D/5 = "v45"
+   42.282 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.383 [D] > get lat/D/6
+   42.383 [D] lat/D/6 = "v46"
+   42.383 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.484 [D] > get lat/D/7
+   42.484 [D] lat/D/7 = "v47"
+   42.484 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.585 [D] > get lat/D/0
+   42.585 [D] lat/D/0 = "v48"
+   42.585 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.685 [D] > get lat/D/1
+   42.685 [D] lat/D/1 = "v49"
+   42.685 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.786 [D] > get lat/D/2
+   42.786 [D] lat/D/2 = "v42"
+   42.786 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.887 [D] > get lat/D/3
+   42.887 [D] lat/D/3 = "v43"
+   42.887 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.988 [D] > get lat/D/4
+   42.988 [D] lat/D/4 = "v44"
+   42.988 [D]    (served by C, 1 attempt(s), 6 ms)
+   43.088 [D] > get lat/D/5
+   43.088 [D] lat/D/5 = "v45"
+   43.088 [D]    (served by B, 1 attempt(s), 6 ms)
+   43.189 [D] > get lat/D/6
+   43.189 [D] lat/D/6 = "v46"
+   43.189 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.290 [D] > get lat/D/7
+   43.290 [D] lat/D/7 = "v47"
+   43.290 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.391 [D] > get lat/D/0
+   43.391 [D] lat/D/0 = "v48"
+   43.391 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.491 [D] > get lat/D/1
+   43.491 [D] lat/D/1 = "v49"
+   43.491 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.536 [A] > sensor on
+   43.536 [A] sampler on
+   43.593 [B] > sensor on
+   43.593 [B] sampler on
+   43.694 [C] > sensor on
+   43.694 [C] sampler on
+   43.793 [D] > sensor on
+   43.793 [D] sampler on
