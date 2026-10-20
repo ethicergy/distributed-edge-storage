@@ -207,7 +207,6 @@ Every node (A, B, C, D):
 | GPIO9 | SCL |
 | — | A0, A1, A2 → GND (jumpers), WP → GND |
 | — | Match pins **by the silkscreen labels** on both boards, not by header position |
-| **node B only** (D10) | VCC from **GPIO6** instead of 3V3 (B's 3V3 pin is loose). Only the `node-b`/`node-b-fi` images drive GPIO6. Never wire another board this way. |
 | 3V3 via 4.7 kΩ → GPIO8, and 3V3 via 4.7 kΩ → GPIO9 | only if the module has no pull-ups |
 
 Node A ↔ Raspberry Pi (3.3 V on both sides, no level shifter):

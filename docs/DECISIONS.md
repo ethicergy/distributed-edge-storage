@@ -16,7 +16,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D7 | Bridge | node A, UART1 GPIO20/21, Python CLI with CSV logging |
 | D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
 | D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
-| D10 | Node B's EEPROM supply | workaround: VCC from GPIO6 driven high (node-b images only); real fix is resoldering B's 3V3 pin |
+| D10 | Node B's EEPROM supply | ~~workaround: VCC from GPIO6~~ **superseded Tue 20**: B resoldered, VCC on 3V3 like every node; the GPIO6 workaround was never used on the board |
 
 ---
 
@@ -183,6 +183,14 @@ EEPROM stays a loud FATAL instead of silently degrading. Revisit only
 if a module fails during the demo window and no spare is left.
 
 ## D10 — Node B's EEPROM powered from GPIO6 (workaround)
+
+**Superseded Tue 20 Oct.** B's 3V3 and GND header pins were resoldered and
+its EEPROM is wired to 3V3 like the other nodes. The flag was removed
+from `node-b`/`node-b-fi`; `scripts/check_images.sh` now checks that no
+image drives an EEPROM power pin. The support code stays, unused
+(`config::EEPROM_POWER_PIN` defaults to none). The workaround never ran on
+a board: B's GND pin turned out to be loose too (Mon 09:22), so it waited
+for soldering instead. The original decision follows.
 
 Board B's 3V3 header pin is loose and there is no soldering iron on
 site (BRINGUP_LOG problem 6). Without B the cluster runs on three

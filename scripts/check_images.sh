@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # After 'make firmware': fault injection must be compiled out of the
-# normal images (node-a..d) and present in the -fi images, and only
-# node B's images power the EEPROM from a GPIO (D10). Checked on the
+# normal images (node-a..d) and present in the -fi images, and no image
+# powers the EEPROM from a GPIO (D10, superseded). Checked on the
 # console texts that only exist in one kind of build.
 #
 #   scripts/check_images.sh [build dir, default .pio/build]
@@ -35,7 +35,8 @@ check() {
     fi
 }
 
-# D10: only B's images power the EEPROM from a GPIO.
+# D10 (superseded Tue 20): no image powers the EEPROM from a GPIO any
+# more. If the workaround comes back, pass yes for the node that uses it.
 check_power() {
     local env="$1" want="$2" elf="$build/$1/firmware.elf"
 
@@ -55,13 +56,10 @@ check_power() {
 }
 
 for node in a b c d; do
-    want_power=no
-    [ "$node" = b ] && want_power=yes
-
     check "node-$node" no
     check "node-$node-fi" yes
-    check_power "node-$node" "$want_power"
-    check_power "node-$node-fi" "$want_power"
+    check_power "node-$node" no
+    check_power "node-$node-fi" no
 done
 
 exit $status
