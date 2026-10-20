@@ -226,9 +226,11 @@ class SerialBackend(Backend):
     # the first real command.
     POST_OPEN_WAIT_S = 1.2
 
-    def __init__(self, ports: Dict[str, str], baud: int = 115200) -> None:
+    def __init__(self, ports: Dict[str, str], baud: int = 115200, event_timeout: float = 180) -> None:
         super().__init__()
         import serial  # pyserial
+
+        self._event_timeout = event_timeout
 
         self._serial = serial
         self._ports = ports
@@ -302,9 +304,9 @@ class SerialBackend(Backend):
             time.sleep(wait)
         handle.write((command + "\n").encode())
 
-    def _wait_event(self, node: str, kind: str, prompt: str, timeout: float = 180) -> float:
+    def _wait_event(self, node: str, kind: str, prompt: str) -> float:
         print(f"\n>>> {prompt}", flush=True)
-        deadline = time.monotonic() + timeout
+        deadline = time.monotonic() + self._event_timeout
         while time.monotonic() < deadline:
             try:
                 event, t = self._events[node].get(timeout=0.5)
@@ -741,6 +743,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     p.add_argument("--bench", type=int, default=50, help="bench size per origin (loss)")
     p.add_argument("--repair-keys", type=int, default=10, help="keys written while the victim is down")
     p.add_argument("--victim", default="C", choices=NODES)
+    p.add_argument("--event-timeout", type=float, default=180,
+                   help="boards: seconds to wait for each unplug/replug (default 180)")
     p.add_argument("--log", help="append the console transcript to this file")
     p.add_argument("--json", help="write all results to this JSON file")
     p.add_argument("--fill", help="RESULTS.md to fill")
@@ -759,7 +763,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         ports = dict(item.split("=", 1) for item in args.ports.split(","))
         if sorted(ports) != NODES:
             p.error("--ports needs A, B, C and D")
-        backend = SerialBackend(ports)
+        backend = SerialBackend(ports, event_timeout=args.event_timeout)
 
     session = Session(backend, args.log, args.verbose)
     results = Results()
