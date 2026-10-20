@@ -140,10 +140,12 @@ class BoardWaitTest(unittest.TestCase):
             else:
                 sys.modules["serial"] = saved
 
-        self.assertEqual([d for _, d in writes], [b"status\n", b"members\n"])
-        self.assertGreaterEqual(writes[0][0], measure.SerialBackend.POST_OPEN_WAIT_S - 0.01)
+        # An empty line right at open, then the commands after the wait.
+        self.assertEqual([d for _, d in writes], [b"\n", b"status\n", b"members\n"])
+        self.assertLess(writes[0][0], 0.2)
+        self.assertGreaterEqual(writes[1][0], measure.SerialBackend.POST_OPEN_WAIT_S - 0.01)
         # Only the first command after an open waits.
-        self.assertLess(writes[1][0] - writes[0][0], 0.2)
+        self.assertLess(writes[2][0] - writes[1][0], 0.2)
 
 
 class SimulatorRunTest(unittest.TestCase):

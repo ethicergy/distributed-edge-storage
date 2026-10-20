@@ -218,9 +218,12 @@ class SerialBackend(Backend):
     PORT_LOST = "<<port lost>>"
     PORT_BACK = "<<port back>>"
 
-    # The console discards input for 1 s after the port opens with output
-    # waiting (echo guard, BRINGUP_LOG problem 5), so nothing is sent
-    # until this long after each (re)open.
+    # The console discards input for 1 s after boot and after a USB
+    # re-plug (echo guard, BRINGUP_LOG problems 5 and 10), so nothing is
+    # sent until this long after each (re)open. Each open first sends an
+    # empty line: it runs any echoed boot fragment in the console's line
+    # buffer as a harmless unknown command, so the fragment cannot join
+    # the first real command.
     POST_OPEN_WAIT_S = 1.2
 
     def __init__(self, ports: Dict[str, str], baud: int = 115200) -> None:
@@ -252,6 +255,10 @@ class SerialBackend(Backend):
                 time.sleep(0.2)
                 continue
             self._opened_at[node] = time.monotonic()
+            try:
+                handle.write(b"\n")
+            except (OSError, self._serial.SerialException):
+                pass
             self._handles[node] = handle
             if lost:
                 t = time.monotonic()

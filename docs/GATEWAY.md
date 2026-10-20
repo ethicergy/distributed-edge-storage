@@ -11,9 +11,9 @@ The Pi link is part of node A's firmware and goes through A's runtime:
 | dependency | where |
 |---|---|
 | The bridge role is a compile-time property of node A | `src/platform/main.cpp:56` (`BRIDGE_ROLE = LOCAL_NODE_ID == config::BRIDGE_NODE_ID`), `platformio.ini:32`, `include/config.h:195-199` |
-| UART1 on GPIO20/21 is opened only on A | `main.cpp:116`, `main.cpp:530-540` |
+| UART1 on GPIO20/21 is opened only on A | `main.cpp:116`, `main.cpp:510-520` |
 | The bridge object is built on A's `edge::Runtime` | `main.cpp:144` (`bridge::Bridge pi_bridge(runtime, …)`), `include/bridge.h:48` |
-| UART bytes are fed only in A's node task | `main.cpp:426-440` |
+| UART bytes are fed only in A's node task | `main.cpp:406-420` |
 | Every Pi request becomes a client op of A: `runtime_.submit(…)` with origin = A | `src/bridge.cpp:204`; identity rule in `include/bridge.h:23-26` |
 | Ping answer and time calibration use A's id and HLC | `bridge.cpp:98-105`, `bridge.cpp:144` |
 | `submit` refuses until the node is ACTIVE | `src/node_runtime.cpp:1217-1218` → `NOT_RESPONSIBLE` to the Pi (`bridge.h:28-31`) |
@@ -45,13 +45,13 @@ Pi ◄─UART── gateway ◄──ESP-NOW unicast── reply ─────
 | topic | today | change needed |
 |---|---|---|
 | Unknown MAC dropped | RX callback drops any MAC outside the table and counts it (`src/platform/transport.cpp:127-131`); `on_send` ignores unknown MACs (`transport.cpp:167-171`) | Add `MAC_GATEWAY` (one more table entry), add it as an ESP-NOW peer in `begin()` (`transport.cpp:193-301`, next to the member peers at `:243-275`), mark its frames with a sentinel source `node::GATEWAY` (e.g. `0xFE`, not a protocol id, not `BROADCAST 0xFF`, `include/node_id.h:19`) instead of dropping them, and add `send_to_gateway(data, len)`. Per-peer TX stats arrays are sized for 4 nodes (`transport.cpp:53-54`, `:421-431`): count gateway sends separately. |
-| Dispatch | Node task passes every radio frame to `runtime.on_frame` (`main.cpp:414-416`) | `if (frame.source_node == node::GATEWAY) gateway_bridge.on_envelope(…) else runtime.on_frame(…)`. The gateway's frames never reach the runtime. |
+| Dispatch | Node task passes every radio frame to `runtime.on_frame` (`main.cpp:394-396`) | `if (frame.source_node == node::GATEWAY) gateway_bridge.on_envelope(…) else runtime.on_frame(…)`. The gateway's frames never reach the runtime. |
 | Bridge | Envelopes enter only through the UART decoder (`bridge.cpp:50-75`, `handle_envelope` is private, `bridge.h:68`), and replies are always UART-framed (`bridge.cpp:77-86`) | Public `on_envelope(data, len, now)`; a constructor flag for unframed output (ESP-NOW has its own CRC; a framed max-size reply would be 254 B > 250). A second instance `gateway_bridge(runtime, write_to_gateway, …)` on every node. |
 | Node id range | Protocol ids must be 1–4 (`src/protocol.cpp:5-8`, enforced on origin/sender at `protocol.cpp:994`, `:1053`); arrays sized by `node::MAX` (`include/membership.h:10-11`, `node_runtime.cpp:389`) | **No change.** The gateway never appears in a protocol header the runtime parses. The Pi's header ids must be valid but are ignored (`bridge.h:26`); the member re-originates. |
 | Dedup keyed by node | Identity = (origin, request_id) (`include/request_identity.h:9-11`), checked on the primary (`node_runtime.cpp:436-478`) | **No change:** origin is the proxying member with its own request ids. Caveat, same as today's bridge: a Pi retry after a member died mid-request is a new cluster request and may apply a SET/DEL twice. Both are idempotent (`STATUS.md` §8). |
 | HLC origin | Versions are assigned by the primary (`node_runtime.cpp:545-551`); every packet's HLC is merged (`node_runtime.cpp:381-384`) | **No change:** the gateway sends no cluster packets, and replies carry the member's HLC for the Pi's calibration. |
 | Membership / heartbeats | Heartbeats feed membership in `on_frame` (`node_runtime.cpp:386-390`) | **No change.** The gateway sends no heartbeats and its frames bypass `on_frame`, so it can never appear in a view or the ring. |
-| Node A's UART bridge | `main.cpp:426-440` | Keep it. It is the fallback if the gateway fails, and it's one cable swap on the Pi. |
+| Node A's UART bridge | `main.cpp:406-420` | Keep it. It is the fallback if the gateway fails, and it's one cable swap on the Pi. |
 | Capacity | Gateway requests share the member's 8 client-op slots with the sampler and console | Fine for one Pi; `BRIDGE_MAX_INFLIGHT` (4) applies per bridge instance. |
 
 Put all member changes behind a compile flag (e.g. `-DEDGE_GATEWAY=1` in `[env]`). Images built without it stay byte-identical to the validated firmware.

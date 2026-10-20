@@ -18,8 +18,8 @@ The ring puts key `k` on **primary D, replica B** (`ring k` on any console). So 
 
 | # | what happens | where |
 |---|---|---|
-| 1 | Characters arrive over USB. Enter dispatches the line. | `main.cpp:422-424` → `Console::on_char` (`src/console.cpp:132`) → `Console::execute` (`console.cpp:162`, `"set"` at `:179`) |
-| 2 | `cmd_kv` splits key and value and calls the runtime's client API. | `console.cpp:384-414` → `Runtime::submit` (`src/node_runtime.cpp:1240`) |
+| 1 | Characters arrive over USB. Enter dispatches the line. | `main.cpp:402-404` → `Console::on_char` (`src/console.cpp:132`) → `Console::execute` (`console.cpp:163`, `"set"` at `:179`) |
+| 2 | `cmd_kv` splits key and value and calls the runtime's client API. | `console.cpp:385-415` → `Runtime::submit` (`src/node_runtime.cpp:1240`) |
 | 3 | `submit` checks the node is ACTIVE and the sizes (key ≤ 32 B, value ≤ 192 B). It copies the operation into a free **client-op slot** (8 of them), phase WAITING. Nothing is sent yet. | `node_runtime.cpp:1252-1300` |
 | 4 | On the next `runtime.tick` → `tick_client_ops` → `start_attempt`. | `node_runtime.cpp:1691`, `:1623`, `:1329` |
 | 5 | **Placement:** `placement_.locate(key, view)` hashes the key with FNV-1a and walks the ring of 4 × 64 virtual points clockwise from that hash. The first live node is the primary (D), the next different live node is the replica (B). `view` is B's own set of live nodes. | `node_runtime.cpp:1347`; `src/placement.cpp:55-150`; `src/consistent_hash.cpp` (FNV-1a); `src/hash_ring.cpp:58` (ring built once at boot) |
@@ -31,7 +31,7 @@ The ring puts key `k` on **primary D, replica B** (`ring k` on any console). So 
 
 | # | what happens | where |
 |---|---|---|
-| 9 | The ESP-NOW callback maps the sender MAC to node B and queues the frame. The node task hands it to the runtime. | `transport.cpp:114-157`; `main.cpp:414-416` |
+| 9 | The ESP-NOW callback maps the sender MAC to node B and queues the frame. The node task hands it to the runtime. | `transport.cpp:114-157`; `main.cpp:394-396` |
 | 10 | `on_frame` validates the header, rejects a frame whose header sender differs from the radio sender (spoof check), and **merges B's HLC** into D's clock. | `node_runtime.cpp:336-385` |
 | 11 | SET_REQ → `handle_client_request`. If D isn't ACTIVE it answers `NOT_READY` (boot gate). | dispatch `node_runtime.cpp:394-397`; gate `:454-467` |
 | 12 | **Dedup:** `begin_request((B, id))`. A new request is marked IN_PROGRESS. If it's a duplicate, the cached reply is replayed instead of running the request again (this is the exactly-once part). | `node_runtime.cpp:473-535`; `src/dedup_manager.cpp:137` |
@@ -63,7 +63,7 @@ The ring puts key `k` on **primary D, replica B** (`ring k` on any console). So 
 |---|---|---|
 | 24 | SET_ACK → `handle_client_response`: it matches `(B, id)` to the client-op slot and stops the retransmissions. | `node_runtime.cpp:1513-1566` |
 | 25 | `on_op_response` → `finish_op` fills a `ClientResult`: status, served by D, attempts, latency. | `node_runtime.cpp:1459`, `:1569` |
-| 26 | At the end of the tick, `deliver_completions` frees the slot and calls the console's completion callback, which prints the line. | `node_runtime.cpp:1666-1688` → `Console::on_complete`/`handle_result` (`console.cpp:526-575`) |
+| 26 | At the end of the tick, `deliver_completions` frees the slot and calls the console's completion callback, which prints the line. | `node_runtime.cpp:1666-1688` → `Console::on_complete`/`handle_result` (`console.cpp:527-576`) |
 
 ```
 SET k: OK (served by D, 1 attempt(s), 11 ms)
@@ -85,7 +85,7 @@ Example: node D's temperature (DHT11). The key `s/D/temp` lives on **primary B, 
 | # | what happens | where |
 |---|---|---|
 | 1 | A separate low-priority task reads the DHT11 every 2 s and records ok/failed and the last good value under a spinlock. Only when D's bit in `REAL_SENSOR_NODES` is set; otherwise `SimulatedSource` provides values. | `src/platform/sensors.cpp:79-102` (task), `:64` (`take`); switch `include/config.h:151`; `main.cpp:100-117` |
-| 2 | Every node-task iteration calls `sampler.tick`. Every 30 s (`SENSOR_PERIOD_MS`), staggered per node, it reads the source. | `main.cpp:444` → `Sampler::tick` (`src/sensor.cpp:398`) |
+| 2 | Every node-task iteration calls `sampler.tick`. Every 30 s (`SENSOR_PERIOD_MS`), staggered per node, it reads the source. | `main.cpp:424` → `Sampler::tick` (`src/sensor.cpp:398`) |
 | 3 | `FallbackSource::read` → `LatestValueSource::read` takes the DHT task's results. It keeps the last good value, and after 10 s without a good read flags it `STALE` (or `ERROR` if there was never one). It is never replaced by simulated data. | `src/sensor_sources.cpp:225`, `:160` |
 | 4 | The sample is encoded as a 20-byte reading: kind, flags, sequence, value in thousandths, HLC of the sample. Event kinds (motion, sound) use 24 bytes. | `sensor.cpp:87` (`encode`); format comment `include/sensor.h:51-81` |
 | 5 | Two ordinary client SETs: `s/D/temp` (latest) and `h/D/temp/<seq % 4>` (4-slot history ring). From here it is **exactly the trip in part 1**: primary B stores and replicates to D. | `sensor.cpp:485-522` → `Runtime::submit` |
@@ -97,7 +97,7 @@ Example: node D's temperature (DHT11). The key `s/D/temp` lives on **primary B, 
 |---|---|---|
 | 7 | The CLI asks the client for each node's latest key, e.g. `GET s/D/temp`. | `pi/edgekv/cli.py` `cmd_sensors` → `client.py:171` → `sensor` `:167` → `get` `:151` |
 | 8 | `_transact` builds a GET_REQ packet with a Pi-chosen request id, frames it `AA 55 \| len \| packet \| CRC-8`, and writes it to the UART. | `client.py:93-133`; `pi/edgekv/framing.py` |
-| 9 | On node A, the node task reads UART1 (GPIO20) and feeds the bridge. The frame decoder resynchronises on noise such as boot text. | `main.cpp:426-440` → `Bridge::on_bytes` (`src/bridge.cpp:50`); decoder `src/uart_frame.cpp` |
+| 9 | On node A, the node task reads UART1 (GPIO20) and feeds the bridge. The frame decoder resynchronises on noise such as boot text. | `main.cpp:406-420` → `Bridge::on_bytes` (`src/bridge.cpp:50`); decoder `src/uart_frame.cpp` |
 | 10 | `handle_envelope` turns the Pi's packet into an ordinary **client op of node A** (`runtime_.submit`) and remembers the Pi's request id. | `bridge.cpp:126-223` (submit at `:204`) |
 | 11 | A's runtime sends GET_REQ to B (primary of `s/D/temp`). B answers GET_RESP with the 20 bytes. This is part 1's path without replication. | as in part 1 |
 | 12 | The completion goes to `Bridge::on_complete`, which answers the Pi with **the Pi's request id** and A's current HLC in the header. | `bridge.cpp:225`, `respond` `:88`, `send_envelope` `:77` → `bridge_uart.write` (`main.cpp:141`) |
@@ -274,4 +274,3 @@ Questions 1–10 are about the distributed-systems design, 11–21 about the har
       * an EEPROM page write takes ~5 ms (a few hundred writes/s);
       * an ESP-NOW frame takes about 1 ms;
       * each node runs at most 8 client operations at once (`config.h:94`).
-

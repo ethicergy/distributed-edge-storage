@@ -112,4 +112,22 @@ private:
     Bench bench_{};
 };
 
+// When to hold console input (BRINGUP_LOG problem 5): at boot, and when
+// the USB host comes back (cable plugged in again while the board
+// stayed powered). Never in the middle of a session: a pause in the
+// output does not mean the port was reopened.
+class InputGuard {
+public:
+    explicit InputGuard(Console& console);
+
+    void begin(std::uint64_t now_ms);
+
+    // usb_plugged: a USB host is sending frames (HWCDC::isPlugged()).
+    void poll(bool usb_plugged, std::uint64_t now_ms);
+
+private:
+    Console& console_;
+    bool plugged_ = true;
+};
+
 } // namespace console

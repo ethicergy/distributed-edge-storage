@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "config.h"
 #include "hash_ring.h"
 #include "consistent_hash.h"
 
@@ -831,6 +832,25 @@ void Console::tick(std::uint64_t now_ms)
         ++bench_.issued;
         bench_.waiting = true;
     }
+}
+
+InputGuard::InputGuard(Console& console)
+    : console_(console)
+{
+}
+
+void InputGuard::begin(std::uint64_t now_ms)
+{
+    console_.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
+}
+
+void InputGuard::poll(bool usb_plugged, std::uint64_t now_ms)
+{
+    if (usb_plugged && !plugged_) {
+        console_.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
+    }
+
+    plugged_ = usb_plugged;
 }
 
 } // namespace console

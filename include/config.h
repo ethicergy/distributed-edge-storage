@@ -324,18 +324,9 @@ static_assert(
 // Console input guard (BRINGUP_LOG problem 5)
 // ---------------------------------------------------------------
 
-// Input is discarded for this long after boot and after a host opens
-// the USB port: the host's tty can echo the board's buffered output
-// back before it switches to raw mode.
+// Input is discarded for this long after boot and after the USB cable
+// is plugged in again (console::InputGuard): the host's tty can echo
+// the board's buffered output back before it switches to raw mode.
 constexpr std::uint32_t CONSOLE_INPUT_HOLD_MS = 1000;
-
-// The board cannot see the port open. It sees buffered output start to
-// drain after nobody read it for at least this long.
-constexpr std::uint32_t CONSOLE_TX_STALL_MS = 200;
-
-static_assert(
-    CONSOLE_TX_STALL_MS >= 50,
-    "a port that is being read drains within a few ms; shorter stalls are normal output"
-);
 
 } // namespace config
