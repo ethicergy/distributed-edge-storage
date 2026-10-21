@@ -282,3 +282,10 @@ Questions 1–10 are about the distributed-systems design, 11–22 about the har
     * Fix in practice: `format yes` on every module at first install. We deleted the 20 live foreign keys. GC marked their tombstones once all four nodes had confirmed them, but compacting one node at a time let the others push the tombstones back (BRINGUP_LOG problem 11). They only disappeared when all four compacted at once: 0 foreign keys and 0 tombstones afterwards.
     * Proper fix (DECISIONS D11, not implemented): a deployment id in the superblock and in heartbeats. Storage with another id is formatted at boot, and frames from another deployment are dropped. Not done because it changes the on-disk format on the day of the demo.
 
+23. **What happens when a node's storage is full?**
+    * Each node indexes at most 64 keys (`storage.h:16`). A new key with no free slot gets `INDEX_FULL` (`storage.cpp:815`). Updates to keys already stored and all reads keep working.
+    * The engine reports it as `STORAGE_ERROR` (`kv_engine.cpp:327`), and `stats` counts it under `storage errors` (`node_runtime.cpp:1036`). A client write whose primary is full fails with `STORAGE_ERROR`; a full replica is a replica failure (D5); anti-entropy repairs to a full owner fail and are retried every round.
+    * It happened on the boards: test keys from measure.py and earlier sessions (~113 distinct keys) filled D to 64/64 and C to 62/64 (A and B were full on Tue). On Wed 21 `stats` showed `storage errors` 77 / 24 / 0 / 159 and the logs repeated `anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)`. No client op failed, nothing crashed, nothing was lost (BRINGUP_LOG problem 13, `wed21-health.log`).
+    * Capacity: 4 × 64 / RF 2 ≈ 128 distinct keys, less in practice because placement is not perfectly even. Tombstones hold a slot until GC (≥ 10 min, D8).
+    * What we did: a fresh format of all four at the same moment, and measure.py now deletes the keys it writes. The confusing part was the name: a capacity limit looked like a hardware error. A distinct `INDEX_FULL` status is future work (DECISIONS D12).
+

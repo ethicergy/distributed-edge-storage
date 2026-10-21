@@ -17,6 +17,8 @@ Evidence for the test matrix in docs/HARDWARE_TEST_PLAN.md.
 | `step3-four-nodes.log` | four nodes: members, ring of every key, stand-in copies and their GC, set/get on B-owned keys from each node |
 | `H2.log` | H2 with one write per node (B k20, C k4, D k0, A k2) and the owners' dumps |
 | `problem7-foreign-keys.log` | deleting the foreign keys from B's module, tombstone GC, push-back after one-at-a-time compaction, simultaneous compaction |
+| `wed21-health.log` | Wed 21 06:50: status/stats/members and dumps of all four after the overnight power-off (problem 13: full key index) |
+| `wed21-format.log` | Wed 21 06:54: final dumps, `format yes` on all four in parallel, 60 s watch, heartbeat rate per link (problem 14) |
 | `H<n>-node-<x>.log` | serial log of node x during hardware test H<n> (docs/HARDWARE_TEST_PLAN.md) |
 | `H14-pi.log` | Raspberry Pi terminal output for H14 |
 

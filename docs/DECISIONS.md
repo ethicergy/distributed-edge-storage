@@ -18,6 +18,7 @@ what was decided and why, so each one can be revisited deliberately.
 | D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
 | D10 | Node B's EEPROM supply | ~~workaround: VCC from GPIO6~~ **superseded Tue 20**: B resoldered, VCC on 3V3 like every node; the GPIO6 workaround was never used on the board |
 | D11 | Foreign data on a reused EEPROM | known limitation: no cluster identity in the storage format; rule: `format yes` at first install. Cluster id / format epoch is future work |
+| D12 | "Index full" reported as STORAGE_ERROR | known limitation: a full 64-key index is reported and counted like a storage fault; a distinct `INDEX_FULL` status is future work, not now |
 
 ---
 
@@ -260,3 +261,23 @@ storage crash tests and the hardware logs would have to be redone on
 the day of the demo. The format-at-install rule removes the risk for
 this deployment.
 
+## D12 — "Index full" reported as STORAGE_ERROR (future work)
+
+**What happened:** on Wed 21 the health check showed `storage errors`
+77 / 24 / 0 / 159 on A-D. The EEPROMs were fine: test keys had filled
+the 64-key index on most nodes, and every rejected anti-entropy repair
+was counted as a storage error (BRINGUP_LOG problem 13).
+
+**Why:** `storage::Result::INDEX_FULL` (and `NO_SPACE`) exist inside the
+storage layer, but `kv::Engine::map_storage_result` (`kv_engine.cpp:327`)
+maps everything it does not name to `STORAGE_ERROR`, and the protocol
+has no other status for it (`protocol.h:82`). A capacity limit and an
+I2C or CRC fault therefore look the same in `stats`, in the logs and to
+a client.
+
+**Future work, not now:** a distinct status (e.g. `INDEX_FULL = 0x0A`
+in `protocol.h`, the kv result, the console text and the Pi decoder)
+and a separate `index full` counter in `stats`. Not done now because it
+changes the frozen protocol and the Pi decoder on the last days of the
+bring-up, and the cause is easy to tell from `status` (`64/64 keys`)
+once you know to look.
