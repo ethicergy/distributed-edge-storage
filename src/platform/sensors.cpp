@@ -81,9 +81,22 @@ private:
         vTaskDelay(pdMS_TO_TICKS(DHT_POWER_UP_MS));
 
         for (;;) {
-            // force = true: the library's own 2 s cache is not needed,
-            // this loop already keeps to DHT11_READ_INTERVAL_MS.
-            const float celsius = dht_.readTemperature(false, true);
+            float celsius = NAN;
+
+            {
+                // The read turns interrupts off (~5 ms good, far longer
+                // when the sensor does not answer). Holding the bus lock
+                // keeps it out of every EEPROM transaction, write cycle
+                // included: an EEPROM op that blocks (I2C interrupt,
+                // delay(1) in the write-cycle poll) would otherwise let
+                // this task run and overrun the op's deadline
+                // (BRINGUP_LOG problem 15).
+                i2c_bus::Lock bus;
+
+                // force = true: the library's own 2 s cache is not needed,
+                // this loop already keeps to DHT11_READ_INTERVAL_MS.
+                celsius = dht_.readTemperature(false, true);
+            }
 
             portENTER_CRITICAL(&lock_);
 
