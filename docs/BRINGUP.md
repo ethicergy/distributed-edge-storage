@@ -228,6 +228,8 @@ Sensors (each node has one; `config.h:159-165`):
 | C | LM393 VCC / GND / DO | 3V3 / GND / **GPIO4** | **3V3 only**, so DO never exceeds 3.3 V. DO is usually active-low. |
 | D | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up |
 
+**Placement:** boards at least ~20 cm apart, antenna end (the end opposite the USB-C) clear of wires, breadboards and the laptop. Close together, 30-55 % of the broadcast heartbeats were lost and views flapped every few seconds; spread apart, 80-98 % arrived (BRINGUP_LOG problem 14).
+
 GPIO4 is not a strapping pin, not USB (18/19) and not the bridge UART (20/21). `config.h:262-272` refuses any pin other than 0–10 minus 2/8/9 at compile time. Spare pins: 3, 5, 6, 7, 10.
 
 ### 3.4 Bring-up order

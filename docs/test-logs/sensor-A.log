@@ -1,0 +1,755 @@
+# M9a, Wed 21: BH1750 (GY-302) on node A, same I2C bus as the EEPROM (SDA 8, SCL 9, ADDR GND). REAL_SENSOR_NODES = 0x01, node-a built Oct 21 07:07:54, flashed 07:08:00.
+# Seconds since each port open. Sections: after flash + baseline (07:08:14), stimulus 1 (07:09:40: partial cover, short torch flash), cover (07:42:51), uncover (07:43:35), coexistence bench (07:45:35, 1 s sampling).
+
+## after flash and baseline
+
+[   0.00s port open, node A, Wed 21 07:08:15]
+[   2.31s >>> status]
+[   2.36s] > status
+[   2.36s] node A  state ACTIVE  view ABCD  uptime 14s
+[   2.36s] hlc 21611985.0
+[   2.36s] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 2069/16064 bytes, bank A, 0 compactions
+[   2.36s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[   2.36s] sensor light (hardware): on, 1 samples, last 19.166 lux seq 603, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[   4.32s >>> stats]
+[   4.37s] > stats
+[   4.37s] radio   rx 104 (invalid 0, spoofed 0)  tx 34 (failed 0)
+[   4.37s] hb      tx 19  rx 89   membership changes 4
+[   4.37s] server  executed 1  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   4.37s] repl    started 1  ok 1  failed 0  stale 0   as replica: applied 3 stale 0
+[   4.37s] ae      rounds 3  chunks tx 9 rx 9  tables 3  pushes 0  resync tx 0 applied 0 stale 0
+[   4.37s] gc      orphans 0  tombstones 0  keys dropped 0
+[   4.37s] client  ok 3  failed 0  attempts 3  local 1
+[   4.37s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[   4.37s] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[   4.37s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[   4.37s] esp-now rx 104  queue overflows 0  unknown MAC 0
+[   4.37s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] esp-now tx -> C: 3 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] esp-now tx -> D: 3 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] heap free 172872 (min 164148)  node task stack headroom 13256 bytes
+[   4.37s] eeprom page writes since boot: total 11, hottest page 39 with 5 (rated 1000000)
+[   4.37s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[   6.33s >>> members]
+[   6.38s] > members
+[   6.38s]   A  self    ACTIVE
+[   6.38s]   B  alive   last heard 193 ms ago, 34 heartbeats
+[   6.38s]   C  alive   last heard 196 ms ago, 33 heartbeats
+[   6.38s]   D  alive   last heard 195 ms ago, 34 heartbeats
+
+[   0.00s port open, node A, Wed 21 07:08:39]
+[   1.31s >>> sensor period 5000]
+[   1.36s] > sensor period 5000
+[   1.36s] sampler on
+[   8.34s >>> get s/A/light]
+[   8.39s] > get s/A/light
+[   8.39s] s/A/light = 19.166 lux  (seq 604, sampled at hlc 21635783)
+[   8.39s]    (served by C, 1 attempt(s), 7 ms)
+[  18.38s >>> get s/A/light]
+[  18.43s] > get s/A/light
+[  18.43s] s/A/light = 18.333 lux  (seq 607, sampled at hlc 21650783)
+[  18.43s]    (served by C, 1 attempt(s), 14 ms)
+[  28.43s >>> get s/A/light]
+[  28.48s] > get s/A/light
+[  28.48s] s/A/light = 18.333 lux  (seq 608, sampled at hlc 21655783)
+[  28.48s]    (served by C, 1 attempt(s), 9 ms)
+[  38.47s >>> status]
+[  38.52s] > status
+[  38.52s] node A  state ACTIVE  view ABCD  uptime 73s
+[  38.52s] hlc 21670702.0
+[  38.52s] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 2958/16064 bytes, bank A, 0 compactions
+[  38.52s] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[  38.52s] sensor light (hardware): on, 8 samples, last 18.333 lux seq 610, 16 ok, 0 under-replicated, 0 failed, 0 read failures
+[  40.48s >>> get s/A/light]
+[  40.53s] > get s/A/light
+[  40.53s] s/A/light = 18.333 lux  (seq 611, sampled at hlc 21670784)
+[  40.53s]    (served by C, 1 attempt(s), 6 ms)
+
+## stimulus 1 (07:09:40-07:13:47)
+
+[   0.00s port open, node A, Wed 21 07:09:40]
+[   1.31s >>> get s/A/light]
+[   1.36s] > get s/A/light
+[   1.36s] s/A/light = 18.333 lux  (seq 615, sampled at hlc 21690784)
+[   1.36s]    (served by C, 1 attempt(s), 6 ms)
+[   5.33s >>> get s/A/light]
+[   5.38s] > get s/A/light
+[   5.38s] s/A/light = 18.333 lux  (seq 616, sampled at hlc 21695784)
+[   5.38s]    (served by C, 1 attempt(s), 6 ms)
+[   9.35s >>> get s/A/light]
+[   9.40s] > get s/A/light
+[   9.40s] s/A/light = 18.333 lux  (seq 617, sampled at hlc 21700784)
+[   9.40s]    (served by C, 1 attempt(s), 6 ms)
+[  13.37s >>> get s/A/light]
+[  13.42s] > get s/A/light
+[  13.42s] s/A/light = 18.333 lux  (seq 618, sampled at hlc 21705784)
+[  13.42s]    (served by C, 1 attempt(s), 6 ms)
+[  17.39s >>> get s/A/light]
+[  17.44s] > get s/A/light
+[  17.44s] s/A/light = 18.333 lux  (seq 619, sampled at hlc 21710784)
+[  17.44s]    (served by C, 1 attempt(s), 6 ms)
+[  21.42s >>> get s/A/light]
+[  21.47s] > get s/A/light
+[  21.47s] s/A/light = 18.333 lux  (seq 619, sampled at hlc 21710784)
+[  21.47s]    (served by C, 1 attempt(s), 9 ms)
+[  25.44s >>> get s/A/light]
+[  26.31s] > get s/A/light
+[  26.31s] s/A/light = 17.500 lux  (seq 620, sampled at hlc 21715784)
+[  26.31s]    (served by C, 1 attempt(s), 6 ms)
+[  29.48s >>> get s/A/light]
+[  29.53s] > get s/A/light
+[  29.53s] s/A/light = 17.500 lux  (seq 621, sampled at hlc 21720784)
+[  29.53s]    (served by C, 1 attempt(s), 6 ms)
+[  33.50s >>> get s/A/light]
+[  33.55s] > get s/A/light
+[  33.55s] s/A/light = 18.333 lux  (seq 622, sampled at hlc 21725784)
+[  33.55s]    (served by C, 1 attempt(s), 7 ms)
+[  37.53s >>> get s/A/light]
+[  37.58s] > get s/A/light
+[  37.58s] s/A/light = 18.333 lux  (seq 623, sampled at hlc 21730784)
+[  37.58s]    (served by C, 1 attempt(s), 6 ms)
+[  41.55s >>> get s/A/light]
+[  41.60s] > get s/A/light
+[  41.60s] s/A/light = 18.333 lux  (seq 623, sampled at hlc 21730784)
+[  41.60s]    (served by C, 1 attempt(s), 14 ms)
+[  45.57s >>> get s/A/light]
+[  45.63s] > get s/A/light
+[  45.63s] s/A/light = 18.333 lux  (seq 624, sampled at hlc 21735784)
+[  45.63s]    (served by C, 1 attempt(s), 9 ms)
+[  49.60s >>> get s/A/light]
+[  49.65s] > get s/A/light
+[  49.65s] s/A/light = 18.333 lux  (seq 625, sampled at hlc 21740784)
+[  49.65s]    (served by C, 1 attempt(s), 6 ms)
+[  53.62s >>> get s/A/light]
+[  53.67s] > get s/A/light
+[  53.67s] s/A/light = 18.333 lux  (seq 626, sampled at hlc 21745784)
+[  53.67s]    (served by C, 1 attempt(s), 6 ms)
+[  57.64s >>> get s/A/light]
+[  57.69s] > get s/A/light
+[  57.69s] s/A/light = 17.500 lux  (seq 627, sampled at hlc 21750784)
+[  57.69s]    (served by C, 1 attempt(s), 6 ms)
+[  61.68s >>> get s/A/light]
+[  61.74s] > get s/A/light
+[  61.74s] s/A/light = 17.500 lux  (seq 627, sampled at hlc 21750784)
+[  61.74s]    (served by C, 1 attempt(s), 6 ms)
+[  65.71s >>> get s/A/light]
+[  65.76s] > get s/A/light
+[  65.76s] s/A/light = 17.500 lux  (seq 628, sampled at hlc 21755784)
+[  65.76s]    (served by C, 1 attempt(s), 7 ms)
+[  69.73s >>> get s/A/light]
+[  69.78s] > get s/A/light
+[  69.78s] s/A/light = 17.500 lux  (seq 629, sampled at hlc 21760784)
+[  69.78s]    (served by C, 1 attempt(s), 6 ms)
+[  73.76s >>> get s/A/light]
+[  73.81s] > get s/A/light
+[  73.81s] s/A/light = 17.500 lux  (seq 630, sampled at hlc 21765784)
+[  73.81s]    (served by C, 1 attempt(s), 6 ms)
+[  77.78s >>> get s/A/light]
+[  77.83s] > get s/A/light
+[  77.83s] s/A/light = 17.500 lux  (seq 631, sampled at hlc 21770784)
+[  77.83s]    (served by C, 1 attempt(s), 6 ms)
+[  81.81s >>> get s/A/light]
+[  81.86s] > get s/A/light
+[  81.86s] s/A/light = 17.500 lux  (seq 631, sampled at hlc 21770784)
+[  81.86s]    (served by C, 1 attempt(s), 6 ms)
+[  85.83s >>> get s/A/light]
+[  85.88s] > get s/A/light
+[  85.88s] s/A/light = 17.500 lux  (seq 632, sampled at hlc 21775784)
+[  85.88s]    (served by C, 1 attempt(s), 6 ms)
+[  89.85s >>> get s/A/light]
+[  89.90s] > get s/A/light
+[  89.90s] s/A/light = 17.500 lux  (seq 633, sampled at hlc 21780784)
+[  89.90s]    (served by C, 1 attempt(s), 6 ms)
+[  94.37s >>> get s/A/light]
+[  94.42s] > get s/A/light
+[  94.42s] s/A/light = 17.500 lux  (seq 634, sampled at hlc 21785784)
+[  94.42s]    (served by C, 1 attempt(s), 6 ms)
+[  98.39s >>> get s/A/light]
+[  98.44s] > get s/A/light
+[  98.44s] s/A/light = 17.500 lux  (seq 635, sampled at hlc 21790784)
+[  98.45s]    (served by C, 1 attempt(s), 7 ms)
+[ 102.42s >>> get s/A/light]
+[ 102.47s] > get s/A/light
+[ 102.47s] s/A/light = 17.500 lux  (seq 635, sampled at hlc 21790784)
+[ 102.47s]    (served by C, 1 attempt(s), 6 ms)
+[ 106.44s >>> get s/A/light]
+[ 106.50s] > get s/A/light
+[ 106.50s] s/A/light = 17.500 lux  (seq 636, sampled at hlc 21795784)
+[ 106.50s]    (served by C, 1 attempt(s), 6 ms)
+[ 110.47s >>> get s/A/light]
+[ 110.52s] > get s/A/light
+[ 110.52s] s/A/light = 17.500 lux  (seq 637, sampled at hlc 21800784)
+[ 110.52s]    (served by C, 1 attempt(s), 6 ms)
+[ 114.49s >>> get s/A/light]
+[ 114.55s] > get s/A/light
+[ 114.55s] s/A/light = 18.333 lux  (seq 638, sampled at hlc 21805784)
+[ 114.55s]    (served by C, 1 attempt(s), 6 ms)
+[ 118.51s >>> get s/A/light]
+[ 118.57s] > get s/A/light
+[ 118.57s] s/A/light = 17.500 lux  (seq 639, sampled at hlc 21810784)
+[ 118.57s]    (served by C, 1 attempt(s), 6 ms)
+[ 122.54s >>> get s/A/light]
+[ 122.59s] > get s/A/light
+[ 122.59s] s/A/light = 17.500 lux  (seq 640, sampled at hlc 21815784)
+[ 122.59s]    (served by C, 1 attempt(s), 7 ms)
+[ 126.57s >>> get s/A/light]
+[ 126.62s] > get s/A/light
+[ 126.62s] s/A/light = 17.500 lux  (seq 640, sampled at hlc 21815784)
+[ 126.62s]    (served by C, 1 attempt(s), 7 ms)
+[ 130.59s >>> get s/A/light]
+[ 130.64s] > get s/A/light
+[ 130.64s] s/A/light = 17.500 lux  (seq 641, sampled at hlc 21820784)
+[ 130.64s]    (served by C, 1 attempt(s), 6 ms)
+[ 134.62s >>> get s/A/light]
+[ 134.67s] > get s/A/light
+[ 134.67s] s/A/light = 17.500 lux  (seq 642, sampled at hlc 21825784)
+[ 134.67s]    (served by C, 1 attempt(s), 6 ms)
+[ 138.64s >>> get s/A/light]
+[ 138.69s] > get s/A/light
+[ 138.69s] s/A/light = 17.500 lux  (seq 643, sampled at hlc 21830784)
+[ 138.69s]    (served by C, 1 attempt(s), 8 ms)
+[ 142.68s >>> get s/A/light]
+[ 142.73s] > get s/A/light
+[ 142.73s] s/A/light = 17.500 lux  (seq 644, sampled at hlc 21835784)
+[ 142.73s]    (served by C, 1 attempt(s), 6 ms)
+[ 146.70s >>> get s/A/light]
+[ 146.75s] > get s/A/light
+[ 146.75s] s/A/light = 17.500 lux  (seq 644, sampled at hlc 21835784)
+[ 146.75s]    (served by C, 1 attempt(s), 6 ms)
+[ 150.72s >>> get s/A/light]
+[ 150.77s] > get s/A/light
+[ 150.77s] s/A/light = 17.500 lux  (seq 645, sampled at hlc 21840784)
+[ 150.77s]    (served by C, 1 attempt(s), 6 ms)
+[ 154.74s >>> get s/A/light]
+[ 154.79s] > get s/A/light
+[ 154.79s] s/A/light = 17.500 lux  (seq 646, sampled at hlc 21845784)
+[ 154.79s]    (served by C, 1 attempt(s), 6 ms)
+[ 158.78s >>> get s/A/light]
+[ 158.83s] > get s/A/light
+[ 158.83s] s/A/light = 17.500 lux  (seq 647, sampled at hlc 21850784)
+[ 158.83s]    (served by C, 1 attempt(s), 8 ms)
+[ 162.82s >>> get s/A/light]
+[ 162.87s] > get s/A/light
+[ 162.87s] s/A/light = 17.500 lux  (seq 648, sampled at hlc 21855784)
+[ 162.87s]    (served by C, 1 attempt(s), 6 ms)
+[ 166.86s >>> get s/A/light]
+[ 166.91s] > get s/A/light
+[ 166.91s] s/A/light = 17.500 lux  (seq 648, sampled at hlc 21855784)
+[ 166.91s]    (served by C, 1 attempt(s), 6 ms)
+[ 170.89s >>> get s/A/light]
+[ 170.94s] > get s/A/light
+[ 170.94s] s/A/light = 16.666 lux  (seq 649, sampled at hlc 21860784)
+[ 170.94s]    (served by C, 1 attempt(s), 6 ms)
+[ 174.92s >>> get s/A/light]
+[ 174.97s] > get s/A/light
+[ 174.97s] s/A/light = 50.000 lux  (seq 650, sampled at hlc 21865784)
+[ 174.97s]    (served by C, 1 attempt(s), 7 ms)
+[ 178.25s]    274.223 [A] storage error on h/A/light/3
+[ 178.25s]    274.238 [A] REPL_REQ C#3608809018 duplicate: cached REPL_ACK replayed
+[ 178.25s]    274.239 [A] REPL_REQ C#3608809018 duplicate: cached REPL_ACK replayed
+[ 178.96s >>> get s/A/light]
+[ 179.01s] > get s/A/light
+[ 179.01s] s/A/light = 65.833 lux  (seq 651, sampled at hlc 21870784)
+[ 179.01s]    (served by C, 1 attempt(s), 6 ms)
+[ 183.00s >>> get s/A/light]
+[ 183.05s] > get s/A/light
+[ 183.05s] s/A/light = 59.166 lux  (seq 652, sampled at hlc 21875784)
+[ 183.05s]    (served by C, 1 attempt(s), 6 ms)
+[ 187.04s >>> get s/A/light]
+[ 187.09s] > get s/A/light
+[ 187.09s] s/A/light = 50.000 lux  (seq 653, sampled at hlc 21880784)
+[ 187.09s]    (served by C, 1 attempt(s), 6 ms)
+[ 191.89s >>> get s/A/light]
+[ 191.94s] > get s/A/light
+[ 191.94s] s/A/light = 50.000 lux  (seq 653, sampled at hlc 21880784)
+[ 191.94s]    (served by C, 1 attempt(s), 6 ms)
+[ 195.93s >>> get s/A/light]
+[ 195.98s] > get s/A/light
+[ 195.98s] s/A/light = 50.833 lux  (seq 654, sampled at hlc 21885784)
+[ 195.98s]    (served by C, 1 attempt(s), 6 ms)
+[ 199.96s >>> get s/A/light]
+[ 200.01s] > get s/A/light
+[ 200.01s] s/A/light = 280.833 lux  (seq 655, sampled at hlc 21890784)
+[ 200.01s]    (served by C, 1 attempt(s), 6 ms)
+[ 203.99s >>> get s/A/light]
+[ 204.04s] > get s/A/light
+[ 204.04s] s/A/light = 3168.333 lux  (seq 656, sampled at hlc 21895784)
+[ 204.04s]    (served by C, 1 attempt(s), 6 ms)
+[ 208.03s >>> get s/A/light]
+[ 208.08s] > get s/A/light
+[ 208.08s] s/A/light = 31.666 lux  (seq 657, sampled at hlc 21900784)
+[ 208.08s]    (served by C, 1 attempt(s), 9 ms)
+[ 212.07s >>> get s/A/light]
+[ 212.12s] > get s/A/light
+[ 212.12s] s/A/light = 31.666 lux  (seq 657, sampled at hlc 21900784)
+[ 212.12s]    (served by C, 1 attempt(s), 6 ms)
+[ 216.11s >>> get s/A/light]
+[ 216.16s] > get s/A/light
+[ 216.16s] s/A/light = 21.666 lux  (seq 658, sampled at hlc 21905784)
+[ 216.16s]    (served by C, 1 attempt(s), 6 ms)
+[ 220.15s >>> get s/A/light]
+[ 220.20s] > get s/A/light
+[ 220.20s] s/A/light = 28.333 lux  (seq 659, sampled at hlc 21910784)
+[ 220.20s]    (served by C, 1 attempt(s), 8 ms)
+[ 224.19s >>> get s/A/light]
+[ 224.24s] > get s/A/light
+[ 224.24s] s/A/light = 28.333 lux  (seq 660, sampled at hlc 21915784)
+[ 224.24s]    (served by C, 1 attempt(s), 6 ms)
+[ 228.21s >>> get s/A/light]
+[ 228.26s] > get s/A/light
+[ 228.26s] s/A/light = 27.500 lux  (seq 661, sampled at hlc 21920784)
+[ 228.26s]    (served by C, 1 attempt(s), 6 ms)
+[ 232.23s >>> get s/A/light]
+[ 232.28s] > get s/A/light
+[ 232.28s] s/A/light = 28.333 lux  (seq 662, sampled at hlc 21925784)
+[ 232.28s]    (served by C, 1 attempt(s), 8 ms)
+[ 236.26s >>> get s/A/light]
+[ 236.31s] > get s/A/light
+[ 236.31s] s/A/light = 28.333 lux  (seq 662, sampled at hlc 21925784)
+[ 236.31s]    (served by C, 1 attempt(s), 6 ms)
+[ 240.70s >>> get s/A/light]
+[ 240.75s] > get s/A/light
+[ 240.75s] s/A/light = 27.500 lux  (seq 663, sampled at hlc 21930784)
+[ 240.75s]    (served by C, 1 attempt(s), 6 ms)
+[ 244.76s >>> status]
+[ 244.81s] > status
+[ 244.81s] node A  state ACTIVE  view ABCD  uptime 340s
+[ 244.81s] hlc 21937811.0
+[ 244.81s] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 8972/16064 bytes, bank A, 0 compactions
+[ 244.81s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[ 244.81s] sensor light (hardware): on, 62 samples, last 27.500 lux seq 664, 124 ok, 0 under-replicated, 0 failed, 0 read failures
+
+## cover attempt 2 (07:22:03-07:25:10, missed: prompt latency)
+
+[   0.00s port open, node A, Wed 21 07:22:03]
+[   1.31s >>> get s/A/light]
+[   1.36s] > get s/A/light
+[   1.36s] s/A/light = 30.000 lux  (seq 764, sampled at hlc 22435786)
+[   1.36s]    (served by C, 1 attempt(s), 6 ms)
+[   5.34s >>> get s/A/light]
+[   5.39s] > get s/A/light
+[   5.39s] s/A/light = 16.666 lux  (seq 765, sampled at hlc 22440786)
+[   5.39s]    (served by C, 1 attempt(s), 6 ms)
+[   9.39s >>> get s/A/light]
+[   9.45s] > get s/A/light
+[   9.45s] s/A/light = 16.666 lux  (seq 766, sampled at hlc 22445786)
+[   9.45s]    (served by C, 1 attempt(s), 7 ms)
+[  14.00s >>> get s/A/light]
+[  14.05s] > get s/A/light
+[  14.05s] s/A/light = 16.666 lux  (seq 767, sampled at hlc 22450786)
+[  14.05s]    (served by C, 1 attempt(s), 6 ms)
+[  18.03s >>> get s/A/light]
+[  18.08s] > get s/A/light
+[  18.08s] s/A/light = 16.666 lux  (seq 767, sampled at hlc 22450786)
+[  18.08s]    (served by C, 1 attempt(s), 6 ms)
+[  22.07s >>> get s/A/light]
+[  22.12s] > get s/A/light
+[  22.12s] s/A/light = 16.666 lux  (seq 768, sampled at hlc 22455786)
+[  22.12s]    (served by C, 1 attempt(s), 6 ms)
+[  26.11s >>> get s/A/light]
+[  26.16s] > get s/A/light
+[  26.16s] s/A/light = 16.666 lux  (seq 769, sampled at hlc 22460786)
+[  26.16s]    (served by C, 1 attempt(s), 6 ms)
+[  30.14s >>> get s/A/light]
+[  30.19s] > get s/A/light
+[  30.19s] s/A/light = 16.666 lux  (seq 770, sampled at hlc 22465786)
+[  30.19s]    (served by C, 1 attempt(s), 6 ms)
+[  34.18s >>> get s/A/light]
+[  34.23s] > get s/A/light
+[  34.23s] s/A/light = 16.666 lux  (seq 771, sampled at hlc 22470786)
+[  34.23s]    (served by C, 1 attempt(s), 8 ms)
+[  38.22s >>> get s/A/light]
+[  38.27s] > get s/A/light
+[  38.27s] s/A/light = 16.666 lux  (seq 772, sampled at hlc 22475786)
+[  38.27s]    (served by C, 1 attempt(s), 6 ms)
+[  42.27s >>> get s/A/light]
+[  42.32s] > get s/A/light
+[  42.32s] s/A/light = 16.666 lux  (seq 772, sampled at hlc 22475786)
+[  42.32s]    (served by C, 1 attempt(s), 6 ms)
+[  46.32s >>> get s/A/light]
+[  46.38s] > get s/A/light
+[  46.38s] s/A/light = 16.666 lux  (seq 773, sampled at hlc 22480786)
+[  46.38s]    (served by C, 1 attempt(s), 7 ms)
+[  50.36s >>> get s/A/light]
+[  50.41s] > get s/A/light
+[  50.41s] s/A/light = 16.666 lux  (seq 774, sampled at hlc 22485786)
+[  50.41s]    (served by C, 1 attempt(s), 6 ms)
+[  54.39s >>> get s/A/light]
+[  54.44s] > get s/A/light
+[  54.44s] s/A/light = 16.666 lux  (seq 775, sampled at hlc 22490786)
+[  54.44s]    (served by C, 1 attempt(s), 6 ms)
+[  58.42s >>> get s/A/light]
+[  58.47s] > get s/A/light
+[  58.47s] s/A/light = 16.666 lux  (seq 775, sampled at hlc 22490786)
+[  58.47s]    (served by C, 1 attempt(s), 6 ms)
+[  62.45s >>> get s/A/light]
+[  62.51s] > get s/A/light
+[  62.51s] s/A/light = 16.666 lux  (seq 776, sampled at hlc 22495786)
+[  62.51s]    (served by C, 1 attempt(s), 6 ms)
+[  66.49s >>> get s/A/light]
+[  66.54s] > get s/A/light
+[  66.54s] s/A/light = 16.666 lux  (seq 777, sampled at hlc 22500786)
+[  66.54s]    (served by C, 1 attempt(s), 6 ms)
+[  70.53s >>> get s/A/light]
+[  70.58s] > get s/A/light
+[  70.58s] s/A/light = 16.666 lux  (seq 778, sampled at hlc 22505786)
+[  70.58s]    (served by C, 1 attempt(s), 6 ms)
+[  74.58s >>> get s/A/light]
+[  74.63s] > get s/A/light
+[  74.63s] s/A/light = 16.666 lux  (seq 779, sampled at hlc 22510786)
+[  74.63s]    (served by C, 1 attempt(s), 7 ms)
+[  78.76s >>> get s/A/light]
+[  78.82s] > get s/A/light
+[  78.82s] s/A/light = 16.666 lux  (seq 779, sampled at hlc 22510786)
+[  78.82s]    (served by C, 1 attempt(s), 7 ms)
+[  82.81s >>> get s/A/light]
+[  82.86s] > get s/A/light
+[  82.86s] s/A/light = 16.666 lux  (seq 780, sampled at hlc 22515786)
+[  82.86s]    (served by C, 1 attempt(s), 7 ms)
+[  86.83s >>> get s/A/light]
+[  86.88s] > get s/A/light
+[  86.88s] s/A/light = 16.666 lux  (seq 781, sampled at hlc 22520786)
+[  86.88s]    (served by C, 1 attempt(s), 7 ms)
+[  90.87s >>> get s/A/light]
+[  90.92s] > get s/A/light
+[  90.92s] s/A/light = 16.666 lux  (seq 782, sampled at hlc 22525786)
+[  90.92s]    (served by C, 1 attempt(s), 6 ms)
+[  94.90s >>> get s/A/light]
+[  94.96s] > get s/A/light
+[  94.96s] s/A/light = 16.666 lux  (seq 783, sampled at hlc 22530786)
+[  94.96s]    (served by C, 1 attempt(s), 7 ms)
+[  98.95s >>> get s/A/light]
+[  99.00s] > get s/A/light
+[  99.00s] s/A/light = 16.666 lux  (seq 784, sampled at hlc 22535786)
+[  99.00s]    (served by C, 1 attempt(s), 7 ms)
+[ 102.99s >>> get s/A/light]
+[ 103.04s] > get s/A/light
+[ 103.04s] s/A/light = 16.666 lux  (seq 784, sampled at hlc 22535786)
+[ 103.04s]    (served by C, 1 attempt(s), 7 ms)
+[ 107.03s >>> get s/A/light]
+[ 107.08s] > get s/A/light
+[ 107.08s] s/A/light = 16.666 lux  (seq 785, sampled at hlc 22540786)
+[ 107.08s]    (served by C, 1 attempt(s), 7 ms)
+[ 111.12s >>> get s/A/light]
+[ 111.17s] > get s/A/light
+[ 111.17s] s/A/light = 16.666 lux  (seq 786, sampled at hlc 22545786)
+[ 111.17s]    (served by C, 1 attempt(s), 8 ms)
+[ 115.17s >>> get s/A/light]
+[ 115.22s] > get s/A/light
+[ 115.22s] s/A/light = 16.666 lux  (seq 787, sampled at hlc 22550786)
+[ 115.22s]    (served by C, 1 attempt(s), 14 ms)
+[ 119.26s >>> get s/A/light]
+[ 119.31s] > get s/A/light
+[ 119.31s] s/A/light = 16.666 lux  (seq 788, sampled at hlc 22555786)
+[ 119.31s]    (served by C, 1 attempt(s), 7 ms)
+[ 123.34s >>> get s/A/light]
+[ 123.39s] > get s/A/light
+[ 123.39s] s/A/light = 16.666 lux  (seq 789, sampled at hlc 22560786)
+[ 123.39s]    (served by C, 1 attempt(s), 7 ms)
+[ 127.39s >>> get s/A/light]
+[ 127.44s] > get s/A/light
+[ 127.44s] s/A/light = 16.666 lux  (seq 789, sampled at hlc 22560786)
+[ 127.44s]    (served by C, 1 attempt(s), 7 ms)
+[ 131.43s >>> get s/A/light]
+[ 131.49s] > get s/A/light
+[ 131.49s] s/A/light = 16.666 lux  (seq 790, sampled at hlc 22565786)
+[ 131.49s]    (served by C, 1 attempt(s), 7 ms)
+[ 135.46s >>> get s/A/light]
+[ 135.51s] > get s/A/light
+[ 135.51s] s/A/light = 16.666 lux  (seq 791, sampled at hlc 22570786)
+[ 135.51s]    (served by C, 1 attempt(s), 7 ms)
+[ 139.49s >>> get s/A/light]
+[ 139.55s] > get s/A/light
+[ 139.55s] s/A/light = 17.500 lux  (seq 792, sampled at hlc 22575786)
+[ 139.55s]    (served by C, 1 attempt(s), 7 ms)
+[ 143.53s >>> get s/A/light]
+[ 143.58s] > get s/A/light
+[ 143.58s] s/A/light = 17.500 lux  (seq 793, sampled at hlc 22580786)
+[ 143.58s]    (served by C, 1 attempt(s), 7 ms)
+[ 147.56s >>> get s/A/light]
+[ 147.62s] > get s/A/light
+[ 147.62s] s/A/light = 17.500 lux  (seq 793, sampled at hlc 22580786)
+[ 147.62s]    (served by C, 1 attempt(s), 7 ms)
+[ 151.59s >>> get s/A/light]
+[ 151.64s] > get s/A/light
+[ 151.64s] s/A/light = 17.500 lux  (seq 794, sampled at hlc 22585786)
+[ 151.64s]    (served by C, 1 attempt(s), 7 ms)
+[ 155.62s >>> get s/A/light]
+[ 155.68s] > get s/A/light
+[ 155.68s] s/A/light = 17.500 lux  (seq 795, sampled at hlc 22590786)
+[ 155.68s]    (served by C, 1 attempt(s), 7 ms)
+[ 160.19s >>> get s/A/light]
+[ 160.24s] > get s/A/light
+[ 160.24s] s/A/light = 17.500 lux  (seq 796, sampled at hlc 22595786)
+[ 160.24s]    (served by C, 1 attempt(s), 7 ms)
+[ 164.23s >>> get s/A/light]
+[ 164.28s] > get s/A/light
+[ 164.28s] s/A/light = 17.500 lux  (seq 797, sampled at hlc 22600786)
+[ 164.28s]    (served by C, 1 attempt(s), 7 ms)
+[ 168.27s >>> get s/A/light]
+[ 168.32s] > get s/A/light
+[ 168.32s] s/A/light = 17.500 lux  (seq 797, sampled at hlc 22600786)
+[ 168.32s]    (served by C, 1 attempt(s), 7 ms)
+[ 172.31s >>> get s/A/light]
+[ 172.36s] > get s/A/light
+[ 172.36s] s/A/light = 17.500 lux  (seq 798, sampled at hlc 22605786)
+[ 172.36s]    (served by C, 1 attempt(s), 7 ms)
+[ 176.36s >>> get s/A/light]
+[ 176.41s] > get s/A/light
+[ 176.41s] s/A/light = 17.500 lux  (seq 799, sampled at hlc 22610786)
+[ 176.41s]    (served by C, 1 attempt(s), 7 ms)
+[ 180.40s >>> get s/A/light]
+[ 180.45s] > get s/A/light
+[ 180.45s] s/A/light = 17.500 lux  (seq 800, sampled at hlc 22615786)
+[ 180.45s]    (served by C, 1 attempt(s), 7 ms)
+[ 184.45s >>> status]
+[ 184.50s] > status
+[ 184.50s] node A  state ACTIVE  view ABCD  uptime 1023s
+[ 184.50s] hlc 22621186.0
+[ 184.50s] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 12057/16064 bytes, bank B, 1 compactions
+[ 184.50s] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[ 184.50s] sensor light (hardware): on, 199 samples, last 17.500 lux seq 801, 398 ok, 0 under-replicated, 0 failed, 0 read failures
+
+## covered (07:42:51) and uncovered (07:43:35)
+
+[   0.00s port open, node A, Wed 21 07:42:51]
+[   1.31s >>> get s/A/light]
+[   1.36s] > get s/A/light
+[   1.36s] s/A/light = 0.000 lux  (seq 1014, sampled at hlc 23685788)
+[   1.36s]    (served by C, 1 attempt(s), 7 ms)
+[   5.32s >>> get s/A/light]
+[   5.37s] > get s/A/light
+[   5.37s] s/A/light = 0.000 lux  (seq 1014, sampled at hlc 23685788)
+[   5.37s]    (served by C, 1 attempt(s), 7 ms)
+[   9.37s >>> get s/A/light]
+[   9.42s] > get s/A/light
+[   9.42s] s/A/light = 0.000 lux  (seq 1015, sampled at hlc 23690788)
+[   9.42s]    (served by C, 1 attempt(s), 7 ms)
+[  13.38s >>> get s/A/light]
+[  13.43s] > get s/A/light
+[  13.43s] s/A/light = 0.000 lux  (seq 1016, sampled at hlc 23695788)
+[  13.43s]    (served by C, 1 attempt(s), 7 ms)
+[  17.40s >>> get s/A/light]
+[  17.45s] > get s/A/light
+[  17.45s] s/A/light = 0.000 lux  (seq 1017, sampled at hlc 23700788)
+[  17.45s]    (served by C, 1 attempt(s), 7 ms)
+[  21.42s >>> get s/A/light]
+[  21.47s] > get s/A/light
+[  21.47s] s/A/light = 0.000 lux  (seq 1018, sampled at hlc 23705788)
+[  21.47s]    (served by C, 1 attempt(s), 7 ms)
+[  25.43s >>> get s/A/light]
+[  25.48s] > get s/A/light
+[  25.48s] s/A/light = 0.000 lux  (seq 1018, sampled at hlc 23705788)
+[  25.48s]    (served by C, 1 attempt(s), 7 ms)
+[  29.45s >>> get s/A/light]
+[  29.50s] > get s/A/light
+[  29.50s] s/A/light = 0.000 lux  (seq 1019, sampled at hlc 23710788)
+[  29.50s]    (served by C, 1 attempt(s), 7 ms)
+[  33.46s >>> get s/A/light]
+[  33.51s] > get s/A/light
+[  33.51s] s/A/light = 0.000 lux  (seq 1020, sampled at hlc 23715788)
+[  33.51s]    (served by C, 1 attempt(s), 7 ms)
+
+[   0.00s port open, node A, Wed 21 07:43:35]
+[   1.31s >>> get s/A/light]
+[   1.36s] > get s/A/light
+[   1.36s] s/A/light = 0.000 lux  (seq 1022, sampled at hlc 23725788)
+[   1.36s]    (served by C, 1 attempt(s), 7 ms)
+[   5.32s >>> get s/A/light]
+[   5.37s] > get s/A/light
+[   5.37s] s/A/light = 0.000 lux  (seq 1023, sampled at hlc 23730788)
+[   5.37s]    (served by C, 1 attempt(s), 7 ms)
+[   9.34s >>> get s/A/light]
+[   9.39s] > get s/A/light
+[   9.39s] s/A/light = 8.333 lux  (seq 1024, sampled at hlc 23735788)
+[   9.39s]    (served by C, 1 attempt(s), 7 ms)
+[  14.01s >>> get s/A/light]
+[  14.06s] > get s/A/light
+[  14.06s] s/A/light = 9.166 lux  (seq 1025, sampled at hlc 23740788)
+[  14.06s]    (served by C, 1 attempt(s), 8 ms)
+[  18.03s >>> get s/A/light]
+[  18.08s] > get s/A/light
+[  18.08s] s/A/light = 11.666 lux  (seq 1026, sampled at hlc 23745788)
+[  18.08s]    (served by C, 1 attempt(s), 10 ms)
+[  22.05s >>> get s/A/light]
+[  22.10s] > get s/A/light
+[  22.10s] s/A/light = 11.666 lux  (seq 1026, sampled at hlc 23745788)
+[  22.10s]    (served by C, 1 attempt(s), 7 ms)
+[  26.06s >>> get s/A/light]
+[  26.11s] > get s/A/light
+[  26.11s] s/A/light = 11.666 lux  (seq 1027, sampled at hlc 23750788)
+[  26.11s]    (served by C, 1 attempt(s), 6 ms)
+[  30.08s >>> get s/A/light]
+[  30.13s] > get s/A/light
+[  30.13s] s/A/light = 12.500 lux  (seq 1028, sampled at hlc 23755788)
+[  30.13s]    (served by C, 1 attempt(s), 6 ms)
+[  34.09s >>> get s/A/light]
+[  34.14s] > get s/A/light
+[  34.14s] s/A/light = 11.666 lux  (seq 1029, sampled at hlc 23760788)
+[  34.14s]    (served by C, 1 attempt(s), 6 ms)
+[  38.11s >>> get s/A/light]
+[  38.16s] > get s/A/light
+[  38.16s] s/A/light = 15.000 lux  (seq 1030, sampled at hlc 23765788)
+[  38.16s]    (served by C, 1 attempt(s), 6 ms)
+[  40.87s]   2172.350 [A] compaction started (3030 bytes free)
+[  42.13s >>> get s/A/light]
+[  42.18s] > get s/A/light
+[  42.18s] s/A/light = 14.166 lux  (seq 1031, sampled at hlc 23770812)
+[  42.18s]    (served by C, 1 attempt(s), 18 ms)
+[  43.23s]   2174.738 [A] compaction #4 done: bank A, 11 keys, 15441 bytes free
+[  46.17s >>> get s/A/light]
+[  46.22s] > get s/A/light
+[  46.22s] s/A/light = 14.166 lux  (seq 1031, sampled at hlc 23770812)
+[  46.22s]    (served by C, 1 attempt(s), 6 ms)
+[  50.18s >>> get s/A/light]
+[  50.23s] > get s/A/light
+[  50.23s] s/A/light = 15.833 lux  (seq 1032, sampled at hlc 23775796)
+[  50.23s]    (served by C, 1 attempt(s), 7 ms)
+[  54.19s >>> get s/A/light]
+[  54.24s] > get s/A/light
+[  54.24s] s/A/light = 15.000 lux  (seq 1033, sampled at hlc 23780796)
+[  54.24s]    (served by C, 1 attempt(s), 6 ms)
+[  58.21s >>> get s/A/light]
+[  58.26s] > get s/A/light
+[  58.26s] s/A/light = 15.000 lux  (seq 1034, sampled at hlc 23785796)
+[  58.26s]    (served by C, 1 attempt(s), 7 ms)
+[  62.23s >>> get s/A/light]
+[  62.28s] > get s/A/light
+[  62.28s] s/A/light = 15.000 lux  (seq 1035, sampled at hlc 23790796)
+[  62.28s]    (served by C, 1 attempt(s), 6 ms)
+[  66.24s >>> get s/A/light]
+[  66.29s] > get s/A/light
+[  66.29s] s/A/light = 15.000 lux  (seq 1035, sampled at hlc 23790796)
+[  66.29s]    (served by C, 1 attempt(s), 6 ms)
+[  70.26s >>> get s/A/light]
+[  70.31s] > get s/A/light
+[  70.31s] s/A/light = 15.000 lux  (seq 1036, sampled at hlc 23795796)
+[  70.31s]    (served by C, 1 attempt(s), 6 ms)
+[  74.28s >>> get s/A/light]
+[  74.33s] > get s/A/light
+[  74.33s] s/A/light = 15.000 lux  (seq 1037, sampled at hlc 23800796)
+[  74.33s]    (served by C, 1 attempt(s), 6 ms)
+[  78.34s >>> get s/A/light]
+[  78.39s] > get s/A/light
+[  78.39s] s/A/light = 15.000 lux  (seq 1038, sampled at hlc 23805796)
+[  78.39s]    (served by C, 1 attempt(s), 6 ms)
+[  82.36s >>> get s/A/light]
+[  82.41s] > get s/A/light
+[  82.41s] s/A/light = 15.833 lux  (seq 1039, sampled at hlc 23810796)
+[  82.41s]    (served by C, 1 attempt(s), 6 ms)
+[  86.37s >>> get s/A/light]
+[  86.42s] > get s/A/light
+[  86.42s] s/A/light = 15.833 lux  (seq 1039, sampled at hlc 23810796)
+[  86.42s]    (served by C, 1 attempt(s), 6 ms)
+[  90.39s >>> get s/A/light]
+[  90.44s] > get s/A/light
+[  90.44s] s/A/light = 15.000 lux  (seq 1040, sampled at hlc 23815796)
+[  90.44s]    (served by C, 1 attempt(s), 6 ms)
+[  94.41s >>> get s/A/light]
+[  94.46s] > get s/A/light
+[  94.46s] s/A/light = 15.833 lux  (seq 1041, sampled at hlc 23820796)
+[  94.46s]    (served by C, 1 attempt(s), 6 ms)
+[  98.42s >>> get s/A/light]
+[  98.47s] > get s/A/light
+[  98.47s] s/A/light = 14.166 lux  (seq 1042, sampled at hlc 23825796)
+[  98.47s]    (served by C, 1 attempt(s), 9 ms)
+
+## coexistence bench (07:45:35), then period back to 5000
+
+[   0.00s port open, node A, Wed 21 07:45:35]
+[   1.31s >>> stats]
+[   1.36s] > stats
+[   1.36s] radio   rx 16709 (invalid 0, spoofed 0)  tx 6912 (failed 0)
+[   1.36s] hb      tx 4490  rx 13396   membership changes 4
+[   1.36s] server  executed 242  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+[   1.36s] repl    started 241  ok 241  failed 0  stale 0   as replica: applied 668 stale 0
+[   1.36s] ae      rounds 227  chunks tx 681 rx 1572  tables 664  pushes 0  resync tx 0 applied 0 stale 0
+[   1.36s] gc      orphans 0  tombstones 0  keys dropped 0
+[   1.36s] client  ok 1032  failed 0  attempts 1033  local 223
+[   1.36s] storage errors 1  compactions 4 (aborted 0)  faults injected 0
+[   1.36s] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[   1.36s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[   1.36s] esp-now rx 16709  queue overflows 0  unknown MAC 0
+[   1.36s] esp-now tx -> B: 167 delivered, 0 failed (MAC-layer ACK)
+[   1.36s] esp-now tx -> C: 1035 delivered, 0 failed (MAC-layer ACK)
+[   1.36s] esp-now tx -> D: 539 delivered, 0 failed (MAC-layer ACK)
+[   1.36s] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[   1.36s] eeprom page writes since boot: total 4742, hottest page 39 with 17 (rated 1000000)
+[   1.36s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[   3.31s >>> sensor period 1000]
+[   3.36s] > sensor period 1000
+[   3.36s] sampler on
+[  15.35s >>> status]
+[  15.40s] > status
+[  15.40s] node A  state ACTIVE  view ABCD  uptime 2266s
+[  15.40s] hlc 23864491.0
+[  15.40s] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 3323/16064 bytes, bank A, 4 compactions
+[  15.40s] pending: 0 client, 0 replication, 12 dedup entries, 8 free op slots
+[  15.40s] sensor light (hardware): on, 454 samples, last 8.333 lux seq 1056, 908 ok, 0 under-replicated, 0 failed, 0 read failures
+[  17.36s >>> bench 50]
+[  17.41s] > bench 50
+[  17.41s] bench: 50 sequential SETs on keys bench/0..7
+[  19.46s] bench: 50 ok, 0 failed in 2118 ms; latency min 29 avg 42 max 61 ms
+[  27.38s >>> bench 50]
+[  27.43s] > bench 50
+[  27.43s] bench: 50 sequential SETs on keys bench/0..7
+[  28.88s] bench: 50 ok, 0 failed in 1501 ms; latency min 25 avg 30 max 45 ms
+[  37.41s >>> bench 50]
+[  37.46s] > bench 50
+[  37.46s] bench: 50 sequential SETs on keys bench/0..7
+[  39.27s] bench: 50 ok, 0 failed in 1891 ms; latency min 26 avg 37 max 68 ms
+[  47.44s >>> set m9a/check bh1750-ok]
+[  47.50s] > set m9a/check bh1750-ok
+[  47.50s] SET m9a/check: OK (served by B, 1 attempt(s), 27 ms)
+[  50.45s >>> get m9a/check]
+[  50.51s] > get m9a/check
+[  50.51s] m9a/check = "bh1750-ok"
+[  50.51s]    (served by B, 1 attempt(s), 6 ms)
+[  53.46s >>> del m9a/check]
+[  53.52s] > del m9a/check
+[  53.52s] DEL m9a/check: OK (served by B, 1 attempt(s), 31 ms)
+[  56.47s >>> status]
+[  56.52s] > status
+[  56.53s] node A  state ACTIVE  view ABCD  uptime 2308s
+[  56.53s] hlc 23905742.0
+[  56.53s] storage recovered: 13 live, 1 tombstones, 14/64 keys, log 8627/16064 bytes, bank A, 4 compactions
+[  56.53s] pending: 0 client, 0 replication, 11 dedup entries, 8 free op slots
+[  56.53s] sensor light (hardware): on, 495 samples, last 15.833 lux seq 1097, 990 ok, 0 under-replicated, 0 failed, 0 read failures
+[  58.50s >>> stats]
+[  58.55s] > stats
+[  58.55s] radio   rx 17465 (invalid 0, spoofed 0)  tx 7407 (failed 0)
+[  58.55s] hb      tx 4604  rx 13733   membership changes 4
+[  58.55s] server  executed 269  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+[  58.55s] repl    started 268  ok 268  failed 0  stale 0   as replica: applied 775 stale 0
+[  58.55s] ae      rounds 232  chunks tx 696 rx 1624  tables 681  pushes 0  resync tx 0 applied 0 stale 1
+[  58.55s] gc      orphans 0  tombstones 0  keys dropped 0
+[  58.55s] client  ok 1291  failed 0  attempts 1292  local 250
+[  58.55s] storage errors 1  compactions 4 (aborted 0)  faults injected 0
+[  58.55s] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[  58.55s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  58.55s] esp-now rx 17465  queue overflows 0  unknown MAC 0
+[  58.55s] esp-now tx -> B: 186 delivered, 0 failed (MAC-layer ACK)
+[  58.55s] esp-now tx -> C: 1201 delivered, 0 failed (MAC-layer ACK)
+[  58.55s] esp-now tx -> D: 720 delivered, 0 failed (MAC-layer ACK)
+[  58.55s] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[  58.55s] eeprom page writes since boot: total 5105, hottest page 83 with 19 (rated 1000000)
+[  58.55s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[  60.50s >>> members]
+[  60.56s] > members
+[  60.56s]   A  self    ACTIVE
+[  60.56s]   B  alive   last heard 227 ms ago, 4566 heartbeats
+[  60.56s]   C  alive   last heard 201 ms ago, 4585 heartbeats
+[  60.56s]   D  alive   last heard 83 ms ago, 4594 heartbeats
+
+[   0.00s port open, node A, Wed 21 07:47:42]
+[   1.30s >>> sensor period 5000]
+[   1.36s] > sensor period 5000
+[   1.36s] sampler on
+[   3.31s >>> status]
+[   3.36s] > status
+[   3.36s] node A  state ACTIVE  view ABCD  uptime 2380s
+[   3.36s] hlc 23978443.0
+[   3.36s] storage recovered: 13 live, 1 tombstones, 14/64 keys, log 3193/16064 bytes, bank B, 5 compactions
+[   3.36s] pending: 0 client, 0 replication, 8 dedup entries, 8 free op slots
+[   3.36s] sensor light (hardware): on, 567 samples, last 14.166 lux seq 1169, 1134 ok, 0 under-replicated, 0 failed, 0 read failures
+

@@ -749,3 +749,137 @@
 [   1.32s B] > sensor on
 [   1.32s B] sampler on
 
+## re-check 07:04:11: heartbeat rate + status, then dump (07:05)
+
+# par.py Wed 21 07:04:11, steps: ['members', 'wait:28', 'members', 'status']
+[   1.31s D] >>> members (sent)
+[   1.31s A] >>> members (sent)
+[   1.31s B] >>> members (sent)
+[   1.31s C] >>> members (sent)
+[   1.33s A] > members
+[   1.33s A]   A  self    ACTIVE
+[   1.33s A]   B  alive   last heard 120 ms ago, 1632 heartbeats
+[   1.33s A]   C  alive   last heard 121 ms ago, 2069 heartbeats
+[   1.33s A]   D  alive   last heard 118 ms ago, 1980 heartbeats
+[   1.33s B] > members
+[   1.33s B]   A  alive   last heard 118 ms ago, 1663 heartbeats
+[   1.33s B]   B  self    ACTIVE
+[   1.33s B]   C  alive   last heard 120 ms ago, 2101 heartbeats
+[   1.33s B]   D  alive   last heard 118 ms ago, 1907 heartbeats
+[   1.33s D] > members
+[   1.33s D]   A  alive   last heard 119 ms ago, 1914 heartbeats
+[   1.33s D]   B  alive   last heard 120 ms ago, 1688 heartbeats
+[   1.33s D]   C  alive   last heard 120 ms ago, 2063 heartbeats
+[   1.33s D]   D  self    ACTIVE
+[   1.33s C] > members
+[   1.33s C]   A  alive   last heard 120 ms ago, 1762 heartbeats
+[   1.33s C]   B  alive   last heard 121 ms ago, 2096 heartbeats
+[   1.33s C]   C  self    ACTIVE
+[   1.33s C]   D  alive   last heard 119 ms ago, 1703 heartbeats
+[  31.96s A] >>> members (sent)
+[  31.96s B] >>> members (sent)
+[  31.96s D] >>> members (sent)
+[  31.96s C] >>> members (sent)
+[  31.96s D] > members
+[  31.96s D]   A  alive   last heard 282 ms ago, 1965 heartbeats
+[  31.96s D]   B  alive   last heard 283 ms ago, 1746 heartbeats
+[  31.96s D]   C  alive   last heard 283 ms ago, 2122 heartbeats
+[  31.96s D]   D  self    ACTIVE
+[  31.96s A] > members
+[  31.96s A]   A  self    ACTIVE
+[  31.96s A]   B  alive   last heard 282 ms ago, 1687 heartbeats
+[  31.96s A]   C  alive   last heard 283 ms ago, 2129 heartbeats
+[  31.96s A]   D  alive   last heard 280 ms ago, 2031 heartbeats
+[  31.96s C] > members
+[  31.96s C]   A  alive   last heard 282 ms ago, 1820 heartbeats
+[  31.96s C]   B  alive   last heard 283 ms ago, 2156 heartbeats
+[  31.96s C]   C  self    ACTIVE
+[  31.96s C]   D  alive   last heard 281 ms ago, 1752 heartbeats
+[  31.97s B] > members
+[  31.97s B]   A  alive   last heard 281 ms ago, 1714 heartbeats
+[  31.97s B]   B  self    ACTIVE
+[  31.97s B]   C  alive   last heard 283 ms ago, 2161 heartbeats
+[  31.97s B]   D  alive   last heard 281 ms ago, 1963 heartbeats
+[  33.97s C] >>> status (sent)
+[  33.97s A] >>> status (sent)
+[  33.97s D] >>> status (sent)
+[  33.97s B] >>> status (sent)
+[  33.97s C] > status
+[  33.97s C] node C  state ACTIVE  view ABCD  uptime 1104s
+[  33.97s C] hlc 21399189.0
+[  33.97s C] storage fresh format: 5 live, 0 tombstones, 5/64 keys, log 522/16064 bytes, bank A, 0 compactions
+[  33.97s C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s C] sensor sound (simulated): on, 20 samples, last 0 events, 0.0 % active seq 528, 38 ok, 2 under-replicated, 0 failed, 0 read failures
+[  33.97s A] > status
+[  33.97s A] node A  state ACTIVE  view ABCD  uptime 1219s
+[  33.97s A] hlc 21399187.0
+[  33.97s A] storage fresh format: 7 live, 0 tombstones, 7/64 keys, log 499/16064 bytes, bank A, 1 compactions
+[  33.97s A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s A] sensor light (simulated): on, 24 samples, last 321.983 lux seq 595, 41 ok, 7 under-replicated, 0 failed, 0 read failures
+[  33.97s D] > status
+[  33.97s D] node D  state ACTIVE  view ABCD  uptime 1153s
+[  33.97s D] hlc 21399187.0
+[  33.97s D] storage fresh format: 11 live, 0 tombstones, 11/64 keys, log 974/16064 bytes, bank A, 5 compactions
+[  33.97s D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s D] sensor temp (simulated): on, 21 samples, last 21.209 degC seq 436, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+[  33.98s B] > status
+[  33.98s B] node B  state ACTIVE  view ABCD  uptime 1129s
+[  33.98s B] hlc 21399188.0
+[  33.98s B] storage fresh format: 9 live, 0 tombstones, 9/64 keys, log 741/16064 bytes, bank A, 1 compactions
+[  33.98s B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.98s B] sensor motion (simulated): on, 21 samples, last 1 events, last motion 6 s before the sample seq 345, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+
+# par.py Wed 21 07:04:57, steps: ['dump']
+[   1.31s D] >>> dump (sent)
+[   1.31s A] >>> dump (sent)
+[   1.31s B] >>> dump (sent)
+[   1.31s C] >>> dump (sent)
+[   1.32s A] > dump
+[   1.32s A]   v=21399917.0@C  s/A/light = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.32s A]   v=21309956.1@B  h/D/temp/2 = 20.601 degC  (seq 434, sampled at hlc 21309892, simulated)
+[   1.32s A]   v=21339893.2@A  h/A/light/2 = 248.054 lux  (seq 594, sampled at hlc 21339892, simulated)
+[   1.32s A]   v=21339941.1@B  h/D/temp/3 = 21.441 degC  (seq 435, sampled at hlc 21339892, simulated)
+[   1.32s A]   v=21369893.2@A  h/A/light/3 = 321.983 lux  (seq 595, sampled at hlc 21369892, simulated)
+[   1.32s A]   v=21369893.1@D  h/D/temp/0 = 21.209 degC  (seq 436, sampled at hlc 21369891, simulated)
+[   1.32s A]   v=21369909.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 528, sampled at hlc 21369893, simulated)
+[   1.32s C] > dump
+[   1.32s C]   v=21399901.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.32s C]   v=21399917.0@C  s/A/light = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.32s C]   v=21309895.1@B  h/B/motion/3 = 0 events, last motion 559 s before the sample  (seq 343, sampled at hlc 21309894, simulated)
+[   1.32s C]   v=21339895.1@B  h/B/motion/0 = 1 events, last motion 4 s before the sample  (seq 344, sampled at hlc 21339893, simulated)
+[   1.32s C]   v=21369928.1@C  h/B/motion/1 = 1 events, last motion 6 s before the sample  (seq 345, sampled at hlc 21369893, simulated)
+[   1.32s C] 5 key(s); log 635/16064 bytes used
+[   1.32s D] > dump
+[   1.32s D]   v=21399901.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.32s D]   v=21399907.1@B  s/C/sound = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.32s D]   v=21309927.0@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 526, sampled at hlc 21309894, simulated)
+[   1.32s D]   v=21399896.0@B  s/D/temp = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.32s D]   v=21309968.1@B  h/A/light/1 = 187.619 lux  (seq 593, sampled at hlc 21309892, simulated)
+[   1.32s D]   v=21339893.2@A  h/A/light/2 = 248.054 lux  (seq 594, sampled at hlc 21339892, simulated)
+[   1.32s B] > dump
+[   1.32s B]   v=21309895.1@B  h/B/motion/3 = 0 events, last motion 559 s before the sample  (seq 343, sampled at hlc 21309894, simulated)
+[   1.32s B]   v=21399907.1@B  s/C/sound = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.32s B]   v=21309927.0@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 526, sampled at hlc 21309894, simulated)
+[   1.32s B]   v=21399896.0@B  s/D/temp = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.32s B]   v=21309956.1@B  h/D/temp/2 = 20.601 degC  (seq 434, sampled at hlc 21309892, simulated)
+[   1.32s B]   v=21309968.1@B  h/A/light/1 = 187.619 lux  (seq 593, sampled at hlc 21309892, simulated)
+[   1.32s B]   v=21339895.1@B  h/B/motion/0 = 1 events, last motion 4 s before the sample  (seq 344, sampled at hlc 21339893, simulated)
+[   1.34s A]   v=21399897.1@A  h/D/temp/1 = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.34s A]   v=21399898.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.34s A]   v=21399914.0@D  h/B/motion/2 = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.34s A]   v=21399929.1@D  h/A/light/0 = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.34s A] 11 key(s); log 785/16064 bytes used
+[   1.34s B]   v=21339941.1@B  h/D/temp/3 = 21.441 degC  (seq 435, sampled at hlc 21339892, simulated)
+[   1.34s B]   v=21339954.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 527, sampled at hlc 21339893, simulated)
+[   1.34s B]   v=21399897.1@A  h/D/temp/1 = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.34s B] 10 key(s); log 907/16064 bytes used
+[   1.34s D]   v=21339954.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 527, sampled at hlc 21339893, simulated)
+[   1.34s D]   v=21369893.1@D  h/D/temp/0 = 21.209 degC  (seq 436, sampled at hlc 21369891, simulated)
+[   1.34s D]   v=21369909.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 528, sampled at hlc 21369893, simulated)
+[   1.34s D]   v=21369893.2@A  h/A/light/3 = 321.983 lux  (seq 595, sampled at hlc 21369892, simulated)
+[   1.34s D]   v=21369928.1@C  h/B/motion/1 = 1 events, last motion 6 s before the sample  (seq 345, sampled at hlc 21369893, simulated)
+[   1.34s D]   v=21399898.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.34s D]   v=21399914.0@D  h/B/motion/2 = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.34s D]   v=21399929.1@D  h/A/light/0 = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.34s D] 14 key(s); log 1321/16064 bytes used
+

@@ -6,7 +6,7 @@ The expected outputs below come from a full rehearsal in `build/host/edge_sim` o
 
 ## Before the audience arrives (not counted)
 
-1. Power the four boards. Open one console per board on the laptop (`pio device monitor -p /dev/serial/by-id/<board> -b 115200`), tiled A B / C D.
+1. Place the boards: boards at least ~20 cm apart, antenna end (the end opposite the USB-C) clear of wires, breadboards and the laptop (BRINGUP_LOG problem 14: close together, views flap). Power the four boards. Open one console per board on the laptop (`pio device monitor -p /dev/serial/by-id/<board> -b 115200`), tiled A B / C D.
 2. SSH into the Pi in one terminal: `cd ~/distributed-edge-storage/pi`.
 3. On every console: `sensor period 5000`, so readings change visibly. On B and D, `log off` to keep their consoles quiet. Keep A and C at the default `log info`: their log lines are part of the show.
 4. Check that the Pi's `python3 -m edgekv ping` prints `bridge is node A`.

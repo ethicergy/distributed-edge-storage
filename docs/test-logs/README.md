@@ -19,6 +19,7 @@ Evidence for the test matrix in docs/HARDWARE_TEST_PLAN.md.
 | `problem7-foreign-keys.log` | deleting the foreign keys from B's module, tombstone GC, push-back after one-at-a-time compaction, simultaneous compaction |
 | `wed21-health.log` | Wed 21 06:50: status/stats/members and dumps of all four after the overnight power-off (problem 13: full key index) |
 | `wed21-format.log` | Wed 21 06:54: final dumps, `format yes` on all four in parallel, 60 s watch, heartbeat rate per link (problem 14) |
+| `sensor-A.log` | M9a: BH1750 on A, after flash, baseline, torch, cover/uncover, EEPROM coexistence bench at 1 s sampling |
 | `H<n>-node-<x>.log` | serial log of node x during hardware test H<n> (docs/HARDWARE_TEST_PLAN.md) |
 | `H14-pi.log` | Raspberry Pi terminal output for H14 |
 
