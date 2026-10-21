@@ -461,9 +461,11 @@ void test_real_sensor_mask()
     REQUIRE(sensor::real_sensor_enabled(node::C, 0x0F));
     REQUIRE(!sensor::real_sensor_enabled(node::INVALID, 0xFF));
 
-    // Shipped default: every node simulated.
+    // Shipped default follows config::REAL_SENSOR_NODES (bits set per
+    // module after its hardware check, docs/BRINGUP.md 4.6).
     for (node::Id id = node::MIN; id <= node::MAX; ++id) {
-        REQUIRE(!sensor::real_sensor_enabled(id));
+        const bool bit = (config::REAL_SENSOR_NODES >> (id - node::MIN)) & 0x01;
+        REQUIRE(sensor::real_sensor_enabled(id) == bit);
     }
 }
 
