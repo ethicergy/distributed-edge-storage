@@ -244,6 +244,49 @@ void h6_replica_failure()
 }
 
 // ------------------------------------------------------------------
+// Storage faults are named on the console (BRINGUP_LOG problem 15):
+// a replica's failed write was counted silently before, and every
+// fault read only "STORAGE_ERROR".
+// ------------------------------------------------------------------
+
+bool logged(Cluster& cluster, node::Id id, const std::string& text)
+{
+    for (const std::string& line : cluster.node(id).log) {
+        if (line.find(text) != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void storage_fault_logged()
+{
+    Cluster cluster(16, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    // Replica C's write times out: C names it, B reports it.
+    const std::string key = cluster.key_owned_by("fault-", node::B, node::C);
+    cluster.node(node::C).eeprom.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    const sim::OpOutcome out = cluster.set(node::A, key, "v1");
+    CHECK(out.completed);
+    CHECK(logged(cluster, node::C, "storage error on " + key + " (replica write from B): WRITE_TIMEOUT"));
+    CHECK(logged(cluster, node::B, "replica C answered STORAGE_ERROR for " + key));
+
+    // Primary B's own write fails on the bus.
+    cluster.node(node::B).eeprom.fail_next_write(eeprom::Result::I2C_ERROR);
+    cluster.set(node::A, key, "v2");
+    CHECK(logged(cluster, node::B, "storage error on " + key + ": I2C_ERROR"));
+
+    // A failed write inside a compaction step names the fault too
+    // (what D showed on Wed 21 as "compaction aborted (10)").
+    CHECK(cluster.runtime(node::D).storage().compaction_begin() == storage::Result::OK);
+    cluster.node(node::D).eeprom.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    CHECK(cluster.run_until([&] { return logged(cluster, node::D, "compaction aborted (10, WRITE_TIMEOUT)"); },
+                            5000));
+}
+
+// ------------------------------------------------------------------
 // H7 + H8: primary fails -> old replica serves (failover by
 // placement); primary returns -> catch-up, and no read ever returns
 // the stale value.
@@ -1304,6 +1347,7 @@ int main(int argc, char** argv)
         {"ZOMBIE", no_zombie_after_tombstone_gc},
         {"H13", h13_sensor_soak},
         {"SENSORS", real_sensor_logic_end_to_end},
+        {"FAULTLOG", storage_fault_logged},
     };
 
     for (const Scenario& scenario : scenarios) {

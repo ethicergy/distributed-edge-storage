@@ -569,7 +569,8 @@ void Runtime::handle_client_request(
 
     if (response.result == kv::Result::STORAGE_ERROR) {
         ++counters_.storage_errors;
-        logf(LogLevel::INFO, "storage error on %s", key_text);
+        logf(LogLevel::INFO, "storage error on %s: %s", key_text,
+             storage::to_string(storage_.last_fault()));
     }
 
     if (mutation && response.result == kv::Result::OK) {
@@ -954,6 +955,16 @@ void Runtime::handle_replication_request(
     char key_text[storage::KEY_MAX + 1];
     format_key(response.key, response.key_length, key_text, sizeof(key_text));
 
+    if (response.result == kv::Result::STORAGE_ERROR) {
+        logf(
+            LogLevel::INFO,
+            "storage error on %s (replica write from %c): %s",
+            key_text,
+            letter(header.sender_node_id),
+            cache ? storage::to_string(storage_.last_fault()) : "dedup table full"
+        );
+    }
+
     logf(
         LogLevel::DEBUG,
         "REPL_REQ %s%s from %c -> %s",
@@ -1039,10 +1050,13 @@ void Runtime::handle_resync(
 
         logf(
             LogLevel::INFO,
-            "anti-entropy: %s from %c failed (%s)",
+            "anti-entropy: %s from %c failed (%s%s%s)",
             key_text,
             letter(message.header.sender_node_id),
-            kv::to_string(response.result)
+            kv::to_string(response.result),
+            response.result == kv::Result::STORAGE_ERROR ? ": " : "",
+            response.result == kv::Result::STORAGE_ERROR
+                ? storage::to_string(storage_.last_fault()) : ""
         );
     }
 }
@@ -1933,8 +1947,9 @@ void Runtime::tick_storage(std::uint64_t now_ms)
             compaction_retry_ms_ = now_ms + 30000;
             logf(
                 LogLevel::INFO,
-                "compaction aborted (%u); old bank stays authoritative",
-                static_cast<unsigned>(result)
+                "compaction aborted (%u, %s); old bank stays authoritative",
+                static_cast<unsigned>(result),
+                storage::to_string(storage_.last_fault())
             );
             return;
         }
