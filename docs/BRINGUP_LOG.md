@@ -1,47 +1,70 @@
 # Bring-up log
 
-## RESUME HERE (updated Wed 21 07:08)
+## RESUME HERE (updated Wed 21 09:50, NS on a break: multimeter batteries)
 
-**Wed 21 morning:** all four powered off overnight, back on ~06:44-06:46 (same by-id paths, EEPROMs as before). **A now also has the BH1750 (GY-302)** on its I2C bus (VCC 3V3, GND, SDA 8 / SCL 9 shared with the EEPROM, ADDR → GND); wired before power-on; boards powered on ~06:44-06:46 (derived from uptime). `REAL_SENSOR_NODES` still `0x00`. Pi off.
+A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
-* Health check 06:50: everything fine except the full key index (problem 13). **All four formatted fresh 06:55** (in parallel): 0/64 keys, ACTIVE, `ABCD`, no FATAL on A. `storage errors` counters still show the pre-format totals (A 80, B 24, D 159) until each node reboots; they did not grow.
-* Problem 14 (heartbeat loss on air, view flaps, 06:55-06:58): probable cause boards too close together; NS spread them apart between the 06:57 and 07:04 measurements → 80-98 % per link, 0 flaps. Rule: ≥ ~20 cm apart, antenna ends clear (BRINGUP 3.3, DEMO setup). After the format the stores hold only sensor keys (`s/*`, `h/*`, 2 copies each).
-* measure.py now deletes its test keys at the end of each section (`--keep-keys` to keep).
-* **M9a done 07:47** (BH1750 on A, bit `0x01`, A flashed 07:08): torch 3168 lux, cover 0.000 lux, coexistence bench 150/0 at 1 s sampling. A's sampler back at 5 s. **Open: problem 15** (one replica storage error on A at 07:12:34, cause not found).
-* **M9d done 09:01** (DHT11 on D, mask `0x09`, D flashed 08:25): 4.8 radio check pass, breathe +2 °C, STALE after 10 s with DATA off, back on reconnect. D's sampler at 5 s.
-* **Problem 15 (open, priority before the soak):** D's errors are compaction aborts (EEPROM fault inside compaction) → log fills → NO_SPACE; all 8 aborts while DHT DATA was off. A's 4 errors unexplained. Fault-type logging approved, to be written and tested, **not flashed** until the pre-soak reflash of all four (with the final mask).
-* **Next:** M9c, LM393 on C, then M9b AM312 on B.
+### Boards (all four ACTIVE, view `ABCD`, at the last check)
+
+By-id path: `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_14:63:93:<MAC>-if00`.
+
+| node | MAC / usbipd BUSID | image on the board | firmware source | `REAL_SENSOR_NODES` in that image | sensor wired / verified | EEPROM | storage errors / aborted compactions (last check) |
+|---|---|---|---|---|---|---|---|
+| A (Pi bridge) | `C5:D0:18` / 1-1 | `node-a` built Wed 21 07:07:54 | `3798192` + mask `0x01` (committed `55509b5`) | `0x01` (A real) | BH1750 (GY-302) on the EEPROM bus, **verified M9a** | 3V3, fresh format Wed 06:55 | 4 / 0 (09:01) |
+| B | `C5:C3:1C` / 5-3 | `node-b` built Tue 20 15:46:38 | `3798192` | `0x00` (simulated) | none yet (AM312 next after C) | 3V3 (resoldered Tue), fresh format Wed 06:55 | 24 / 0 (08:48; all 24 from before the format, counter runs since boot) |
+| C | `C8:A3:08` / 5-4 | `node-c` built Tue 20 15:46:48 | `3798192` | `0x00` (simulated) | none yet (LM393 next) | 3V3, fresh format Wed 06:55 | 0 / 0 (08:48) |
+| D | `C5:C1:9C` / 5-2 | `node-d` built Wed 21 08:25:31 | `3798192` + mask `0x09` (committed `acc368e`) | `0x09` (D real) | DHT11, **verified M9d**; DATA (S) was unplugged for the problem-15 test and **NS is reconnecting S → GPIO4** now | 3V3; a jumper was reseated 08:19 (problem 16), **not yet metered** | 32 / 13 (09:21, all aborts with DATA off or miswired) |
+
+Sampler periods: A 5 s, D 5 s, B and C 30 s (default). Pi: **OFF** until NS says otherwise. `include/config.h` on the branch says `0x09`.
+
+### Committed but NOT flashed (go into the pre-soak reflash of all four)
+
+* `24569fb` storage fault named on the console (`storage error on k (replica write from B): WRITE_TIMEOUT`, `compaction aborted (10, WRITE_TIMEOUT)`); replica-side errors were silent before.
+* `9ded10a` F1: the DHT11 read holds `i2c_bus::Lock` (FreeRTOS mutex, priority inheritance).
+* `15a9273` F2: `eeprom::wait_for_write_cycle` polls once more after its 10 ms deadline (`include/eeprom_poll.h`, `test/eeprom_poll_test.cpp`).
+* Also on the branch: `19c137e` measure.py deletes its test keys; `f51918d` mask test follows the config.
+* Host state: `make check` passes (32 host tests + Pi tests); all four envs compile.
+
+### Milestones
+
+* **Done:** M1-M5 (incl. H1, H2, H3, H11), M7 (latency + failover; RESULTS.md §1-2), **M9a** (BH1750 on A), **M9d** (DHT11 on D, BRINGUP 4.8 radio check pass).
+* **Next / not started:** M9c (LM393 on C), M9b (AM312 on B), M9e (all four sensors 30 min), G1 go/no-go, M10 soak, M11, M8 (H6, H7, H8, H12a, H9), M12 (-fi images: H4, H5, H10, loss), M13 (H12b), M14-M17.
+* **Deferred:** M6 (Pi bridge) and H14: the Pi is OFF until NS says so.
+
+### Open problems
+
+* **15 (fixes committed, awaiting hardware validation):** storage errors on D = compaction aborts (EEPROM fault inside compaction) → log fills → NO_SPACE. Cause: the DHT11 task can run inside an EEPROM op, and a failed read keeps interrupts off for tens of ms; `wait_for_write_cycle` then gives up without a final poll. Test (a) vs (b) 09:11-09:21, DATA off, untouched: 5 aborts → (a), not handling. F1 + F2 + logging validated only after the pre-soak reflash. A's 4 errors (07:12, 07:54-08:21) have no DHT and are unexplained; F2 may cover them, the logging will tell.
+* **16:** D's EEPROM jumpers reseated, waiting for NS's meter check.
+* **Pending decision:** DHT read back-off after N failures (assessed small and testable) **deferred until after the DATA-off validation**, because it would hide F1's effect in that test.
+* Watch items: problem 14 (heartbeat loss when boards are close), problem 9/10 (USB output and echo; press Enter, send an empty line first).
+
+### Next steps, in order
+
+1. **NS reports D's jumper meter check** (and that S is back on GPIO4). Then check D: `status` (DHT reading, no `STALE`), `stats`.
+2. **M9c, LM393 on C** (BRINGUP 3.3, 4.6). Wiring, C off first: VCC → 3V3 (not 5 V), GND → GND, DO → GPIO4, AO unconnected, by silkscreen. Settings already in config: `SOUND_DO_PIN = 4`, `SOUND_ACTIVE_HIGH = false`, `SOUND_EVENT_GAP_MS = 150`; C's bit `0x04`. Pot (by NS, LEDs only, before flashing): quiet room, turn until the DO LED just goes off (or from off: until just on, then back to just off), then about a quarter turn less sensitive; a clap at 30 cm flashes it, talking at 1 m mostly not. NS reports **polarity**: LED lit on sound = DO low = matches `false`; lit in silence = flipped (changing `SOUND_ACTIVE_HIGH` needs NS's approval). Then: `stats` on all four (storage errors before), mask `0x0D`, flash C only, `status` shows `sensor sound (hardware)`; `sensor period 5000`; 30 s quiet baseline (0 events, 0 %; 100 % with 0 events = pot too sensitive); NS claps twice and messages → expect `2 events, x % active`; `bench 50` on C; storage errors after; log `sensor-C.log`; commit the mask with the log; push.
+3. **M9b, AM312 on B** (BRINGUP 4.3, 4.6): VCC → 3V3, GND → GND, OUT → GPIO4. Settle time: `PIR_SETTLE_MS = 30000`; measure it if asked (4.3). Stimulus: stay still past settling, then wave → `1 events, last motion 0 s`. Mask `0x0F`.
+4. **Pre-soak reflash of all four**: mask `0x0F` + logging + F1 + F2 (all from the branch head). Flash each with `.venv/bin/pio run -e node-<x> -t upload --upload-port <by-id>`; record banners/`status` (`sensor … (hardware)` on all four).
+5. **Pre-soak validation:** (a) 10 min with D's DATA unplugged, nobody touching → expect **0 aborted compactions, 0 storage errors** on D (with fault lines if any); (b) `bench 50` ×3 on D, compare with the 4.8 run 2 numbers (avg 30.7 ms, max 67 ms) for F1's latency cost; (c) health check of all four: `status`, `stats`, `members` (storage errors 0, view `ABCD`, 0 queue overflows, heartbeats ~2/s per link). Reconnect DATA after (a).
+6. **Overnight soak (M10, H13):** all four sensors real, default 30 s period (or as NS decides), continuous console captures of all four to `docs/test-logs/soak-*.log` (logging shows any storage fault). Morning (M11): `status`, `stats`, `members`, `sensors` on all four; storage errors (expect 0), aborted compactions, `queue overflows`, sensor `0 failed`, seq ≈ elapsed / period; `scripts/measure.py --sections sensors,wear` (fills RESULTS sensors and wear).
+7. Then: M9e if not covered by the soak, remaining H-tests (M8: H6, H7, H8, H12a, H9; M12 with the `-fi` images; M13 H12b), RESULTS.md hardware column (M14), demo rehearsals (M15, M16: DEMO.md, no-Pi version), slides.
+
+### Standing rules
+
+* `/dev/serial/by-id/...` paths only, never `ttyACMx`.
+* After a replug or opening a port: send an empty line first, wait ~1.2 s (boot input hold).
+* Never `cat`/`echo` to a tty (echo feeds output back as commands); use pyserial or `pio device monitor`.
+* Wire by **silkscreen**, never by position (problems 4, 17).
+* Boards ≥ 20 cm apart, antenna ends (opposite the USB-C) clear of wires, breadboards, laptop (problem 14).
+* Physical actions are NS's: say exactly what to do and wait.
+* Use the laptop's clock for timestamps; NS messages at the moment of each action. For timed stimuli NS acts first and messages, then the capture starts.
+* Record `storage errors` (and aborted compactions) before and after every step.
+* Firmware fixes test-first (host/sim test failing first); ask before any change NS has not approved, and log decisions in §3.
+* `scripts/measure.py` waits after opening each port and deletes its test keys (`--keep-keys` to keep).
+* `format yes` on every new EEPROM module before it joins (problem 7).
+* A board missing from `/dev/serial/by-id`: on Windows (admin PowerShell) `usbipd list`, then `usbipd attach --wsl --busid <BUSID> --auto-attach` with A 1-1, D 5-2, B 5-3, C 5-4. If it is not listed at all, the cable or power is the problem (NS).
+* PlatformIO is `.venv/bin/pio` (not on PATH). Commit and push at the points NS names; "who" column = NS.
 
 ---
-
-*Tue 20 state (for reference):*
-
-All four nodes are up with EEPROMs and in one view (`ABCD`). B was resoldered (3V3 and GND), so the GPIO6 workaround is retired (D10 superseded, `dd78c40`).
-
-**Boards** (by-id `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_<MAC>-if00`; all attached with `usbipd --auto-attach`):
-
-| label | node | MAC / hub port | image | EEPROM | state |
-|---|---|---|---|---|---|
-| 1 | A (Pi bridge) | `14:63:93:C5:D0:18` / 1-1 | `node-a`, built Tue 14:43:59 (`06f45b1`) | 3V3, passed step 2 + power cycle | ACTIVE, `ABCD`; **Pi off** |
-| 3 | B | `14:63:93:C5:C3:1C` / 5-3 | `node-b`, built Tue 14:44:06 (`06f45b1`) | 3V3, passed step 2 + power cycle, H11 (format + refill) | ACTIVE, `ABCD` |
-| 4 | C | `14:63:93:C8:A3:08` / 5-4 | `node-c`, built Tue 14:44:12 (`06f45b1`) | 3V3, passed step 2 + power cycle | ACTIVE, `ABCD` |
-| 2 | D | `14:63:93:C5:C1:9C` / 5-2 | `node-d`, built Tue 14:44:17 (`06f45b1`) | 3V3, passed step 2 + power cycle | ACTIVE, `ABCD` |
-
-All four run the same build (`06f45b1`, echo guard at boot and USB re-plug only). Samplers are on (default period).
-
-**Foreign data (problem 7): resolved Tue 14:58**, 0 foreign keys and 0 tombstones on all four. **Open:** tombstone GC ping-pong when nodes compact at different times (problem 11, fix needs a decision); compact all four at once until then.
-
-**Milestones:** M1-M4 done. M5: four-node checks passed (members `ABCD`, catch-up, handed-off keys back, stand-in copies GC'd, set/get from every node); H1-H3 passed Tue 13:53. H11 passed early (format + refill on B). **M6 (Pi bridge) and H14 are deferred: the Pi is off.** Next: M7 (`measure.py` baseline on the four boards).
-
-**`measure.py`** sends an empty line on every port (re)open, then waits 1.2 s before its first command (`POST_OPEN_WAIT_S`). The echo guard now holds input only at boot and USB re-plug (problem 10).
-
-**Next step:** M7 done Tue 16:13 (latency + failover). Remaining measurements: loss (needs the `-fi` images, M12), sensors/wear (after the soak, M10/M11).
-
-**Optional, not scheduled:** a laptop-side logger that polls A's console `sensors` over USB and writes the same CSV as `edgekv watch` (estimate 2.5 h, no firmware change). Only if the Pi stays off for the demo and a CSV is wanted.
-
-**Now:** M9 real sensors, one module at a time (A BH1750 → D DHT11 + BRINGUP 4.8 → C LM393 → B AM312), then loss tests (-fi images), then an overnight soak with real sensors.
-
-**Committed and pushed** (`hw-bringup`), newest last: `f85e49e` monitor reset, `b81c370` 0x58 guard, `f3b5e1c` step 2 on A, `2a9730f` A+C / A+C+D, `142b8fe` D10 GPIO6, `c7d0735` echo guard (drain trigger), `0077669` pause, `dd78c40` D10 retired, `dc9de2e` four nodes + H11, `81eb8d3` H1-H3, `0a19939` H1-B accepted, `05f6954` measure.py open wait, `06f45b1` echo guard at boot/re-plug only, `9e25ea4` problem 7 resolved.
 
 ## 1. Milestones: planned vs actual
 
