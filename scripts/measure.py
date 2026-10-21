@@ -23,6 +23,11 @@ Sections (--sections, default all):
 
 Run 'sensors' and 'wear' after a long run (the overnight soak): they read
 counters since boot. Needs pyserial for --ports.
+
+Every key a section writes (lat/*, fo/*, bench/*) is deleted again at the
+end of that section (--keep-keys to keep them): each node indexes at most
+64 keys, and leftover test keys filled it on the boards (BRINGUP_LOG
+problem 13). The tombstones are removed by GC later.
 """
 
 from __future__ import annotations
@@ -37,7 +42,7 @@ import sys
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Set, Tuple
 
 NODES = ["A", "B", "C", "D"]
 BRIDGE = "A"
@@ -348,6 +353,7 @@ class Session:
         self._transcript = open(transcript, "a", encoding="utf-8") if transcript else None
         self._verbose = verbose
         self._t0 = time.monotonic()
+        self.created: Set[str] = set()  # keys written, for delete_created_keys
 
     def close(self) -> None:
         self.backend.close()
@@ -467,6 +473,8 @@ def wait_cluster_ready(s: Session, timeout: float = 60) -> None:
 def op(s: Session, node: str, kind: str, key: str, value: str = "") -> Optional[Tuple[str, str, int, int]]:
     """One console SET/GET. Returns (status, served_by, attempts, latency_ms)."""
     command = f"{kind.lower()} {key}" + (f" {value}" if kind == "SET" else "")
+    if kind == "SET":
+        s.created.add(key)
     any_result = re.compile(OP_RESULT.pattern + "|" + GET_SERVED.pattern)
     m, _ = s.command(node, command, any_result)
     if not m:
@@ -642,6 +650,7 @@ def measure_loss(s: Session, r: Results, bench: int, levels=(10, 20)) -> None:
             continue
 
         before = {n: snapshot(s, n) for n in NODES}
+        s.created.update(f"bench/{i}" for i in range(8))  # console.cpp cmd_bench
         for origin in (BRIDGE, "B"):
             m, _ = s.command(origin, f"bench {bench}", BENCH, timeout=max(120.0, bench * 6.0))
             if m:
@@ -659,6 +668,24 @@ def measure_loss(s: Session, r: Results, bench: int, levels=(10, 20)) -> None:
         r.put(f"loss{pct}_retries", f"{extra} extra client attempts, {replays} duplicate requests answered from cache",
               {"extra_attempts": extra, "dedup_replays": replays})
         s.settle(3.0)
+
+
+def delete_created_keys(s: Session) -> None:
+    """DEL every key the measurements wrote, through the bridge node."""
+    if not s.created:
+        return
+    deleted, missing, failed = 0, 0, []
+    for key in sorted(s.created):
+        m, _ = s.command(BRIDGE, f"del {key}", OP_RESULT, timeout=15)
+        if m and m.group(3) == "OK":
+            deleted += 1
+        elif m and m.group(3) == "NOT_FOUND":
+            missing += 1
+        else:
+            failed.append(key)
+    s.created.clear()
+    print(f"  cleanup: {deleted} test key(s) deleted, {missing} already gone"
+          + (f", NOT deleted: {' '.join(failed)}" if failed else ""), flush=True)
 
 
 def measure_sensors(s: Session, r: Results) -> None:
@@ -745,6 +772,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     p.add_argument("--victim", default="C", choices=NODES)
     p.add_argument("--event-timeout", type=float, default=180,
                    help="boards: seconds to wait for each unplug/replug (default 180)")
+    p.add_argument("--keep-keys", action="store_true",
+                   help="keep the test keys (default: deleted at the end of each section)")
     p.add_argument("--log", help="append the console transcript to this file")
     p.add_argument("--json", help="write all results to this JSON file")
     p.add_argument("--fill", help="RESULTS.md to fill")
@@ -772,14 +801,18 @@ def main(argv: Optional[List[str]] = None) -> int:
         wait_cluster_ready(session)
         if "latency" in sections or "loss" in sections:
             set_sampling(session, False)
+        cleanup = (lambda: None) if args.keep_keys else (lambda: delete_created_keys(session))
         if "latency" in sections:
             measure_latency(session, results, args.count)
+            cleanup()
         if "failover" in sections:
             measure_failover(session, results, args.victim, args.repair_keys)
             wait_cluster_ready(session)
             set_sampling(session, False)  # the victim rebooted with its sampler on
+            cleanup()
         if "loss" in sections:
             measure_loss(session, results, args.bench)
+            cleanup()
         set_sampling(session, True)
         if "sensors" in sections:
             measure_sensors(session, results)
