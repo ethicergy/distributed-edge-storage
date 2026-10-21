@@ -1,0 +1,1581 @@
+# M9d, Wed 21: DHT11 on node D (VCC 3V3, GND, DATA GPIO4).
+
+## pre-wiring counters (07:54:06), D power-off (07:58:41)
+
+# par.py Wed 21 07:54:06, steps: ['stats', 'status']
+[   1.31s D] >>> stats (sent)
+[   1.31s B] >>> stats (sent)
+[   1.31s A] >>> stats (sent)
+[   1.31s C] >>> stats (sent)
+[   1.32s B] > stats
+[   1.32s B] radio   rx 29318 (invalid 0, spoofed 0)  tx 10975 (failed 0)
+[   1.32s B] hb      tx 8164  rx 23373   membership changes 82
+[   1.32s B] server  executed 590  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   1.32s B] repl    started 588  ok 588  failed 0  stale 0   as replica: applied 31 stale 0
+[   1.32s B] ae      rounds 410  chunks tx 1425 rx 4566  tables 1199  pushes 56  resync tx 56 applied 19 stale 6
+[   1.32s B] gc      orphans 16  tombstones 0  keys dropped 16
+[   1.32s B] client  ok 241  failed 0  attempts 241  local 60
+[   1.32s B] storage errors 24  compactions 3 (aborted 0)  faults injected 0
+[   1.32s B] env node-b, built Oct 20 2026 15:46:38, reset reason: power-on
+[   1.32s B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[   1.32s B] esp-now rx 29318  queue overflows 0  unknown MAC 0
+[   1.32s B] esp-now tx -> A: 269 delivered, 0 failed (MAC-layer ACK)
+[   1.32s B] esp-now tx -> C: 390 delivered, 0 failed (MAC-layer ACK)
+[   1.32s B] esp-now tx -> D: 727 delivered, 0 failed (MAC-layer ACK)
+[   1.32s B] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[   1.32s B] eeprom page writes since boot: total 4046, hottest page 52 with 21 (rated 1000000)
+[   1.32s C] > stats
+[   1.32s C] radio   rx 30140 (invalid 0, spoofed 0)  tx 11613 (failed 0)
+[   1.32s C] hb      tx 8114  rx 23217   membership changes 73
+[   1.32s C] server  executed 1022  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+[   1.32s C] repl    started 878  ok 877  failed 1  stale 0   as replica: applied 114 stale 0
+[   1.32s C] ae      rounds 408  chunks tx 1236 rx 4643  tables 1181  pushes 3  resync tx 3 applied 13 stale 8
+[   1.32s C] gc      orphans 10  tombstones 0  keys dropped 5
+[   1.32s C] client  ok 239  failed 0  attempts 239  local 0
+[   1.32s C] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+[   1.32s C] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+[   1.32s C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[   1.32s C] esp-now rx 30140  queue overflows 0  unknown MAC 0
+[   1.32s C] esp-now tx -> A: 1551 delivered, 0 failed (MAC-layer ACK)
+[   1.32s C] esp-now tx -> B: 389 delivered, 0 failed (MAC-layer ACK)
+[   1.32s C] esp-now tx -> D: 323 delivered, 0 failed (MAC-layer ACK)
+[   1.32s C] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[   1.32s C] eeprom page writes since boot: total 4901, hottest page 164 with 17 (rated 1000000)
+[   1.32s D] > stats
+[   1.32s D] radio   rx 29665 (invalid 0, spoofed 0)  tx 12132 (failed 0)
+[   1.32s D] hb      tx 8211  rx 23351   membership changes 63
+[   1.32s D] server  executed 382  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+[   1.32s D] repl    started 380  ok 378  failed 2  stale 0   as replica: applied 1010 stale 0
+[   1.32s D] ae      rounds 413  chunks tx 1859 rx 4191  tables 1182  pushes 111  resync tx 111 applied 12 stale 1
+[   1.32s D] gc      orphans 9  tombstones 0  keys dropped 9
+[   1.32s D] client  ok 241  failed 0  attempts 241  local 32
+[   1.32s D] storage errors 159  compactions 10 (aborted 0)  faults injected 0
+[   1.32s D] env node-d, built Oct 20 2026 15:38:19, reset reason: power-on
+[   1.32s D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[   1.32s D] esp-now rx 29665  queue overflows 0  unknown MAC 0
+[   1.32s D] esp-now tx -> A: 1036 delivered, 0 failed (MAC-layer ACK)
+[   1.32s D] esp-now tx -> B: 693 delivered, 0 failed (MAC-layer ACK)
+[   1.32s D] esp-now tx -> C: 333 delivered, 0 failed (MAC-layer ACK)
+[   1.32s D] heap free 179008 (min 170180)  node task stack headroom 13320 bytes
+[   1.32s D] eeprom page writes since boot: total 10628, hottest page 274 with 42 (rated 1000000)
+[   1.32s A] > stats
+[   1.32s A] radio   rx 21168 (invalid 0, spoofed 0)  tx 8957 (failed 0)
+[   1.32s A] hb      tx 5511  rx 16434   membership changes 4
+[   1.32s A] server  executed 345  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+[   1.32s A] repl    started 344  ok 344  failed 0  stale 0   as replica: applied 980 stale 0
+[   1.32s A] ae      rounds 278  chunks tx 834 rx 2121  tables 814  pushes 0  resync tx 0 applied 0 stale 1
+[   1.32s A] gc      orphans 0  tombstones 0  keys dropped 0
+[   1.32s A] client  ok 1583  failed 0  attempts 1584  local 322
+[   1.32s A] storage errors 1  compactions 5 (aborted 0)  faults injected 0
+[   1.32s A] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[   1.32s A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[   1.32s A] esp-now rx 21168  queue overflows 0  unknown MAC 0
+[   1.32s A] esp-now tx -> B: 235 delivered, 0 failed (MAC-layer ACK)
+[   1.32s A] esp-now tx -> C: 1493 delivered, 0 failed (MAC-layer ACK)
+[   1.32s A] esp-now tx -> D: 884 delivered, 0 failed (MAC-layer ACK)
+[   1.32s A] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[   1.32s A] eeprom page writes since boot: total 6453, hottest page 263 with 21 (rated 1000000)
+[   1.32s A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[   3.31s C] >>> status (sent)
+[   3.31s B] >>> status (sent)
+[   3.31s D] >>> status (sent)
+[   3.31s A] >>> status (sent)
+[   3.33s B] > status
+[   3.33s B] node B  state ACTIVE  view ABCD  uptime 4093s
+[   3.33s B] hlc 24363109.0
+[   3.33s B] storage fresh format: 10 live, 1 tombstones, 11/64 keys, log 6240/16064 bytes, bank A, 3 compactions
+[   3.33s B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[   3.33s B] sensor motion (simulated): on, 120 samples, last 0 events, last motion 55 s before the sample seq 444, 240 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.33s C] > status
+[   3.33s C] node C  state ACTIVE  view ABCD  uptime 4068s
+[   3.33s C] hlc 24363108.0
+[   3.33s C] storage fresh format: 11 live, 0 tombstones, 11/64 keys, log 11086/16064 bytes, bank B, 3 compactions
+[   3.33s C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   3.33s C] sensor sound (simulated): on, 119 samples, last 3 events, 3.7 % active seq 627, 236 ok, 2 under-replicated, 0 failed, 0 read failures
+[   3.33s A] > status
+[   3.33s A] node A  state ACTIVE  view ABCD  uptime 2765s
+[   3.33s A] hlc 24363106.0
+[   3.33s A] storage recovered: 13 live, 1 tombstones, 14/64 keys, log 11857/16064 bytes, bank B, 5 compactions
+[   3.33s A] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[   3.33s A] sensor light (hardware): on, 644 samples, last 13.333 lux seq 1246, 1288 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.33s D] > status
+[   3.33s D] node D  state ACTIVE  view ABCD  uptime 4117s
+[   3.33s D] hlc 24363108.0
+[   3.33s D] storage fresh format: 22 live, 0 tombstones, 22/64 keys, log 7265/16064 bytes, bank B, 10 compactions
+[   3.33s D] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   3.33s D] sensor temp (simulated): on, 120 samples, last 24.443 degC seq 535, 240 ok, 0 under-replicated, 0 failed, 0 read failures
+
+[   0.00s port open, node A, Wed 21 07:58:41]
+[   0.05s] from C
+[   0.05s]   3030.614 [A] anti-entropy: key h/C/sound/3 repaired from B
+[   0.05s]   3030.635 [A] anti-entropy: key bench/2 repaired from C
+[   0.05s]   3030.679 [A] anti-entropy: key bench/3 repaired from C
+[   0.05s]   3030.715 [A] anti-entropy: key bench/6 repaired from C
+[   0.05s]   3030.759 [A] anti-entropy: key bench/7 repaired from C
+[   1.31s >>> members]
+[   1.36s] > members
+[   1.36s]   A  self    ACTIVE
+[   1.36s]   B  alive   last heard 128 ms ago, 6010 heartbeats
+[   1.36s]   C  alive   last heard 34 ms ago, 6019 heartbeats
+[   1.36s]   D  DEAD    last heard 11947 ms ago, 6015 heartbeats
+[   3.32s >>> status]
+[   3.37s] > status
+[   3.37s] node A  state ACTIVE  view ABC-  uptime 3041s
+[   3.37s] hlc 24638701.0
+[   3.37s] storage recovered: 23 live, 1 tombstones, 24/64 keys, log 6234/16064 bytes, bank A, 6 compactions
+[   3.37s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[   3.37s] sensor light (hardware): on, 699 samples, last 10.833 lux seq 1301, 1398 ok, 0 under-replicated, 0 failed, 0 read failures
+
+## D after wiring: FATAL (08:12:43, problem 16), then after reseating (08:20:10)
+
+[   0.00s port open, node D, Wed 21 08:12:43]
+[   2.22s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)
+[   2.32s >>> status]
+[   4.34s >>> stats]
+[   6.35s >>> members]
+[   7.10s] FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)
+
+[   0.00s port open, node D, Wed 21 08:20:10]
+[   0.05s] > edge-kv firmwar C 43[ar2 keys, 14981 by
+[   0.05s] unknown command 'edge-kv' (try 'help')
+[   2.31s >>> status]
+[   2.36s] > status
+[   2.36s] node D  state ACTIVE  view ABCD  uptime 47s
+[   2.36s] hlc 25925937.0
+[   2.36s] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 1761/16064 bytes, bank A, 1 compactions
+[   2.36s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   2.36s] sensor temp (simulated): on, 1 samples, last 23.373 degC seq 545, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[   4.32s >>> stats]
+[   4.37s] > stats
+[   4.37s] radio   rx 375 (invalid 0, spoofed 0)  tx 132 (failed 0)
+[   4.37s] hb      tx 84  rx 279   membership changes 1
+[   4.37s] server  executed 2  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   4.37s] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 11 stale 0
+[   4.37s] ae      rounds 6  chunks tx 30 rx 54  tables 13  pushes 0  resync tx 0 applied 12 stale 12
+[   4.37s] gc      orphans 0  tombstones 0  keys dropped 0
+[   4.37s] client  ok 3  failed 0  attempts 3  local 0
+[   4.37s] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+[   4.37s] env node-d, built Oct 20 2026 15:38:19, reset reason: power-on
+[   4.37s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[   4.37s] esp-now rx 375  queue overflows 0  unknown MAC 0
+[   4.37s] esp-now tx -> A: 10 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] esp-now tx -> C: 1 delivered, 0 failed (MAC-layer ACK)
+[   4.37s] heap free 179008 (min 170180)  node task stack headroom 13560 bytes
+[   4.37s] eeprom page writes since boot: total 642, hottest page 12 with 7 (rated 1000000)
+[   6.33s >>> members]
+[   6.38s] > members
+[   6.38s]   A  alive   last heard 482 ms ago, 98 heartbeats
+[   6.38s]   B  alive   last heard 418 ms ago, 95 heartbeats
+[   6.38s]   C  alive   last heard 270 ms ago, 98 heartbeats
+[   6.38s]   D  self    ACTIVE
+
+
+## D after rewiring the DHT11 by silkscreen (08:48:15)
+
+[   0.00s port open, node D, Wed 21 08:48:15]
+[   0.05s] > edge-kv firmwar entr 2/uorepaired from B
+[   0.05s] unknown command 'edge-kv' (try 'help')
+[   5.32s >>> status]
+[   5.37s] > status
+[   5.37s] node D  state ACTIVE  view ABCD  uptime 36s
+[   5.37s] hlc 27615310.0
+[   5.37s] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 5151/16064 bytes, bank A, 0 compactions
+[   5.37s] pending: 0 client, 0 replication, 5 dedup entries, 8 free op slots
+[   5.37s] sensor temp (hardware): on, 1 samples, last 30.800 degC seq 1234, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[   7.36s >>> stats]
+[   7.41s] > stats
+[   7.41s] radio   rx 288 (invalid 0, spoofed 0)  tx 104 (failed 0)
+[   7.41s] hb      tx 62  rx 213   membership changes 4
+[   7.41s] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   7.41s] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 8 stale 0
+[   7.41s] ae      rounds 5  chunks tx 25 rx 34  tables 7  pushes 0  resync tx 0 applied 12 stale 12
+[   7.41s] gc      orphans 0  tombstones 0  keys dropped 0
+[   7.41s] client  ok 3  failed 0  attempts 3  local 0
+[   7.41s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[   7.41s] env node-d, built Oct 21 2026 08:25:31, reset reason: power-on
+[   7.41s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[   7.41s] esp-now rx 288  queue overflows 0  unknown MAC 0
+[   7.41s] esp-now tx -> A: 8 delivered, 0 failed (MAC-layer ACK)
+[   7.41s] esp-now tx -> B: 6 delivered, 0 failed (MAC-layer ACK)
+[   7.41s] esp-now tx -> C: 3 delivered, 0 failed (MAC-layer ACK)
+[   7.41s] heap free 174992 (min 166168)  node task stack headroom 13560 bytes
+[   7.41s] eeprom page writes since boot: total 66, hottest page 69 with 5 (rated 1000000)
+
+## continuous capture of D, 08:50-09:01: get s/D/temp every 2 s; breathe (~08:53:30), DATA off (~08:56:05), DATA on (~09:00:12). Wall-clock timestamps.
+
+[08:50:18.813] --- capture of D started ---
+[08:50:20.822] >>> status
+[08:50:21.174] > status
+[08:50:21.174] node D  state ACTIVE  view ABCD  uptime 155s
+[08:50:21.174] hlc 27734287.0
+[08:50:21.174] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 6228/16064 bytes, bank B, 1 compactions
+[08:50:21.174] pending: 0 client, 0 replication, 12 dedup entries, 8 free op slots
+[08:50:21.174] sensor temp (hardware): on, 97 samples, last 31.300 degC seq 1330, 194 ok, 0 under-replicated, 0 failed, 1 read failures
+[08:50:22.832] >>> get s/D/temp
+[08:50:23.184] > get s/D/temp
+[08:50:23.184] s/D/temp = 31.300 degC  (seq 1332, sampled at hlc 27736096)
+[08:50:23.184]    (served by B, 1 attempt(s), 7 ms)
+[08:50:24.791] >>> get s/D/temp
+[08:50:25.143] > get s/D/temp
+[08:50:25.143] s/D/temp = 31.300 degC  (seq 1334, sampled at hlc 27738096)
+[08:50:25.143]    (served by B, 1 attempt(s), 7 ms)
+[08:50:26.800] >>> get s/D/temp
+[08:50:27.152] > get s/D/temp
+[08:50:27.152] s/D/temp = 31.300 degC  (seq 1336, sampled at hlc 27740096)
+[08:50:27.152]    (served by B, 1 attempt(s), 6 ms)
+[08:50:28.809] >>> get s/D/temp
+[08:50:29.160] > get s/D/temp
+[08:50:29.160] s/D/temp = 31.300 degC  (seq 1338, sampled at hlc 27742096)
+[08:50:29.160]    (served by B, 1 attempt(s), 6 ms)
+[08:50:30.816] >>> get s/D/temp
+[08:50:31.167] > get s/D/temp
+[08:50:31.167] s/D/temp = 31.300 degC  (seq 1340, sampled at hlc 27744096)
+[08:50:31.167]    (served by B, 1 attempt(s), 6 ms)
+[08:50:32.822] >>> get s/D/temp
+[08:50:33.173] > get s/D/temp
+[08:50:33.173] s/D/temp = 31.300 degC  (seq 1342, sampled at hlc 27746096)
+[08:50:33.173]    (served by B, 1 attempt(s), 6 ms)
+[08:50:34.829] >>> get s/D/temp
+[08:50:35.180] > get s/D/temp
+[08:50:35.180] s/D/temp = 31.300 degC  (seq 1344, sampled at hlc 27748096)
+[08:50:35.180]    (served by B, 1 attempt(s), 6 ms)
+[08:50:36.836] >>> get s/D/temp
+[08:50:37.187] > get s/D/temp
+[08:50:37.188] s/D/temp = 31.300 degC  (seq 1346, sampled at hlc 27750096)
+[08:50:37.188]    (served by B, 1 attempt(s), 6 ms)
+[08:50:38.844] >>> get s/D/temp
+[08:50:39.195] > get s/D/temp
+[08:50:39.195] s/D/temp = 31.300 degC  (seq 1348, sampled at hlc 27752096)
+[08:50:39.195]    (served by B, 1 attempt(s), 6 ms)
+[08:50:40.849] >>> get s/D/temp
+[08:50:41.201] > get s/D/temp
+[08:50:41.201] s/D/temp = 31.300 degC  (seq 1350, sampled at hlc 27754096)
+[08:50:41.201]    (served by B, 1 attempt(s), 6 ms)
+[08:50:42.859] >>> get s/D/temp
+[08:50:43.210] > get s/D/temp
+[08:50:43.210] s/D/temp = 31.300 degC  (seq 1352, sampled at hlc 27756096)
+[08:50:43.210]    (served by B, 1 attempt(s), 22 ms)
+[08:50:44.866] >>> get s/D/temp
+[08:50:45.218] > get s/D/temp
+[08:50:45.218] s/D/temp = 31.300 degC  (seq 1354, sampled at hlc 27758096)
+[08:50:45.218]    (served by B, 1 attempt(s), 6 ms)
+[08:50:46.874] >>> get s/D/temp
+[08:50:47.225] > get s/D/temp
+[08:50:47.225] s/D/temp = 31.300 degC  (seq 1356, sampled at hlc 27760096)
+[08:50:47.225]    (served by B, 1 attempt(s), 6 ms)
+[08:50:48.830] >>> get s/D/temp
+[08:50:49.182] > get s/D/temp
+[08:50:49.182] s/D/temp = 31.300 degC  (seq 1359, sampled at hlc 27763096)
+[08:50:49.182]    (served by B, 1 attempt(s), 36 ms)
+[08:50:52.175] >>> get s/D/temp
+[08:50:52.527] > get s/D/temp
+[08:50:52.527] s/D/temp = 31.300 degC  (seq 1361, sampled at hlc 27765096)
+[08:50:52.527]    (served by B, 1 attempt(s), 6 ms)
+[08:50:54.183] >>> get s/D/temp
+[08:50:54.534] > get s/D/temp
+[08:50:54.534] s/D/temp = 31.300 degC  (seq 1363, sampled at hlc 27767096)
+[08:50:54.534]    (served by B, 1 attempt(s), 6 ms)
+[08:50:56.189] >>> get s/D/temp
+[08:50:56.540] > get s/D/temp
+[08:50:56.540] s/D/temp = 31.300 degC  (seq 1365, sampled at hlc 27769096)
+[08:50:56.540]    (served by B, 1 attempt(s), 6 ms)
+[08:50:58.196] >>> get s/D/temp
+[08:50:58.547] > get s/D/temp
+[08:50:58.547] s/D/temp = 31.300 degC  (seq 1367, sampled at hlc 27771096)
+[08:50:58.547]    (served by B, 1 attempt(s), 6 ms)
+[08:51:00.205] >>> get s/D/temp
+[08:51:00.556] > get s/D/temp
+[08:51:00.556] s/D/temp = 31.300 degC  (seq 1369, sampled at hlc 27773096)
+[08:51:00.556]    (served by B, 1 attempt(s), 7 ms)
+[08:51:02.213] >>> get s/D/temp
+[08:51:02.564] > get s/D/temp
+[08:51:02.564] s/D/temp = 31.300 degC  (seq 1371, sampled at hlc 27775096)
+[08:51:02.564]    (served by B, 1 attempt(s), 6 ms)
+[08:51:04.220] >>> get s/D/temp
+[08:51:04.572] > get s/D/temp
+[08:51:04.572] s/D/temp = 31.300 degC  (seq 1373, sampled at hlc 27777096)
+[08:51:04.572]    (served by B, 1 attempt(s), 6 ms)
+[08:51:06.228] >>> get s/D/temp
+[08:51:06.579] > get s/D/temp
+[08:51:06.579] s/D/temp = 31.300 degC  (seq 1375, sampled at hlc 27779096)
+[08:51:06.579]    (served by B, 1 attempt(s), 6 ms)
+[08:51:08.234] >>> get s/D/temp
+[08:51:08.586] > get s/D/temp
+[08:51:08.586] s/D/temp = 31.300 degC  (seq 1377, sampled at hlc 27781096)
+[08:51:08.586]    (served by B, 1 attempt(s), 6 ms)
+[08:51:10.241] >>> get s/D/temp
+[08:51:10.592] > get s/D/temp
+[08:51:10.592] s/D/temp = 31.300 degC  (seq 1379, sampled at hlc 27783096)
+[08:51:10.592]    (served by B, 1 attempt(s), 6 ms)
+[08:51:12.198] >>> get s/D/temp
+[08:51:12.549] > get s/D/temp
+[08:51:12.549] s/D/temp = 31.300 degC  (seq 1381, sampled at hlc 27785096)
+[08:51:12.549]    (served by B, 1 attempt(s), 6 ms)
+[08:51:14.205] >>> get s/D/temp
+[08:51:14.556] > get s/D/temp
+[08:51:14.556] s/D/temp = 31.300 degC  (seq 1383, sampled at hlc 27787096)
+[08:51:14.556]    (served by B, 1 attempt(s), 6 ms)
+[08:51:16.212] >>> get s/D/temp
+[08:51:16.563] > get s/D/temp
+[08:51:16.563] s/D/temp = 31.300 degC  (seq 1385, sampled at hlc 27789096)
+[08:51:16.563]    (served by B, 1 attempt(s), 7 ms)
+[08:51:18.219] >>> get s/D/temp
+[08:51:18.571] > get s/D/temp
+[08:51:18.571] s/D/temp = 31.300 degC  (seq 1387, sampled at hlc 27791096)
+[08:51:18.571]    (served by B, 1 attempt(s), 23 ms)
+[08:51:20.226] >>> get s/D/temp
+[08:51:20.578] > get s/D/temp
+[08:51:20.578] s/D/temp = 31.300 degC  (seq 1389, sampled at hlc 27793096)
+[08:51:20.578]    (served by B, 1 attempt(s), 6 ms)
+[08:51:22.234] >>> get s/D/temp
+[08:51:22.586] > get s/D/temp
+[08:51:22.586] s/D/temp = 31.300 degC  (seq 1391, sampled at hlc 27795096)
+[08:51:22.586]    (served by B, 1 attempt(s), 6 ms)
+[08:51:24.242] >>> get s/D/temp
+[08:51:25.547] > get s/D/temp
+[08:51:25.547] s/D/temp = 31.300 degC  (seq 1394, sampled at hlc 27798096)
+[08:51:25.547]    (served by B, 1 attempt(s), 6 ms)
+[08:51:27.202] >>> get s/D/temp
+[08:51:27.554] > get s/D/temp
+[08:51:27.554] s/D/temp = 31.300 degC  (seq 1396, sampled at hlc 27800096)
+[08:51:27.554]    (served by B, 1 attempt(s), 6 ms)
+[08:51:29.210] >>> get s/D/temp
+[08:51:29.562] > get s/D/temp
+[08:51:29.562] s/D/temp = 31.300 degC  (seq 1398, sampled at hlc 27802096)
+[08:51:29.562]    (served by B, 1 attempt(s), 11 ms)
+[08:51:31.217] >>> get s/D/temp
+[08:51:31.569] > get s/D/temp
+[08:51:31.569] s/D/temp = 31.300 degC  (seq 1400, sampled at hlc 27804096)
+[08:51:31.569]    (served by B, 1 attempt(s), 7 ms)
+[08:51:33.225] >>> get s/D/temp
+[08:51:33.577] > get s/D/temp
+[08:51:33.577] s/D/temp = 31.300 degC  (seq 1402, sampled at hlc 27806096)
+[08:51:33.577]    (served by B, 1 attempt(s), 6 ms)
+[08:51:35.183] >>> get s/D/temp
+[08:51:35.534] > get s/D/temp
+[08:51:35.534] s/D/temp = 31.300 degC  (seq 1404, sampled at hlc 27808096)
+[08:51:35.535]    (served by B, 1 attempt(s), 7 ms)
+[08:51:37.190] >>> get s/D/temp
+[08:51:37.541] > get s/D/temp
+[08:51:37.541] s/D/temp = 31.300 degC  (seq 1406, sampled at hlc 27810096)
+[08:51:37.541]    (served by B, 1 attempt(s), 6 ms)
+[08:51:39.198] >>> get s/D/temp
+[08:51:39.549] > get s/D/temp
+[08:51:39.549] s/D/temp = 31.300 degC  (seq 1408, sampled at hlc 27812096)
+[08:51:39.549]    (served by B, 1 attempt(s), 6 ms)
+[08:51:41.206] >>> get s/D/temp
+[08:51:41.557] > get s/D/temp
+[08:51:41.557] s/D/temp = 31.300 degC  (seq 1410, sampled at hlc 27814096)
+[08:51:41.557]    (served by B, 1 attempt(s), 6 ms)
+[08:51:42.711]    237.776 [D] compaction started (3024 bytes free)
+[08:51:43.213] >>> get s/D/temp
+[08:51:43.564] > get s/D/temp
+[08:51:43.564] s/D/temp = 31.300 degC  (seq 1412, sampled at hlc 27816096)
+[08:51:43.564]    (served by B, 1 attempt(s), 18 ms)
+[08:51:45.220]    240.329 [D] compaction #2 done: bank A, 22 keys, 14981 bytes free
+[08:51:45.220] >>> get s/D/temp
+[08:51:45.572] > get s/D/temp
+[08:51:45.572] s/D/temp = 31.300 degC  (seq 1414, sampled at hlc 27818132)
+[08:51:45.572]    (served by B, 1 attempt(s), 6 ms)
+[08:51:47.228] >>> get s/D/temp
+[08:51:47.579] > get s/D/temp
+[08:51:47.579] s/D/temp = 31.300 degC  (seq 1416, sampled at hlc 27820116)
+[08:51:47.579]    (served by B, 1 attempt(s), 6 ms)
+[08:51:49.235] >>> get s/D/temp
+[08:51:49.587] > get s/D/temp
+[08:51:49.587] s/D/temp = 31.300 degC  (seq 1418, sampled at hlc 27822116)
+[08:51:49.587]    (served by B, 1 attempt(s), 6 ms)
+[08:51:51.244] >>> get s/D/temp
+[08:51:51.595] > get s/D/temp
+[08:51:51.595] s/D/temp = 31.300 degC  (seq 1420, sampled at hlc 27824116)
+[08:51:51.595]    (served by B, 1 attempt(s), 9 ms)
+[08:51:53.251] >>> get s/D/temp
+[08:51:53.602] > get s/D/temp
+[08:51:53.603] s/D/temp = 31.300 degC  (seq 1422, sampled at hlc 27826116)
+[08:51:53.603]    (served by B, 1 attempt(s), 7 ms)
+[08:51:55.259] >>> get s/D/temp
+[08:51:55.610] > get s/D/temp
+[08:51:55.610] s/D/temp = 31.300 degC  (seq 1424, sampled at hlc 27828116)
+[08:51:55.610]    (served by B, 1 attempt(s), 6 ms)
+[08:51:57.216] >>> get s/D/temp
+[08:51:57.567] > get s/D/temp
+[08:51:57.567] s/D/temp = 31.300 degC  (seq 1426, sampled at hlc 27830116)
+[08:51:57.567]    (served by B, 1 attempt(s), 7 ms)
+[08:51:59.224] >>> get s/D/temp
+[08:51:59.575] > get s/D/temp
+[08:51:59.575] s/D/temp = 31.300 degC  (seq 1428, sampled at hlc 27832116)
+[08:51:59.575]    (served by B, 1 attempt(s), 7 ms)
+[08:52:01.231] >>> get s/D/temp
+[08:52:01.582] > get s/D/temp
+[08:52:01.582] s/D/temp = 31.300 degC  (seq 1431, sampled at hlc 27835116)
+[08:52:01.582]    (served by B, 1 attempt(s), 6 ms)
+[08:52:03.239] >>> get s/D/temp
+[08:52:03.590] > get s/D/temp
+[08:52:03.590] s/D/temp = 31.300 degC  (seq 1433, sampled at hlc 27837116)
+[08:52:03.590]    (served by B, 1 attempt(s), 6 ms)
+[08:52:05.247] >>> get s/D/temp
+[08:52:05.598] > get s/D/temp
+[08:52:05.598] s/D/temp = 31.300 degC  (seq 1435, sampled at hlc 27839116)
+[08:52:05.598]    (served by B, 1 attempt(s), 6 ms)
+[08:52:07.254] >>> get s/D/temp
+[08:52:07.605] > get s/D/temp
+[08:52:07.605] s/D/temp = 31.300 degC  (seq 1437, sampled at hlc 27841116)
+[08:52:07.605]    (served by B, 1 attempt(s), 6 ms)
+[08:52:09.263] >>> get s/D/temp
+[08:52:09.614] > get s/D/temp
+[08:52:09.614] s/D/temp = 31.300 degC  (seq 1439, sampled at hlc 27843116)
+[08:52:09.614]    (served by B, 1 attempt(s), 8 ms)
+[08:52:11.270] >>> get s/D/temp
+[08:52:11.621] > get s/D/temp
+[08:52:11.622] s/D/temp = 31.300 degC  (seq 1441, sampled at hlc 27845116)
+[08:52:11.622]    (served by B, 1 attempt(s), 6 ms)
+[08:52:14.586] >>> get s/D/temp
+[08:52:14.937] > get s/D/temp
+[08:52:14.937] s/D/temp = 31.300 degC  (seq 1443, sampled at hlc 27847116)
+[08:52:14.937]    (served by B, 1 attempt(s), 6 ms)
+[08:52:16.595] >>> get s/D/temp
+[08:52:16.946] > get s/D/temp
+[08:52:16.947] s/D/temp = 31.300 degC  (seq 1445, sampled at hlc 27849116)
+[08:52:16.947]    (served by B, 1 attempt(s), 6 ms)
+[08:52:18.554] >>> get s/D/temp
+[08:52:18.905] > get s/D/temp
+[08:52:18.905] s/D/temp = 31.300 degC  (seq 1447, sampled at hlc 27851116)
+[08:52:18.905]    (served by B, 1 attempt(s), 6 ms)
+[08:52:20.565] >>> get s/D/temp
+[08:52:20.916] > get s/D/temp
+[08:52:20.916] s/D/temp = 31.300 degC  (seq 1449, sampled at hlc 27853116)
+[08:52:20.916]    (served by B, 1 attempt(s), 6 ms)
+[08:52:22.575] >>> get s/D/temp
+[08:52:22.927] > get s/D/temp
+[08:52:22.927] s/D/temp = 31.300 degC  (seq 1451, sampled at hlc 27855116)
+[08:52:22.927]    (served by B, 1 attempt(s), 6 ms)
+[08:52:24.585] >>> get s/D/temp
+[08:52:24.937] > get s/D/temp
+[08:52:24.937] s/D/temp = 31.300 degC  (seq 1453, sampled at hlc 27857116)
+[08:52:24.937]    (served by B, 1 attempt(s), 6 ms)
+[08:52:26.594] >>> get s/D/temp
+[08:52:26.946] > get s/D/temp
+[08:52:26.946] s/D/temp = 31.300 degC  (seq 1455, sampled at hlc 27859116)
+[08:52:26.946]    (served by B, 1 attempt(s), 6 ms)
+[08:52:28.605] >>> get s/D/temp
+[08:52:28.956] > get s/D/temp
+[08:52:28.956] s/D/temp = 31.300 degC  (seq 1457, sampled at hlc 27861116)
+[08:52:28.956]    (served by B, 1 attempt(s), 6 ms)
+[08:52:30.615] >>> get s/D/temp
+[08:52:30.967] > get s/D/temp
+[08:52:30.967] s/D/temp = 31.300 degC  (seq 1459, sampled at hlc 27863116)
+[08:52:30.967]    (served by B, 1 attempt(s), 6 ms)
+[08:52:32.572] >>> get s/D/temp
+[08:52:32.924] > get s/D/temp
+[08:52:32.924] s/D/temp = 31.300 degC  (seq 1461, sampled at hlc 27865116)
+[08:52:32.924]    (served by B, 1 attempt(s), 6 ms)
+[08:52:34.578] >>> get s/D/temp
+[08:52:34.929] > get s/D/temp
+[08:52:34.929] s/D/temp = 31.300 degC  (seq 1463, sampled at hlc 27867116)
+[08:52:34.929]    (served by B, 1 attempt(s), 6 ms)
+[08:52:36.583] >>> get s/D/temp
+[08:52:36.935] > get s/D/temp
+[08:52:36.935] s/D/temp = 31.300 degC  (seq 1465, sampled at hlc 27869116)
+[08:52:36.935]    (served by B, 1 attempt(s), 6 ms)
+[08:52:38.589] >>> get s/D/temp
+[08:52:38.941] > get s/D/temp
+[08:52:38.941] s/D/temp = 31.300 degC  (seq 1468, sampled at hlc 27872116)
+[08:52:38.941]    (served by B, 1 attempt(s), 6 ms)
+[08:52:40.594] >>> get s/D/temp
+[08:52:40.946] > get s/D/temp
+[08:52:40.946] s/D/temp = 31.300 degC  (seq 1470, sampled at hlc 27874116)
+[08:52:40.946]    (served by B, 1 attempt(s), 6 ms)
+[08:52:42.601] >>> get s/D/temp
+[08:52:42.953] > get s/D/temp
+[08:52:42.953] s/D/temp = 31.300 degC  (seq 1472, sampled at hlc 27876116)
+[08:52:42.953]    (served by B, 1 attempt(s), 6 ms)
+[08:52:44.607] >>> get s/D/temp
+[08:52:44.958] > get s/D/temp
+[08:52:44.958] s/D/temp = 31.300 degC  (seq 1474, sampled at hlc 27878116)
+[08:52:44.958]    (served by B, 1 attempt(s), 11 ms)
+[08:52:47.441] >>> get s/D/temp
+[08:52:47.793] > get s/D/temp
+[08:52:47.793] s/D/temp = 31.300 degC  (seq 1476, sampled at hlc 27880116)
+[08:52:47.793]    (served by B, 1 attempt(s), 6 ms)
+[08:52:49.448] >>> get s/D/temp
+[08:52:49.799] > get s/D/temp
+[08:52:49.799] s/D/temp = 31.300 degC  (seq 1478, sampled at hlc 27882116)
+[08:52:49.799]    (served by B, 1 attempt(s), 8 ms)
+[08:52:51.454] >>> get s/D/temp
+[08:52:51.806] > get s/D/temp
+[08:52:51.806] s/D/temp = 31.300 degC  (seq 1480, sampled at hlc 27884116)
+[08:52:51.806]    (served by B, 1 attempt(s), 7 ms)
+[08:52:53.461] >>> get s/D/temp
+[08:52:53.812] > get s/D/temp
+[08:52:53.812] s/D/temp = 31.300 degC  (seq 1482, sampled at hlc 27886116)
+[08:52:53.812]    (served by B, 1 attempt(s), 6 ms)
+[08:52:55.467] >>> get s/D/temp
+[08:52:55.818] > get s/D/temp
+[08:52:55.819] s/D/temp = 31.300 degC  (seq 1484, sampled at hlc 27888116)
+[08:52:55.819]    (served by B, 1 attempt(s), 6 ms)
+[08:52:57.473] >>> get s/D/temp
+[08:52:57.824] > get s/D/temp
+[08:52:57.824] s/D/temp = 31.300 degC  (seq 1486, sampled at hlc 27890116)
+[08:52:57.824]    (served by B, 1 attempt(s), 6 ms)
+[08:52:59.480] >>> get s/D/temp
+[08:52:59.832] > get s/D/temp
+[08:52:59.832] s/D/temp = 31.300 degC  (seq 1488, sampled at hlc 27892116)
+[08:52:59.832]    (served by B, 1 attempt(s), 6 ms)
+[08:53:01.487] >>> get s/D/temp
+[08:53:01.838] > get s/D/temp
+[08:53:01.838] s/D/temp = 31.300 degC  (seq 1490, sampled at hlc 27894116)
+[08:53:01.838]    (served by B, 1 attempt(s), 6 ms)
+[08:53:03.493] >>> get s/D/temp
+[08:53:03.844] > get s/D/temp
+[08:53:03.844] s/D/temp = 31.300 degC  (seq 1492, sampled at hlc 27896116)
+[08:53:03.844]    (served by B, 1 attempt(s), 6 ms)
+[08:53:05.448] >>> get s/D/temp
+[08:53:05.799] > get s/D/temp
+[08:53:05.799] s/D/temp = 31.300 degC  (seq 1494, sampled at hlc 27898116)
+[08:53:05.799]    (served by B, 1 attempt(s), 6 ms)
+[08:53:07.453] >>> get s/D/temp
+[08:53:07.806] > get s/D/temp
+[08:53:07.806] s/D/temp = 31.300 degC  (seq 1496, sampled at hlc 27900116)
+[08:53:07.806]    (served by B, 1 attempt(s), 6 ms)
+[08:53:09.460] >>> get s/D/temp
+[08:53:09.811] > get s/D/temp
+[08:53:09.811] s/D/temp = 31.300 degC  (seq 1498, sampled at hlc 27902116)
+[08:53:09.811]    (served by B, 1 attempt(s), 6 ms)
+[08:53:11.466] >>> get s/D/temp
+[08:53:11.817] > get s/D/temp
+[08:53:11.817] s/D/temp = 31.300 degC  (seq 1500, sampled at hlc 27904116)
+[08:53:11.817]    (served by B, 1 attempt(s), 7 ms)
+[08:53:13.471] >>> get s/D/temp
+[08:53:13.822] > get s/D/temp
+[08:53:13.823] s/D/temp = 31.300 degC  (seq 1502, sampled at hlc 27906116)
+[08:53:13.823]    (served by B, 1 attempt(s), 8 ms)
+[08:53:15.477] >>> get s/D/temp
+[08:53:15.829] > get s/D/temp
+[08:53:15.829] s/D/temp = 31.300 degC  (seq 1505, sampled at hlc 27909116)
+[08:53:15.829]    (served by B, 1 attempt(s), 11 ms)
+[08:53:17.483] >>> get s/D/temp
+[08:53:17.834] > get s/D/temp
+[08:53:17.834] s/D/temp = 31.300 degC  (seq 1507, sampled at hlc 27911116)
+[08:53:17.834]    (served by B, 1 attempt(s), 6 ms)
+[08:53:20.299] >>> get s/D/temp
+[08:53:20.651] > get s/D/temp
+[08:53:20.651] s/D/temp = 31.300 degC  (seq 1509, sampled at hlc 27913116)
+[08:53:20.651]    (served by B, 1 attempt(s), 8 ms)
+[08:53:22.306] >>> get s/D/temp
+[08:53:22.659] > get s/D/temp
+[08:53:22.659] s/D/temp = 31.300 degC  (seq 1511, sampled at hlc 27915116)
+[08:53:22.659]    (served by B, 1 attempt(s), 6 ms)
+[08:53:24.314] >>> get s/D/temp
+[08:53:24.665] > get s/D/temp
+[08:53:24.665] s/D/temp = 31.300 degC  (seq 1513, sampled at hlc 27917116)
+[08:53:24.665]    (served by B, 1 attempt(s), 7 ms)
+[08:53:26.321] >>> get s/D/temp
+[08:53:26.672] > get s/D/temp
+[08:53:26.672] s/D/temp = 31.300 degC  (seq 1515, sampled at hlc 27919116)
+[08:53:26.672]    (served by B, 1 attempt(s), 6 ms)
+[08:53:28.329] >>> get s/D/temp
+[08:53:28.680] > get s/D/temp
+[08:53:28.680] s/D/temp = 31.300 degC  (seq 1517, sampled at hlc 27921116)
+[08:53:28.680]    (served by B, 1 attempt(s), 6 ms)
+[08:53:30.336] >>> get s/D/temp
+[08:53:30.688] > get s/D/temp
+[08:53:30.688] s/D/temp = 31.300 degC  (seq 1519, sampled at hlc 27923116)
+[08:53:30.688]    (served by B, 1 attempt(s), 6 ms)
+[08:53:32.295] >>> get s/D/temp
+[08:53:32.646] > get s/D/temp
+[08:53:32.647] s/D/temp = 31.800 degC  (seq 1521, sampled at hlc 27925116)
+[08:53:32.647]    (served by B, 1 attempt(s), 6 ms)
+[08:53:34.303] >>> get s/D/temp
+[08:53:34.654] > get s/D/temp
+[08:53:34.655] s/D/temp = 31.800 degC  (seq 1523, sampled at hlc 27927116)
+[08:53:34.655]    (served by B, 1 attempt(s), 13 ms)
+[08:53:36.311] >>> get s/D/temp
+[08:53:36.662] > get s/D/temp
+[08:53:36.662] s/D/temp = 32.300 degC  (seq 1525, sampled at hlc 27929116)
+[08:53:36.662]    (served by B, 1 attempt(s), 7 ms)
+[08:53:38.318] >>> get s/D/temp
+[08:53:38.669] > get s/D/temp
+[08:53:38.669] s/D/temp = 32.300 degC  (seq 1527, sampled at hlc 27931116)
+[08:53:38.669]    (served by B, 1 attempt(s), 6 ms)
+[08:53:40.325] >>> get s/D/temp
+[08:53:40.676] > get s/D/temp
+[08:53:40.676] s/D/temp = 32.800 degC  (seq 1529, sampled at hlc 27933116)
+[08:53:40.676]    (served by B, 1 attempt(s), 6 ms)
+[08:53:42.333] >>> get s/D/temp
+[08:53:42.686] > get s/D/temp
+[08:53:42.686] s/D/temp = 32.800 degC  (seq 1531, sampled at hlc 27935116)
+[08:53:42.686]    (served by B, 1 attempt(s), 9 ms)
+[08:53:44.343] >>> get s/D/temp
+[08:53:44.695] > get s/D/temp
+[08:53:44.695] s/D/temp = 33.300 degC  (seq 1533, sampled at hlc 27937116)
+[08:53:44.695]    (served by B, 1 attempt(s), 6 ms)
+[08:53:46.352] >>> get s/D/temp
+[08:53:46.704] > get s/D/temp
+[08:53:46.704] s/D/temp = 33.300 degC  (seq 1536, sampled at hlc 27940116)
+[08:53:46.704]    (served by B, 1 attempt(s), 6 ms)
+[08:53:48.361] >>> get s/D/temp
+[08:53:48.712] > get s/D/temp
+[08:53:48.712] s/D/temp = 33.300 degC  (seq 1538, sampled at hlc 27942116)
+[08:53:48.712]    (served by B, 1 attempt(s), 8 ms)
+[08:53:50.318] >>> get s/D/temp
+[08:53:50.670] > get s/D/temp
+[08:53:50.670] s/D/temp = 33.300 degC  (seq 1540, sampled at hlc 27944116)
+[08:53:50.670]    (served by B, 1 attempt(s), 6 ms)
+[08:53:52.327] >>> get s/D/temp
+[08:53:53.721] > get s/D/temp
+[08:53:53.721] s/D/temp = 33.300 degC  (seq 1542, sampled at hlc 27946116)
+[08:53:53.721]    (served by B, 1 attempt(s), 6 ms)
+[08:53:55.379] >>> get s/D/temp
+[08:53:55.730] > get s/D/temp
+[08:53:55.730] s/D/temp = 33.300 degC  (seq 1544, sampled at hlc 27948116)
+[08:53:55.730]    (served by B, 1 attempt(s), 6 ms)
+[08:53:57.386] >>> get s/D/temp
+[08:53:57.738] > get s/D/temp
+[08:53:57.738] s/D/temp = 32.800 degC  (seq 1546, sampled at hlc 27950116)
+[08:53:57.738]    (served by B, 1 attempt(s), 6 ms)
+[08:53:59.394] >>> get s/D/temp
+[08:53:59.746] > get s/D/temp
+[08:53:59.746] s/D/temp = 32.800 degC  (seq 1548, sampled at hlc 27952116)
+[08:53:59.746]    (served by B, 1 attempt(s), 7 ms)
+[08:54:01.402] >>> get s/D/temp
+[08:54:01.753] > get s/D/temp
+[08:54:01.753] s/D/temp = 32.800 degC  (seq 1550, sampled at hlc 27954116)
+[08:54:01.753]    (served by B, 1 attempt(s), 8 ms)
+[08:54:03.410] >>> get s/D/temp
+[08:54:03.761] > get s/D/temp
+[08:54:03.761] s/D/temp = 32.800 degC  (seq 1552, sampled at hlc 27956116)
+[08:54:03.761]    (served by B, 1 attempt(s), 6 ms)
+[08:54:04.963]    379.798 [D] compaction started (3061 bytes free)
+[08:54:05.415] >>> get s/D/temp
+[08:54:05.766] > get s/D/temp
+[08:54:05.766] s/D/temp = 32.800 degC  (seq 1554, sampled at hlc 27958116)
+[08:54:05.766]    (served by B, 1 attempt(s), 18 ms)
+[08:54:07.419]    382.357 [D] compaction #3 done: bank B, 22 keys, 14981 bytes free
+[08:54:07.420] >>> get s/D/temp
+[08:54:07.771] > get s/D/temp
+[08:54:07.771] s/D/temp = 32.800 degC  (seq 1556, sampled at hlc 27960143)
+[08:54:07.771]    (served by B, 1 attempt(s), 6 ms)
+[08:54:09.425] >>> get s/D/temp
+[08:54:09.777] > get s/D/temp
+[08:54:09.777] s/D/temp = 32.800 degC  (seq 1558, sampled at hlc 27962127)
+[08:54:09.777]    (served by B, 1 attempt(s), 6 ms)
+[08:54:11.430] >>> get s/D/temp
+[08:54:11.781] > get s/D/temp
+[08:54:11.781] s/D/temp = 32.800 degC  (seq 1560, sampled at hlc 27964127)
+[08:54:11.781]    (served by B, 1 attempt(s), 7 ms)
+[08:54:13.435] >>> get s/D/temp
+[08:54:13.787] > get s/D/temp
+[08:54:13.787] s/D/temp = 32.300 degC  (seq 1562, sampled at hlc 27966127)
+[08:54:13.787]    (served by B, 1 attempt(s), 8 ms)
+[08:54:15.441] >>> get s/D/temp
+[08:54:15.792] > get s/D/temp
+[08:54:15.792] s/D/temp = 32.300 degC  (seq 1564, sampled at hlc 27968127)
+[08:54:15.792]    (served by B, 1 attempt(s), 6 ms)
+[08:54:17.447] >>> get s/D/temp
+[08:54:17.798] > get s/D/temp
+[08:54:17.798] s/D/temp = 32.300 degC  (seq 1566, sampled at hlc 27970127)
+[08:54:17.798]    (served by B, 1 attempt(s), 7 ms)
+[08:54:19.402] >>> get s/D/temp
+[08:54:19.753] > get s/D/temp
+[08:54:19.753] s/D/temp = 32.300 degC  (seq 1568, sampled at hlc 27972127)
+[08:54:19.753]    (served by B, 1 attempt(s), 8 ms)
+[08:54:21.407] >>> get s/D/temp
+[08:54:21.758] > get s/D/temp
+[08:54:21.758] s/D/temp = 32.300 degC  (seq 1571, sampled at hlc 27975127)
+[08:54:21.758]    (served by B, 1 attempt(s), 33 ms)
+[08:54:23.412] >>> get s/D/temp
+[08:54:23.764] > get s/D/temp
+[08:54:23.764] s/D/temp = 32.300 degC  (seq 1573, sampled at hlc 27977127)
+[08:54:23.764]    (served by B, 1 attempt(s), 7 ms)
+[08:54:25.418] >>> get s/D/temp
+[08:54:25.769] > get s/D/temp
+[08:54:25.769] s/D/temp = 32.300 degC  (seq 1575, sampled at hlc 27979127)
+[08:54:25.769]    (served by B, 1 attempt(s), 6 ms)
+[08:54:28.317] >>> get s/D/temp
+[08:54:28.668] > get s/D/temp
+[08:54:28.668] s/D/temp = 32.300 degC  (seq 1577, sampled at hlc 27981127)
+[08:54:28.668]    (served by B, 1 attempt(s), 6 ms)
+[08:54:30.323] >>> get s/D/temp
+[08:54:30.674] > get s/D/temp
+[08:54:30.674] s/D/temp = 32.300 degC  (seq 1579, sampled at hlc 27983127)
+[08:54:30.674]    (served by B, 1 attempt(s), 6 ms)
+[08:54:32.328] >>> get s/D/temp
+[08:54:32.680] > get s/D/temp
+[08:54:32.680] s/D/temp = 32.300 degC  (seq 1581, sampled at hlc 27985127)
+[08:54:32.680]    (served by B, 1 attempt(s), 6 ms)
+[08:54:34.337] >>> get s/D/temp
+[08:54:34.688] > get s/D/temp
+[08:54:34.688] s/D/temp = 32.300 degC  (seq 1583, sampled at hlc 27987127)
+[08:54:34.688]    (served by B, 1 attempt(s), 6 ms)
+[08:54:36.344] >>> get s/D/temp
+[08:54:36.696] > get s/D/temp
+[08:54:36.696] s/D/temp = 31.800 degC  (seq 1585, sampled at hlc 27989127)
+[08:54:36.696]    (served by B, 1 attempt(s), 7 ms)
+[08:54:38.352] >>> get s/D/temp
+[08:54:38.703] > get s/D/temp
+[08:54:38.703] s/D/temp = 31.800 degC  (seq 1587, sampled at hlc 27991127)
+[08:54:38.703]    (served by B, 1 attempt(s), 7 ms)
+[08:54:40.360] >>> get s/D/temp
+[08:54:40.711] > get s/D/temp
+[08:54:40.711] s/D/temp = 31.800 degC  (seq 1589, sampled at hlc 27993127)
+[08:54:40.711]    (served by B, 1 attempt(s), 7 ms)
+[08:54:42.367] >>> get s/D/temp
+[08:54:42.718] > get s/D/temp
+[08:54:42.719] s/D/temp = 31.800 degC  (seq 1591, sampled at hlc 27995127)
+[08:54:42.719]    (served by B, 1 attempt(s), 7 ms)
+[08:54:44.375] >>> get s/D/temp
+[08:54:44.727] > get s/D/temp
+[08:54:44.727] s/D/temp = 31.800 degC  (seq 1593, sampled at hlc 27997127)
+[08:54:44.727]    (served by B, 1 attempt(s), 6 ms)
+[08:54:46.381] >>> get s/D/temp
+[08:54:46.733] > get s/D/temp
+[08:54:46.733] s/D/temp = 31.800 degC  (seq 1595, sampled at hlc 27999127)
+[08:54:46.733]    (served by B, 1 attempt(s), 34 ms)
+[08:54:48.337] >>> get s/D/temp
+[08:54:48.688] > get s/D/temp
+[08:54:48.689] s/D/temp = 31.800 degC  (seq 1597, sampled at hlc 28001127)
+[08:54:48.689]    (served by B, 1 attempt(s), 6 ms)
+[08:54:50.343] >>> get s/D/temp
+[08:54:50.694] > get s/D/temp
+[08:54:50.694] s/D/temp = 31.800 degC  (seq 1599, sampled at hlc 28003127)
+[08:54:50.694]    (served by B, 1 attempt(s), 7 ms)
+[08:54:52.348] >>> get s/D/temp
+[08:54:52.700] > get s/D/temp
+[08:54:52.700] s/D/temp = 31.800 degC  (seq 1601, sampled at hlc 28005127)
+[08:54:52.700]    (served by B, 1 attempt(s), 9 ms)
+[08:54:54.354] >>> get s/D/temp
+[08:54:54.705] > get s/D/temp
+[08:54:54.705] s/D/temp = 31.800 degC  (seq 1603, sampled at hlc 28007127)
+[08:54:54.705]    (served by B, 1 attempt(s), 7 ms)
+[08:54:56.360] >>> get s/D/temp
+[08:54:56.711] > get s/D/temp
+[08:54:56.711] s/D/temp = 31.800 degC  (seq 1606, sampled at hlc 28010127)
+[08:54:56.711]    (served by B, 1 attempt(s), 7 ms)
+[08:54:58.366] >>> get s/D/temp
+[08:54:58.717] > get s/D/temp
+[08:54:58.717] s/D/temp = 31.800 degC  (seq 1608, sampled at hlc 28012128)
+[08:54:58.717]    (served by B, 1 attempt(s), 7 ms)
+[08:55:01.314] >>> get s/D/temp
+[08:55:01.666] > get s/D/temp
+[08:55:01.666] s/D/temp = 31.800 degC  (seq 1610, sampled at hlc 28014128)
+[08:55:01.666]    (served by B, 1 attempt(s), 7 ms)
+[08:55:03.321] >>> get s/D/temp
+[08:55:03.672] > get s/D/temp
+[08:55:03.672] s/D/temp = 31.800 degC  (seq 1612, sampled at hlc 28016128)
+[08:55:03.672]    (served by B, 1 attempt(s), 7 ms)
+[08:55:05.326] >>> get s/D/temp
+[08:55:05.677] > get s/D/temp
+[08:55:05.677] s/D/temp = 31.800 degC  (seq 1614, sampled at hlc 28018128)
+[08:55:05.677]    (served by B, 1 attempt(s), 7 ms)
+[08:55:07.332] >>> get s/D/temp
+[08:55:07.683] > get s/D/temp
+[08:55:07.683] s/D/temp = 31.800 degC  (seq 1616, sampled at hlc 28020128)
+[08:55:07.683]    (served by B, 1 attempt(s), 7 ms)
+[08:55:09.337] >>> get s/D/temp
+[08:55:09.688] > get s/D/temp
+[08:55:09.688] s/D/temp = 31.800 degC  (seq 1618, sampled at hlc 28022128)
+[08:55:09.688]    (served by B, 1 attempt(s), 7 ms)
+[08:55:11.343] >>> get s/D/temp
+[08:55:11.694] > get s/D/temp
+[08:55:11.694] s/D/temp = 31.800 degC  (seq 1620, sampled at hlc 28024128)
+[08:55:11.694]    (served by B, 1 attempt(s), 7 ms)
+[08:55:13.348] >>> get s/D/temp
+[08:55:13.699] > get s/D/temp
+[08:55:13.700] s/D/temp = 31.800 degC  (seq 1622, sampled at hlc 28026128)
+[08:55:13.700]    (served by B, 1 attempt(s), 7 ms)
+[08:55:15.354] >>> get s/D/temp
+[08:55:15.705] > get s/D/temp
+[08:55:15.705] s/D/temp = 31.800 degC  (seq 1624, sampled at hlc 28028128)
+[08:55:15.705]    (served by B, 1 attempt(s), 7 ms)
+[08:55:17.359] >>> get s/D/temp
+[08:55:17.710] > get s/D/temp
+[08:55:17.710] s/D/temp = 31.800 degC  (seq 1626, sampled at hlc 28030128)
+[08:55:17.710]    (served by B, 1 attempt(s), 7 ms)
+[08:55:19.364] >>> get s/D/temp
+[08:55:19.716] > get s/D/temp
+[08:55:19.716] s/D/temp = 31.800 degC  (seq 1628, sampled at hlc 28032128)
+[08:55:19.716]    (served by B, 1 attempt(s), 8 ms)
+[08:55:21.370] >>> get s/D/temp
+[08:55:21.721] > get s/D/temp
+[08:55:21.721] s/D/temp = 31.800 degC  (seq 1630, sampled at hlc 28034128)
+[08:55:21.721]    (served by B, 1 attempt(s), 7 ms)
+[08:55:23.326] >>> get s/D/temp
+[08:55:23.677] > get s/D/temp
+[08:55:23.677] s/D/temp = 31.800 degC  (seq 1632, sampled at hlc 28036128)
+[08:55:23.677]    (served by B, 1 attempt(s), 7 ms)
+[08:55:25.332] >>> get s/D/temp
+[08:55:25.684] > get s/D/temp
+[08:55:25.684] s/D/temp = 31.800 degC  (seq 1634, sampled at hlc 28038128)
+[08:55:25.684]    (served by B, 1 attempt(s), 8 ms)
+[08:55:27.339] >>> get s/D/temp
+[08:55:27.690] > get s/D/temp
+[08:55:27.690] s/D/temp = 31.800 degC  (seq 1636, sampled at hlc 28040128)
+[08:55:27.690]    (served by B, 1 attempt(s), 7 ms)
+[08:55:29.345] >>> get s/D/temp
+[08:55:29.697] > get s/D/temp
+[08:55:29.697] s/D/temp = 31.800 degC  (seq 1639, sampled at hlc 28043128)
+[08:55:29.697]    (served by B, 1 attempt(s), 22 ms)
+[08:55:31.352] >>> get s/D/temp
+[08:55:31.703] > get s/D/temp
+[08:55:31.703] s/D/temp = 31.800 degC  (seq 1641, sampled at hlc 28045128)
+[08:55:31.703]    (served by B, 1 attempt(s), 7 ms)
+[08:55:34.296] >>> get s/D/temp
+[08:55:34.648] > get s/D/temp
+[08:55:34.648] s/D/temp = 31.800 degC  (seq 1643, sampled at hlc 28047128)
+[08:55:34.648]    (served by B, 1 attempt(s), 7 ms)
+[08:55:36.302] >>> get s/D/temp
+[08:55:36.654] > get s/D/temp
+[08:55:36.654] s/D/temp = 31.800 degC  (seq 1645, sampled at hlc 28049128)
+[08:55:36.654]    (served by B, 1 attempt(s), 7 ms)
+[08:55:38.308] >>> get s/D/temp
+[08:55:38.660] > get s/D/temp
+[08:55:38.660] s/D/temp = 31.800 degC  (seq 1647, sampled at hlc 28051128)
+[08:55:38.660]    (served by B, 1 attempt(s), 7 ms)
+[08:55:40.314] >>> get s/D/temp
+[08:55:40.666] > get s/D/temp
+[08:55:40.666] s/D/temp = 31.800 degC  (seq 1649, sampled at hlc 28053128)
+[08:55:40.666]    (served by B, 1 attempt(s), 11 ms)
+[08:55:42.320] >>> get s/D/temp
+[08:55:42.672] > get s/D/temp
+[08:55:42.672] s/D/temp = 31.800 degC  (seq 1651, sampled at hlc 28055128)
+[08:55:42.672]    (served by B, 1 attempt(s), 15 ms)
+[08:55:44.327] >>> get s/D/temp
+[08:55:44.678] > get s/D/temp
+[08:55:44.678] s/D/temp = 31.800 degC  (seq 1653, sampled at hlc 28057128)
+[08:55:44.678]    (served by B, 1 attempt(s), 7 ms)
+[08:55:46.332] >>> get s/D/temp
+[08:55:46.683] > get s/D/temp
+[08:55:46.683] s/D/temp = 31.800 degC  (seq 1655, sampled at hlc 28059128)
+[08:55:46.683]    (served by B, 1 attempt(s), 7 ms)
+[08:55:48.338] >>> get s/D/temp
+[08:55:48.689] > get s/D/temp
+[08:55:48.689] s/D/temp = 31.800 degC  (seq 1657, sampled at hlc 28061128)
+[08:55:48.689]    (served by B, 1 attempt(s), 7 ms)
+[08:55:50.344] >>> get s/D/temp
+[08:55:50.695] > get s/D/temp
+[08:55:50.695] s/D/temp = 31.800 degC  (seq 1659, sampled at hlc 28063128)
+[08:55:50.695]    (served by B, 1 attempt(s), 8 ms)
+[08:55:52.349] >>> get s/D/temp
+[08:55:52.700] > get s/D/temp
+[08:55:52.701] s/D/temp = 31.800 degC  (seq 1661, sampled at hlc 28065128)
+[08:55:52.701]    (served by B, 1 attempt(s), 7 ms)
+[08:55:54.355] >>> get s/D/temp
+[08:55:54.706] > get s/D/temp
+[08:55:54.706] s/D/temp = 31.700 degC  (seq 1663, sampled at hlc 28067128)
+[08:55:54.706]    (served by B, 1 attempt(s), 11 ms)
+[08:55:56.311] >>> get s/D/temp
+[08:55:56.663] > get s/D/temp
+[08:55:56.663] s/D/temp = 31.400 degC  (seq 1665, sampled at hlc 28069128)
+[08:55:56.663]    (served by B, 1 attempt(s), 7 ms)
+[08:55:58.322] >>> get s/D/temp
+[08:55:58.674] > get s/D/temp
+[08:55:58.674] s/D/temp = 31.300 degC  (seq 1667, sampled at hlc 28071128)
+[08:55:58.674]    (served by B, 1 attempt(s), 7 ms)
+[08:56:00.329] >>> get s/D/temp
+[08:56:00.680] > get s/D/temp
+[08:56:00.680] s/D/temp = 31.300 degC  (seq 1669, sampled at hlc 28073128)
+[08:56:00.680]    (served by B, 1 attempt(s), 7 ms)
+[08:56:02.334] >>> get s/D/temp
+[08:56:02.685] > get s/D/temp
+[08:56:02.685] s/D/temp = 31.300 degC  (seq 1672, sampled at hlc 28076128)
+[08:56:02.685]    (served by B, 1 attempt(s), 7 ms)
+[08:56:04.339] >>> get s/D/temp
+[08:56:04.690] > get s/D/temp
+[08:56:04.691] s/D/temp = 31.300 degC  (seq 1674, sampled at hlc 28078128)
+[08:56:04.691]    (served by B, 1 attempt(s), 7 ms)
+[08:56:07.298] >>> get s/D/temp
+[08:56:07.651] > get s/D/temp
+[08:56:07.651] s/D/temp = 31.300 degC  (seq 1676, sampled at hlc 28080128)
+[08:56:07.651]    (served by B, 1 attempt(s), 9 ms)
+[08:56:09.305] >>> get s/D/temp
+[08:56:09.657] > get s/D/temp
+[08:56:09.657] s/D/temp = 31.300 degC  (seq 1678, sampled at hlc 28082128)
+[08:56:09.657]    (served by B, 1 attempt(s), 7 ms)
+[08:56:11.310] >>> get s/D/temp
+[08:56:11.662] > get s/D/temp
+[08:56:11.662] s/D/temp = 31.300 degC  (seq 1680, sampled at hlc 28084128)
+[08:56:11.662]    (served by B, 1 attempt(s), 7 ms)
+[08:56:13.316] >>> get s/D/temp
+[08:56:13.667] > get s/D/temp
+[08:56:13.667] s/D/temp = 31.300 degC  (seq 1682, sampled at hlc 28086141)
+[08:56:13.667]    (served by B, 1 attempt(s), 7 ms)
+[08:56:15.322] >>> get s/D/temp
+[08:56:15.674] > get s/D/temp
+[08:56:15.674] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1684, sampled at hlc 28088141)
+[08:56:15.674]    (served by B, 1 attempt(s), 7 ms)
+[08:56:17.329] >>> get s/D/temp
+[08:56:17.681] > get s/D/temp
+[08:56:17.681] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1686, sampled at hlc 28090141)
+[08:56:17.681]    (served by B, 1 attempt(s), 7 ms)
+[08:56:19.336] >>> get s/D/temp
+[08:56:19.688] > get s/D/temp
+[08:56:19.688] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1688, sampled at hlc 28092141)
+[08:56:19.688]    (served by B, 1 attempt(s), 7 ms)
+[08:56:21.344] >>> get s/D/temp
+[08:56:21.696] > get s/D/temp
+[08:56:21.696] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1690, sampled at hlc 28094141)
+[08:56:21.696]    (served by B, 1 attempt(s), 7 ms)
+[08:56:23.353] >>> get s/D/temp
+[08:56:23.705] > get s/D/temp
+[08:56:23.705] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1692, sampled at hlc 28096141)
+[08:56:23.705]    (served by B, 1 attempt(s), 7 ms)
+[08:56:25.310] >>> get s/D/temp
+[08:56:25.662] > get s/D/temp
+[08:56:25.662] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1694, sampled at hlc 28098141)
+[08:56:25.662]    (served by B, 1 attempt(s), 7 ms)
+[08:56:26.614]    521.822 [D] compaction started (3053 bytes free)
+[08:56:27.317] >>> get s/D/temp
+[08:56:27.669]    522.187 [D] compaction aborted (10); old bank stays authoritative
+[08:56:27.669] > get s/D/temp
+[08:56:27.669] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1696, sampled at hlc 28100141)
+[08:56:27.669]    (served by B, 1 attempt(s), 7 ms)
+[08:56:29.324] >>> get s/D/temp
+[08:56:29.675] > get s/D/temp
+[08:56:29.675] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1698, sampled at hlc 28102141)
+[08:56:29.675]    (served by B, 1 attempt(s), 7 ms)
+[08:56:31.330] >>> get s/D/temp
+[08:56:31.681] > get s/D/temp
+[08:56:31.681] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1700, sampled at hlc 28104141)
+[08:56:31.681]    (served by B, 1 attempt(s), 7 ms)
+[08:56:33.337] >>> get s/D/temp
+[08:56:33.688] > get s/D/temp
+[08:56:33.688] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1702, sampled at hlc 28106141)
+[08:56:33.688]    (served by B, 1 attempt(s), 8 ms)
+[08:56:35.344] >>> get s/D/temp
+[08:56:35.695] > get s/D/temp
+[08:56:35.695] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1705, sampled at hlc 28109141)
+[08:56:35.695]    (served by B, 1 attempt(s), 27 ms)
+[08:56:37.352] >>> get s/D/temp
+[08:56:37.704] > get s/D/temp
+[08:56:37.704] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1707, sampled at hlc 28111141)
+[08:56:37.704]    (served by B, 1 attempt(s), 7 ms)
+[08:56:40.340] >>> get s/D/temp
+[08:56:40.692] > get s/D/temp
+[08:56:40.692] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1709, sampled at hlc 28113141)
+[08:56:40.692]    (served by B, 1 attempt(s), 7 ms)
+[08:56:42.349] >>> get s/D/temp
+[08:56:42.701] > get s/D/temp
+[08:56:42.701] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1711, sampled at hlc 28115141)
+[08:56:42.701]    (served by B, 1 attempt(s), 7 ms)
+[08:56:44.356] >>> get s/D/temp
+[08:56:44.708] > get s/D/temp
+[08:56:44.708] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1713, sampled at hlc 28117141)
+[08:56:44.708]    (served by B, 1 attempt(s), 7 ms)
+[08:56:46.362] >>> get s/D/temp
+[08:56:46.713] > get s/D/temp
+[08:56:46.713] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1715, sampled at hlc 28119141)
+[08:56:46.713]    (served by B, 1 attempt(s), 7 ms)
+[08:56:48.368] >>> get s/D/temp
+[08:56:48.719] > get s/D/temp
+[08:56:48.719] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1717, sampled at hlc 28121141)
+[08:56:48.719]    (served by B, 1 attempt(s), 7 ms)
+[08:56:50.324] >>> get s/D/temp
+[08:56:50.675] > get s/D/temp
+[08:56:50.675] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1719, sampled at hlc 28123168)
+[08:56:50.675]    (served by B, 1 attempt(s), 7 ms)
+[08:56:52.332] >>> get s/D/temp
+[08:56:52.683] > get s/D/temp
+[08:56:52.683] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1721, sampled at hlc 28125168)
+[08:56:52.683]    (served by B, 1 attempt(s), 7 ms)
+[08:56:54.338] >>> get s/D/temp
+[08:56:54.690] > get s/D/temp
+[08:56:54.690] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1723, sampled at hlc 28127168)
+[08:56:54.690]    (served by B, 1 attempt(s), 7 ms)
+[08:56:56.345] >>> get s/D/temp
+[08:56:56.696] > get s/D/temp
+[08:56:56.696] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1725, sampled at hlc 28129168)
+[08:56:56.696]    (served by B, 1 attempt(s), 7 ms)
+[08:56:57.097]    552.146 [D] compaction started (504 bytes free)
+[08:56:58.351] >>> get s/D/temp
+[08:56:58.702]    553.042 [D] compaction aborted (10); old bank stays authoritative
+[08:56:58.702] > get s/D/temp
+[08:56:58.702] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1727, sampled at hlc 28131196)
+[08:56:58.702]    (served by B, 1 attempt(s), 7 ms)
+[08:57:00.356] >>> get s/D/temp
+[08:57:00.707] > get s/D/temp
+[08:57:00.708] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1729, sampled at hlc 28133180)
+[08:57:00.708]    (served by B, 1 attempt(s), 7 ms)
+[08:57:02.363] >>> get s/D/temp
+[08:57:02.714] > get s/D/temp
+[08:57:02.714] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1731, sampled at hlc 28135180)
+[08:57:02.714]    (served by B, 1 attempt(s), 7 ms)
+[08:57:04.369] >>> get s/D/temp
+[08:57:04.721]    559.213 [D] compaction aborted (10); old bank stays authoritative
+[08:57:04.721] > get s/D/temp
+[08:57:04.721] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1733, sampled at hlc 28137202)
+[08:57:04.721]    (served by B, 1 attempt(s), 7 ms)
+[08:57:06.376] >>> get s/D/temp
+[08:57:06.728]    561.270 [D] compaction aborted (10); old bank stays authoritative
+[08:57:06.728] > get s/D/temp
+[08:57:06.728] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1735, sampled at hlc 28139209)
+[08:57:06.728]    (served by B, 1 attempt(s), 11 ms)
+[08:57:06.728]    561.841 [D] storage error on h/D/temp/0
+[08:57:06.878]    562.251 [D] storage error on h/D/temp/0
+[08:57:07.229]    562.609 [D] anti-entropy: s/D/temp from B failed (STORAGE_ERROR)
+[08:57:07.280]    562.661 [D] anti-entropy: h/A/light/1 from B failed (STORAGE_ERROR)
+[08:57:07.681]    563.053 [D] storage error on h/D/temp/0
+[08:57:08.384] >>> get s/D/temp
+[08:57:08.735] > get s/D/temp
+[08:57:08.736] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1736, sampled at hlc 28140193)
+[08:57:08.736]    (served by B, 1 attempt(s), 18 ms)
+[08:57:08.836]    564.260 [D] storage error on h/D/temp/0
+[08:57:08.987]    564.393 [D] compaction #4 done: bank A, 22 keys, 14981 bytes free
+[08:57:10.392] >>> get s/D/temp
+[08:57:10.743] > get s/D/temp
+[08:57:10.744] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1736, sampled at hlc 28140193)
+[08:57:10.744]    (served by B, 1 attempt(s), 7 ms)
+[08:57:13.337] >>> get s/D/temp
+[08:57:13.689] > get s/D/temp
+[08:57:13.689] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1738, sampled at hlc 28146210)
+[08:57:13.689]    (served by B, 1 attempt(s), 10 ms)
+[08:57:15.296] >>> get s/D/temp
+[08:57:15.647] > get s/D/temp
+[08:57:15.647] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1740, sampled at hlc 28148210)
+[08:57:15.647]    (served by B, 1 attempt(s), 7 ms)
+[08:57:17.303] >>> get s/D/temp
+[08:57:17.654] > get s/D/temp
+[08:57:17.654] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1742, sampled at hlc 28150210)
+[08:57:17.654]    (served by B, 1 attempt(s), 7 ms)
+[08:57:17.855]    572.562 [D] anti-entropy: key h/A/light/2 repaired from A
+[08:57:17.905]    572.642 [D] anti-entropy: key h/A/light/1 repaired from B
+[08:57:19.311] >>> get s/D/temp
+[08:57:19.662] > get s/D/temp
+[08:57:19.662] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1744, sampled at hlc 28152210)
+[08:57:19.662]    (served by B, 1 attempt(s), 7 ms)
+[08:57:21.318] >>> get s/D/temp
+[08:57:21.670] > get s/D/temp
+[08:57:21.670] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1746, sampled at hlc 28154210)
+[08:57:21.670]    (served by B, 1 attempt(s), 7 ms)
+[08:57:23.325] >>> get s/D/temp
+[08:57:23.677] > get s/D/temp
+[08:57:23.677] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1748, sampled at hlc 28156210)
+[08:57:23.677]    (served by B, 1 attempt(s), 7 ms)
+[08:57:25.333] >>> get s/D/temp
+[08:57:25.684] > get s/D/temp
+[08:57:25.685] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1750, sampled at hlc 28158210)
+[08:57:25.685]    (served by B, 1 attempt(s), 7 ms)
+[08:57:27.341] >>> get s/D/temp
+[08:57:27.692] > get s/D/temp
+[08:57:27.692] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1752, sampled at hlc 28160210)
+[08:57:27.692]    (served by B, 1 attempt(s), 7 ms)
+[08:57:29.349] >>> get s/D/temp
+[08:57:29.702] > get s/D/temp
+[08:57:29.702] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1754, sampled at hlc 28162210)
+[08:57:29.702]    (served by B, 1 attempt(s), 7 ms)
+[08:57:31.359] >>> get s/D/temp
+[08:57:31.711] > get s/D/temp
+[08:57:31.711] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1756, sampled at hlc 28164210)
+[08:57:31.711]    (served by B, 1 attempt(s), 7 ms)
+[08:57:33.316] >>> get s/D/temp
+[08:57:33.668] > get s/D/temp
+[08:57:33.668] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1758, sampled at hlc 28166210)
+[08:57:33.668]    (served by B, 1 attempt(s), 7 ms)
+[08:57:35.328] >>> get s/D/temp
+[08:57:35.679] > get s/D/temp
+[08:57:35.679] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1760, sampled at hlc 28168210)
+[08:57:35.679]    (served by B, 1 attempt(s), 7 ms)
+[08:57:37.335] >>> get s/D/temp
+[08:57:37.687] > get s/D/temp
+[08:57:37.687] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1762, sampled at hlc 28170210)
+[08:57:37.687]    (served by B, 1 attempt(s), 7 ms)
+[08:57:39.343] >>> get s/D/temp
+[08:57:39.694] > get s/D/temp
+[08:57:39.694] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1764, sampled at hlc 28172210)
+[08:57:39.694]    (served by B, 1 attempt(s), 7 ms)
+[08:57:41.351] >>> get s/D/temp
+[08:57:41.703] > get s/D/temp
+[08:57:41.703] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1766, sampled at hlc 28174210)
+[08:57:41.703]    (served by B, 1 attempt(s), 7 ms)
+[08:57:43.359] >>> get s/D/temp
+[08:57:43.711] > get s/D/temp
+[08:57:43.711] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1769, sampled at hlc 28177210)
+[08:57:43.711]    (served by B, 1 attempt(s), 21 ms)
+[08:57:46.352] >>> get s/D/temp
+[08:57:46.703] > get s/D/temp
+[08:57:46.703] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1771, sampled at hlc 28179210)
+[08:57:46.703]    (served by B, 1 attempt(s), 7 ms)
+[08:57:48.359] >>> get s/D/temp
+[08:57:48.710] > get s/D/temp
+[08:57:48.710] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1773, sampled at hlc 28181210)
+[08:57:48.710]    (served by B, 1 attempt(s), 13 ms)
+[08:57:50.367] >>> get s/D/temp
+[08:57:50.718] > get s/D/temp
+[08:57:50.718] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1775, sampled at hlc 28183210)
+[08:57:50.718]    (served by B, 1 attempt(s), 16 ms)
+[08:57:52.375] >>> get s/D/temp
+[08:57:52.726] > get s/D/temp
+[08:57:52.726] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1777, sampled at hlc 28185210)
+[08:57:52.726]    (served by B, 1 attempt(s), 7 ms)
+[08:57:54.332] >>> get s/D/temp
+[08:57:54.683] > get s/D/temp
+[08:57:54.683] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1779, sampled at hlc 28187210)
+[08:57:54.683]    (served by B, 1 attempt(s), 7 ms)
+[08:57:56.338] >>> get s/D/temp
+[08:57:56.690] > get s/D/temp
+[08:57:56.690] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1781, sampled at hlc 28189210)
+[08:57:56.690]    (served by B, 1 attempt(s), 7 ms)
+[08:57:58.346] >>> get s/D/temp
+[08:57:58.697] > get s/D/temp
+[08:57:58.697] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1783, sampled at hlc 28191210)
+[08:57:58.697]    (served by B, 1 attempt(s), 7 ms)
+[08:58:00.353] >>> get s/D/temp
+[08:58:00.705] > get s/D/temp
+[08:58:00.705] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1785, sampled at hlc 28193210)
+[08:58:00.705]    (served by B, 1 attempt(s), 6 ms)
+[08:58:02.360] >>> get s/D/temp
+[08:58:02.712] > get s/D/temp
+[08:58:02.712] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1787, sampled at hlc 28195210)
+[08:58:02.712]    (served by B, 1 attempt(s), 7 ms)
+[08:58:04.367] >>> get s/D/temp
+[08:58:04.719] > get s/D/temp
+[08:58:04.719] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1789, sampled at hlc 28197221)
+[08:58:04.719]    (served by B, 1 attempt(s), 7 ms)
+[08:58:06.374] >>> get s/D/temp
+[08:58:06.725] > get s/D/temp
+[08:58:06.725] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1791, sampled at hlc 28199221)
+[08:58:06.725]    (served by B, 1 attempt(s), 7 ms)
+[08:58:08.380] >>> get s/D/temp
+[08:58:08.732] > get s/D/temp
+[08:58:08.732] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1793, sampled at hlc 28201221)
+[08:58:08.732]    (served by B, 1 attempt(s), 6 ms)
+[08:58:10.387] >>> get s/D/temp
+[08:58:10.738] > get s/D/temp
+[08:58:10.738] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1795, sampled at hlc 28203221)
+[08:58:10.738]    (served by B, 1 attempt(s), 6 ms)
+[08:58:12.393] >>> get s/D/temp
+[08:58:12.744] > get s/D/temp
+[08:58:12.744] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1797, sampled at hlc 28205221)
+[08:58:12.744]    (served by B, 1 attempt(s), 6 ms)
+[08:58:14.400] >>> get s/D/temp
+[08:58:14.751] > get s/D/temp
+[08:58:14.751] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1800, sampled at hlc 28208221)
+[08:58:14.752]    (served by B, 1 attempt(s), 6 ms)
+[08:58:16.407] >>> get s/D/temp
+[08:58:16.758] > get s/D/temp
+[08:58:16.758] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1802, sampled at hlc 28210221)
+[08:58:16.758]    (served by B, 1 attempt(s), 6 ms)
+[08:58:18.364] >>> get s/D/temp
+[08:58:19.749] > get s/D/temp
+[08:58:19.749] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1804, sampled at hlc 28212221)
+[08:58:19.749]    (served by B, 1 attempt(s), 6 ms)
+[08:58:21.405] >>> get s/D/temp
+[08:58:21.756] > get s/D/temp
+[08:58:21.756] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1806, sampled at hlc 28214221)
+[08:58:21.756]    (served by B, 1 attempt(s), 7 ms)
+[08:58:23.412] >>> get s/D/temp
+[08:58:23.763] > get s/D/temp
+[08:58:23.763] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1808, sampled at hlc 28216221)
+[08:58:23.763]    (served by B, 1 attempt(s), 6 ms)
+[08:58:25.419] >>> get s/D/temp
+[08:58:25.771] > get s/D/temp
+[08:58:25.771] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1810, sampled at hlc 28218221)
+[08:58:25.771]    (served by B, 1 attempt(s), 10 ms)
+[08:58:27.428] >>> get s/D/temp
+[08:58:27.779] > get s/D/temp
+[08:58:27.779] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1812, sampled at hlc 28220221)
+[08:58:27.779]    (served by B, 1 attempt(s), 6 ms)
+[08:58:29.436] >>> get s/D/temp
+[08:58:29.787] > get s/D/temp
+[08:58:29.787] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1814, sampled at hlc 28222221)
+[08:58:29.787]    (served by B, 1 attempt(s), 6 ms)
+[08:58:31.443] >>> get s/D/temp
+[08:58:31.795] > get s/D/temp
+[08:58:31.796] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1816, sampled at hlc 28224221)
+[08:58:31.796]    (served by B, 1 attempt(s), 6 ms)
+[08:58:33.451] >>> get s/D/temp
+[08:58:33.803] > get s/D/temp
+[08:58:33.803] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1818, sampled at hlc 28226221)
+[08:58:33.803]    (served by B, 1 attempt(s), 6 ms)
+[08:58:35.459] >>> get s/D/temp
+[08:58:35.810] > get s/D/temp
+[08:58:35.810] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1820, sampled at hlc 28228221)
+[08:58:35.810]    (served by B, 1 attempt(s), 11 ms)
+[08:58:37.466] >>> get s/D/temp
+[08:58:37.818] > get s/D/temp
+[08:58:37.818] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1822, sampled at hlc 28230221)
+[08:58:37.818]    (served by B, 1 attempt(s), 6 ms)
+[08:58:39.424] >>> get s/D/temp
+[08:58:39.775] > get s/D/temp
+[08:58:39.775] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1824, sampled at hlc 28232221)
+[08:58:39.775]    (served by B, 1 attempt(s), 10 ms)
+[08:58:41.432] >>> get s/D/temp
+[08:58:41.783] > get s/D/temp
+[08:58:41.783] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1826, sampled at hlc 28234247)
+[08:58:41.783]    (served by B, 1 attempt(s), 7 ms)
+[08:58:43.440] >>> get s/D/temp
+[08:58:43.792] > get s/D/temp
+[08:58:43.792] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1828, sampled at hlc 28236247)
+[08:58:43.792]    (served by B, 1 attempt(s), 6 ms)
+[08:58:45.448] >>> get s/D/temp
+[08:58:45.799] > get s/D/temp
+[08:58:45.799] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1830, sampled at hlc 28238247)
+[08:58:45.799]    (served by B, 1 attempt(s), 6 ms)
+[08:58:47.456] >>> get s/D/temp
+[08:58:47.807] > get s/D/temp
+[08:58:47.807] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1833, sampled at hlc 28241247)
+[08:58:47.807]    (served by B, 1 attempt(s), 5 ms)
+[08:58:49.465] >>> get s/D/temp
+[08:58:49.817] > get s/D/temp
+[08:58:49.817] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1835, sampled at hlc 28243247)
+[08:58:49.817]    (served by B, 1 attempt(s), 6 ms)
+[08:58:51.473] >>> get s/D/temp
+[08:58:51.825] > get s/D/temp
+[08:58:51.825] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1837, sampled at hlc 28245247)
+[08:58:51.825]    (served by B, 1 attempt(s), 6 ms)
+[08:58:54.403] >>> get s/D/temp
+[08:58:54.755] > get s/D/temp
+[08:58:54.755] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1839, sampled at hlc 28247247)
+[08:58:54.755]    (served by B, 1 attempt(s), 6 ms)
+[08:58:56.411] >>> get s/D/temp
+[08:58:56.763] > get s/D/temp
+[08:58:56.763] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1841, sampled at hlc 28249247)
+[08:58:56.763]    (served by B, 1 attempt(s), 6 ms)
+[08:58:58.419] >>> get s/D/temp
+[08:58:58.770] > get s/D/temp
+[08:58:58.771] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1843, sampled at hlc 28251247)
+[08:58:58.771]    (served by B, 1 attempt(s), 7 ms)
+[08:59:00.376] >>> get s/D/temp
+[08:59:00.728] > get s/D/temp
+[08:59:00.728] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1845, sampled at hlc 28253247)
+[08:59:00.728]    (served by B, 1 attempt(s), 6 ms)
+[08:59:02.383] >>> get s/D/temp
+[08:59:02.735] > get s/D/temp
+[08:59:02.735] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1847, sampled at hlc 28255247)
+[08:59:02.735]    (served by B, 1 attempt(s), 6 ms)
+[08:59:04.390] >>> get s/D/temp
+[08:59:04.742] > get s/D/temp
+[08:59:04.742] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1849, sampled at hlc 28257247)
+[08:59:04.742]    (served by B, 1 attempt(s), 6 ms)
+[08:59:06.398] >>> get s/D/temp
+[08:59:06.749] > get s/D/temp
+[08:59:06.749] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1851, sampled at hlc 28259247)
+[08:59:06.749]    (served by B, 1 attempt(s), 6 ms)
+[08:59:08.404] >>> get s/D/temp
+[08:59:08.755] > get s/D/temp
+[08:59:08.756] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1853, sampled at hlc 28261247)
+[08:59:08.756]    (served by B, 1 attempt(s), 6 ms)
+[08:59:10.411] >>> get s/D/temp
+[08:59:10.762] > get s/D/temp
+[08:59:10.763] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1855, sampled at hlc 28263247)
+[08:59:10.763]    (served by B, 1 attempt(s), 9 ms)
+[08:59:12.418] >>> get s/D/temp
+[08:59:12.770] > get s/D/temp
+[08:59:12.770] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1857, sampled at hlc 28265247)
+[08:59:12.770]    (served by B, 1 attempt(s), 6 ms)
+[08:59:14.425] >>> get s/D/temp
+[08:59:14.777] > get s/D/temp
+[08:59:14.777] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1859, sampled at hlc 28267247)
+[08:59:14.777]    (served by B, 1 attempt(s), 7 ms)
+[08:59:16.433] >>> get s/D/temp
+[08:59:16.784] > get s/D/temp
+[08:59:16.785] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1861, sampled at hlc 28269247)
+[08:59:16.785]    (served by B, 1 attempt(s), 6 ms)
+[08:59:18.441] >>> get s/D/temp
+[08:59:18.792] > get s/D/temp
+[08:59:18.792] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1863, sampled at hlc 28271273)
+[08:59:18.792]    (served by B, 1 attempt(s), 6 ms)
+[08:59:20.448] >>> get s/D/temp
+[08:59:20.800] > get s/D/temp
+[08:59:20.800] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1866, sampled at hlc 28274273)
+[08:59:20.800]    (served by B, 1 attempt(s), 6 ms)
+[08:59:22.406] >>> get s/D/temp
+[08:59:22.757] > get s/D/temp
+[08:59:22.757] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1868, sampled at hlc 28276273)
+[08:59:22.757]    (served by B, 1 attempt(s), 6 ms)
+[08:59:24.414] >>> get s/D/temp
+[08:59:24.765] > get s/D/temp
+[08:59:24.765] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1870, sampled at hlc 28278273)
+[08:59:24.765]    (served by B, 1 attempt(s), 6 ms)
+[08:59:27.466] >>> get s/D/temp
+[08:59:27.817] > get s/D/temp
+[08:59:27.817] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1872, sampled at hlc 28280273)
+[08:59:27.817]    (served by B, 1 attempt(s), 6 ms)
+[08:59:29.474] >>> get s/D/temp
+[08:59:29.825] > get s/D/temp
+[08:59:29.825] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1874, sampled at hlc 28282273)
+[08:59:29.825]    (served by B, 1 attempt(s), 6 ms)
+[08:59:30.277]    704.951 [D] compaction started (3055 bytes free)
+[08:59:31.482] >>> get s/D/temp
+[08:59:31.833]    705.262 [D] compaction aborted (10); old bank stays authoritative
+[08:59:31.834] > get s/D/temp
+[08:59:31.834] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1876, sampled at hlc 28284273)
+[08:59:31.834]    (served by B, 1 attempt(s), 11 ms)
+[08:59:33.490] >>> get s/D/temp
+[08:59:33.841] > get s/D/temp
+[08:59:33.841] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1878, sampled at hlc 28286273)
+[08:59:33.841]    (served by B, 1 attempt(s), 6 ms)
+[08:59:35.498] >>> get s/D/temp
+[08:59:35.849] > get s/D/temp
+[08:59:35.849] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1880, sampled at hlc 28288273)
+[08:59:35.849]    (served by B, 1 attempt(s), 6 ms)
+[08:59:37.506] >>> get s/D/temp
+[08:59:37.858] > get s/D/temp
+[08:59:37.858] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1882, sampled at hlc 28290273)
+[08:59:37.858]    (served by B, 1 attempt(s), 6 ms)
+[08:59:39.514] >>> get s/D/temp
+[08:59:39.865] > get s/D/temp
+[08:59:39.865] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1884, sampled at hlc 28292273)
+[08:59:39.865]    (served by B, 1 attempt(s), 17 ms)
+[08:59:41.521] >>> get s/D/temp
+[08:59:41.872] > get s/D/temp
+[08:59:41.872] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1886, sampled at hlc 28294273)
+[08:59:41.872]    (served by B, 1 attempt(s), 6 ms)
+[08:59:43.477] >>> get s/D/temp
+[08:59:43.829] > get s/D/temp
+[08:59:43.829] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1888, sampled at hlc 28296273)
+[08:59:43.829]    (served by B, 1 attempt(s), 6 ms)
+[08:59:45.484] >>> get s/D/temp
+[08:59:45.836] > get s/D/temp
+[08:59:45.836] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1890, sampled at hlc 28298273)
+[08:59:45.836]    (served by B, 1 attempt(s), 6 ms)
+[08:59:47.491] >>> get s/D/temp
+[08:59:47.842] > get s/D/temp
+[08:59:47.842] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1892, sampled at hlc 28300273)
+[08:59:47.842]    (served by B, 1 attempt(s), 6 ms)
+[08:59:49.499] >>> get s/D/temp
+[08:59:49.850] > get s/D/temp
+[08:59:49.850] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1894, sampled at hlc 28302273)
+[08:59:49.850]    (served by B, 1 attempt(s), 7 ms)
+[08:59:51.506] >>> get s/D/temp
+[08:59:51.857] > get s/D/temp
+[08:59:51.857] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1897, sampled at hlc 28305273)
+[08:59:51.857]    (served by B, 1 attempt(s), 6 ms)
+[08:59:53.514] >>> get s/D/temp
+[08:59:53.865] > get s/D/temp
+[08:59:53.865] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1899, sampled at hlc 28307273)
+[08:59:53.865]    (served by B, 1 attempt(s), 22 ms)
+[08:59:55.522] >>> get s/D/temp
+[08:59:55.873] > get s/D/temp
+[08:59:55.873] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1901, sampled at hlc 28309300)
+[08:59:55.874]    (served by B, 1 attempt(s), 13 ms)
+[08:59:57.532] >>> get s/D/temp
+[08:59:57.883] > get s/D/temp
+[08:59:57.883] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1903, sampled at hlc 28311300)
+[08:59:57.883]    (served by B, 1 attempt(s), 10 ms)
+[08:59:59.539]    735.224 [D] compaction started (512 bytes free)
+[08:59:59.539] >>> get s/D/temp
+[08:59:59.890] > get s/D/temp
+[08:59:59.891] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1905, sampled at hlc 28313300)
+[08:59:59.891]    (served by B, 1 attempt(s), 18 ms)
+[09:00:01.548] >>> get s/D/temp
+[09:00:01.899]    736.117 [D] compaction aborted (10); old bank stays authoritative
+[09:00:01.899] > get s/D/temp
+[09:00:01.899] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1907, sampled at hlc 28315311)
+[09:00:01.899]    (served by B, 1 attempt(s), 8 ms)
+[09:00:03.507] >>> get s/D/temp
+[09:00:03.858] > get s/D/temp
+[09:00:03.858] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1909, sampled at hlc 28317311)
+[09:00:03.858]    (served by B, 1 attempt(s), 6 ms)
+[09:00:05.515] >>> get s/D/temp
+[09:00:05.866] > get s/D/temp
+[09:00:05.866] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1911, sampled at hlc 28319311)
+[09:00:05.866]    (served by B, 1 attempt(s), 6 ms)
+[09:00:06.821]    742.288 [D] compaction aborted (10); old bank stays authoritative
+[09:00:06.821]    742.588 [D] anti-entropy: s/D/temp from B failed (STORAGE_ERROR)
+[09:00:07.524] >>> get s/D/temp
+[09:00:07.875] > get s/D/temp
+[09:00:07.875] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1913, sampled at hlc 28321332)
+[09:00:07.875]    (served by B, 1 attempt(s), 18 ms)
+[09:00:09.532] >>> get s/D/temp
+[09:00:09.883]    744.345 [D] compaction aborted (10); old bank stays authoritative
+[09:00:09.883] > get s/D/temp
+[09:00:09.883] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1915, sampled at hlc 28323324)
+[09:00:09.883]    (served by B, 1 attempt(s), 18 ms)
+[09:00:10.134]    745.996 [D] storage error on h/D/temp/0
+[09:00:10.536]    746.409 [D] storage error on h/D/temp/0
+[09:00:11.339]    747.221 [D] storage error on h/D/temp/0
+[09:00:11.540] >>> get s/D/temp
+[09:00:11.891] > get s/D/temp
+[09:00:11.891]    747.506 [D] compaction #5 done: bank B, 22 keys, 14981 bytes free
+[09:00:11.891] s/D/temp = 31.300 degC STALE (last good value, no good read lately)  (seq 1916, sampled at hlc 28324348)
+[09:00:11.891]    (served by B, 1 attempt(s), 32 ms)
+[09:00:13.548] >>> get s/D/temp
+[09:00:13.900] > get s/D/temp
+[09:00:13.900] s/D/temp = 30.800 degC  (seq 1917, sampled at hlc 28327341)
+[09:00:13.900]    (served by B, 1 attempt(s), 6 ms)
+[09:00:16.945] >>> get s/D/temp
+[09:00:17.296] > get s/D/temp
+[09:00:17.296] s/D/temp = 30.800 degC  (seq 1919, sampled at hlc 28329341)
+[09:00:17.296]    (served by B, 1 attempt(s), 11 ms)
+[09:00:17.900]    752.559 [D] anti-entropy: key h/A/light/2 repaired from A
+[09:00:18.956] >>> get s/D/temp
+[09:00:19.307] > get s/D/temp
+[09:00:19.307] s/D/temp = 31.300 degC  (seq 1921, sampled at hlc 28331341)
+[09:00:19.307]    (served by B, 1 attempt(s), 6 ms)
+[09:00:20.964] >>> get s/D/temp
+[09:00:21.315] > get s/D/temp
+[09:00:21.315] s/D/temp = 31.300 degC  (seq 1923, sampled at hlc 28333341)
+[09:00:21.315]    (served by B, 1 attempt(s), 6 ms)
+[09:00:22.921] >>> get s/D/temp
+[09:00:23.273] > get s/D/temp
+[09:00:23.273] s/D/temp = 31.300 degC  (seq 1925, sampled at hlc 28335341)
+[09:00:23.273]    (served by B, 1 attempt(s), 12 ms)
+[09:00:24.930] >>> get s/D/temp
+[09:00:25.282] > get s/D/temp
+[09:00:25.282] s/D/temp = 31.300 degC  (seq 1927, sampled at hlc 28337341)
+[09:00:25.282]    (served by B, 1 attempt(s), 6 ms)
+[09:00:26.939] >>> get s/D/temp
+[09:00:27.290] > get s/D/temp
+[09:00:27.290] s/D/temp = 31.300 degC  (seq 1929, sampled at hlc 28339341)
+[09:00:27.291]    (served by B, 1 attempt(s), 6 ms)
+[09:00:28.947] >>> get s/D/temp
+[09:00:29.299] > get s/D/temp
+[09:00:29.299] s/D/temp = 31.300 degC  (seq 1931, sampled at hlc 28341341)
+[09:00:29.299]    (served by B, 1 attempt(s), 6 ms)
+[09:00:30.956] >>> get s/D/temp
+[09:00:31.308] > get s/D/temp
+[09:00:31.308] s/D/temp = 31.300 degC  (seq 1934, sampled at hlc 28344341)
+[09:00:31.308]    (served by B, 1 attempt(s), 22 ms)
+[09:00:32.964] >>> get s/D/temp
+[09:00:33.316] > get s/D/temp
+[09:00:33.316] s/D/temp = 31.300 degC  (seq 1936, sampled at hlc 28346341)
+[09:00:33.316]    (served by B, 1 attempt(s), 6 ms)
+[09:00:34.972] >>> get s/D/temp
+[09:00:35.324] > get s/D/temp
+[09:00:35.324] s/D/temp = 31.300 degC  (seq 1938, sampled at hlc 28348341)
+[09:00:35.324]    (served by B, 1 attempt(s), 6 ms)
+[09:00:36.979] >>> get s/D/temp
+[09:00:37.331] > get s/D/temp
+[09:00:37.331] s/D/temp = 31.300 degC  (seq 1940, sampled at hlc 28350341)
+[09:00:37.331]    (served by B, 1 attempt(s), 6 ms)
+[09:00:38.985] >>> get s/D/temp
+[09:00:39.336] > get s/D/temp
+[09:00:39.336] s/D/temp = 31.300 degC  (seq 1942, sampled at hlc 28352341)
+[09:00:39.336]    (served by B, 1 attempt(s), 6 ms)
+[09:00:39.437] >>> status
+[09:00:39.789] > status
+[09:00:39.789] node D  state ACTIVE  view ABCD  uptime 774s
+[09:00:39.789] hlc 28353101.0
+[09:00:39.789] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 3476/16064 bytes, bank B, 5 compactions
+[09:00:39.789] pending: 0 client, 0 replication, 8 dedup entries, 8 free op slots
+[09:00:39.789] sensor temp (hardware): on, 709 samples, last 31.300 degC seq 1942, 1407 ok, 11 under-replicated, 0 failed, 120 read failures
+[09:00:40.942] >>> get s/D/temp
+[09:00:41.293] > get s/D/temp
+[09:00:41.293] s/D/temp = 31.300 degC  (seq 1944, sampled at hlc 28354341)
+[09:00:41.293]    (served by B, 1 attempt(s), 7 ms)
+[09:00:42.949] >>> get s/D/temp
+[09:00:43.301] > get s/D/temp
+[09:00:43.301] s/D/temp = 31.300 degC  (seq 1946, sampled at hlc 28356341)
+[09:00:43.301]    (served by B, 1 attempt(s), 6 ms)
+[09:00:44.956] >>> get s/D/temp
+[09:00:45.308] > get s/D/temp
+[09:00:45.308] s/D/temp = 31.300 degC  (seq 1948, sampled at hlc 28358341)
+[09:00:45.308]    (served by B, 1 attempt(s), 6 ms)
+[09:00:46.964] >>> get s/D/temp
+[09:00:47.316] > get s/D/temp
+[09:00:47.316] s/D/temp = 31.300 degC  (seq 1950, sampled at hlc 28360341)
+[09:00:47.316]    (served by B, 1 attempt(s), 6 ms)
+[09:00:49.921] >>> get s/D/temp
+[09:00:50.273] > get s/D/temp
+[09:00:50.273] s/D/temp = 31.300 degC  (seq 1952, sampled at hlc 28362341)
+[09:00:50.273]    (served by B, 1 attempt(s), 6 ms)
+[09:00:51.930] >>> get s/D/temp
+[09:00:52.281] > get s/D/temp
+[09:00:52.281] s/D/temp = 31.300 degC  (seq 1954, sampled at hlc 28364341)
+[09:00:52.281]    (served by B, 1 attempt(s), 6 ms)
+[09:00:53.937] >>> get s/D/temp
+[09:00:54.288] > get s/D/temp
+[09:00:54.288] s/D/temp = 31.300 degC  (seq 1956, sampled at hlc 28366341)
+[09:00:54.288]    (served by B, 1 attempt(s), 6 ms)
+[09:00:55.944] >>> get s/D/temp
+[09:00:56.295] > get s/D/temp
+[09:00:56.295] s/D/temp = 31.300 degC  (seq 1958, sampled at hlc 28368341)
+[09:00:56.295]    (served by B, 1 attempt(s), 6 ms)
+[09:00:57.952] >>> get s/D/temp
+[09:00:58.303] > get s/D/temp
+[09:00:58.303] s/D/temp = 31.300 degC  (seq 1960, sampled at hlc 28370341)
+[09:00:58.303]    (served by B, 1 attempt(s), 6 ms)
+[09:00:59.960] >>> get s/D/temp
+[09:01:00.312] > get s/D/temp
+[09:01:00.312] s/D/temp = 31.300 degC  (seq 1962, sampled at hlc 28372341)
+[09:01:00.312]    (served by B, 1 attempt(s), 6 ms)
+[09:01:01.969] >>> get s/D/temp
+[09:01:02.320] > get s/D/temp
+[09:01:02.321] s/D/temp = 31.300 degC  (seq 1964, sampled at hlc 28374341)
+[09:01:02.321]    (served by B, 1 attempt(s), 6 ms)
+[09:01:03.926] >>> get s/D/temp
+[09:01:04.277] > get s/D/temp
+[09:01:04.277] s/D/temp = 31.300 degC  (seq 1967, sampled at hlc 28377341)
+[09:01:04.277]    (served by B, 1 attempt(s), 4 ms)
+[09:01:05.933] >>> get s/D/temp
+[09:01:06.284] > get s/D/temp
+[09:01:06.285] s/D/temp = 31.300 degC  (seq 1969, sampled at hlc 28379341)
+[09:01:06.285]    (served by B, 1 attempt(s), 6 ms)
+[09:01:07.942] >>> get s/D/temp
+[09:01:08.293] > get s/D/temp
+[09:01:08.293] s/D/temp = 31.300 degC  (seq 1971, sampled at hlc 28381341)
+[09:01:08.293]    (served by B, 1 attempt(s), 6 ms)
+[09:01:09.948] >>> get s/D/temp
+[09:01:10.300] > get s/D/temp
+[09:01:10.300] s/D/temp = 31.300 degC  (seq 1973, sampled at hlc 28383341)
+[09:01:10.300]    (served by B, 1 attempt(s), 6 ms)
+[09:01:11.954] >>> get s/D/temp
+[09:01:12.305] > get s/D/temp
+[09:01:12.305] s/D/temp = 31.300 degC  (seq 1975, sampled at hlc 28385341)
+[09:01:12.305]    (served by B, 1 attempt(s), 6 ms)
+[09:01:13.959] >>> get s/D/temp
+[09:01:14.311] > get s/D/temp
+[09:01:14.311] s/D/temp = 31.300 degC  (seq 1977, sampled at hlc 28387341)
+[09:01:14.311]    (served by B, 1 attempt(s), 6 ms)
+[09:01:15.966] >>> get s/D/temp
+[09:01:16.318] > get s/D/temp
+[09:01:16.318] s/D/temp = 31.300 degC  (seq 1979, sampled at hlc 28389341)
+[09:01:16.318]    (served by B, 1 attempt(s), 6 ms)
+[09:01:17.973] >>> get s/D/temp
+[09:01:18.324] > get s/D/temp
+[09:01:18.324] s/D/temp = 31.300 degC  (seq 1981, sampled at hlc 28391341)
+[09:01:18.324]    (served by B, 1 attempt(s), 6 ms)
+[09:01:19.980] >>> get s/D/temp
+[09:01:20.331] > get s/D/temp
+[09:01:20.331] s/D/temp = 31.300 degC  (seq 1983, sampled at hlc 28393341)
+[09:01:20.332]    (served by B, 1 attempt(s), 6 ms)
+[09:01:21.988] >>> get s/D/temp
+[09:01:22.339] > get s/D/temp
+[09:01:22.339] s/D/temp = 31.300 degC  (seq 1985, sampled at hlc 28395341)
+[09:01:22.339]    (served by B, 1 attempt(s), 6 ms)
+[09:01:23.995] >>> get s/D/temp
+[09:01:24.347] > get s/D/temp
+[09:01:24.347] s/D/temp = 31.300 degC  (seq 1987, sampled at hlc 28397341)
+[09:01:24.347]    (served by B, 1 attempt(s), 6 ms)
+[09:01:26.002] >>> get s/D/temp
+[09:01:26.354] > get s/D/temp
+[09:01:26.354] s/D/temp = 31.300 degC  (seq 1989, sampled at hlc 28399341)
+[09:01:26.354]    (served by B, 1 attempt(s), 7 ms)
+[09:01:27.962] >>> get s/D/temp
+[09:01:28.313] > get s/D/temp
+[09:01:28.314] s/D/temp = 31.300 degC  (seq 1991, sampled at hlc 28401341)
+[09:01:28.314]    (served by B, 1 attempt(s), 6 ms)
+[09:01:29.969] >>> get s/D/temp
+[09:01:30.321] > get s/D/temp
+[09:01:30.321] s/D/temp = 31.300 degC  (seq 1993, sampled at hlc 28403341)
+[09:01:30.321]    (served by B, 1 attempt(s), 7 ms)
+[09:01:30.421] >>> sensor period 5000
+[09:01:30.772] > sensor period 5000
+[09:01:30.773] sampler on
+[09:01:31.425] >>> stats
+[09:01:31.776] > stats
+[09:01:31.776] radio   rx 8805 (invalid 0, spoofed 0)  tx 5216 (failed 0)
+[09:01:31.776] hb      tx 1640  rx 4911   membership changes 4
+[09:01:31.776] server  executed 349  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[09:01:31.776] repl    started 342  ok 342  failed 0  stale 0   as replica: applied 1005 stale 0
+[09:01:31.776] ae      rounds 84  chunks tx 420 rx 720  tables 235  pushes 13  resync tx 13 applied 15 stale 13
+[09:01:31.776] gc      orphans 0  tombstones 0  keys dropped 0
+[09:01:31.776] client  ok 2000  failed 0  attempts 2007  local 287
+[09:01:31.776] storage errors 24  compactions 5 (aborted 8)  faults injected 0
+[09:01:31.776] env node-d, built Oct 21 2026 08:25:31, reset reason: power-on
+[09:01:31.776] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[09:01:31.776] esp-now rx 8805  queue overflows 0  unknown MAC 0
+[09:01:31.776] esp-now tx -> A: 614 delivered, 0 failed (MAC-layer ACK)
+[09:01:31.776] esp-now tx -> B: 2320 delivered, 0 failed (MAC-layer ACK)
+[09:01:31.776] esp-now tx -> C: 222 delivered, 0 failed (MAC-layer ACK)
+[09:01:31.776] heap free 174992 (min 166168)  node task stack headroom 13240 bytes
+[09:01:31.776] eeprom page writes since boot: total 8102, hottest page 268 with 29 (rated 1000000)
+[09:01:31.977] >>> get s/D/temp
+[09:01:32.329] > get s/D/temp
+[09:01:32.329] s/D/temp = 31.300 degC  (seq 1995, sampled at hlc 28405341)
+[09:01:32.329]    (served by B, 1 attempt(s), 6 ms)
+[09:01:33.986] >>> get s/D/temp
+[09:01:34.337] > get s/D/temp
+[09:01:34.337] s/D/temp = 31.300 degC  (seq 1995, sampled at hlc 28405341)
+[09:01:34.337]    (served by B, 1 attempt(s), 6 ms)

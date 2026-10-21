@@ -20,6 +20,9 @@ Evidence for the test matrix in docs/HARDWARE_TEST_PLAN.md.
 | `wed21-health.log` | Wed 21 06:50: status/stats/members and dumps of all four after the overnight power-off (problem 13: full key index) |
 | `wed21-format.log` | Wed 21 06:54: final dumps, `format yes` on all four in parallel, 60 s watch, heartbeat rate per link (problem 14) |
 | `sensor-A.log` | M9a: BH1750 on A, after flash, baseline, torch, cover/uncover, EEPROM coexistence bench at 1 s sampling |
+| `sensor-D.log` | M9d: DHT11 on D: wiring problems 16/17, boots, continuous capture with breathe, DATA off (STALE), DATA on; D's compaction aborts (problem 15) |
+| `dht-radio-off.log` / `dht-radio-on.log` | BRINGUP 4.8 radio check, bit off / on (`-attempt1`: DHT not reading, invalid) |
+| `A-capture-wed21.log` | continuous console capture of A during M9d (problem 15) |
 | `H<n>-node-<x>.log` | serial log of node x during hardware test H<n> (docs/HARDWARE_TEST_PLAN.md) |
 | `H14-pi.log` | Raspberry Pi terminal output for H14 |
 

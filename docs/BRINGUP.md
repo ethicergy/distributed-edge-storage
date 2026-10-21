@@ -226,7 +226,7 @@ Sensors (each node has one; `config.h:159-165`):
 | A (bridge) | GY-302 VCC / GND / SDA / SCL / ADDR | 3V3 / GND / **GPIO8** / **GPIO9** / GND | Same bus as A's EEPROM, address 0x23. **3V3 only**: its pull-ups may go to VCC. Its driver never disables interrupts, so the Pi link is unaffected. |
 | B | AM312 VCC / GND / OUT | 3V3 / GND / **GPIO4** | 3.3 V supply is fine; no pots |
 | C | LM393 VCC / GND / DO | 3V3 / GND / **GPIO4** | **3V3 only**, so DO never exceeds 3.3 V. DO is usually active-low. |
-| D | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up |
+| D | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up. **Wire by silkscreen**: our module's order is S / VCC / GND, VCC in the middle (BRINGUP_LOG problem 17) |
 
 **Placement:** boards at least ~20 cm apart, antenna end (the end opposite the USB-C) clear of wires, breadboards and the laptop. Close together, 30-55 % of the broadcast heartbeats were lost and views flapped every few seconds; spread apart, 80-98 % arrived (BRINGUP_LOG problem 14).
 
@@ -415,13 +415,15 @@ On A, B and C, run `stats` before and after each run for `dedup replays`. Save b
 
 | metric (per 150 SETs) | bit off | bit on | pass if |
 |---|---|---|---|
-| ok / failed | | | 150 / 0 both |
-| avg latency (mean of 3 runs) | | | on ≤ off + 5 ms |
-| max latency | | | on ≤ off + 20 ms |
-| Δ `client attempts` − 150 (extra attempts) | | | equal (both 0 expected) |
-| Δ `radio tx` − Δ `hb tx` (data frames incl. retransmissions) | | | within 5 % |
-| Δ `radio … failed` | | | within noise (± 2) |
-| Σ Δ `dedup replays` on A, B, C | | | equal |
+| ok / failed | 150 / 0 | 150 / 0 | 150 / 0 both |
+| avg latency (mean of 3 runs) | 29.3 ms | 30.7 ms | on ≤ off + 5 ms |
+| max latency | 53 ms | 67 ms | on ≤ off + 20 ms |
+| Δ `client attempts` − Δ `client ok` (extra attempts; sampler writes included) | 2 | 0 | equal (both 0 expected) |
+| Δ `radio tx` − Δ `hb tx` (data frames incl. retransmissions) | 282 (1.57 per client op) | 332 (1.55 per client op) | within 5 % (per client op: the simulated source wrote 30 samples, the real one 64) |
+| Δ `radio … failed` | 0 | 0 | within noise (± 2) |
+| Σ Δ `dedup replays` on A, B, C | 0 | 0 | equal |
+
+**Result Wed 21 (BRINGUP_LOG M9d): pass.** Run 1 08:21, run 2 08:48; `dht-radio-off.log`, `dht-radio-on.log`.
 
 What to expect: no measurable difference. A 5 ms gap holds back at most one or two queued frames; the Wi-Fi hardware still receives and ACKs. If run 2 fails:
 * raise `DHT11_READ_INTERVAL_MS` (e.g. 5000) and re-run, or
