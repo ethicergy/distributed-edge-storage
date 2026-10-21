@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "eeprom_poll.h"
 #include "i2c_bus.h"
 
 namespace eeprom {
@@ -25,23 +26,16 @@ bool valid_range(
         (static_cast<std::size_t>(SIZE_BYTES) - address);
 }
 
+// Logic and its tests: eeprom_poll.h, test/eeprom_poll_test.cpp.
 Result wait_for_write_cycle() {
-    const unsigned long start = millis();
-
-    while ((millis() - start) < WRITE_CYCLE_TIMEOUT_MS) {
-        Wire.beginTransmission(I2C_ADDRESS);
-
-        const std::uint8_t error =
-            Wire.endTransmission(true);
-
-        if (error == 0) {
-            return Result::OK;
-        }
-
-        delay(1);
-    }
-
-    return Result::WRITE_TIMEOUT;
+    return eeprom::wait_for_write_cycle(
+        [] { return static_cast<std::uint32_t>(millis()); },
+        [] {
+            Wire.beginTransmission(I2C_ADDRESS);
+            return Wire.endTransmission(true) == 0;
+        },
+        [] { delay(1); }
+    );
 }
 
 } // namespace
