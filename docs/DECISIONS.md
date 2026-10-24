@@ -53,7 +53,15 @@ module AO rests at ~0.07 V and a clap at 30 cm stays inside the ADC
 noise (35-73 mV swing vs 33-56 mV in silence), even after raising the
 rest to 134 mV with the pot; a tap on the capsule did not show either.
 Back to DO only, as originally decided. Evidence:
-`docs/test-logs/sat24-sensors.log`, `sound-ao-test-first.log`.)
+`docs/test-logs/sat24-sensors.log`, `sound-ao-test-first.log`.
+
+**Module limit, accepted (NS, Sat 24):** with DO, our LM393 board
+detects a loud clap reliably only within ~5 cm of its microphone
+(10 cm: 0-1 of 2; 30 cm: never), at the best of ~16 turns of pot travel.
+C's real sensor stays enabled (bit set); the demo claps within ~5 cm.
+**Future work:** an amplified microphone module (MAX9814 with AGC, or
+MAX4466 with adjustable gain) on an ADC1 pin with the peak-to-peak
+logic of `a9f483f`, which would give a usable range across a room.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real

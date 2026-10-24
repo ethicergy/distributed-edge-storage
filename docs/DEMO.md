@@ -41,7 +41,7 @@ sensor light (simulated): on, 3 samples, last 389.097 lux seq 2, 6 ok, ...   <- 
 | where | command |
 |---|---|
 | Pi | `python3 -m edgekv watch --interval 5 --csv demo.csv` |
-| room | wave at B's PIR, clap near C, cover A's light sensor, breathe on D's DHT11 |
+| room | wave at B's PIR, clap **within ~5 cm of C's microphone** (the LM393 module does not hear claps further away; RESULTS.md), cover A's light sensor, breathe on D's DHT11 |
 | Pi | Ctrl-C, then `head -5 demo.csv` |
 
 **Audience sees** (every 5 s):

@@ -80,7 +80,7 @@ The simulator column is the 2-hour soak of `cluster_test H13`: all four nodes, 3
 |---|---|---|---|---|
 | `sensor_A` | A (BH1750 light): samples, writes committed, read failures | H13 (all nodes, 2 h, 5 reboots): 1918 writes ok, 0 failed, 0 storage errors | | Simulated sources never fail to read. A BH1750 read failure is an I2C error (`read failures`). After 3 in a row the simulated source stands in, and its readings are flagged `simulated`. |
 | `sensor_B` | B (AM312 motion) | as above | | PIR reads never fail. The first `PIR_SETTLE_MS` of samples are `settling`. |
-| `sensor_C` | C (LM393 sound) | as above | | Reads never fail. Event counts depend on the knob setting. |
+| `sensor_C` | C (LM393 sound, DO) | as above | | Reads never fail. **Module limit (Sat 24):** a loud clap is detected reliably only within ~5 cm of the microphone (10 cm unreliable, 30 cm not detected at any pot setting), so event counts in the soak reflect only very close or very loud sounds. |
 | `sensor_D` | D (DHT11 temperature) | as above | | DHT11 checksum or timeout failures are counted in `read failures`. The last good value is kept, and after 10 s without a good read it is flagged `STALE`. |
 
 ## 5. EEPROM wear (after the overnight soak)
