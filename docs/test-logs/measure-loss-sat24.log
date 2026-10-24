@@ -1,0 +1,494 @@
+    3.009 [A] > status
+    3.009 [A] node A  state ACTIVE  view ABCD  uptime 106s
+    3.009 [A] hlc 47302662.0
+    3.009 [A] storage recovered: 23 live, 0 tombstones, 23/64 keys, log 10668/16064 bytes, bank A, 0 compactions
+    3.009 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.012 [B] > status
+    3.012 [B] node B  state ACTIVE  view ABCD  uptime 96s
+    3.012 [B] hlc 47302664.0
+    3.012 [B] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 3247/16064 bytes, bank B, 0 compactions
+    3.012 [B] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+    3.015 [C] > status
+    3.015 [C] node C  state ACTIVE  view ABCD  uptime 86s
+    3.015 [C] hlc 47302666.0
+    3.015 [C] storage recovered: 20 live, 0 tombstones, 20/64 keys, log 4507/16064 bytes, bank B, 0 compactions
+    3.015 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.018 [D] > status
+    3.018 [D] node D  state ACTIVE  view ABCD  uptime 75s
+    3.018 [D] hlc 47302669.0
+    3.018 [D] storage recovered: 27 live, 0 tombstones, 27/64 keys, log 3703/16064 bytes, bank B, 0 compactions
+    3.018 [D] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+    3.109 [A] sensor light (hardware): on, 4 samples, last 45.833 lux seq 3135, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.109 [A] chip temp 59.1 degC (die temperature, not ambient)
+    3.109 [A] > sensor off
+    3.109 [A] sampler off
+    3.112 [B] sensor motion (simulated): on, 3 samples, last 3 events, last motion 15 s before the sample seq 1610, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.112 [B] chip temp 55.5 degC (die temperature, not ambient)
+    3.112 [B] > sensor off
+    3.112 [B] sampler off
+    3.115 [C] sensor sound (hardware): on, 3 samples, last 0 events, 0.0 % active seq 2035, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.115 [C] chip temp 54.4 degC (die temperature, not ambient)
+    3.115 [C] > sensor off
+    3.115 [C] sampler off
+    3.119 [D] sensor temp (hardware): on, 2 samples, last 29.800 degC seq 3406, 4 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.119 [D] chip temp 53.6 degC (die temperature, not ambient)
+    3.119 [D] > sensor off
+    3.119 [D] sampler off
+    3.210 [A] > fault loss 10
+    3.210 [A] frame loss 10 % on every frame this node sends
+    3.212 [B] > fault loss 10
+    3.212 [B] frame loss 10 % on every frame this node sends
+    3.215 [C] > fault loss 10
+    3.215 [C] frame loss 10 % on every frame this node sends
+    3.219 [D] > fault loss 10
+    3.219 [D] frame loss 10 % on every frame this node sends
+    3.220 [A] > stats
+    3.220 [A] radio   rx 701 (invalid 0, spoofed 0)  tx 287 (failed 0)
+    3.220 [A] hb      tx 200  rx 541   membership changes 10
+    3.220 [A] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+    3.221 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 11 stale 0
+    3.221 [A] ae      rounds 12  chunks tx 53 rx 128  tables 28  pushes 12  resync tx 12 applied 10 stale 0
+    3.221 [A] gc      orphans 11  tombstones 0  keys dropped 0
+    3.221 [A] client  ok 9  failed 0  attempts 9  local 2
+    3.222 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+    3.222 [A] chip temp 59.1 degC (die temperature, not ambient)
+    3.222 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+    3.222 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+    3.222 [A] esp-now rx 701  queue overflows 0  unknown MAC 20
+    3.222 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+    3.222 [A] esp-now tx -> C: 17 delivered, 0 failed (MAC-layer ACK)
+    3.222 [A] esp-now tx -> D: 10 delivered, 0 failed (MAC-layer ACK)
+    3.222 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+    3.224 [B] > stats
+    3.224 [B] radio   rx 694 (invalid 0, spoofed 0)  tx 246 (failed 0)
+    3.224 [B] hb      tx 179  rx 520   membership changes 6
+    3.224 [B] server  executed 13  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+    3.225 [B] repl    started 11  ok 11  failed 0  stale 0   as replica: applied 1 stale 0
+    3.225 [B] ae      rounds 11  chunks tx 30 rx 140  tables 28  pushes 4  resync tx 4 applied 4 stale 0
+    3.225 [B] gc      orphans 4  tombstones 0  keys dropped 0
+    3.225 [B] client  ok 7  failed 0  attempts 8  local 1
+    3.225 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+    3.226 [B] chip temp 55.5 degC (die temperature, not ambient)
+    3.226 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+    3.226 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+    3.226 [B] esp-now rx 694  queue overflows 0  unknown MAC 16
+    3.226 [B] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+    3.226 [B] esp-now tx -> C: 12 delivered, 3 failed (MAC-layer ACK)
+    3.226 [B] esp-now tx -> D: 18 delivered, 0 failed (MAC-layer ACK)
+    3.226 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+    3.227 [C] > stats
+    3.227 [C] radio   rx 634 (invalid 0, spoofed 0)  tx 215 (failed 0)
+    3.227 [C] hb      tx 159  rx 484   membership changes 6
+    3.227 [C] server  executed 6  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+    3.228 [C] repl    started 6  ok 6  failed 0  stale 0   as replica: applied 0 stale 0
+    3.228 [C] ae      rounds 10  chunks tx 37 rx 118  tables 25  pushes 0  resync tx 0 applied 11 stale 2
+    3.228 [C] gc      orphans 9  tombstones 0  keys dropped 0
+    3.228 [C] client  ok 7  failed 0  attempts 7  local 0
+    3.228 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+    3.228 [C] chip temp 54.4 degC (die temperature, not ambient)
+    3.228 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+    3.228 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+    3.228 [C] esp-now rx 634  queue overflows 0  unknown MAC 12
+    3.228 [C] esp-now tx -> A: 6 delivered, 0 failed (MAC-layer ACK)
+    3.228 [C] esp-now tx -> B: 9 delivered, 0 failed (MAC-layer ACK)
+    3.228 [C] esp-now tx -> D: 4 delivered, 0 failed (MAC-layer ACK)
+    3.228 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+    3.230 [D] > stats
+    3.230 [D] radio   rx 548 (invalid 0, spoofed 0)  tx 213 (failed 0)
+    3.230 [D] hb      tx 138  rx 441   membership changes 4
+    3.230 [D] server  executed 2  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+    3.231 [D] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 12 stale 0
+    3.231 [D] ae      rounds 9  chunks tx 54 rx 83  tables 20  pushes 0  resync tx 0 applied 1 stale 2
+    3.231 [D] gc      orphans 5  tombstones 0  keys dropped 0
+    3.231 [D] client  ok 5  failed 0  attempts 5  local 0
+    3.231 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+    3.231 [D] chip temp 53.6 degC (die temperature, not ambient)
+    3.231 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+    3.231 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+    3.231 [D] esp-now rx 548  queue overflows 0  unknown MAC 10
+    3.232 [D] esp-now tx -> A: 5 delivered, 0 failed (MAC-layer ACK)
+    3.232 [D] esp-now tx -> B: 12 delivered, 0 failed (MAC-layer ACK)
+    3.232 [D] esp-now tx -> C: 4 delivered, 0 failed (MAC-layer ACK)
+    3.232 [D] heap free 174712 (min 166152)  node task stack headroom 13432 bytes
+    3.323 [A] eeprom page writes since boot: total 67, hottest page 161 with 5 (rated 1000000)
+    3.323 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+    3.323 [A] > bench 50
+    3.323 [A] bench: 50 sequential SETs on keys bench/0..7
+    3.327 [B] eeprom page writes since boot: total 46, hottest page 304 with 4 (rated 1000000)
+    3.328 [C] eeprom page writes since boot: total 48, hottest page 320 with 5 (rated 1000000)
+    3.332 [D] eeprom page writes since boot: total 43, hottest page 311 with 4 (rated 1000000)
+    4.533 [D]     77.274 [D] SET_REQ bench/3 from A#3020324996: duplicate, cached response replayed
+    5.535 [D]     78.301 [D] REPL_REQ C#3940031456 duplicate: cached REPL_ACK replayed
+    6.433 [C]     89.605 [C] REPL_REQ D#1504388433 duplicate: cached REPL_ACK replayed
+    6.631 [A]    110.504 [A] anti-entropy: key bench/4 repaired from D
+    7.338 [D]     80.177 [D] replica A has a newer version of bench/4: client gets STALE_VERSION
+    8.036 [C]     91.179 [C] SET_REQ bench/6 from A#3020325008: duplicate, cached response replayed
+    8.739 [D]     81.562 [D] SET_REQ bench/3 from A#3020325013: duplicate, cached response replayed
+   11.440 [C]     94.714 [C] SET_REQ bench/0 from A#3020325018: duplicate, cached response replayed
+   12.943 [C]     96.218 [C] replica D did not answer for bench/1: under-replicated
+   16.651 [D]     89.686 [D] REPL_REQ C#3940031466 duplicate: cached REPL_ACK replayed
+   18.254 [C]    101.734 [C] SET_REQ bench/1 from A#3020325035: duplicate, cached response replayed
+   19.957 [C]    103.442 [C] SET_REQ bench/1 from A#3020325043: duplicate, cached response replayed
+   19.957 [A] bench: 50 ok, 0 failed in 17122 ms; latency min 26 avg 342 max 1828 ms
+   20.058 [B] > bench 50
+   20.058 [B] bench: 50 sequential SETs on keys bench/0..7
+   21.861 [A]    126.099 [A] REPL_REQ D#1504388465 duplicate: cached REPL_ACK replayed
+   22.362 [A]    126.699 [A] REPL_REQ D#1504388465 duplicate: cached REPL_ACK replayed
+   23.063 [C]    106.675 [C] SET_REQ bench/1 from B#1315120271: duplicate, cached response replayed
+   23.665 [D]     96.941 [D] SET_REQ bench/2 from B#1315120272: duplicate, cached response replayed
+   25.067 [D]     98.354 [D] SET_REQ bench/2 from B#1315120280: duplicate, cached response replayed
+   28.174 [D]    101.490 [D] REPL_REQ C#3940031485 duplicate: cached REPL_ACK replayed
+   28.474 [C]    112.196 [C] REPL_REQ D#1504388479 duplicate: cached REPL_ACK replayed
+   29.276 [D]    102.612 [D] anti-entropy: key bench/0 repaired from C
+   29.476 [C]    113.228 [C] replica D has a newer version of bench/0: client gets STALE_VERSION
+   30.178 [C]    113.882 [C] REPL_REQ D#1504388483 duplicate: cached REPL_ACK replayed
+   31.179 [D]    104.602 [D] REPL_REQ C#3940031492 duplicate: cached REPL_ACK replayed
+   31.480 [B] bench: 50 ok, 0 failed in 11773 ms; latency min 26 avg 235 max 909 ms
+   31.482 [A] > stats
+   31.482 [A] radio   rx 965 (invalid 0, spoofed 0)  tx 458 (failed 0)
+   31.482 [A] hb      tx 258  rx 691   membership changes 10
+   31.482 [A] server  executed 3  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+   31.483 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 35 stale 1
+   31.483 [A] ae      rounds 15  chunks tx 68 rx 163  tables 33  pushes 12  resync tx 12 applied 11 stale 0
+   31.483 [A] gc      orphans 11  tombstones 0  keys dropped 0
+   31.483 [A] client  ok 59  failed 0  attempts 60  local 2
+   31.484 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 19
+   31.484 [A] chip temp 60.1 degC (die temperature, not ambient)
+   31.484 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+   31.484 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+   31.484 [A] esp-now rx 965  queue overflows 0  unknown MAC 20
+   31.484 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+   31.484 [A] esp-now tx -> C: 41 delivered, 0 failed (MAC-layer ACK)
+   31.484 [A] esp-now tx -> D: 71 delivered, 0 failed (MAC-layer ACK)
+   31.484 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+   31.486 [B] > stats
+   31.486 [B] radio   rx 943 (invalid 0, spoofed 0)  tx 377 (failed 0)
+   31.486 [B] hb      tx 237  rx 675   membership changes 6
+   31.486 [B] server  executed 13  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+   31.486 [B] repl    started 11  ok 11  failed 0  stale 0   as replica: applied 1 stale 0
+   31.486 [B] ae      rounds 14  chunks tx 39 rx 183  tables 35  pushes 4  resync tx 4 applied 4 stale 0
+   31.486 [B] gc      orphans 4  tombstones 0  keys dropped 0
+   31.486 [B] client  ok 57  failed 0  attempts 59  local 1
+   31.487 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 17
+   31.487 [B] chip temp 55.5 degC (die temperature, not ambient)
+   31.487 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+   31.487 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+   31.487 [B] esp-now rx 943  queue overflows 0  unknown MAC 16
+   31.487 [B] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+   31.487 [B] esp-now tx -> C: 36 delivered, 3 failed (MAC-layer ACK)
+   31.487 [B] esp-now tx -> D: 51 delivered, 0 failed (MAC-layer ACK)
+   31.487 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+   31.490 [C] > stats
+   31.490 [C] radio   rx 951 (invalid 0, spoofed 0)  tx 424 (failed 0)
+   31.490 [C] hb      tx 217  rx 635   membership changes 6
+   31.490 [C] server  executed 47  not-ready 0  dedup replays 8  suppressed 2  table-full 0
+   31.490 [C] repl    started 47  ok 45  failed 1  stale 1   as replica: applied 36 stale 0
+   31.490 [C] ae      rounds 13  chunks tx 49 rx 157  tables 31  pushes 1  resync tx 1 applied 11 stale 2
+   31.490 [C] gc      orphans 9  tombstones 0  keys dropped 0
+   31.490 [C] client  ok 7  failed 0  attempts 7  local 0
+   31.490 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 21
+   31.490 [C] chip temp 54.4 degC (die temperature, not ambient)
+   31.490 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+   31.490 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+   31.490 [C] esp-now rx 951  queue overflows 0  unknown MAC 12
+   31.491 [C] esp-now tx -> A: 26 delivered, 0 failed (MAC-layer ACK)
+   31.491 [C] esp-now tx -> B: 30 delivered, 0 failed (MAC-layer ACK)
+   31.491 [C] esp-now tx -> D: 86 delivered, 0 failed (MAC-layer ACK)
+   31.491 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+   31.493 [D] > stats
+   31.493 [D] radio   rx 913 (invalid 0, spoofed 0)  tx 475 (failed 0)
+   31.493 [D] hb      tx 196  rx 596   membership changes 4
+   31.493 [D] server  executed 63  not-ready 0  dedup replays 8  suppressed 4  table-full 0
+   31.493 [D] repl    started 63  ok 62  failed 0  stale 1   as replica: applied 52 stale 1
+   31.493 [D] ae      rounds 12  chunks tx 72 rx 117  tables 27  pushes 1  resync tx 1 applied 2 stale 2
+   31.493 [D] gc      orphans 5  tombstones 0  keys dropped 0
+   31.493 [D] client  ok 5  failed 0  attempts 5  local 0
+   31.494 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 28
+   31.494 [D] chip temp 53.6 degC (die temperature, not ambient)
+   31.494 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+   31.494 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+   31.494 [D] esp-now rx 913  queue overflows 0  unknown MAC 10
+   31.495 [D] esp-now tx -> A: 64 delivered, 0 failed (MAC-layer ACK)
+   31.495 [D] esp-now tx -> B: 42 delivered, 0 failed (MAC-layer ACK)
+   31.495 [D] esp-now tx -> C: 83 delivered, 0 failed (MAC-layer ACK)
+   31.495 [D] heap free 174712 (min 166152)  node task stack headroom 13432 bytes
+   31.585 [A] eeprom page writes since boot: total 129, hottest page 161 with 5 (rated 1000000)
+   31.585 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+   31.585 [A] > fault clear
+   31.585 [A] fault armed
+   31.588 [B] eeprom page writes since boot: total 46, hottest page 304 with 4 (rated 1000000)
+   31.588 [B] > fault clear
+   31.588 [B] fault armed
+   31.592 [C] eeprom page writes since boot: total 239, hottest page 320 with 5 (rated 1000000)
+   31.592 [C] > fault clear
+   31.592 [C] fault armed
+   31.595 [D] eeprom page writes since boot: total 298, hottest page 318 with 5 (rated 1000000)
+   31.595 [D] > fault clear
+   31.595 [D] fault armed
+   34.690 [A] > fault loss 20
+   34.690 [A] frame loss 20 % on every frame this node sends
+   34.692 [B] > fault loss 20
+   34.692 [B] frame loss 20 % on every frame this node sends
+   34.696 [C] > fault loss 20
+   34.696 [C] frame loss 20 % on every frame this node sends
+   34.700 [D] > fault loss 20
+   34.700 [D] frame loss 20 % on every frame this node sends
+   34.702 [A] > stats
+   34.702 [A] radio   rx 985 (invalid 0, spoofed 0)  tx 465 (failed 0)
+   34.702 [A] hb      tx 265  rx 711   membership changes 10
+   34.702 [A] server  executed 3  not-ready 0  dedup replays 2  suppressed 0  table-full 0
+   34.703 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 35 stale 1
+   34.703 [A] ae      rounds 15  chunks tx 68 rx 163  tables 33  pushes 12  resync tx 12 applied 11 stale 0
+   34.703 [A] gc      orphans 11  tombstones 0  keys dropped 0
+   34.703 [A] client  ok 59  failed 0  attempts 60  local 2
+   34.703 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 19
+   34.703 [A] chip temp 60.1 degC (die temperature, not ambient)
+   34.703 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+   34.703 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+   34.703 [A] esp-now rx 985  queue overflows 0  unknown MAC 21
+   34.704 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+   34.704 [A] esp-now tx -> C: 41 delivered, 0 failed (MAC-layer ACK)
+   34.704 [A] esp-now tx -> D: 71 delivered, 0 failed (MAC-layer ACK)
+   34.704 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+   34.705 [B] > stats
+   34.705 [B] radio   rx 963 (invalid 0, spoofed 0)  tx 384 (failed 0)
+   34.705 [B] hb      tx 244  rx 695   membership changes 6
+   34.705 [B] server  executed 13  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+   34.706 [B] repl    started 11  ok 11  failed 0  stale 0   as replica: applied 1 stale 0
+   34.706 [B] ae      rounds 14  chunks tx 39 rx 183  tables 35  pushes 4  resync tx 4 applied 4 stale 0
+   34.706 [B] gc      orphans 4  tombstones 0  keys dropped 0
+   34.706 [B] client  ok 57  failed 0  attempts 59  local 1
+   34.706 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 17
+   34.706 [B] chip temp 55.5 degC (die temperature, not ambient)
+   34.706 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+   34.706 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+   34.706 [B] esp-now rx 963  queue overflows 0  unknown MAC 18
+   34.708 [B] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+   34.708 [B] esp-now tx -> C: 36 delivered, 3 failed (MAC-layer ACK)
+   34.708 [B] esp-now tx -> D: 51 delivered, 0 failed (MAC-layer ACK)
+   34.708 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+   34.709 [C] > stats
+   34.709 [C] radio   rx 972 (invalid 0, spoofed 0)  tx 430 (failed 0)
+   34.709 [C] hb      tx 223  rx 656   membership changes 6
+   34.709 [C] server  executed 47  not-ready 0  dedup replays 8  suppressed 2  table-full 0
+   34.711 [C] repl    started 47  ok 45  failed 1  stale 1   as replica: applied 36 stale 0
+   34.711 [C] ae      rounds 13  chunks tx 49 rx 157  tables 31  pushes 1  resync tx 1 applied 11 stale 2
+   34.711 [C] gc      orphans 9  tombstones 0  keys dropped 0
+   34.711 [C] client  ok 7  failed 0  attempts 7  local 0
+   34.711 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 21
+   34.711 [C] chip temp 54.4 degC (die temperature, not ambient)
+   34.711 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+   34.711 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+   34.711 [C] esp-now rx 972  queue overflows 0  unknown MAC 12
+   34.712 [C] esp-now tx -> A: 26 delivered, 0 failed (MAC-layer ACK)
+   34.712 [C] esp-now tx -> B: 30 delivered, 0 failed (MAC-layer ACK)
+   34.712 [C] esp-now tx -> D: 86 delivered, 0 failed (MAC-layer ACK)
+   34.712 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+   34.714 [D] > stats
+   34.714 [D] radio   rx 933 (invalid 0, spoofed 0)  tx 482 (failed 0)
+   34.714 [D] hb      tx 203  rx 616   membership changes 4
+   34.714 [D] server  executed 63  not-ready 0  dedup replays 8  suppressed 4  table-full 0
+   34.714 [D] repl    started 63  ok 62  failed 0  stale 1   as replica: applied 52 stale 1
+   34.714 [D] ae      rounds 12  chunks tx 72 rx 117  tables 27  pushes 1  resync tx 1 applied 2 stale 2
+   34.714 [D] gc      orphans 5  tombstones 0  keys dropped 0
+   34.714 [D] client  ok 5  failed 0  attempts 5  local 0
+   34.715 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 28
+   34.715 [D] chip temp 53.6 degC (die temperature, not ambient)
+   34.715 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+   34.715 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+   34.715 [D] esp-now rx 933  queue overflows 0  unknown MAC 13
+   34.715 [D] esp-now tx -> A: 64 delivered, 0 failed (MAC-layer ACK)
+   34.715 [D] esp-now tx -> B: 42 delivered, 0 failed (MAC-layer ACK)
+   34.715 [D] esp-now tx -> C: 83 delivered, 0 failed (MAC-layer ACK)
+   34.715 [D] heap free 174712 (min 166152)  node task stack headroom 13432 bytes
+   34.804 [A] eeprom page writes since boot: total 129, hottest page 161 with 5 (rated 1000000)
+   34.804 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+   34.804 [A] > bench 50
+   34.804 [A] bench: 50 sequential SETs on keys bench/0..7
+   34.808 [B] eeprom page writes since boot: total 46, hottest page 304 with 4 (rated 1000000)
+   34.812 [C] eeprom page writes since boot: total 239, hottest page 320 with 5 (rated 1000000)
+   34.816 [D] eeprom page writes since boot: total 298, hottest page 318 with 5 (rated 1000000)
+   35.312 [C]    119.248 [C] SET_REQ bench/0 from A#3020325044: duplicate, cached response replayed
+   35.617 [D]    109.216 [D] REPL_REQ C#3940031495 duplicate: cached REPL_ACK replayed
+   35.913 [C]    119.863 [C] REPL_REQ D#1504388488 duplicate: cached REPL_ACK replayed
+   37.420 [D]    111.031 [D] replica C did not answer for bench/3: under-replicated
+   37.916 [C]    121.860 [C] anti-entropy: key bench/3 repaired from D
+   38.722 [D]    112.330 [D] SET_REQ bench/7 from A#3020325051: duplicate, cached response replayed
+   39.013 [B]    133.220 [B] view: -BCD
+   39.017 [C]    122.964 [C] view: -BCD
+   39.023 [D]    112.625 [D] view: -BCD
+   39.023 [D]    112.688 [D] anti-entropy: key h/D/temp/1 repaired from B
+   39.123 [D]    112.742 [D] anti-entropy: key h/D/temp/2 repaired from B
+   39.414 [B]    133.719 [B] view: ABCD
+   39.418 [C]    123.463 [C] view: ABCD
+   39.424 [D]    113.124 [D] view: ABCD
+   39.824 [D]    113.530 [D] SET_REQ bench/7 from A#3020325051: duplicate, cached response replayed
+   40.125 [D]    113.837 [D] REPL_REQ C#3940031497 duplicate: cached REPL_ACK replayed
+   40.419 [C]    124.473 [C] SET_REQ bench/0 from A#3020325052: duplicate, cached response replayed
+   40.726 [D]    114.440 [D] REPL_REQ C#3940031498 duplicate: cached REPL_ACK replayed
+   41.327 [D]    115.046 [D] SET_REQ bench/2 from A#3020325054: duplicate, cached response replayed
+   41.928 [D]    115.651 [D] SET_REQ bench/3 from A#3020325055: duplicate, cached response replayed
+   42.819 [A]    147.671 [A] REPL_REQ D#1504388496 duplicate: cached REPL_ACK replayed
+   43.731 [D]    117.484 [D] SET_REQ bench/5 from A#3020325057: duplicate, cached response replayed
+   44.632 [D]    118.406 [D] SET_REQ bench/7 from A#3020325059: duplicate, cached response replayed
+   46.135 [D]    119.941 [D] REPL_REQ C#3940031501 duplicate: cached REPL_ACK replayed
+   46.736 [D]    120.549 [D] SET_REQ bench/2 from A#3020325062: duplicate, cached response replayed
+   48.339 [D]    122.207 [D] REPL_REQ C#3940031503 duplicate: cached REPL_ACK replayed
+   49.240 [D]    123.115 [D] REPL_REQ C#3940031504 duplicate: cached REPL_ACK replayed
+   50.031 [C]    134.354 [C] SET_REQ bench/1 from A#3020325069: duplicate, cached response replayed
+   51.934 [C]    136.284 [C] REPL_REQ D#1504388503 duplicate: cached REPL_ACK replayed
+   52.836 [A]    157.981 [A] REPL_REQ D#1504388506 duplicate: cached REPL_ACK replayed
+   53.437 [C]    137.841 [C] SET_REQ bench/6 from A#3020325075: duplicate, cached response replayed
+   53.738 [C]    138.146 [C] REPL_REQ D#1504388507 duplicate: cached REPL_ACK replayed
+   54.339 [C]    138.756 [C] SET_REQ bench/0 from A#3020325077: duplicate, cached response replayed
+   55.952 [D]    130.073 [D] REPL_REQ C#3940031509 duplicate: cached REPL_ACK replayed
+   56.553 [D]    130.681 [D] SET_REQ bench/7 from A#3020325084: duplicate, cached response replayed
+   60.560 [D]    134.766 [D] REPL_REQ C#3940031512 duplicate: cached REPL_ACK replayed
+   64.467 [D]    138.795 [D] REPL_REQ C#3940031513 duplicate: cached REPL_ACK replayed
+   65.068 [D]    139.394 [D] REPL_REQ C#3940031513 duplicate: cached REPL_ACK replayed
+   65.360 [A] bench: 50 ok, 0 failed in 31412 ms; latency min 27 avg 628 max 3720 ms
+   65.458 [B] > bench 50
+   65.458 [B] bench: 50 sequential SETs on keys bench/0..7
+   65.669 [D]    140.071 [D] REPL_REQ C#3940031515 duplicate: cached REPL_ACK replayed
+   66.270 [D]    140.671 [D] REPL_REQ C#3940031515 duplicate: cached REPL_ACK replayed
+   68.373 [D]    142.781 [D] REPL_REQ C#3940031516 duplicate: cached REPL_ACK replayed
+   68.974 [D]    143.380 [D] REPL_REQ C#3940031516 duplicate: cached REPL_ACK replayed
+   69.968 [C]    154.749 [C] REPL_REQ D#1504388518 duplicate: cached REPL_ACK replayed
+   70.469 [C]    155.349 [C] REPL_REQ D#1504388518 duplicate: cached REPL_ACK replayed
+   71.379 [D]    145.909 [D] SET_REQ bench/2 from B#1315120308: duplicate, cached response replayed
+   72.681 [D]    147.208 [D] gc: 2 key(s) marked for drop (orphans 7, tombstones 0 total)
+   72.882 [D]    147.412 [D] replica C did not answer for bench/3: under-replicated
+   73.775 [C]    158.744 [C] REPL_REQ D#1504388522 duplicate: cached REPL_ACK replayed
+   74.184 [D]    148.746 [D] REPL_REQ C#3940031520 duplicate: cached REPL_ACK replayed
+   74.777 [A]    180.509 [A] anti-entropy: key bench/4 repaired from D
+   74.785 [D]    149.385 [D] SET_REQ bench/3 from B#1315120317: duplicate, cached response replayed
+   75.679 [A]    181.376 [A] REPL_REQ D#1504388525 duplicate: cached REPL_ACK replayed
+   75.687 [D]    150.292 [D] replica A has a newer version of bench/4: client gets STALE_VERSION
+   77.783 [C]    162.794 [C] replica D did not answer for bench/6: under-replicated
+   79.193 [D]    153.959 [D] replica C did not answer for bench/7: under-replicated
+   79.785 [C]    164.903 [C] SET_REQ bench/0 from B#1315120323: duplicate, cached response replayed
+   80.094 [D]    154.871 [D] REPL_REQ C#3940031523 duplicate: cached REPL_ACK replayed
+   80.696 [D]    155.470 [D] REPL_REQ C#3940031523 duplicate: cached REPL_ACK replayed
+   84.101 [D]    158.911 [D] SET_REQ bench/3 from B#1315120327: duplicate, cached response replayed
+   84.396 [A]    190.302 [A] REPL_REQ D#1504388531 duplicate: cached REPL_ACK replayed
+   84.896 [A]    190.902 [A] REPL_REQ D#1504388531 duplicate: cached REPL_ACK replayed
+   86.699 [C]    171.990 [C] SET_REQ bench/6 from B#1315120330: duplicate, cached response replayed
+   88.301 [C]    173.593 [C] REPL_REQ D#1504388535 duplicate: cached REPL_ACK replayed
+   89.913 [D]    164.879 [D] REPL_REQ C#3940031529 duplicate: cached REPL_ACK replayed
+   90.413 [D]    165.480 [D] REPL_REQ C#3940031529 duplicate: cached REPL_ACK replayed
+   94.712 [C]    180.153 [C] REPL_REQ D#1504388539 duplicate: cached REPL_ACK replayed
+   95.513 [C]    181.060 [C] REPL_REQ D#1504388540 duplicate: cached REPL_ACK replayed
+   98.318 [C]    183.861 [C] REPL_REQ D#1504388541 duplicate: cached REPL_ACK replayed
+   98.623 [A]    204.949 [A] REPL_REQ D#1504388543 duplicate: cached REPL_ACK replayed
+   98.928 [D]    174.162 [D] SET_REQ bench/5 from B#1315120347: duplicate, cached response replayed
+  100.030 [D]    175.362 [D] SET_REQ bench/5 from B#1315120347: duplicate, cached response replayed
+  100.722 [C]    186.412 [C] REPL_REQ D#1504388545 duplicate: cached REPL_ACK replayed
+  101.332 [D]    176.679 [D] SET_REQ bench/3 from B#1315120353: duplicate, cached response replayed
+  102.625 [C]    188.283 [C] SET_REQ bench/6 from B#1315120356: duplicate, cached response replayed
+  104.729 [B] bench: 50 ok, 0 failed in 40346 ms; latency min 25 avg 806 max 3710 ms
+  104.732 [A] > stats
+  104.732 [A] radio   rx 1468 (invalid 0, spoofed 0)  tx 763 (failed 0)
+  104.732 [A] hb      tx 409  rx 1045   membership changes 10
+  104.732 [A] server  executed 3  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+  104.733 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 59 stale 2
+  104.733 [A] ae      rounds 23  chunks tx 108 rx 230  tables 40  pushes 12  resync tx 12 applied 12 stale 0
+  104.733 [A] gc      orphans 11  tombstones 0  keys dropped 0
+  104.733 [A] client  ok 109  failed 0  attempts 112  local 2
+  104.733 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 76
+  104.733 [A] chip temp 63.1 degC (die temperature, not ambient)
+  104.733 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+  104.733 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+  104.733 [A] esp-now rx 1468  queue overflows 0  unknown MAC 33
+  104.734 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+  104.734 [A] esp-now tx -> C: 70 delivered, 0 failed (MAC-layer ACK)
+  104.734 [A] esp-now tx -> D: 136 delivered, 0 failed (MAC-layer ACK)
+  104.734 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+  104.735 [B] > stats
+  104.735 [B] radio   rx 1444 (invalid 0, spoofed 0)  tx 641 (failed 0)
+  104.735 [B] hb      tx 388  rx 1039   membership changes 8
+  104.735 [B] server  executed 13  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+  104.736 [B] repl    started 11  ok 11  failed 0  stale 0   as replica: applied 1 stale 0
+  104.736 [B] ae      rounds 21  chunks tx 60 rx 269  tables 43  pushes 6  resync tx 6 applied 4 stale 0
+  104.736 [B] gc      orphans 4  tombstones 0  keys dropped 0
+  104.736 [B] client  ok 107  failed 0  attempts 114  local 1
+  104.736 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 73
+  104.736 [B] chip temp 59.5 degC (die temperature, not ambient)
+  104.736 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+  104.736 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+  104.736 [B] esp-now rx 1444  queue overflows 0  unknown MAC 29
+  104.737 [B] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+  104.737 [B] esp-now tx -> C: 66 delivered, 3 failed (MAC-layer ACK)
+  104.737 [B] esp-now tx -> D: 96 delivered, 0 failed (MAC-layer ACK)
+  104.737 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+  104.738 [D]    180.108 [D] REPL_REQ C#3940031537 duplicate: cached REPL_ACK replayed
+  104.739 [C] > stats
+  104.739 [C] radio   rx 1548 (invalid 0, spoofed 0)  tx 773 (failed 0)
+  104.739 [C] hb      tx 367  rx 1002   membership changes 8
+  104.739 [C] server  executed 91  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+  104.739 [C] repl    started 91  ok 88  failed 2  stale 1   as replica: applied 71 stale 0
+  104.739 [C] ae      rounds 20  chunks tx 77 rx 238  tables 39  pushes 1  resync tx 1 applied 12 stale 2
+  104.739 [C] gc      orphans 9  tombstones 0  keys dropped 0
+  104.739 [C] client  ok 7  failed 0  attempts 7  local 0
+  104.739 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 97
+  104.739 [C] chip temp 57.4 degC (die temperature, not ambient)
+  104.739 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+  104.739 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+  104.739 [C] esp-now rx 1548  queue overflows 0  unknown MAC 23
+  104.741 [C] esp-now tx -> A: 46 delivered, 0 failed (MAC-layer ACK)
+  104.741 [C] esp-now tx -> B: 50 delivered, 0 failed (MAC-layer ACK)
+  104.741 [C] esp-now tx -> D: 184 delivered, 0 failed (MAC-layer ACK)
+  104.741 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+  104.741 [D] > stats
+  104.741 [D] radio   rx 1543 (invalid 0, spoofed 0)  tx 904 (failed 0)
+  104.741 [D] hb      tx 346  rx 951   membership changes 6
+  104.741 [D] server  executed 125  not-ready 0  dedup replays 42  suppressed 11  table-full 0
+  104.742 [D] repl    started 125  ok 120  failed 3  stale 2   as replica: applied 96 stale 1
+  104.742 [D] ae      rounds 19  chunks tx 114 rx 184  tables 35  pushes 3  resync tx 3 applied 4 stale 2
+  104.742 [D] gc      orphans 7  tombstones 0  keys dropped 0
+  104.742 [D] client  ok 5  failed 0  attempts 5  local 0
+  104.742 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 113
+  104.742 [D] chip temp 57.6 degC (die temperature, not ambient)
+  104.742 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+  104.742 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+  104.742 [D] esp-now rx 1543  queue overflows 0  unknown MAC 24
+  104.743 [D] esp-now tx -> A: 126 delivered, 0 failed (MAC-layer ACK)
+  104.743 [D] esp-now tx -> B: 73 delivered, 0 failed (MAC-layer ACK)
+  104.743 [D] esp-now tx -> C: 173 delivered, 0 failed (MAC-layer ACK)
+  104.743 [D] heap free 174712 (min 166152)  node task stack headroom 13432 bytes
+  104.834 [A] eeprom page writes since boot: total 192, hottest page 161 with 5 (rated 1000000)
+  104.834 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+  104.834 [A] > fault clear
+  104.834 [A] fault armed
+  104.837 [B] eeprom page writes since boot: total 46, hottest page 304 with 4 (rated 1000000)
+  104.837 [B] > fault clear
+  104.837 [B] fault armed
+  104.841 [C] eeprom page writes since boot: total 439, hottest page 320 with 5 (rated 1000000)
+  104.841 [C] > fault clear
+  104.841 [C] fault armed
+  104.843 [D] eeprom page writes since boot: total 568, hottest page 318 with 5 (rated 1000000)
+  104.843 [D] > fault clear
+  104.843 [D] fault armed
+  107.941 [A] > del bench/0
+  107.941 [A] DEL bench/0: OK (served by C, 1 attempt(s), 32 ms)
+  108.041 [A] > del bench/1
+  108.041 [A] DEL bench/1: OK (served by C, 1 attempt(s), 25 ms)
+  108.141 [A] > del bench/2
+  108.141 [A] DEL bench/2: OK (served by D, 1 attempt(s), 45 ms)
+  108.241 [A] > del bench/3
+  108.241 [A] DEL bench/3: OK (served by D, 1 attempt(s), 28 ms)
+  108.342 [A] > del bench/4
+  108.342 [A] DEL bench/4: OK (served by D, 1 attempt(s), 32 ms)
+  108.442 [A] > del bench/5
+  108.442 [A] DEL bench/5: OK (served by D, 1 attempt(s), 26 ms)
+  108.542 [A] > del bench/6
+  108.542 [A] DEL bench/6: OK (served by C, 1 attempt(s), 32 ms)
+  108.642 [A] > del bench/7
+  108.642 [A] DEL bench/7: OK (served by D, 1 attempt(s), 25 ms)
+  108.743 [A] > sensor on
+  108.743 [A] sampler on
+  108.843 [B] > sensor on
+  108.843 [B] sampler on
+  108.846 [C] > sensor on
+  108.846 [C] sampler on
+  108.849 [D] > sensor on
+  108.849 [D] sampler on

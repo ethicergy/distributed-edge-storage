@@ -63,12 +63,12 @@ Not driven by `measure.py`: read from `status` before and after unplugging node 
 
 | id | metric | simulator | hardware | why they differ |
 |---|---|---|---|---|
-| `loss10_A` | 10 % loss, bench from A: ok/failed, min/avg/max | 50 ok, 0 failed; latency 6 / 444 / 3406 ms (min/avg/max) | | Each lost request or reply costs a retransmission timeout (600 ms, then 1200 ms). Boards add their own real losses on top of the injected ones. Expect avg and max a bit higher, but still 0 failed. |
-| `loss10_B` | 10 % loss, bench from B | 50 ok, 0 failed; latency 8 / 256 / 1814 ms (min/avg/max) | | As above. |
-| `loss10_retries` | extra client attempts / duplicates answered from the dedup cache | 1 extra client attempts, 30 duplicate requests answered from cache | | Duplicates answered from the cache are retransmissions whose first copy had already executed: exactly-once at work. Extra attempts are whole-attempt timeouts (rare at 10 %). |
-| `loss20_A` | 20 % loss, bench from A | 50 ok, 0 failed; latency 7 / 731 / 5211 ms (min/avg/max) | | Matches the earlier `loss 0.2` runs (avg ~0.6–1 s). |
-| `loss20_B` | 20 % loss, bench from B | 50 ok, 0 failed; latency 6 / 821 / 3414 ms (min/avg/max) | | |
-| `loss20_retries` | extra client attempts / duplicates answered from the dedup cache | 8 extra client attempts, 40 duplicate requests answered from cache | | |
+| `loss10_A` | 10 % loss, bench from A: ok/failed, min/avg/max | 50 ok, 0 failed; latency 6 / 444 / 3406 ms (min/avg/max) | 50 ok, 0 failed; latency 26 / 342 / 1828 ms (min/avg/max) | Each lost request or reply costs a retransmission timeout (600 ms, then 1200 ms). Boards add their own real losses on top of the injected ones. Expect avg and max a bit higher, but still 0 failed. |
+| `loss10_B` | 10 % loss, bench from B | 50 ok, 0 failed; latency 8 / 256 / 1814 ms (min/avg/max) | 50 ok, 0 failed; latency 26 / 235 / 909 ms (min/avg/max) | As above. |
+| `loss10_retries` | extra client attempts / duplicates answered from the dedup cache | 1 extra client attempts, 30 duplicate requests answered from cache | 2 extra client attempts, 18 duplicate requests answered from cache | Duplicates answered from the cache are retransmissions whose first copy had already executed: exactly-once at work. Extra attempts are whole-attempt timeouts (rare at 10 %). |
+| `loss20_A` | 20 % loss, bench from A | 50 ok, 0 failed; latency 7 / 731 / 5211 ms (min/avg/max) | 50 ok, 0 failed; latency 27 / 628 / 3720 ms (min/avg/max) | Matches the earlier `loss 0.2` runs (avg ~0.6–1 s). |
+| `loss20_B` | 20 % loss, bench from B | 50 ok, 0 failed; latency 6 / 821 / 3414 ms (min/avg/max) | 50 ok, 0 failed; latency 25 / 806 / 3710 ms (min/avg/max) | |
+| `loss20_retries` | extra client attempts / duplicates answered from the dedup cache | 8 extra client attempts, 40 duplicate requests answered from cache | 7 extra client attempts, 59 duplicate requests answered from cache | |
 
 ## 4. Sensors (after the overnight soak)
 

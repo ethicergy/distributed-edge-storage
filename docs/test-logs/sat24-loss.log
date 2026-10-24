@@ -1,0 +1,155 @@
+# Sat 24 step 6: loss tests on the final firmware (RESULTS.md section 3), laptop clock UTC
+17:02:22.396 [A] >>> stats
+17:02:22.397 [A] > stats
+17:02:22.397 [A] radio   rx 651 (invalid 0, spoofed 0)  tx 275 (failed 0)
+17:02:22.397 [A] hb      tx 188  rx 504   membership changes 10
+17:02:22.397 [A] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+17:02:22.397 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 11 stale 0
+17:02:22.397 [A] ae      rounds 12  chunks tx 53 rx 115  tables 25  pushes 12  resync tx 12 applied 10 stale 0
+17:02:22.397 [A] gc      orphans 11  tombstones 0  keys dropped 0
+17:02:22.397 [A] client  ok 9  failed 0  attempts 9  local 2
+17:02:22.397 [B] >>> stats
+17:02:22.399 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+17:02:22.399 [A] chip temp 59.1 degC (die temperature, not ambient)
+17:02:22.399 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+17:02:22.399 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+17:02:22.399 [A] esp-now rx 651  queue overflows 0  unknown MAC 20
+17:02:22.399 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+17:02:22.399 [A] esp-now tx -> C: 17 delivered, 0 failed (MAC-layer ACK)
+17:02:22.399 [A] esp-now tx -> D: 10 delivered, 0 failed (MAC-layer ACK)
+17:02:22.399 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+17:02:22.400 [B] > stats
+17:02:22.400 [C] >>> stats
+17:02:22.400 [B] radio   rx 643 (invalid 0, spoofed 0)  tx 227 (failed 0)
+17:02:22.400 [B] hb      tx 167  rx 483   membership changes 6
+17:02:22.400 [B] server  executed 11  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+17:02:22.400 [B] repl    started 9  ok 9  failed 0  stale 0   as replica: applied 1 stale 0
+17:02:22.400 [B] ae      rounds 10  chunks tx 27 rx 130  tables 26  pushes 4  resync tx 4 applied 4 stale 0
+17:02:22.400 [B] gc      orphans 4  tombstones 0  keys dropped 0
+17:02:22.400 [B] client  ok 7  failed 0  attempts 8  local 1
+17:02:22.401 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+17:02:22.401 [B] chip temp 55.5 degC (die temperature, not ambient)
+17:02:22.401 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+17:02:22.401 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+17:02:22.401 [B] esp-now rx 643  queue overflows 0  unknown MAC 16
+17:02:22.401 [B] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+17:02:22.401 [B] esp-now tx -> C: 10 delivered, 3 failed (MAC-layer ACK)
+17:02:22.401 [B] esp-now tx -> D: 16 delivered, 0 failed (MAC-layer ACK)
+17:02:22.401 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+17:02:22.401 [D] >>> stats
+17:02:22.402 [C] > stats
+17:02:22.403 [C] radio   rx 587 (invalid 0, spoofed 0)  tx 196 (failed 0)
+17:02:22.403 [C] hb      tx 146  rx 448   membership changes 6
+17:02:22.403 [C] server  executed 6  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+17:02:22.403 [C] repl    started 6  ok 6  failed 0  stale 0   as replica: applied 0 stale 0
+17:02:22.403 [C] ae      rounds 9  chunks tx 33 rx 109  tables 23  pushes 0  resync tx 0 applied 11 stale 2
+17:02:22.403 [C] gc      orphans 9  tombstones 0  keys dropped 0
+17:02:22.403 [C] client  ok 5  failed 0  attempts 5  local 0
+17:02:22.403 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+17:02:22.403 [D] > stats
+17:02:22.403 [D] radio   rx 502 (invalid 0, spoofed 0)  tx 193 (failed 0)
+17:02:22.403 [D] hb      tx 126  rx 404   membership changes 4
+17:02:22.403 [D] server  executed 2  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+17:02:22.403 [D] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 10 stale 0
+17:02:22.403 [D] ae      rounds 8  chunks tx 48 rx 76  tables 18  pushes 0  resync tx 0 applied 1 stale 2
+17:02:22.403 [D] gc      orphans 5  tombstones 0  keys dropped 0
+17:02:22.403 [D] client  ok 5  failed 0  attempts 5  local 0
+17:02:22.403 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+17:02:22.404 [C] chip temp 54.4 degC (die temperature, not ambient)
+17:02:22.404 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+17:02:22.404 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+17:02:22.404 [C] esp-now rx 587  queue overflows 0  unknown MAC 12
+17:02:22.404 [C] esp-now tx -> A: 6 delivered, 0 failed (MAC-layer ACK)
+17:02:22.404 [C] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+17:02:22.404 [C] esp-now tx -> D: 4 delivered, 0 failed (MAC-layer ACK)
+17:02:22.404 [C] heap free 174324 (min 165864)  node task stack headroom 13480 bytes
+17:02:22.405 [D] chip temp 53.6 degC (die temperature, not ambient)
+17:02:22.405 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+17:02:22.405 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+17:02:22.405 [D] esp-now rx 502  queue overflows 0  unknown MAC 10
+17:02:22.405 [D] esp-now tx -> A: 5 delivered, 0 failed (MAC-layer ACK)
+17:02:22.405 [D] esp-now tx -> B: 10 delivered, 0 failed (MAC-layer ACK)
+17:02:22.405 [D] esp-now tx -> C: 4 delivered, 0 failed (MAC-layer ACK)
+17:02:22.405 [D] heap free 174712 (min 166152)  node task stack headroom 13480 bytes
+17:02:22.450 [A] eeprom page writes since boot: total 67, hottest page 161 with 5 (rated 1000000)
+17:02:22.450 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+17:02:22.451 [B] eeprom page writes since boot: total 40, hottest page 304 with 4 (rated 1000000)
+17:02:22.454 [C] eeprom page writes since boot: total 48, hottest page 320 with 5 (rated 1000000)
+17:02:22.455 [D] eeprom page writes since boot: total 37, hottest page 311 with 4 (rated 1000000)
+17:04:17.897 [A] >>> stats
+17:04:17.898 [B] >>> stats
+17:04:17.899 [A] > stats
+17:04:17.899 [A] radio   rx 1531 (invalid 0, spoofed 0)  tx 790 (failed 0)
+17:04:17.899 [A] hb      tx 420  rx 1079   membership changes 10
+17:04:17.899 [A] server  executed 3  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+17:04:17.899 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 65 stale 2
+17:04:17.899 [A] ae      rounds 23  chunks tx 108 rx 243  tables 43  pushes 12  resync tx 12 applied 12 stale 0
+17:04:17.899 [A] gc      orphans 11  tombstones 0  keys dropped 0
+17:04:17.899 [A] client  ok 119  failed 0  attempts 122  local 2
+17:04:17.900 [B] > stats
+17:04:17.900 [B] radio   rx 1496 (invalid 0, spoofed 0)  tx 663 (failed 0)
+17:04:17.900 [B] hb      tx 399  rx 1073   membership changes 8
+17:04:17.900 [B] server  executed 17  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+17:04:17.900 [B] repl    started 15  ok 15  failed 0  stale 0   as replica: applied 1 stale 0
+17:04:17.900 [B] ae      rounds 22  chunks tx 63 rx 279  tables 45  pushes 6  resync tx 6 applied 4 stale 0
+17:04:17.900 [B] gc      orphans 4  tombstones 0  keys dropped 0
+17:04:17.900 [B] client  ok 109  failed 0  attempts 116  local 2
+17:04:17.901 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 76
+17:04:17.901 [A] chip temp 63.1 degC (die temperature, not ambient)
+17:04:17.901 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+17:04:17.901 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+17:04:17.901 [A] esp-now rx 1531  queue overflows 0  unknown MAC 33
+17:04:17.902 [A] esp-now tx -> B: 8 delivered, 0 failed (MAC-layer ACK)
+17:04:17.902 [C] > stats
+17:04:17.902 [C] radio   rx 1607 (invalid 0, spoofed 0)  tx 804 (failed 0)
+17:04:17.902 [C] hb      tx 378  rx 1036   membership changes 8
+17:04:17.902 [C] server  executed 96  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+17:04:17.902 [A] esp-now tx -> C: 75 delivered, 0 failed (MAC-layer ACK)
+17:04:17.902 [A] esp-now tx -> D: 146 delivered, 0 failed (MAC-layer ACK)
+17:04:17.903 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+17:04:17.902 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 73
+17:04:17.902 [C] repl    started 96  ok 93  failed 2  stale 1   as replica: applied 75 stale 0
+17:04:17.902 [C] >>> stats
+17:04:17.903 [B] chip temp 60.5 degC (die temperature, not ambient)
+17:04:17.903 [C] ae      rounds 21  chunks tx 81 rx 247  tables 41  pushes 1  resync tx 1 applied 12 stale 2
+17:04:17.903 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+17:04:17.904 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+17:04:17.903 [C] gc      orphans 9  tombstones 0  keys dropped 0
+17:04:17.904 [B] esp-now rx 1496  queue overflows 0  unknown MAC 29
+17:04:17.904 [B] esp-now tx -> A: 5 delivered, 0 failed (MAC-layer ACK)
+17:04:17.904 [C] client  ok 9  failed 0  attempts 9  local 0
+17:04:17.904 [B] esp-now tx -> C: 69 delivered, 3 failed (MAC-layer ACK)
+17:04:17.904 [D] >>> stats
+17:04:17.904 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 97
+17:04:17.904 [B] esp-now tx -> D: 100 delivered, 0 failed (MAC-layer ACK)
+17:04:17.904 [C] chip temp 58.4 degC (die temperature, not ambient)
+17:04:17.905 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+17:04:17.904 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+17:04:17.905 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+17:04:17.905 [C] esp-now rx 1607  queue overflows 0  unknown MAC 23
+17:04:17.905 [C] esp-now tx -> A: 51 delivered, 0 failed (MAC-layer ACK)
+17:04:17.905 [C] esp-now tx -> B: 53 delivered, 0 failed (MAC-layer ACK)
+17:04:17.905 [C] esp-now tx -> D: 192 delivered, 0 failed (MAC-layer ACK)
+17:04:17.905 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+17:04:17.906 [D] > stats
+17:04:17.906 [D] radio   rx 1606 (invalid 0, spoofed 0)  tx 944 (failed 0)
+17:04:17.906 [D] hb      tx 358  rx 985   membership changes 6
+17:04:17.906 [D] server  executed 132  not-ready 0  dedup replays 42  suppressed 11  table-full 0
+17:04:17.906 [D] repl    started 132  ok 127  failed 3  stale 2   as replica: applied 102 stale 1
+17:04:17.906 [D] ae      rounds 20  chunks tx 120 rx 191  tables 37  pushes 3  resync tx 3 applied 4 stale 2
+17:04:17.906 [D] gc      orphans 7  tombstones 0  keys dropped 0
+17:04:17.906 [D] client  ok 7  failed 0  attempts 7  local 0
+17:04:17.907 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 113
+17:04:17.907 [D] chip temp 57.6 degC (die temperature, not ambient)
+17:04:17.907 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+17:04:17.907 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+17:04:17.908 [D] esp-now rx 1606  queue overflows 0  unknown MAC 24
+17:04:17.908 [D] esp-now tx -> A: 136 delivered, 0 failed (MAC-layer ACK)
+17:04:17.908 [D] esp-now tx -> B: 77 delivered, 0 failed (MAC-layer ACK)
+17:04:17.908 [D] esp-now tx -> C: 181 delivered, 0 failed (MAC-layer ACK)
+17:04:17.908 [D] heap free 174712 (min 166152)  node task stack headroom 13432 bytes
+17:04:17.953 [A] eeprom page writes since boot: total 209, hottest page 161 with 5 (rated 1000000)
+17:04:17.953 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+17:04:17.955 [B] eeprom page writes since boot: total 57, hottest page 313 with 5 (rated 1000000)
+17:04:17.955 [C] eeprom page writes since boot: total 463, hottest page 320 with 5 (rated 1000000)
+17:04:17.958 [D] eeprom page writes since boot: total 603, hottest page 318 with 5 (rated 1000000)
