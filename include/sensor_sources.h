@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 
 #include "config.h"
@@ -11,9 +10,8 @@
  * access is behind three small interfaces, implemented by the drivers
  * in src/platform/sensors.cpp and by fakes in the host tests:
  *
- *   DigitalInput     a GPIO level (AM312)
- *   SoundBlockInput  ADC sample blocks from another task (LM393 AO)
- *   ValueInput       attempts of a sensor read in another task (DHT11)
+ *   DigitalInput  a GPIO level, optionally with an ISR edge counter
+ *   ValueInput    attempts of a sensor read in another task (DHT11)
  *
  * and a Source for the BH1750 (plain synchronous I2C read).
  */
@@ -27,6 +25,10 @@ public:
 
     // Raw pin level, true = high.
     virtual bool level() = 0;
+
+    // Running count of edges seen by the ISR (wraps). Only written by
+    // the ISR; readers take differences.
+    virtual std::uint32_t edges() { return 0; }
 };
 
 /*
@@ -68,125 +70,43 @@ private:
 };
 
 /*
- * LM393 sound module, AO only (node C). A task samples AO on an ADC1
- * pin every config::SOUND_SAMPLE_INTERVAL_MS and summarises each
- * config::SOUND_BLOCK_SAMPLES samples into a SoundBlock. The logic
- * below is pure (host tests feed it synthetic sample arrays):
- *
- *   summarize_sound_block  min / max / mean of one block, and whether a
- *                          sample sat at an ADC limit (clipping)
- *   SoundDetector          a block is active when its peak-to-peak
- *                          swing exceeds the threshold; events are
- *                          rising crossings (inactive -> active), and
- *                          crossings less than gap_ms apart are one event
- *
- * The reading keeps the DO-era format: value = events per window,
- * aux = milli-percent of the window active.
- */
-struct SoundBlock {
-    std::uint16_t min_mv = 0;
-    std::uint16_t max_mv = 0;
-    std::uint16_t mean_mv = 0;
-    bool clipped = false;     // a sample at clip_low_mv or clip_high_mv
-    std::uint64_t end_ms = 0; // node clock at the last sample
-};
-
-// clip_low_mv / clip_high_mv: what raw 0 and full scale convert to.
-SoundBlock summarize_sound_block(
-    const std::uint16_t* samples_mv,
-    std::size_t count,
-    std::uint16_t clip_low_mv,
-    std::uint16_t clip_high_mv,
-    std::uint64_t end_ms
-);
-
-constexpr std::uint16_t swing_mv(const SoundBlock& block)
-{
-    return static_cast<std::uint16_t>(block.max_mv - block.min_mv);
-}
-
-// One reading window of blocks.
-struct SoundWindow {
-    std::uint32_t events = 0;
-    std::uint32_t blocks = 0;
-    std::uint32_t active_blocks = 0;
-    std::uint32_t clipped_blocks = 0;
-    std::uint16_t max_swing_mv = 0;
-    std::uint16_t mean_mv = 0; // mean of the block means (resting level)
-};
-
-class SoundDetector {
-public:
-    SoundDetector(std::uint16_t threshold_mv, std::uint32_t gap_ms);
-
-    void add(const SoundBlock& block);
-
-    // The window so far; starts a new one. Crossing state carries over.
-    SoundWindow take();
-
-private:
-    std::uint16_t threshold_mv_;
-    std::uint32_t gap_ms_;
-    SoundWindow window_{};
-    std::uint64_t mean_sum_ = 0;
-    bool active_ = false;
-    bool have_crossing_ = false;
-    std::uint64_t last_crossing_ms_ = 0;
-};
-
-// Blocks completed by the sampling task, handed to the node task.
-class SoundBlockInput {
-public:
-    virtual ~SoundBlockInput() = default;
-
-    virtual bool begin() = 0;
-
-    // Moves up to `capacity` completed blocks into `out`, oldest first.
-    virtual std::size_t take(SoundBlock* out, std::size_t capacity) = 0;
-
-    // Running count of blocks lost because the buffer was full.
-    virtual std::uint32_t dropped() const { return 0; }
-
-    // Mean time of one ADC sample in microseconds (0 if unknown).
-    virtual std::uint32_t sample_cost_us() const { return 0; }
-};
-
-/*
- * value: events per window; aux: milli-percent of the window active
- * (active blocks x block_ms). A window with no block at all (sampling
- * task stalled or dead) is a failed read, so the fallback shows it.
- * describe(): the last window's level, swing and sampling figures.
+ * LM393 sound module, DO only (node C). The ISR counts edges into the
+ * active level; edges less than gap_ms apart are one event. Value:
+ * events per window. Aux: milli-percent of the window DO was active,
+ * from the level sampled on every poll (each node-task iteration).
  */
 class SoundSource final : public Source {
 public:
     explicit SoundSource(
-        SoundBlockInput& input,
-        std::uint16_t threshold_mv = config::SOUND_ACTIVE_SWING_MV,
-        std::uint32_t gap_ms = config::SOUND_EVENT_GAP_MS,
-        std::uint32_t block_ms = config::SOUND_BLOCK_MS
+        DigitalInput& input,
+        bool active_high = config::SOUND_ACTIVE_HIGH,
+        std::uint32_t gap_ms = config::SOUND_EVENT_GAP_MS
     );
 
-    bool begin() override { return input_.begin(); }
+    bool begin() override;
     Kind kind() const override { return Kind::SOUND; }
     bool simulated() const override { return false; }
     void poll(std::uint64_t now_ms) override;
     bool read(std::uint64_t now_ms, Sample& sample) override;
-    std::uint32_t failures() const override { return failures_; }
-    std::size_t describe(char* out, std::size_t capacity) const override;
 
-    const SoundWindow& last_window() const { return last_window_; }
+    std::uint32_t total_edges() const { return total_edges_; }
 
 private:
-    SoundBlockInput& input_;
-    SoundDetector detector_;
-    std::uint16_t threshold_mv_;
-    std::uint32_t block_ms_;
+    DigitalInput& input_;
+    bool active_high_;
+    std::uint32_t gap_ms_;
+
+    std::uint32_t edges_seen_ = 0;
+    std::uint32_t total_edges_ = 0;
+    std::uint32_t events_ = 0;
+    bool have_edge_ = false;
+    std::uint64_t last_edge_ms_ = 0;
 
     bool started_ = false;
     std::uint64_t window_start_ms_ = 0;
-    SoundWindow last_window_{};
-    std::uint64_t last_window_ms_ = 0;
-    std::uint32_t failures_ = 0;
+    std::uint64_t last_poll_ms_ = 0;
+    bool active_ = false;
+    std::uint64_t active_ms_ = 0;
 };
 
 // Results of read attempts made elsewhere (the DHT11 task) since the
@@ -261,7 +181,6 @@ public:
     void poll(std::uint64_t now_ms) override;
     bool read(std::uint64_t now_ms, Sample& sample) override;
     std::uint32_t failures() const override;
-    std::size_t describe(char* out, std::size_t capacity) const override;
 
     // Real sensor present and initialised.
     bool real_enabled() const { return real_ok_; }

@@ -977,45 +977,24 @@ struct FakePir final : sensor::DigitalInput {
     }
 };
 
-// LM393 AO at 1 kHz, rest 400 mV, blocked like the sampling task does.
-// Clap 1 rings in and out of the threshold (t0 + 11.00-11.04 s, then
-// 11.06-11.09 s: one event); clap 2 is 300 ms long (13.0 s).
-struct FakeMic final : sensor::SoundBlockInput {
+struct FakeMic final : sensor::DigitalInput {
     const Cluster* cluster = nullptr;
     std::uint64_t t0 = 0;
-    std::uint64_t next_ms = 0; // first sample of the next block
 
-    bool begin() override
+    bool begin() override { return true; }
+
+    // Active-low DO: low while a clap is above the threshold.
+    bool level() override
     {
-        next_ms = cluster->now();
-        return true;
+        const std::uint64_t t = cluster->now() - t0;
+        return !((t >= 11000 && t < 11100) || (t >= 13000 && t < 13300));
     }
 
-    bool loud(std::uint64_t at) const
+    // What the ISR would have counted: 3 chattering edges, then 1.
+    std::uint32_t edges() override
     {
-        const auto in = [&](std::uint64_t from, std::uint64_t to) { return at >= t0 + from && at < t0 + to; };
-        return in(11000, 11040) || in(11060, 11090) || in(13000, 13300);
-    }
-
-    std::size_t take(sensor::SoundBlock* out, std::size_t capacity) override
-    {
-        std::size_t n = 0;
-
-        while (n < capacity && next_ms + config::SOUND_BLOCK_MS <= cluster->now()) {
-            std::uint16_t samples[config::SOUND_BLOCK_SAMPLES];
-
-            for (std::uint32_t i = 0; i < config::SOUND_BLOCK_SAMPLES; ++i) {
-                const int amplitude = loud(next_ms + i) ? 100 : 2;
-                samples[i] = static_cast<std::uint16_t>(400 + (i % 2 != 0 ? amplitude : -amplitude));
-            }
-
-            out[n++] = sensor::summarize_sound_block(
-                samples, config::SOUND_BLOCK_SAMPLES, 0, 750, next_ms + config::SOUND_BLOCK_MS - 1
-            );
-            next_ms += config::SOUND_BLOCK_MS;
-        }
-
-        return n;
+        const std::uint64_t t = cluster->now() - t0;
+        return (t >= 11000) + (t >= 11020) + (t >= 11040) + (t >= 13000);
     }
 };
 
@@ -1064,7 +1043,6 @@ struct BrokenLight final : sensor::Source {
 struct Rig final : sensor::Source {
     std::unique_ptr<sensor::DigitalInput> input;
     std::unique_ptr<sensor::ValueInput> value_input;
-    std::unique_ptr<sensor::SoundBlockInput> block_input;
     std::unique_ptr<sensor::Source> real;
     std::unique_ptr<sensor::Source> simulated_source;
     std::unique_ptr<sensor::FallbackSource> top;
@@ -1102,8 +1080,8 @@ std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, st
             auto mic = std::make_unique<FakeMic>();
             mic->cluster = &cluster;
             mic->t0 = t0;
-            rig->real = std::make_unique<sensor::SoundSource>(*mic);
-            rig->block_input = std::move(mic);
+            rig->real = std::make_unique<sensor::SoundSource>(*mic, false);
+            rig->input = std::move(mic);
             break;
         }
         default: // node A
@@ -1189,8 +1167,8 @@ void real_sensor_logic_end_to_end()
     CHECK(reading.flags == 0);
     CHECK(reading.aux >= 0 && reading.aux <= 8);
 
-    // C: a ringing clap (two crossings) + a long one = two events, each
-    // window with events also shows activity.
+    // C: three chattering edges + one = two claps, each window with
+    // events also shows activity.
     std::int32_t active_windows = 0;
     CHECK(history_events(cluster, node::C, &active_windows) == 2);
     CHECK(active_windows >= 1);

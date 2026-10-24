@@ -15596,3 +15596,421 @@
 14:11:40.171 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
 14:11:40.171 [C] sensor sound (hardware): on, 123 samples, last 2 events, 0.4 % active seq 1166, 246 ok, 0 under-replicated, 0 failed, 0 read failures
 14:11:40.171 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:42.158 [C] >>> status
+14:11:42.182 [C] > status
+14:11:42.182 [C] node C  state ACTIVE  view ABCD  uptime 3237s
+14:11:42.182 [C] hlc 37056174.0
+14:11:42.182 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 524/16064 bytes, bank A, 2 compactions
+14:11:42.182 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:11:42.182 [C] sensor sound (hardware): on, 123 samples, last 2 events, 0.4 % active seq 1166, 246 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:42.182 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:44.164 [C] >>> status
+14:11:44.192 [C] > status
+14:11:44.192 [C] node C  state ACTIVE  view ABCD  uptime 3239s
+14:11:44.192 [C] hlc 37058218.0
+14:11:44.192 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 524/16064 bytes, bank A, 2 compactions
+14:11:44.192 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:11:44.192 [C] sensor sound (hardware): on, 124 samples, last 3 events, 0.6 % active seq 1167, 248 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:44.192 [C] sensor detail: AO rest 135 mV, swing max 51 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:46.170 [C] >>> status
+14:11:46.206 [C] > status
+14:11:46.206 [C] node C  state ACTIVE  view ABCD  uptime 3241s
+14:11:46.206 [C] hlc 37060262.0
+14:11:46.206 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 644/16064 bytes, bank A, 2 compactions
+14:11:46.206 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:11:46.206 [C] sensor sound (hardware): on, 124 samples, last 3 events, 0.6 % active seq 1167, 248 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:46.206 [C] sensor detail: AO rest 135 mV, swing max 51 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:48.176 [C] >>> status
+14:11:48.216 [C] > status
+14:11:48.216 [C] node C  state ACTIVE  view ABCD  uptime 3243s
+14:11:48.216 [C] hlc 37062305.0
+14:11:48.217 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 644/16064 bytes, bank A, 2 compactions
+14:11:48.217 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:11:48.217 [C] sensor sound (hardware): on, 125 samples, last 4 events, 0.8 % active seq 1168, 250 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:48.217 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:50.183 [C] >>> status
+14:11:50.227 [C] > status
+14:11:50.227 [C] node C  state ACTIVE  view ABCD  uptime 3245s
+14:11:50.227 [C] hlc 37064346.0
+14:11:50.227 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 644/16064 bytes, bank A, 2 compactions
+14:11:50.227 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:11:50.227 [C] sensor sound (hardware): on, 125 samples, last 4 events, 0.8 % active seq 1168, 250 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:50.227 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:52.188 [C] >>> status
+14:11:52.189 [C] > status
+14:11:52.189 [C] node C  state ACTIVE  view ABCD  uptime 3247s
+14:11:52.189 [C] hlc 37066383.0
+14:11:52.190 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 644/16064 bytes, bank A, 2 compactions
+14:11:52.190 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:11:52.190 [C] sensor sound (hardware): on, 125 samples, last 4 events, 0.8 % active seq 1168, 250 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:52.190 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:54.195 [C] >>> status
+14:11:54.205 [C] > status
+14:11:54.205 [C] node C  state ACTIVE  view ABCD  uptime 3249s
+14:11:54.205 [C] hlc 37068422.0
+14:11:54.205 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 644/16064 bytes, bank A, 2 compactions
+14:11:54.205 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:11:54.205 [C] sensor sound (hardware): on, 126 samples, last 3 events, 0.6 % active seq 1169, 252 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:54.205 [C] sensor detail: AO rest 135 mV, swing max 49 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:56.199 [C] >>> status
+14:11:56.215 [C] > status
+14:11:56.215 [C] node C  state ACTIVE  view ABCD  uptime 3251s
+14:11:56.215 [C] hlc 37070459.0
+14:11:56.215 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:11:56.215 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:11:56.215 [C] sensor sound (hardware): on, 126 samples, last 3 events, 0.6 % active seq 1169, 252 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:56.215 [C] sensor detail: AO rest 135 mV, swing max 49 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:11:58.206 [C] >>> status
+14:11:58.226 [C] > status
+14:11:58.226 [C] node C  state ACTIVE  view ABCD  uptime 3253s
+14:11:58.226 [C] hlc 37072498.0
+14:11:58.226 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:11:58.226 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:11:58.226 [C] sensor sound (hardware): on, 127 samples, last 5 events, 1.0 % active seq 1170, 254 ok, 0 under-replicated, 0 failed, 0 read failures
+14:11:58.226 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 5/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:00.211 [C] >>> status
+14:12:00.241 [C] > status
+14:12:00.241 [C] node C  state ACTIVE  view ABCD  uptime 3256s
+14:12:00.241 [C] hlc 37074537.0
+14:12:00.241 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:00.241 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:00.241 [C] sensor sound (hardware): on, 127 samples, last 5 events, 1.0 % active seq 1170, 254 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:00.241 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 5/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:02.218 [C] >>> status
+14:12:02.776 [C] > status
+14:12:02.776 [C] node C  state ACTIVE  view ABCD  uptime 3258s
+14:12:02.776 [C] hlc 37076577.0
+14:12:02.776 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:02.776 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:02.776 [C] sensor sound (hardware): on, 127 samples, last 5 events, 1.0 % active seq 1170, 254 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:02.776 [C] sensor detail: AO rest 135 mV, swing max 61 mV (threshold 40 mV), 5/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:04.751 [C] >>> status
+14:12:04.782 [C] > status
+14:12:04.782 [C] node C  state ACTIVE  view ABCD  uptime 3260s
+14:12:04.782 [C] hlc 37078615.0
+14:12:04.782 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:04.782 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:04.782 [C] sensor sound (hardware): on, 128 samples, last 2 events, 0.4 % active seq 1171, 256 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:04.782 [C] sensor detail: AO rest 135 mV, swing max 51 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:06.757 [C] >>> status
+14:12:06.787 [C] > status
+14:12:06.787 [C] node C  state ACTIVE  view ABCD  uptime 3262s
+14:12:06.787 [C] hlc 37080653.0
+14:12:06.787 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:06.787 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:06.787 [C] sensor sound (hardware): on, 128 samples, last 2 events, 0.4 % active seq 1171, 256 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:06.787 [C] sensor detail: AO rest 135 mV, swing max 51 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:08.764 [C] >>> status
+14:12:08.794 [C] > status
+14:12:08.794 [C] node C  state ACTIVE  view ABCD  uptime 3264s
+14:12:08.794 [C] hlc 37082691.0
+14:12:08.794 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:08.794 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:08.794 [C] sensor sound (hardware): on, 129 samples, last 3 events, 0.6 % active seq 1172, 258 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:08.794 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:10.769 [C] >>> status
+14:12:10.801 [C] > status
+14:12:10.801 [C] node C  state ACTIVE  view ABCD  uptime 3266s
+14:12:10.801 [C] hlc 37084728.0
+14:12:10.801 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:10.801 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:10.801 [C] sensor sound (hardware): on, 129 samples, last 3 events, 0.6 % active seq 1172, 258 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:10.801 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:12.775 [C] >>> status
+14:12:12.807 [C] > status
+14:12:12.807 [C] node C  state ACTIVE  view ABCD  uptime 3268s
+14:12:12.807 [C] hlc 37086764.0
+14:12:12.807 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:12.807 [C] pending: 2 client, 0 replication, 0 dedup entries, 6 free op slots
+14:12:12.807 [C] sensor sound (hardware): on, 130 samples, last 3 events, 0.8 % active seq 1173, 258 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:12.807 [C] sensor detail: AO rest 135 mV, swing max 59 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:14.780 [C] >>> status
+14:12:14.812 [C] > status
+14:12:14.812 [C] node C  state ACTIVE  view ABCD  uptime 3270s
+14:12:14.812 [C] hlc 37088806.0
+14:12:14.812 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 698/16064 bytes, bank A, 2 compactions
+14:12:14.812 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:14.812 [C] sensor sound (hardware): on, 130 samples, last 3 events, 0.8 % active seq 1173, 260 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:14.812 [C] sensor detail: AO rest 135 mV, swing max 59 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:16.786 [C] >>> status
+14:12:16.817 [C] > status
+14:12:16.818 [C] node C  state ACTIVE  view ABCD  uptime 3272s
+14:12:16.818 [C] hlc 37090849.0
+14:12:16.818 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 757/16064 bytes, bank A, 2 compactions
+14:12:16.818 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:16.818 [C] sensor sound (hardware): on, 130 samples, last 3 events, 0.8 % active seq 1173, 260 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:16.818 [C] sensor detail: AO rest 135 mV, swing max 59 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:18.794 [C] >>> status
+14:12:18.823 [C] > status
+14:12:18.823 [C] node C  state ACTIVE  view ABCD  uptime 3274s
+14:12:18.823 [C] hlc 37092894.0
+14:12:18.823 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 757/16064 bytes, bank A, 2 compactions
+14:12:18.823 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:18.823 [C] sensor sound (hardware): on, 131 samples, last 4 events, 0.8 % active seq 1174, 262 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:18.823 [C] sensor detail: AO rest 135 mV, swing max 62 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:20.798 [C] >>> status
+14:12:20.828 [C] > status
+14:12:20.828 [C] node C  state ACTIVE  view ABCD  uptime 3276s
+14:12:20.828 [C] hlc 37094937.0
+14:12:20.828 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 757/16064 bytes, bank A, 2 compactions
+14:12:20.828 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:20.828 [C] sensor sound (hardware): on, 131 samples, last 4 events, 0.8 % active seq 1174, 262 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:20.828 [C] sensor detail: AO rest 135 mV, swing max 62 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:22.805 [C] >>> status
+14:12:22.834 [C] > status
+14:12:22.834 [C] node C  state ACTIVE  view ABCD  uptime 3278s
+14:12:22.834 [C] hlc 37096977.0
+14:12:22.834 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 757/16064 bytes, bank A, 2 compactions
+14:12:22.834 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:22.834 [C] sensor sound (hardware): on, 132 samples, last 1 events, 0.2 % active seq 1175, 264 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:22.834 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 1/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:24.810 [C] >>> status
+14:12:24.839 [C] > status
+14:12:24.839 [C] node C  state ACTIVE  view ABCD  uptime 3280s
+14:12:24.839 [C] hlc 37099015.0
+14:12:24.839 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 757/16064 bytes, bank A, 2 compactions
+14:12:24.839 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:24.839 [C] sensor sound (hardware): on, 132 samples, last 1 events, 0.2 % active seq 1175, 264 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:24.839 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 1/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:24.977 [A]   4621.044 [A] compaction started (3066 bytes free)
+14:12:26.816 [C] >>> status
+14:12:26.845 [C] > status
+14:12:26.845 [C] node C  state ACTIVE  view ABCD  uptime 3282s
+14:12:26.845 [C] hlc 37101053.0
+14:12:26.845 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:26.845 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:26.845 [C] sensor sound (hardware): on, 132 samples, last 1 events, 0.2 % active seq 1175, 264 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:26.845 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 1/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:27.284 [A]   4623.385 [A] compaction #3 done: bank B, 11 keys, 15441 bytes free
+14:12:28.824 [C] >>> status
+14:12:28.850 [C] > status
+14:12:28.850 [C] node C  state ACTIVE  view ABCD  uptime 3284s
+14:12:28.850 [C] hlc 37103094.0
+14:12:28.850 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:28.850 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:28.850 [C] sensor sound (hardware): on, 133 samples, last 4 events, 0.8 % active seq 1176, 266 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:28.850 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:30.829 [C] >>> status
+14:12:30.855 [C] > status
+14:12:30.855 [C] node C  state ACTIVE  view ABCD  uptime 3286s
+14:12:30.855 [C] hlc 37105132.0
+14:12:30.855 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:30.855 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:30.855 [C] sensor sound (hardware): on, 133 samples, last 4 events, 0.8 % active seq 1176, 266 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:30.855 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:32.835 [C] >>> status
+14:12:32.860 [C] > status
+14:12:32.860 [C] node C  state ACTIVE  view ABCD  uptime 3288s
+14:12:32.860 [C] hlc 37107170.0
+14:12:32.860 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:32.860 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:32.860 [C] sensor sound (hardware): on, 134 samples, last 2 events, 0.4 % active seq 1177, 268 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:32.860 [C] sensor detail: AO rest 135 mV, swing max 48 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:34.842 [C] >>> status
+14:12:34.865 [C] > status
+14:12:34.865 [C] node C  state ACTIVE  view ABCD  uptime 3290s
+14:12:34.865 [C] hlc 37109209.0
+14:12:34.865 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:34.865 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:34.865 [C] sensor sound (hardware): on, 134 samples, last 2 events, 0.4 % active seq 1177, 268 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:34.865 [C] sensor detail: AO rest 135 mV, swing max 48 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:36.847 [C] >>> status
+14:12:36.870 [C] > status
+14:12:36.870 [C] node C  state ACTIVE  view ABCD  uptime 3292s
+14:12:36.870 [C] hlc 37111249.0
+14:12:36.870 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:36.870 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:36.870 [C] sensor sound (hardware): on, 134 samples, last 2 events, 0.4 % active seq 1177, 268 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:36.870 [C] sensor detail: AO rest 135 mV, swing max 48 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:38.854 [C] >>> status
+14:12:38.875 [C] > status
+14:12:38.875 [C] node C  state ACTIVE  view ABCD  uptime 3294s
+14:12:38.875 [C] hlc 37113287.0
+14:12:38.875 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:38.875 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:38.875 [C] sensor sound (hardware): on, 135 samples, last 4 events, 0.8 % active seq 1178, 270 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:38.875 [C] sensor detail: AO rest 135 mV, swing max 56 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:40.861 [C] >>> status
+14:12:40.881 [C] > status
+14:12:40.881 [C] node C  state ACTIVE  view ABCD  uptime 3296s
+14:12:40.881 [C] hlc 37115326.0
+14:12:40.881 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:40.881 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:40.881 [C] sensor sound (hardware): on, 135 samples, last 4 events, 0.8 % active seq 1178, 270 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:40.881 [C] sensor detail: AO rest 135 mV, swing max 56 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:42.867 [C] >>> status
+14:12:42.889 [C] > status
+14:12:42.889 [C] node C  state ACTIVE  view ABCD  uptime 3298s
+14:12:42.889 [C] hlc 37117362.0
+14:12:42.889 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 811/16064 bytes, bank A, 2 compactions
+14:12:42.889 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:42.889 [C] sensor sound (hardware): on, 136 samples, last 8 events, 1.6 % active seq 1179, 272 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:42.889 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 8/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:44.873 [C] >>> status
+14:12:44.895 [C] > status
+14:12:44.896 [C] node C  state ACTIVE  view ABCD  uptime 3300s
+14:12:44.896 [C] hlc 37119399.0
+14:12:44.896 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 931/16064 bytes, bank A, 2 compactions
+14:12:44.896 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:12:44.896 [C] sensor sound (hardware): on, 136 samples, last 8 events, 1.6 % active seq 1179, 272 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:44.896 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 8/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:46.879 [C] >>> status
+14:12:46.902 [C] > status
+14:12:46.902 [C] node C  state ACTIVE  view ABCD  uptime 3302s
+14:12:46.902 [C] hlc 37121435.0
+14:12:46.902 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 931/16064 bytes, bank A, 2 compactions
+14:12:46.902 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:12:46.902 [C] sensor sound (hardware): on, 136 samples, last 8 events, 1.6 % active seq 1179, 272 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:46.902 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 8/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:48.886 [C] >>> status
+14:12:48.909 [C] > status
+14:12:48.909 [C] node C  state ACTIVE  view ABCD  uptime 3304s
+14:12:48.909 [C] hlc 37123470.0
+14:12:48.909 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 931/16064 bytes, bank A, 2 compactions
+14:12:48.909 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:12:48.909 [C] sensor sound (hardware): on, 137 samples, last 4 events, 0.8 % active seq 1180, 274 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:48.910 [C] sensor detail: AO rest 135 mV, swing max 56 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:51.685 [C] >>> status
+14:12:51.711 [C] > status
+14:12:51.711 [C] node C  state ACTIVE  view ABCD  uptime 3306s
+14:12:51.711 [C] hlc 37125504.0
+14:12:51.711 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 931/16064 bytes, bank A, 2 compactions
+14:12:51.711 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:51.711 [C] sensor sound (hardware): on, 137 samples, last 4 events, 0.8 % active seq 1180, 274 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:51.711 [C] sensor detail: AO rest 135 mV, swing max 56 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:53.690 [C] >>> status
+14:12:53.720 [C] > status
+14:12:53.721 [C] node C  state ACTIVE  view ABCD  uptime 3309s
+14:12:53.721 [C] hlc 37127538.0
+14:12:53.721 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 931/16064 bytes, bank A, 2 compactions
+14:12:53.721 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:12:53.721 [C] sensor sound (hardware): on, 138 samples, last 2 events, 0.6 % active seq 1181, 276 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:53.721 [C] sensor detail: AO rest 135 mV, swing max 58 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:55.696 [C] >>> status
+14:12:55.728 [C] > status
+14:12:55.728 [C] node C  state ACTIVE  view ABCD  uptime 3311s
+14:12:55.728 [C] hlc 37129575.0
+14:12:55.728 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:12:55.728 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:55.728 [C] sensor sound (hardware): on, 138 samples, last 2 events, 0.6 % active seq 1181, 276 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:55.728 [C] sensor detail: AO rest 135 mV, swing max 58 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:57.701 [C] >>> status
+14:12:57.735 [C] > status
+14:12:57.735 [C] node C  state ACTIVE  view ABCD  uptime 3313s
+14:12:57.735 [C] hlc 37131612.0
+14:12:57.735 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:12:57.735 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:57.735 [C] sensor sound (hardware): on, 138 samples, last 2 events, 0.6 % active seq 1181, 276 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:57.735 [C] sensor detail: AO rest 135 mV, swing max 58 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:12:59.708 [C] >>> status
+14:12:59.741 [C] > status
+14:12:59.741 [C] node C  state ACTIVE  view ABCD  uptime 3315s
+14:12:59.741 [C] hlc 37133651.0
+14:12:59.741 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:12:59.741 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:12:59.741 [C] sensor sound (hardware): on, 139 samples, last 3 events, 0.6 % active seq 1182, 278 ok, 0 under-replicated, 0 failed, 0 read failures
+14:12:59.741 [C] sensor detail: AO rest 135 mV, swing max 55 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:01.712 [C] >>> status
+14:13:01.747 [C] > status
+14:13:01.747 [C] node C  state ACTIVE  view ABCD  uptime 3317s
+14:13:01.747 [C] hlc 37135688.0
+14:13:01.747 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:01.747 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:01.747 [C] sensor sound (hardware): on, 139 samples, last 3 events, 0.6 % active seq 1182, 278 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:01.747 [C] sensor detail: AO rest 135 mV, swing max 55 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:03.718 [C] >>> status
+14:13:03.751 [C] > status
+14:13:03.752 [C] node C  state ACTIVE  view ABCD  uptime 3319s
+14:13:03.752 [C] hlc 37137730.0
+14:13:03.752 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:03.752 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:03.752 [C] sensor sound (hardware): on, 140 samples, last 2 events, 0.4 % active seq 1183, 280 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:03.752 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:05.723 [C] >>> status
+14:13:05.757 [C] > status
+14:13:05.757 [C] node C  state ACTIVE  view ABCD  uptime 3321s
+14:13:05.757 [C] hlc 37139773.0
+14:13:05.757 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:05.757 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:05.757 [C] sensor sound (hardware): on, 140 samples, last 2 events, 0.4 % active seq 1183, 280 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:05.757 [C] sensor detail: AO rest 135 mV, swing max 52 mV (threshold 40 mV), 2/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:07.729 [C] >>> status
+14:13:07.764 [C] > status
+14:13:07.764 [C] node C  state ACTIVE  view ABCD  uptime 3323s
+14:13:07.764 [C] hlc 37141816.0
+14:13:07.764 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:07.764 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:07.764 [C] sensor sound (hardware): on, 141 samples, last 4 events, 0.8 % active seq 1184, 282 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:07.764 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:09.734 [C] >>> status
+14:13:09.770 [C] > status
+14:13:09.770 [C] node C  state ACTIVE  view ABCD  uptime 3325s
+14:13:09.770 [C] hlc 37143860.0
+14:13:09.770 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:09.770 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:09.770 [C] sensor sound (hardware): on, 141 samples, last 4 events, 0.8 % active seq 1184, 282 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:09.770 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:11.741 [C] >>> status
+14:13:11.777 [C] > status
+14:13:11.777 [C] node C  state ACTIVE  view ABCD  uptime 3327s
+14:13:11.777 [C] hlc 37145900.0
+14:13:11.777 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:11.777 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:11.777 [C] sensor sound (hardware): on, 141 samples, last 4 events, 0.8 % active seq 1184, 282 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:11.777 [C] sensor detail: AO rest 135 mV, swing max 50 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:13.747 [C] >>> status
+14:13:13.783 [C] > status
+14:13:13.784 [C] node C  state ACTIVE  view ABCD  uptime 3329s
+14:13:13.784 [C] hlc 37147937.0
+14:13:13.784 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 985/16064 bytes, bank A, 2 compactions
+14:13:13.784 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:13.784 [C] sensor sound (hardware): on, 142 samples, last 3 events, 0.6 % active seq 1185, 284 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:13.784 [C] sensor detail: AO rest 135 mV, swing max 54 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:15.754 [C] >>> status
+14:13:15.790 [C] > status
+14:13:15.790 [C] node C  state ACTIVE  view ABCD  uptime 3331s
+14:13:15.790 [C] hlc 37149976.0
+14:13:15.790 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1105/16064 bytes, bank A, 2 compactions
+14:13:15.790 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:13:15.790 [C] sensor sound (hardware): on, 142 samples, last 3 events, 0.6 % active seq 1185, 284 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:15.790 [C] sensor detail: AO rest 135 mV, swing max 54 mV (threshold 40 mV), 3/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:17.759 [C] >>> status
+14:13:17.798 [C] > status
+14:13:17.798 [C] node C  state ACTIVE  view ABCD  uptime 3333s
+14:13:17.798 [C] hlc 37152014.0
+14:13:17.798 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1105/16064 bytes, bank A, 2 compactions
+14:13:17.798 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:13:17.798 [C] sensor sound (hardware): on, 143 samples, last 4 events, 0.8 % active seq 1186, 286 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:17.798 [C] sensor detail: AO rest 135 mV, swing max 57 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:19.766 [C] >>> status
+14:13:19.813 [C] > status
+14:13:19.813 [C] node C  state ACTIVE  view ABCD  uptime 3335s
+14:13:19.813 [C] hlc 37154053.0
+14:13:19.813 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1105/16064 bytes, bank A, 2 compactions
+14:13:19.813 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+14:13:19.813 [C] sensor sound (hardware): on, 143 samples, last 4 events, 0.8 % active seq 1186, 286 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:19.813 [C] sensor detail: AO rest 135 mV, swing max 57 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:21.772 [C] >>> status
+14:13:21.776 [C] > status
+14:13:21.776 [C] node C  state ACTIVE  view ABCD  uptime 3337s
+14:13:21.776 [C] hlc 37156094.0
+14:13:21.776 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1105/16064 bytes, bank A, 2 compactions
+14:13:21.776 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:21.776 [C] sensor sound (hardware): on, 143 samples, last 4 events, 0.8 % active seq 1186, 286 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:21.776 [C] sensor detail: AO rest 135 mV, swing max 57 mV (threshold 40 mV), 4/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:23.779 [C] >>> status
+14:13:24.329 [C] > status
+14:13:24.329 [C] node C  state ACTIVE  view ABCD  uptime 3339s
+14:13:24.329 [C] hlc 37158133.0
+14:13:24.329 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1105/16064 bytes, bank A, 2 compactions
+14:13:24.329 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+14:13:24.329 [C] sensor sound (hardware): on, 144 samples, last 0 events, 0.0 % active seq 1187, 288 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:24.329 [C] sensor detail: AO rest 135 mV, swing max 37 mV (threshold 40 mV), 0/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+14:13:26.324 [C] >>> status
+14:13:26.341 [C] > status
+14:13:26.341 [C] node C  state ACTIVE  view ABCD  uptime 3341s
+14:13:26.341 [C] hlc 37160172.0
+14:13:26.341 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 1159/16064 bytes, bank A, 2 compactions
+14:13:26.341 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+14:13:26.341 [C] sensor sound (hardware): on, 144 samples, last 0 events, 0.0 % active seq 1187, 288 ok, 0 under-replicated, 0 failed, 0 read failures
+14:13:26.341 [C] sensor detail: AO rest 135 mV, swing max 37 mV (threshold 40 mV), 0/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample

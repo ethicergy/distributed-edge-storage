@@ -43,7 +43,7 @@ python3 -m edgekv --raw-log uart-raw.log watch --interval 5
 ```
 
 Readings: A `light` (BH1750), B `motion` (AM312 PIR: events per window,
-"last motion N s ago", `settling` after power-on), C `sound` (LM393 AO:
+"last motion N s ago", `settling` after power-on), C `sound` (LM393:
 events per window, % of the window active), D `temp` (DHT11; `STALE`
 or `ERROR` when it stops reading). The
 CSV of `watch --csv` has the columns `read_at, node, kind, value, unit,

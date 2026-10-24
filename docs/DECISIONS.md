@@ -39,7 +39,7 @@ every node runs a `sensor::SimulatedSource`:
 |---|---|---|---|---|
 | A | BH1750 (GY-302) | light | lux | 320 ± 330 |
 | B | AM312 PIR | motion | events per window (+ s since last motion) | 0–3 events |
-| C | LM393 sound (AO) | sound | events per window (+ % of window active) | 0–6 events |
+| C | LM393 sound (DO) | sound | events per window (+ % of window active) | 0–6 events |
 | D | DHT11 | temperature | °C | 22.5 ± 3.5 |
 
 (Revised 2026-10-17: the parts were chosen; humidity and pressure
@@ -47,13 +47,13 @@ were the earlier placeholders for B and C. The bridge node A gets the
 BH1750 because its driver never disables interrupts; the DHT11 library
 disables them for ~5 ms per read, so it is on D.)
 
-(Revised Sat 24 Oct: C's LM393 is read on **AO only** (GPIO0, ADC1,
-0 dB), DO not connected. A 1 kHz sampling task takes the peak-to-peak
-swing of each 10 ms block; a block is active above
-`SOUND_ACTIVE_SWING_MV`, events are rising crossings 150 ms apart. The
-reading format stays the same (events, % active), so the Pi side is
-unchanged; the swing and rest level are on the console (`status`).
-Decided by NS; wired AO → GPIO0 before the change.)
+(Sat 24 Oct: an AO-only driver for C (GPIO0, ADC1, 1 kHz peak-to-peak,
+commit `a9f483f`) was built and then reverted the same day: on our
+module AO rests at ~0.07 V and a clap at 30 cm stays inside the ADC
+noise (35-73 mV swing vs 33-56 mV in silence), even after raising the
+rest to 134 mV with the pot; a tap on the capsule did not show either.
+Back to DO only, as originally decided. Evidence:
+`docs/test-logs/sat24-sensors.log`, `sound-ao-test-first.log`.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real

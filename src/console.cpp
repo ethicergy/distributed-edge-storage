@@ -326,13 +326,6 @@ void Console::cmd_status(std::uint64_t now_ms)
             static_cast<unsigned long>(s.writes_failed),
             static_cast<unsigned long>(sampler_->source().failures())
         );
-
-        // Hardware detail of the last window (LM393 AO level and swing).
-        char detail[192];
-
-        if (sampler_->source().describe(detail, sizeof(detail)) > 0) {
-            printf("sensor detail: %s\n", detail);
-        }
     }
 }
 

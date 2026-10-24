@@ -139,15 +139,6 @@ public:
     // Whether a FallbackSource may serve simulated values in place of
     // this one when it fails.
     virtual bool fallback_allowed() const { return true; }
-
-    // Optional one-line hardware detail for `status` (NUL-terminated);
-    // returns its length, 0 = nothing to show.
-    virtual std::size_t describe(char* out, std::size_t capacity) const
-    {
-        (void)out;
-        (void)capacity;
-        return 0;
-    }
 };
 
 /*
