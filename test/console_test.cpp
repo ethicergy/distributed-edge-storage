@@ -24,6 +24,15 @@ bool contains(const std::string& text)
     return g_output.find(text) != std::string::npos;
 }
 
+float g_chip_temp = 0.0f;
+bool g_chip_temp_ok = false;
+
+bool fake_chip_temp(void*, float& celsius)
+{
+    celsius = g_chip_temp;
+    return g_chip_temp_ok;
+}
+
 void run(sim::Cluster& cluster, console::Console& console, const char* line, std::uint64_t settle_ms = 300)
 {
     console.execute(line, cluster.now());
@@ -190,6 +199,36 @@ int main()
 
     run(cluster, console, "format");
     REQUIRE(contains("format yes"));
+
+    // Chip temperature (die, not ambient) on `status` and `stats`:
+    // only with the platform hook; "n/a" when the read fails.
+    REQUIRE(!contains("chip temp"));
+
+    console::Hooks chip_hooks{};
+    chip_hooks.read_chip_temp = fake_chip_temp;
+    console::Console chip_console(cluster.runtime(node::B), cluster.node(node::B).sampler.get(), capture, nullptr, chip_hooks);
+
+    g_chip_temp = 41.26f;
+    g_chip_temp_ok = true;
+    g_output.clear();
+    run(cluster, chip_console, "status");
+    REQUIRE(contains("chip temp 41.3 degC (die temperature, not ambient)\n"));
+    g_output.clear();
+    run(cluster, chip_console, "stats");
+    REQUIRE(contains("chip temp 41.3 degC (die temperature, not ambient)\n"));
+
+    g_chip_temp = -3.04f;
+    g_output.clear();
+    run(cluster, chip_console, "status");
+    REQUIRE(contains("chip temp -3.0 degC"));
+
+    g_chip_temp_ok = false;
+    g_output.clear();
+    run(cluster, chip_console, "status");
+    REQUIRE(contains("chip temp n/a (die temperature, not ambient)\n"));
+    g_output.clear();
+    run(cluster, chip_console, "stats");
+    REQUIRE(contains("chip temp n/a"));
 
     std::cout << "Console tests: PASS\n";
     return 0;

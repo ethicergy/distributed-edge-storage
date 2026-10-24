@@ -63,6 +63,22 @@ C's real sensor stays enabled (bit set); the demo claps within ~5 cm.
 MAX4466 with adjustable gain) on an ADC1 pin with the peak-to-peak
 logic of `a9f483f`, which would give a usable range across a room.)
 
+(Sat 24 Oct, B: the AM312 gave no output (BRINGUP_LOG problem 24), so
+B serves **simulated motion**, flagged `simulated`
+(`REAL_SENSOR_NODES = 0x0D`). Future work: replace the PIR.
+
+**Chip temperature, light version (NS, Sat 24):** every node prints
+the ESP32-C3's internal (die) temperature in `status` and `stats`,
+labelled `chip temp NN.N degC (die temperature, not ambient)`; the
+sensor is started once at boot and read on demand. It is a health
+figure logged by the soak capture, not a sensor reading in the store.
+**Considered and deferred:** a full `CHIP_TEMP` sensor kind, with B
+publishing its die temperature as a real reading in place of motion.
+Estimated 1-1.25 h: a new kind in the shared kind table (C++ and Pi),
+`kind_for_node(B)`, simulated fallback, CLI/CSV, the cluster SENSORS
+test reworked, DEMO without the PIR step. Too much risk to the
+reading format just before the soak.)
+
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real
 measurements.

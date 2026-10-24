@@ -21,6 +21,9 @@ using WriteFn = void (*)(void* context, const char* text);
 struct Hooks {
     void (*print_platform_stats)(void* context, WriteFn write, void* write_context) = nullptr;
     void (*reboot)(void* context) = nullptr;
+    // Die temperature of the MCU in degC (ESP32-C3 internal sensor);
+    // false if the read failed. Not ambient. nullptr: no line printed.
+    bool (*read_chip_temp)(void* context, float& celsius) = nullptr;
     void* context = nullptr;
 };
 
@@ -88,6 +91,7 @@ private:
     void cmd_sensors(std::uint64_t now_ms);
     void cmd_dump();
     void cmd_stats();
+    void print_chip_temp();
     void cmd_log(const char* level);
     void cmd_fault(const char* args);
     void cmd_stale(const char* args);

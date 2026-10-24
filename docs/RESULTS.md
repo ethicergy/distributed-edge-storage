@@ -79,9 +79,10 @@ The simulator column is the 2-hour soak of `cluster_test H13`: all four nodes, 3
 | id | metric | simulator | hardware | why they differ |
 |---|---|---|---|---|
 | `sensor_A` | A (BH1750 light): samples, writes committed, read failures | H13 (all nodes, 2 h, 5 reboots): 1918 writes ok, 0 failed, 0 storage errors | | Simulated sources never fail to read. A BH1750 read failure is an I2C error (`read failures`). After 3 in a row the simulated source stands in, and its readings are flagged `simulated`. |
-| `sensor_B` | B (AM312 motion) | as above | | PIR reads never fail. The first `PIR_SETTLE_MS` of samples are `settling`. |
+| `sensor_B` | B (motion, **simulated** since Sat 24) | as above | | B's AM312 gave no output (BRINGUP_LOG problem 24), so B's bit is clear (`REAL_SENSOR_NODES = 0x0D`) and its readings are flagged `simulated`. With a working PIR: reads never fail; the first `PIR_SETTLE_MS` of samples are `settling`. |
 | `sensor_C` | C (LM393 sound, DO) | as above | | Reads never fail. **Module limit (Sat 24):** a loud clap is detected reliably only within ~5 cm of the microphone (10 cm unreliable, 30 cm not detected at any pot setting), so event counts in the soak reflect only very close or very loud sounds. |
 | `sensor_D` | D (DHT11 temperature) | as above | | DHT11 checksum or timeout failures are counted in `read failures`. The last good value is kept, and after 10 s without a good read it is flagged `STALE`. |
+| `chip_temp` | **chip temperature during the soak**, per node: min / median / max degC, and the curve over the night | — (the simulator has no chip) | | `status` and `stats` print `chip temp NN.N degC (die temperature, not ambient)` from the ESP32-C3's internal sensor. It is the **die** temperature: well above room temperature and rising with radio load, so it is a health figure (does any board run hot, does it drift), not a room measurement; compare with D's DHT11 for the room. **Plot plan:** the soak capture sends `stats` to every node every 5 min; extract `chip temp` per node (`grep 'chip temp' docs/test-logs/soak-*.log`), one line per node over time, with D's `s/D/temp` on the same axis for the room. Not stored in the KV (no reading-format change); `n/a` lines mean the read failed. |
 
 ## 5. EEPROM wear (after the overnight soak)
 

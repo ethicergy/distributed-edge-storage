@@ -327,6 +327,8 @@ void Console::cmd_status(std::uint64_t now_ms)
             static_cast<unsigned long>(sampler_->source().failures())
         );
     }
+
+    print_chip_temp();
 }
 
 void Console::cmd_members(std::uint64_t now_ms)
@@ -654,8 +656,25 @@ void Console::cmd_stats()
         (unsigned long)c.storage_errors, (unsigned long)s.compactions_completed,
         (unsigned long)s.compactions_aborted, (unsigned long)c.faults_injected);
 
+    print_chip_temp();
+
     if (hooks_.print_platform_stats != nullptr) {
         hooks_.print_platform_stats(hooks_.context, write_, write_context_);
+    }
+}
+
+void Console::print_chip_temp()
+{
+    if (hooks_.read_chip_temp == nullptr) {
+        return;
+    }
+
+    float celsius = 0.0f;
+
+    if (hooks_.read_chip_temp(hooks_.context, celsius)) {
+        printf("chip temp %.1f degC (die temperature, not ambient)\n", static_cast<double>(celsius));
+    } else {
+        printf("chip temp n/a (die temperature, not ambient)\n");
     }
 }
 

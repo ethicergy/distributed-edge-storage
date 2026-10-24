@@ -12,6 +12,7 @@
 
 #include <Arduino.h>
 #include <driver/gpio.h>
+#include <driver/temp_sensor.h>
 #include <esp_random.h>
 #include <esp_system.h>
 #include <hal/usb_serial_jtag_ll.h>
@@ -358,11 +359,28 @@ void reboot(void*)
     esp_restart();
 }
 
+// ESP32-C3 internal temperature sensor: the die temperature, well
+// above ambient and rising with radio load. Started once at boot, read
+// on demand by `status` and `stats` (a few microseconds, no bus).
+bool chip_temp_started = false;
+
+void start_chip_temp()
+{
+    temp_sensor_config_t config = TSENS_CONFIG_DEFAULT();
+    chip_temp_started = temp_sensor_set_config(config) == ESP_OK && temp_sensor_start() == ESP_OK;
+}
+
+bool read_chip_temp(void*, float& celsius)
+{
+    return chip_temp_started && temp_sensor_read_celsius(&celsius) == ESP_OK;
+}
+
 console::Hooks console_hooks()
 {
     console::Hooks hooks{};
     hooks.print_platform_stats = print_platform_stats;
     hooks.reboot = reboot;
+    hooks.read_chip_temp = read_chip_temp;
     return hooks;
 }
 
@@ -544,6 +562,7 @@ void setup()
         bridge_uart.setTimeout(2);
     }
 
+    start_chip_temp();
     operator_console.print_banner();
 
     if (xTaskCreateStatic(
