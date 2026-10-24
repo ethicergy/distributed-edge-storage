@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sat 24 13:00, steps 1-3 of today's plan done)
+## RESUME HERE (updated Sat 24 17:08 UTC: steps 1-6 done, **overnight soak running since 17:05:07 UTC = 22:35 IST**)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -17,6 +17,13 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * **AO driver for C (Sat 24, step 1):** 1 kHz ADC1 task (priority 4), 10 ms blocks, active when the block's peak-to-peak swing > `SOUND_ACTIVE_SWING_MV = 40` (initial, tune in step 4), events = rising crossings 150 ms apart, 0 dB attenuation. Reading format unchanged; `status` adds `sensor detail: AO rest … mV, swing max … mV …`. Test-first: `docs/test-logs/sound-ao-test-first.log`.
 * Problem 15: fault logging `24569fb`, F1 `9ded10a` (DHT read under the bus lock), F2 `15a9273` (final write-cycle poll).
 * `make check` passes (32 host tests + 40 Pi tests); all 8 envs build without warnings.
+
+### SOAK IN PROGRESS (M10/H13): started Sat 24 17:05:07 UTC (22:35 IST)
+
+* **Firmware:** the final build below on all four (A, C, D real; B simulated), 30 s sampling, Pi off. Storage errors 0 on all four at the start; `faults injected` frozen at the loss-test counts (A 76, B 73, C 97, D 113).
+* **Recording:** `docs/test-logs/soak-sat24.log` — one continuous capture of all four consoles (every line, UTC timestamps: view changes, compactions, `storage error on … : <fault>` lines, anti-entropy, reboots / port loss), plus `status` and `stats` on every node every 5 min (chip temp, storage errors, compactions / aborted, sensor sample counts, last value, read failures, under-replicated / failed writes, ESP-NOW delivered / failed, queue overflows, heap). Capture and poller are detached processes in WSL (`cap.py` and a shell loop in the session scratchpad; the poller stops when `soak_on` there is removed).
+* **Needs overnight:** laptop plugged in, **no sleep/hibernate**, the WSL/Claude Code terminal left open (closing all WSL sessions can stop the VM and the capture), boards untouched, D's EEPROM on the table.
+* **Collect: Sun 25 from ~07:00 IST (01:30 UTC), ≥ 8 h.** Steps (M11): stop the poller; `status`, `stats`, `members`, `sensors` on all four into the soak log; quit the capture; check: storage errors (expect 0), aborted compactions (0), queue overflows (0), sensor `0 failed`, seq ≈ elapsed / 30 s, no reboots (uptime), view `ABCD`; then `scripts/measure.py --sections sensors,wear` (fills RESULTS §4 sensors and §5 wear); chip temp per node over the night (`grep 'chip temp'`, RESULTS `chip_temp` plot plan); commit + push.
 
 ### FINAL FIRMWARE (Sat 24 17:01) — the loss tests and the soak run on this
 
