@@ -28562,3 +28562,504 @@
 15:35:03.996 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
 15:35:03.996 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
 15:35:03.996 [C] sensor sound (hardware): on, 456 samples, last 0 events, 0.0 % active seq 1856, 905 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:05.980 [C] >>> status
+15:35:06.002 [C] > status
+15:35:06.003 [C] node C  state ACTIVE  view ABCD  uptime 2329s
+15:35:06.003 [C] hlc 42060543.0
+15:35:06.003 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:06.003 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:06.003 [C] sensor sound (hardware): on, 457 samples, last 0 events, 0.0 % active seq 1857, 907 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:07.983 [C] >>> status
+15:35:08.009 [C] > status
+15:35:08.009 [C] node C  state ACTIVE  view ABCD  uptime 2331s
+15:35:08.009 [C] hlc 42062605.0
+15:35:08.009 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:08.009 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:08.009 [C] sensor sound (hardware): on, 457 samples, last 0 events, 0.0 % active seq 1857, 907 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:09.987 [C] >>> status
+15:35:10.016 [C] > status
+15:35:10.016 [C] node C  state ACTIVE  view ABCD  uptime 2333s
+15:35:10.016 [C] hlc 42064667.0
+15:35:10.016 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:10.016 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:10.016 [C] sensor sound (hardware): on, 458 samples, last 0 events, 0.0 % active seq 1858, 909 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:11.991 [C] >>> status
+15:35:12.022 [C] > status
+15:35:12.022 [C] node C  state ACTIVE  view ABCD  uptime 2335s
+15:35:12.022 [C] hlc 42066729.0
+15:35:12.022 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:12.022 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:12.022 [C] sensor sound (hardware): on, 458 samples, last 0 events, 0.0 % active seq 1858, 909 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:13.996 [C] >>> status
+15:35:14.028 [C] > status
+15:35:14.029 [C] node C  state ACTIVE  view ABCD  uptime 2337s
+15:35:14.029 [C] hlc 42068792.0
+15:35:14.029 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:14.029 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:14.029 [C] sensor sound (hardware): on, 458 samples, last 0 events, 0.0 % active seq 1858, 909 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:14.429 [D]   9559.372 [D] compaction started (3043 bytes free)
+15:35:15.999 [C] >>> status
+15:35:16.034 [C] > status
+15:35:16.034 [C] node C  state ACTIVE  view ABCD  uptime 2339s
+15:35:16.034 [C] hlc 42070854.0
+15:35:16.034 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:16.034 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:16.035 [C] sensor sound (hardware): on, 459 samples, last 0 events, 0.0 % active seq 1859, 911 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:16.836 [D]   9561.842 [D] compaction #15 done: bank B, 14 keys, 15253 bytes free
+15:35:18.004 [C] >>> status
+15:35:18.039 [C] > status
+15:35:18.039 [C] node C  state ACTIVE  view ABCD  uptime 2341s
+15:35:18.039 [C] hlc 42072917.0
+15:35:18.039 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:18.039 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:18.039 [C] sensor sound (hardware): on, 459 samples, last 0 events, 0.0 % active seq 1859, 911 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:20.983 [C] >>> status
+15:35:21.020 [C] > status
+15:35:21.020 [C] node C  state ACTIVE  view ABCD  uptime 2343s
+15:35:21.020 [C] hlc 42074978.0
+15:35:21.020 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:21.020 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:21.020 [C] sensor sound (hardware): on, 460 samples, last 0 events, 0.0 % active seq 1860, 913 ok, 5 under-replicated, 2 failed, 0 read failures
+15:35:22.987 [C] >>> status
+15:35:23.024 [C] > status
+15:35:23.024 [C] node C  state ACTIVE  view ABCD  uptime 2345s
+15:35:23.024 [C] hlc 42077040.0
+15:35:23.024 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 11037/16064 bytes, bank B, 1 compactions
+15:35:23.024 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+15:35:23.024 [C] sensor sound (hardware): on, 460 samples, last 0 events, 0.0 % active seq 1860, 913 ok, 5 under-replicated, 2 failed, 0 read failures
+# 15:35:27.493 bench 50 x3 on A, B, C, D in turn (C on the DO image); C period back to 30 s; poll stopped
+15:35:27.494 [C] >>> sensor period 30000
+15:35:27.495 [A] >>> stats
+15:35:27.496 [B] >>> stats
+15:35:27.496 [C] >>> stats
+15:35:27.497 [D] >>> stats
+15:35:27.498 [C] > sensor period 30000
+15:35:27.498 [C] sampler on
+15:35:27.498 [C] > stats
+15:35:27.498 [C] radio   rx 17253 (invalid 0, spoofed 0)  tx 6245 (failed 0)
+15:35:27.498 [C] hb      tx 4687  rx 13988   membership changes 3
+15:35:27.498 [C] server  executed 175  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:35:27.498 [C] repl    started 175  ok 174  failed 1  stale 0   as replica: applied 39 stale 0
+15:35:27.498 [C] ae      rounds 236  chunks tx 236 rx 1933  tables 684  pushes 2  resync tx 2 applied 6 stale 6
+15:35:27.498 [C] gc      orphans 0  tombstones 0  keys dropped 0
+15:35:27.498 [C] client  ok 921  failed 2  attempts 931  local 0
+15:35:27.499 [C] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+15:35:27.499 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: power-on
+15:35:27.499 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+15:35:27.499 [C] esp-now rx 17253  queue overflows 0  unknown MAC 339
+15:35:27.499 [C] esp-now tx -> A: 156 delivered, 0 failed (MAC-layer ACK)
+15:35:27.499 [C] esp-now tx -> B: 828 delivered, 0 failed (MAC-layer ACK)
+15:35:27.499 [C] esp-now tx -> D: 338 delivered, 0 failed (MAC-layer ACK)
+15:35:27.499 [C] heap free 174604 (min 165880)  node task stack headroom 13544 bytes
+15:35:27.499 [D] > stats
+15:35:27.500 [D] radio   rx 65714 (invalid 0, spoofed 0)  tx 26729 (failed 0)
+15:35:27.500 [D] hb      tx 19123  rx 55057   membership changes 29
+15:35:27.500 [D] server  executed 788  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+15:35:27.500 [D] repl    started 777  ok 777  failed 0  stale 0   as replica: applied 2414 stale 0
+15:35:27.500 [D] ae      rounds 958  chunks tx 3093 rx 6169  tables 2749  pushes 51  resync tx 51 applied 21 stale 1
+15:35:27.500 [D] gc      orphans 23  tombstones 0  keys dropped 8
+15:35:27.500 [D] client  ok 633  failed 0  attempts 633  local 80
+15:35:27.500 [D] storage errors 22  compactions 15 (aborted 0)  faults injected 0
+15:35:27.500 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+15:35:27.500 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+15:35:27.500 [D] esp-now rx 65714  queue overflows 0  unknown MAC 1243
+15:35:27.500 [D] esp-now tx -> A: 1141 delivered, 1 failed (MAC-layer ACK)
+15:35:27.500 [D] esp-now tx -> B: 2494 delivered, 0 failed (MAC-layer ACK)
+15:35:27.500 [D] esp-now tx -> C: 877 delivered, 0 failed (MAC-layer ACK)
+15:35:27.500 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+15:35:27.500 [B] > stats
+15:35:27.500 [B] radio   rx 19512 (invalid 0, spoofed 0)  tx 7977 (failed 0)
+15:35:27.500 [B] hb      tx 5416  rx 15609   membership changes 8
+15:35:27.500 [B] server  executed 901  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:35:27.500 [B] repl    started 899  ok 893  failed 6  stale 0   as replica: applied 35 stale 0
+15:35:27.500 [B] ae      rounds 273  chunks tx 619 rx 1971  tables 774  pushes 16  resync tx 16 applied 4 stale 2
+15:35:27.500 [B] gc      orphans 5  tombstones 0  keys dropped 2
+15:35:27.500 [B] client  ok 181  failed 0  attempts 181  local 45
+15:35:27.500 [B] storage errors 0  compactions 4 (aborted 0)  faults injected 0
+15:35:27.500 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: power-on
+15:35:27.500 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+15:35:27.500 [B] esp-now rx 19512  queue overflows 0  unknown MAC 339
+15:35:27.500 [B] esp-now tx -> A: 101 delivered, 0 failed (MAC-layer ACK)
+15:35:27.500 [B] esp-now tx -> C: 846 delivered, 0 failed (MAC-layer ACK)
+15:35:27.500 [B] esp-now tx -> D: 995 delivered, 0 failed (MAC-layer ACK)
+15:35:27.500 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+15:35:27.549 [C] eeprom page writes since boot: total 1154, hottest page 275 with 7 (rated 1000000)
+15:35:27.550 [D] eeprom page writes since boot: total 17992, hottest page 180 with 50 (rated 1000000)
+15:35:27.551 [B] eeprom page writes since boot: total 4849, hottest page 79 with 17 (rated 1000000)
+15:35:30.501 [A] >>> bench 50
+15:36:38.426 [A] >>> bench 50
+15:37:46.343 [A] >>> bench 50
+15:38:54.506 [B] >>> bench 50
+15:38:54.534 [B] > bench 50
+15:38:54.534 [B] bench: 50 sequential SETs on keys bench/0..7
+15:38:55.489 [C]   2558.633 [C] compaction started (3069 bytes free)
+15:38:56.192 [B] bench: 50 ok, 0 failed in 1704 ms; latency min 27 avg 34 max 50 ms
+15:38:57.949 [C]   2561.161 [C] compaction #2 done: bank A, 11 keys, 15564 bytes free
+15:39:02.607 [B] >>> bench 50
+15:39:02.620 [B] > bench 50
+15:39:02.621 [B] bench: 50 sequential SETs on keys bench/0..7
+15:39:04.126 [B] bench: 50 ok, 0 failed in 1533 ms; latency min 27 avg 30 max 37 ms
+15:39:10.193 [B] >>> bench 50
+15:39:10.201 [B] > bench 50
+15:39:10.201 [B] bench: 50 sequential SETs on keys bench/0..7
+15:39:11.808 [B] bench: 50 ok, 0 failed in 1617 ms; latency min 27 avg 32 max 81 ms
+15:39:19.221 [C] >>> bench 50
+15:39:19.260 [C] > bench 50
+15:39:19.260 [C] bench: 50 sequential SETs on keys bench/0..7
+15:39:20.666 [C] bench: 50 ok, 0 failed in 1441 ms; latency min 23 avg 28 max 35 ms
+15:39:26.810 [C] >>> bench 50
+15:39:26.844 [C] > bench 50
+15:39:26.844 [C] bench: 50 sequential SETs on keys bench/0..7
+15:39:28.300 [C] bench: 50 ok, 0 failed in 1498 ms; latency min 15 avg 29 max 62 ms
+15:39:34.401 [C] >>> bench 50
+15:39:34.427 [C] > bench 50
+15:39:34.427 [C] bench: 50 sequential SETs on keys bench/0..7
+15:39:34.929 [D]   9819.731 [D] compaction started (3056 bytes free)
+15:39:36.185 [C] bench: 50 ok, 0 failed in 1823 ms; latency min 23 avg 36 max 69 ms
+15:39:37.791 [D]   9822.672 [D] compaction #16 done: bank A, 22 keys, 14981 bytes free
+15:39:42.503 [D] >>> bench 50
+15:39:42.513 [D] > bench 50
+15:39:42.513 [D] bench: 50 sequential SETs on keys bench/0..7
+15:39:43.920 [D] bench: 50 ok, 0 failed in 1422 ms; latency min 23 avg 28 max 45 ms
+15:39:51.132 [D] >>> bench 50
+15:39:51.181 [D] > bench 50
+15:39:51.181 [D] bench: 50 sequential SETs on keys bench/0..7
+15:39:52.540 [D] bench: 50 ok, 0 failed in 1411 ms; latency min 23 avg 28 max 34 ms
+15:39:58.715 [D] >>> bench 50
+15:39:58.718 [D] > bench 50
+15:39:58.718 [D] bench: 50 sequential SETs on keys bench/0..7
+15:40:00.123 [D] bench: 50 ok, 0 failed in 1411 ms; latency min 23 avg 28 max 35 ms
+15:40:06.295 [A] >>> stats
+15:40:06.296 [B] >>> stats
+15:40:06.299 [C] >>> stats
+15:40:06.299 [B] > stats
+15:40:06.299 [B] radio   rx 21642 (invalid 0, spoofed 0)  tx 8827 (failed 0)
+15:40:06.300 [B] hb      tx 5975  rx 17280   membership changes 8
+15:40:06.300 [B] server  executed 937  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:40:06.300 [B] repl    started 935  ok 929  failed 6  stale 0   as replica: applied 38 stale 0
+15:40:06.300 [B] ae      rounds 301  chunks tx 675 rx 2195  tables 858  pushes 16  resync tx 16 applied 4 stale 2
+15:40:06.300 [B] gc      orphans 5  tombstones 0  keys dropped 2
+15:40:06.300 [B] client  ok 351  failed 0  attempts 351  local 50
+15:40:06.300 [C] > stats
+15:40:06.300 [C] radio   rx 19781 (invalid 0, spoofed 0)  tx 7467 (failed 0)
+15:40:06.300 [C] hb      tx 5245  rx 15658   membership changes 3
+15:40:06.300 [D] >>> stats
+15:40:06.300 [B] storage errors 0  compactions 4 (aborted 0)  faults injected 0
+15:40:06.301 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: power-on
+15:40:06.301 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+15:40:06.301 [C] server  executed 377  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:40:06.301 [C] repl    started 377  ok 376  failed 1  stale 0   as replica: applied 206 stale 0
+15:40:06.301 [C] ae      rounds 264  chunks tx 278 rx 2170  tables 767  pushes 3  resync tx 3 applied 6 stale 6
+15:40:06.301 [C] gc      orphans 0  tombstones 0  keys dropped 0
+15:40:06.301 [C] client  ok 1091  failed 2  attempts 1101  local 60
+15:40:06.301 [B] esp-now rx 21642  queue overflows 0  unknown MAC 389
+15:40:06.301 [B] esp-now tx -> A: 110 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [B] esp-now tx -> C: 940 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [B] esp-now tx -> D: 1127 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [C] storage errors 0  compactions 2 (aborted 0)  faults injected 0
+15:40:06.301 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: power-on
+15:40:06.301 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+15:40:06.301 [C] esp-now rx 19781  queue overflows 0  unknown MAC 379
+15:40:06.301 [C] esp-now tx -> A: 174 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [C] esp-now tx -> B: 922 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [C] esp-now tx -> D: 848 delivered, 0 failed (MAC-layer ACK)
+15:40:06.301 [C] heap free 174604 (min 165880)  node task stack headroom 13304 bytes
+15:40:06.301 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+15:40:06.302 [D] > stats
+15:40:06.302 [D] radio   rx 68331 (invalid 0, spoofed 0)  tx 28154 (failed 0)
+15:40:06.302 [D] hb      tx 19681  rx 56724   membership changes 29
+15:40:06.302 [D] server  executed 1068  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+15:40:06.302 [D] repl    started 1057  ok 1057  failed 0  stale 0   as replica: applied 2639 stale 0
+15:40:06.302 [D] ae      rounds 986  chunks tx 3191 rx 6349  tables 2831  pushes 51  resync tx 51 applied 21 stale 2
+15:40:06.302 [D] gc      orphans 23  tombstones 0  keys dropped 8
+15:40:06.302 [D] client  ok 801  failed 0  attempts 801  local 172
+15:40:06.303 [D] storage errors 22  compactions 16 (aborted 0)  faults injected 0
+15:40:06.303 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+15:40:06.303 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+15:40:06.303 [D] esp-now rx 68331  queue overflows 0  unknown MAC 1287
+15:40:06.303 [D] esp-now tx -> A: 1269 delivered, 1 failed (MAC-layer ACK)
+15:40:06.303 [D] esp-now tx -> B: 2626 delivered, 0 failed (MAC-layer ACK)
+15:40:06.303 [D] esp-now tx -> C: 1386 delivered, 0 failed (MAC-layer ACK)
+15:40:06.303 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+15:40:06.352 [C] eeprom page writes since boot: total 2626, hottest page 13 with 7 (rated 1000000)
+15:40:06.352 [B] eeprom page writes since boot: total 4960, hottest page 79 with 17 (rated 1000000)
+15:40:06.353 [D] eeprom page writes since boot: total 19845, hottest page 64 with 55 (rated 1000000)
+15:40:48.981 [D] --- port open
+15:40:48.982 [B] --- port open
+15:40:48.983 [C] --- port open
+15:40:48.983 [A] --- port open
+15:40:49.274 [A] >>> stats
+# 15:41:11.418 A: console silent since 14:50:09 (B/C USB swap) though in every view; capture reopen did not help; RTS reset of A
+15:41:15.861 [D] --- port open
+15:41:15.872 [A] --- port open
+15:41:15.877 [B] --- port open
+15:41:15.893 [C] --- port open
+15:41:15.912 [D]   9920.062 [D] view: -BCD
+15:41:15.929 [B]   3063.563 [B] view: -BCD
+15:41:15.944 [C]   2698.732 [C] view: -BCD
+15:41:18.619 [C]   2701.916 [C] anti-entropy: key h/A/light/2 repaired from D
+15:41:18.673 [C]   2701.957 [C] anti-entropy: key h/B/motion/2 repaired from D
+15:41:18.676 [C]   2701.995 [C] anti-entropy: key h/A/light/3 repaired from D
+15:41:18.730 [C]   2702.035 [C] anti-entropy: key h/A/light/0 repaired from D
+15:41:18.785 [C]   2702.075 [C] anti-entropy: key h/D/temp/0 repaired from D
+15:41:18.786 [C]   2702.110 [C] anti-entropy: key bench/4 repaired from D
+15:41:18.838 [C]   2702.153 [C] anti-entropy: key bench/5 repaired from D
+15:41:20.889 [C]   2704.217 [C] view: ABCD
+15:41:20.905 [B]   3069.048 [B] view: ABCD
+15:41:20.928 [D]   9925.547 [D] view: ABCD
+15:41:23.884 [C]   2707.215 [C] gc: 7 key(s) marked for drop (orphans 7, tombstones 0 total)
+15:41:26.613 [A] >>> stats
+15:41:26.620 [A] >>> status
+15:41:42.953 [B] >>> members
+15:41:42.975 [B] > members
+15:41:42.977 [B]   A  alive   last heard 9 ms ago, 6127 heartbeats
+15:41:42.977 [B]   B  self    ACTIVE
+15:41:42.977 [B]   C  alive   last heard 353 ms ago, 5589 heartbeats
+15:41:42.990 [B]   D  alive   last heard 495 ms ago, 6125 heartbeats
+15:44:57.967 [C]   2920.911 [C] compaction started (3035 bytes free)
+15:45:00.072 [C]   2923.248 [C] compaction #3 done: bank B, 11 keys, 15564 bytes free
+15:46:02.017 [A] --- port lost, reopening
+15:46:03.682 [D]  10208.048 [D] view: -BCD
+15:46:03.682 [B]   3351.549 [B] view: -BCD
+15:46:03.683 [C]   2986.719 [C] view: -BCD
+15:46:08.700 [C]   2991.931 [C] anti-entropy: key h/A/light/2 repaired from D
+15:46:08.750 [C]   2991.972 [C] anti-entropy: key h/B/motion/2 repaired from D
+15:46:08.801 [C]   2992.011 [C] anti-entropy: key h/A/light/3 repaired from D
+15:46:08.851 [C]   2992.051 [C] anti-entropy: key h/A/light/0 repaired from D
+15:46:08.901 [C]   2992.090 [C] anti-entropy: key h/D/temp/0 repaired from D
+15:46:08.901 [C]   2992.125 [C] anti-entropy: key bench/4 repaired from D
+15:46:08.951 [C]   2992.168 [C] anti-entropy: key bench/5 repaired from D
+15:46:11.556 [D]  10216.191 [D] anti-entropy: key h/D/temp/1 repaired from B
+15:46:11.606 [D]  10216.231 [D] anti-entropy: key h/D/temp/2 repaired from B
+15:46:11.656 [D]  10216.271 [D] anti-entropy: key h/D/temp/3 repaired from B
+15:46:13.008 [B]   3361.170 [B] anti-entropy: key s/A/light repaired from C
+15:46:13.009 [B]   3361.181 [B] anti-entropy: key h/C/sound/1 repaired from D
+15:46:13.059 [B]   3361.209 [B] anti-entropy: key h/C/sound/0 repaired from D
+15:46:22.736 [A] --- port open
+15:46:23.514 [A] 
+15:46:23.514 [A] edge-kv firmware, node A (Pi bridge) [fault injection build]
+15:46:23.514 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: power-on
+15:46:23.514 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+15:46:23.514 [A]      2.169 [A] storage recovered: 13 live, 0 tombstones, 9407/16064 log bytes used
+15:46:23.514 [A]      2.172 [A] state -> BOOTING
+15:46:23.514 [A] sensor light: hardware
+15:46:23.514 [A] 
+15:46:23.514 [A] edge-kv node A  (4-node ESP-NOW KV store, RF=2)
+15:46:23.514 [A] type 'help' for commands
+15:46:23.514 [A]      2.174 [A] view: ABCD
+15:46:23.514 [A]      4.218 [A] state -> CATCHUP
+15:46:23.550 [C]   3007.038 [C] view: ABCD
+15:46:23.550 [B]   3371.868 [B] view: ABCD
+15:46:23.550 [D]  10228.367 [D] view: ABCD
+15:46:23.564 [A]      4.279 [A] anti-entropy: key h/D/temp/2 repaired from D
+15:46:23.564 [A]      7.218 [A] state -> ACTIVE
+15:46:23.701 [C]   3007.215 [C] gc: 7 key(s) marked for drop (orphans 14, tombstones 0 total)
+15:46:26.717 [D]  10230.799 [D] gc: 3 key(s) marked for drop (orphans 26, tombstones 0 total)
+15:46:29.631 [B]   3377.209 [B] gc: 3 key(s) marked for drop (orphans 8, tombstones 0 total)
+15:46:34.010 [A]     16.985 [A] view: ABC-
+15:46:34.461 [A]     17.485 [A] view: ABCD
+15:46:39.859 [B]   3387.867 [B] view: -BCD
+15:46:39.862 [C]   3023.037 [C] view: -BCD
+15:46:40.361 [B]   3388.366 [B] view: ABCD
+15:46:40.363 [C]   3023.536 [C] view: ABCD
+15:46:40.934 [A]     24.291 [A] view: A-CD
+15:46:43.768 [B]   3391.867 [B] view: -BCD
+15:46:43.771 [C]   3027.037 [C] view: -BCD
+15:46:44.343 [A]     27.790 [A] view: ABCD
+15:46:44.493 [A]     27.986 [A] view: ABC-
+15:46:45.446 [A]     28.985 [A] view: ABCD
+15:46:45.672 [B]   3393.866 [B] view: ABCD
+15:46:45.675 [C]   3029.036 [C] view: ABCD
+15:46:46.900 [A]     30.478 [A] anti-entropy: key h/D/temp/3 repaired from D
+15:46:57.402 [B]   3405.725 [B] compaction started (3031 bytes free)
+15:47:00.446 [B]   3408.065 [B] compaction #5 done: bank B, 10 keys, 15490 bytes free
+15:47:06.661 [D]  10270.799 [D] gc: 1 key(s) marked for drop (orphans 27, tombstones 0 total)
+# 15:47:58.269 NS: A replugged, usbipd attached (earlier a series of failed attaches). D's EEPROM was hanging off the table edge (probable cause of the 15:25 I2C_ERROR burst); NS reseated D's wiring
+15:48:00.275 [A] >>> stats
+15:48:00.276 [B] >>> stats
+15:48:00.276 [C] >>> stats
+15:48:00.277 [D] >>> stats
+15:48:00.278 [C] > stats
+15:48:00.278 [C] radio   rx 23155 (invalid 0, spoofed 0)  tx 8707 (failed 0)
+15:48:00.278 [C] hb      tx 6193  rx 18425   membership changes 11
+15:48:00.278 [C] server  executed 415  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:00.278 [C] repl    started 413  ok 412  failed 1  stale 0   as replica: applied 214 stale 0
+15:48:00.278 [C] ae      rounds 312  chunks tx 455 rx 2649  tables 909  pushes 4  resync tx 4 applied 20 stale 6
+15:48:00.278 [C] gc      orphans 14  tombstones 0  keys dropped 7
+15:48:00.278 [C] client  ok 1123  failed 2  attempts 1133  local 60
+15:48:00.279 [A] > stats
+15:48:00.279 [A] radio   rx 703 (invalid 0, spoofed 0)  tx 250 (failed 0)
+15:48:00.279 [B] > stats
+15:48:00.279 [B] radio   rx 25109 (invalid 0, spoofed 0)  tx 10018 (failed 0)
+15:48:00.279 [B] hb      tx 6923  rx 20046   membership changes 16
+15:48:00.279 [B] server  executed 997  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:00.279 [B] repl    started 995  ok 989  failed 6  stale 0   as replica: applied 42 stale 0
+15:48:00.279 [B] ae      rounds 348  chunks tx 773 rx 2753  tables 1001  pushes 21  resync tx 21 applied 7 stale 2
+15:48:00.279 [B] gc      orphans 8  tombstones 0  keys dropped 5
+15:48:00.280 [D] > stats
+15:48:00.280 [A] hb      tx 194  rx 573   membership changes 7
+15:48:00.280 [A] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:00.280 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 9 stale 0
+15:48:00.280 [A] >>> status
+15:48:00.280 [D] radio   rx 71664 (invalid 0, spoofed 0)  tx 29495 (failed 0)
+15:48:00.280 [D] hb      tx 20629  rx 59497   membership changes 33
+15:48:00.280 [D] server  executed 1088  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+15:48:00.280 [D] repl    started 1077  ok 1077  failed 0  stale 0   as replica: applied 2713 stale 0
+15:48:00.280 [B] client  ok 383  failed 0  attempts 383  local 58
+15:48:00.280 [C] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+15:48:00.280 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: power-on
+15:48:00.280 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+15:48:00.280 [C] esp-now rx 23155  queue overflows 0  unknown MAC 452
+15:48:00.280 [C] esp-now tx -> A: 208 delivered, 0 failed (MAC-layer ACK)
+15:48:00.280 [C] esp-now tx -> B: 975 delivered, 0 failed (MAC-layer ACK)
+15:48:00.280 [C] esp-now tx -> D: 876 delivered, 0 failed (MAC-layer ACK)
+15:48:00.280 [C] heap free 174604 (min 165880)  node task stack headroom 13304 bytes
+15:48:00.280 [A] ae      rounds 12  chunks tx 36 rx 106  tables 26  pushes 0  resync tx 0 applied 2 stale 2
+15:48:00.280 [A] gc      orphans 0  tombstones 0  keys dropped 0
+15:48:00.280 [A] client  ok 9  failed 0  attempts 9  local 2
+15:48:00.280 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+15:48:00.280 [D] ae      rounds 1033  chunks tx 3426 rx 6768  tables 2972  pushes 69  resync tx 69 applied 24 stale 2
+15:48:00.280 [D] gc      orphans 27  tombstones 0  keys dropped 8
+15:48:00.280 [D] client  ok 833  failed 0  attempts 833  local 176
+15:48:00.280 [D] storage errors 22  compactions 16 (aborted 0)  faults injected 0
+15:48:00.280 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+15:48:00.281 [B] >>> status
+15:48:00.281 [B] storage errors 0  compactions 5 (aborted 0)  faults injected 0
+15:48:00.281 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: power-on
+15:48:00.281 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+15:48:00.281 [B] esp-now rx 25109  queue overflows 0  unknown MAC 459
+15:48:00.281 [B] esp-now tx -> A: 126 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [B] esp-now tx -> C: 992 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [B] esp-now tx -> D: 1204 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+15:48:00.281 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+15:48:00.281 [D] esp-now rx 71664  queue overflows 0  unknown MAC 1346
+15:48:00.281 [D] esp-now tx -> A: 1307 delivered, 3 failed (MAC-layer ACK)
+15:48:00.281 [D] esp-now tx -> B: 2702 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [D] esp-now tx -> C: 1428 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+15:48:00.281 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: power-on
+15:48:00.281 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+15:48:00.281 [A] esp-now rx 703  queue overflows 0  unknown MAC 19
+15:48:00.281 [A] esp-now tx -> B: 2 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [A] esp-now tx -> C: 9 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [A] esp-now tx -> D: 9 delivered, 0 failed (MAC-layer ACK)
+15:48:00.281 [A] heap free 169448 (min 160724)  node task stack headroom 13240 bytes
+15:48:00.281 [A] eeprom page writes since boot: total 39, hottest page 418 with 5 (rated 1000000)
+15:48:00.281 [C] >>> status
+15:48:00.282 [D] >>> status
+15:48:00.330 [C] eeprom page writes since boot: total 3329, hottest page 266 with 13 (rated 1000000)
+15:48:00.330 [C] > status
+15:48:00.330 [C] node C  state ACTIVE  view ABCD  uptime 3103s
+15:48:00.330 [C] hlc 42834911.0
+15:48:00.331 [C] storage recovered: 18 live, 0 tombstones, 18/64 keys, log 1835/16064 bytes, bank B, 3 compactions
+15:48:00.331 [C] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+15:48:00.331 [C] sensor sound (hardware): on, 487 samples, last 0 events, 0.0 % active seq 1887, 967 ok, 5 under-replicated, 2 failed, 0 read failures
+15:48:00.331 [B] eeprom page writes since boot: total 5691, hottest page 263 with 21 (rated 1000000)
+15:48:00.331 [B] > status
+15:48:00.331 [B] node B  state ACTIVE  view ABCD  uptime 3468s
+15:48:00.331 [B] hlc 42834911.0
+15:48:00.331 [B] storage recovered: 10 live, 0 tombstones, 10/64 keys, log 1146/16064 bytes, bank B, 5 compactions
+15:48:00.331 [B] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+15:48:00.331 [B] sensor motion (hardware): on, 116 samples, last 0 events, no motion since boot seq 1053, 231 ok, 1 under-replicated, 0 failed, 0 read failures
+15:48:00.331 [D] eeprom page writes since boot: total 20123, hottest page 64 with 55 (rated 1000000)
+15:48:00.331 [D] > status
+15:48:00.331 [D] node D  state ACTIVE  view ABCD  uptime 10325s
+15:48:00.331 [D] hlc 42834911.0
+15:48:00.331 [D] storage fresh format: 25 live, 0 tombstones, 25/64 keys, log 12059/16064 bytes, bank A, 16 compactions
+15:48:00.331 [D] pending: 0 client, 0 replication, 5 dedup entries, 8 free op slots
+15:48:00.331 [D] sensor temp (hardware): on, 341 samples, last 29.800 degC seq 2873, 682 ok, 0 under-replicated, 0 failed, 3 read failures
+15:48:00.331 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+15:48:00.331 [A] > status
+15:48:00.331 [A] node A  state ACTIVE  view ABCD  uptime 103s
+15:48:00.331 [A] hlc 42834908.0
+15:48:00.331 [A] storage recovered: 13 live, 0 tombstones, 13/64 keys, log 10192/16064 bytes, bank B, 0 compactions
+15:48:00.331 [A] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+15:48:00.331 [A] sensor light (hardware): on, 4 samples, last 56.666 lux seq 2986, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+15:48:19.938 [A] >>> bench 50
+15:48:19.959 [A] > bench 50
+15:48:19.960 [A] bench: 50 sequential SETs on keys bench/0..7
+15:48:20.712 [D]  10345.214 [D] compaction started (3044 bytes free)
+15:48:21.666 [A] bench: 50 ok, 0 failed in 1865 ms; latency min 27 avg 37 max 53 ms
+15:48:23.373 [D]  10348.032 [D] compaction #17 done: bank B, 22 keys, 14981 bytes free
+15:48:26.940 [A] >>> bench 50
+15:48:26.969 [A] > bench 50
+15:48:26.969 [A] bench: 50 sequential SETs on keys bench/0..7
+15:48:28.525 [A] bench: 50 ok, 0 failed in 1561 ms; latency min 27 avg 31 max 49 ms
+15:48:33.944 [A] >>> bench 50
+15:48:33.946 [A] > bench 50
+15:48:33.946 [A] bench: 50 sequential SETs on keys bench/0..7
+15:48:35.504 [A] bench: 50 ok, 0 failed in 1523 ms; latency min 27 avg 30 max 35 ms
+15:48:41.673 [A] >>> stats
+15:48:41.673 [B] >>> stats
+15:48:41.674 [C] >>> stats
+15:48:41.675 [A] > stats
+15:48:41.675 [A] radio   rx 1183 (invalid 0, spoofed 0)  tx 535 (failed 0)
+15:48:41.675 [A] hb      tx 275  rx 817   membership changes 7
+15:48:41.675 [A] server  executed 4  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:41.675 [A] repl    started 4  ok 4  failed 0  stale 0   as replica: applied 49 stale 0
+15:48:41.675 [A] ae      rounds 16  chunks tx 48 rx 150  tables 38  pushes 0  resync tx 0 applied 2 stale 2
+15:48:41.675 [A] gc      orphans 0  tombstones 0  keys dropped 0
+15:48:41.675 [A] client  ok 161  failed 0  attempts 161  local 3
+15:48:41.675 [B] > stats
+15:48:41.675 [B] radio   rx 25409 (invalid 0, spoofed 0)  tx 10115 (failed 0)
+15:48:41.675 [B] hb      tx 7004  rx 20290   membership changes 16
+15:48:41.675 [B] server  executed 1000  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:41.675 [B] repl    started 998  ok 992  failed 6  stale 0   as replica: applied 42 stale 0
+15:48:41.675 [B] ae      rounds 352  chunks tx 781 rx 2801  tables 1013  pushes 21  resync tx 21 applied 7 stale 2
+15:48:41.675 [B] gc      orphans 8  tombstones 0  keys dropped 5
+15:48:41.675 [B] client  ok 385  failed 0  attempts 385  local 58
+15:48:41.675 [D] >>> stats
+15:48:41.676 [D] > stats
+15:48:41.676 [C] > stats
+15:48:41.676 [C] radio   rx 23618 (invalid 0, spoofed 0)  tx 8985 (failed 0)
+15:48:41.676 [C] hb      tx 6275  rx 18668   membership changes 11
+15:48:41.676 [C] server  executed 477  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+15:48:41.676 [C] repl    started 475  ok 474  failed 1  stale 0   as replica: applied 268 stale 0
+15:48:41.676 [C] ae      rounds 316  chunks tx 471 rx 2689  tables 921  pushes 4  resync tx 4 applied 20 stale 6
+15:48:41.676 [C] gc      orphans 14  tombstones 0  keys dropped 7
+15:48:41.676 [C] client  ok 1125  failed 2  attempts 1135  local 60
+15:48:41.677 [D] radio   rx 72194 (invalid 0, spoofed 0)  tx 29847 (failed 0)
+15:48:41.677 [D] hb      tx 20711  rx 59741   membership changes 33
+15:48:41.677 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+15:48:41.677 [D] server  executed 1180  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+15:48:41.677 [D] repl    started 1169  ok 1169  failed 0  stale 0   as replica: applied 2777 stale 0
+15:48:41.677 [B] storage errors 0  compactions 5 (aborted 0)  faults injected 0
+15:48:41.677 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: power-on
+15:48:41.677 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+15:48:41.677 [A] esp-now rx 1183  queue overflows 0  unknown MAC 23
+15:48:41.677 [A] esp-now tx -> B: 3 delivered, 0 failed (MAC-layer ACK)
+15:48:41.677 [A] esp-now tx -> C: 71 delivered, 0 failed (MAC-layer ACK)
+15:48:41.677 [A] esp-now tx -> D: 138 delivered, 0 failed (MAC-layer ACK)
+15:48:41.677 [A] heap free 169448 (min 160724)  node task stack headroom 13240 bytes
+15:48:41.677 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: power-on
+15:48:41.677 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+15:48:41.677 [C] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+15:48:41.677 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: power-on
+15:48:41.678 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+15:48:41.678 [C] esp-now rx 23618  queue overflows 0  unknown MAC 458
+15:48:41.678 [D] ae      rounds 1037  chunks tx 3446 rx 6804  tables 2984  pushes 69  resync tx 69 applied 24 stale 2
+15:48:41.678 [D] gc      orphans 27  tombstones 0  keys dropped 11
+15:48:41.678 [B] esp-now rx 25409  queue overflows 0  unknown MAC 465
+15:48:41.678 [B] esp-now tx -> A: 127 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [B] esp-now tx -> C: 994 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [B] esp-now tx -> D: 1209 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+15:48:41.678 [C] esp-now tx -> A: 270 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [C] esp-now tx -> B: 977 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [C] esp-now tx -> D: 992 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [C] heap free 174604 (min 165880)  node task stack headroom 13304 bytes
+15:48:41.678 [D] client  ok 835  failed 0  attempts 835  local 176
+15:48:41.678 [A] eeprom page writes since boot: total 144, hottest page 418 with 5 (rated 1000000)
+15:48:41.678 [D] storage errors 22  compactions 17 (aborted 0)  faults injected 0
+15:48:41.678 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+15:48:41.678 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+15:48:41.678 [D] esp-now rx 72194  queue overflows 0  unknown MAC 1353
+15:48:41.678 [D] esp-now tx -> A: 1436 delivered, 3 failed (MAC-layer ACK)
+15:48:41.678 [D] esp-now tx -> B: 2707 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [D] esp-now tx -> C: 1544 delivered, 0 failed (MAC-layer ACK)
+15:48:41.678 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+15:48:41.728 [B] eeprom page writes since boot: total 5699, hottest page 263 with 21 (rated 1000000)
+15:48:41.728 [C] eeprom page writes since boot: total 3620, hottest page 294 with 14 (rated 1000000)
+15:48:41.728 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+15:48:41.728 [D] eeprom page writes since boot: total 21086, hottest page 275 with 57 (rated 1000000)
