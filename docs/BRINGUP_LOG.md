@@ -18,6 +18,10 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * Problem 15: fault logging `24569fb`, F1 `9ded10a` (DHT read under the bus lock), F2 `15a9273` (final write-cycle poll).
 * `make check` passes (32 host tests + 40 Pi tests); all 8 envs build without warnings.
 
+### FINAL FIRMWARE (Sat 24 17:01) — the loss tests and the soak run on this
+
+`-fi` images on all four, built 16:42:20 (A), 16:42:25 (B), 16:42:31 (C), 16:42:37 (D) from the code of `40a8157` (later commits are docs only): mask **`0x0D`** (A BH1750, C LM393 **DO**, D DHT11 real; **B simulated**, problem 24), F1 + F2 + fault logging, `chip temp` (die) in `status`/`stats`. Flashed 17:00:34-17:01:05; 17:01:47 all four ACTIVE `ABCD`, storage errors 0, aborted 0; chip temp A 59.1, B 55.5, C 53.4, D 53.6 °C (room 29.8 °C by D's DHT11). `check_images.sh` 16/16 ok. BUSIDs now A 1-1, B 5-4, C 5-3, D 5-2. `sat24-flash.log`.
+
 ### Today's plan (NS, Sat 24), in order; commit + push after each step
 
 1. ~~AO driver for C, test-first, docs~~ **done** (this commit).
