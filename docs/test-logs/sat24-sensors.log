@@ -16014,3 +16014,124 @@
 14:13:26.341 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
 14:13:26.341 [C] sensor sound (hardware): on, 144 samples, last 0 events, 0.0 % active seq 1187, 288 ok, 0 under-replicated, 0 failed, 0 read failures
 14:13:26.341 [C] sensor detail: AO rest 135 mV, swing max 37 mV (threshold 40 mV), 0/500 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+# 14:15:43.001 NS: C off (USB unplugged) for DO -> GPIO4 wiring
+# 14:17:05.278 NS: C on (DO -> GPIO4, AO removed)
+14:17:06.864 [B] --- port open
+14:17:06.865 [A] --- port open
+14:17:06.867 [D] --- port open
+14:17:06.867 [C] --- port open
+14:17:06.917 [C] FATAL: node runtime failed to start (storage?)
+14:17:11.387 [C] FATAL: node runtime failed to start (storage?)
+14:17:16.219 [C] FATAL: node runtime failed to start (storage?)
+14:17:21.154 [C] FATAL: node runtime failed to start (storage?)
+14:17:26.039 [C] FATAL: node runtime failed to start (storage?)
+14:17:30.713 [C] >>> stats
+14:17:30.713 [C] >>> status
+14:17:30.714 [C] >>> sensor period 5000
+14:17:31.692 [C] FATAL: node runtime failed to start (storage?)
+14:17:36.619 [C] FATAL: node runtime failed to start (storage?)
+14:17:41.493 [C] FATAL: node runtime failed to start (storage?)
+14:17:46.167 [C] FATAL: node runtime failed to start (storage?)
+14:17:51.098 [C] FATAL: node runtime failed to start (storage?)
+14:17:55.986 [C] FATAL: node runtime failed to start (storage?)
+14:18:00.917 [C] FATAL: node runtime failed to start (storage?)
+# 14:18:05 RTS reset of C to capture the boot (FATAL: node runtime failed to start)
+14:18:13 [C] 
+14:18:13 [C] edge-kv firmware, node C [fault injection build]
+14:18:13 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: unknown
+14:18:13 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+14:18:13 [C]      1.793 [C] storage recovered: 5 live, 0 tombstones, 1794/16064 log bytes used
+14:18:13 [C]      1.796 [C] state -> BOOTING
+14:18:13 [C] sensor sound: hardware
+14:18:13 [C] 
+14:18:13 [C] edge-kv node C  (4-node ESP-NOW KV store, RF=2)
+14:18:13 [C] type 'help' for commands
+14:18:13 [C]      1.796 [C] view: ABC-
+14:18:13 [C]      1.981 [C] view: ABCD
+14:18:13 [C]      4.207 [C] state -> CATCHUP
+14:18:13 [C]      4.230 [C] anti-entropy: key s/A/light repaired from B
+14:18:13 [C]      4.245 [C] anti-entropy: key s/B/motion repaired from D
+14:18:13 [C]      4.269 [C] anti-entropy: key h/B/motion/1 repaired from B
+14:18:13 [C]      4.309 [C] anti-entropy: key h/B/motion/3 repaired from B
+14:18:13 [C]      4.350 [C] anti-entropy: key h/B/motion/0 repaired from B
+14:18:13 [C]      7.207 [C] state -> ACTIVE
+14:18:32.295 [C] --- port open
+14:18:32.295 [A] --- port open
+14:18:32.296 [B] --- port open
+14:18:32.296 [D] --- port open
+14:18:32.597 [C] >>> sensor period 5000
+14:18:32.598 [A] >>> stats
+14:18:32.598 [B] >>> stats
+14:18:32.599 [A] > stats
+14:18:32.599 [A] radio   rx 33186 (invalid 0, spoofed 0)  tx 12607 (failed 0)
+14:18:32.599 [A] hb      tx 9959  rx 28756   membership changes 33
+14:18:32.599 [A] server  executed 154  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+14:18:32.599 [A] repl    started 154  ok 154  failed 0  stale 0   as replica: applied 592 stale 0
+14:18:32.599 [A] ae      rounds 500  chunks tx 1524 rx 3318  tables 1419  pushes 16  resync tx 16 applied 5 stale 0
+14:18:32.599 [A] gc      orphans 20  tombstones 0  keys dropped 1
+14:18:32.599 [A] client  ok 433  failed 0  attempts 433  local 113
+14:18:32.600 [C] >>> stats
+14:18:32.601 [A] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+14:18:32.601 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: unknown
+14:18:32.601 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+14:18:32.601 [A] esp-now rx 33186  queue overflows 0  unknown MAC 824
+14:18:32.601 [A] esp-now tx -> B: 186 delivered, 0 failed (MAC-layer ACK)
+14:18:32.601 [A] esp-now tx -> C: 433 delivered, 0 failed (MAC-layer ACK)
+14:18:32.601 [A] esp-now tx -> D: 505 delivered, 0 failed (MAC-layer ACK)
+14:18:32.601 [A] heap free 169448 (min 160724)  node task stack headroom 13240 bytes
+14:18:32.601 [D] >>> stats
+14:18:32.604 [C] > sensor period 5000
+14:18:32.604 [C] sampler on
+14:18:32.604 [C] > stats
+14:18:32.604 [C] radio   rx 200 (invalid 0, spoofed 0)  tx 53 (failed 0)
+14:18:32.604 [C] hb      tx 42  rx 158   membership changes 2
+14:18:32.604 [C] server  executed 2  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+14:18:32.604 [C] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 0 stale 0
+14:18:32.604 [C] ae      rounds 4  chunks tx 4 rx 25  tables 7  pushes 0  resync tx 0 applied 5 stale 5
+14:18:32.604 [C] gc      orphans 0  tombstones 0  keys dropped 0
+14:18:32.604 [C] client  ok 3  failed 0  attempts 3  local 0
+14:18:32.604 [D] > stats
+14:18:32.604 [D] radio   rx 34104 (invalid 0, spoofed 0)  tx 13273 (failed 0)
+14:18:32.604 [D] hb      tx 9895  rx 29014   membership changes 17
+14:18:32.605 [D] server  executed 299  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+14:18:32.605 [D] repl    started 299  ok 299  failed 0  stale 0   as replica: applied 975 stale 0
+14:18:32.605 [D] ae      rounds 497  chunks tx 1541 rx 3266  tables 1445  pushes 18  resync tx 18 applied 5 stale 1
+14:18:32.605 [D] gc      orphans 9  tombstones 0  keys dropped 0
+14:18:32.605 [D] client  ok 325  failed 0  attempts 325  local 40
+14:18:32.605 [B] > stats
+14:18:32.605 [B] radio   rx 34801 (invalid 0, spoofed 0)  tx 13075 (failed 0)
+14:18:32.606 [B] hb      tx 9932  rx 29236   membership changes 19
+14:18:32.606 [B] server  executed 841  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+14:18:32.606 [B] repl    started 836  ok 836  failed 0  stale 0   as replica: applied 50 stale 0
+14:18:32.606 [B] ae      rounds 500  chunks tx 1229 rx 3657  tables 1471  pushes 13  resync tx 13 applied 12 stale 2
+14:18:32.606 [B] gc      orphans 21  tombstones 0  keys dropped 4
+14:18:32.606 [B] client  ok 327  failed 0  attempts 330  local 81
+14:18:32.606 [B] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+14:18:32.606 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: unknown
+14:18:32.606 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+14:18:32.606 [B] esp-now rx 34801  queue overflows 0  unknown MAC 656
+14:18:32.606 [B] esp-now tx -> A: 182 delivered, 0 failed (MAC-layer ACK)
+14:18:32.606 [B] esp-now tx -> C: 742 delivered, 7 failed (MAC-layer ACK)
+14:18:32.606 [B] esp-now tx -> D: 983 delivered, 0 failed (MAC-layer ACK)
+14:18:32.606 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+14:18:32.606 [D] storage errors 0  compactions 5 (aborted 0)  faults injected 0
+14:18:32.606 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+14:18:32.606 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+14:18:32.606 [D] esp-now rx 34104  queue overflows 0  unknown MAC 609
+14:18:32.606 [D] esp-now tx -> A: 499 delivered, 1 failed (MAC-layer ACK)
+14:18:32.606 [D] esp-now tx -> B: 978 delivered, 0 failed (MAC-layer ACK)
+14:18:32.606 [D] esp-now tx -> C: 359 delivered, 0 failed (MAC-layer ACK)
+14:18:32.606 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+14:18:32.651 [A] eeprom page writes since boot: total 4274, hottest page 125 with 14 (rated 1000000)
+14:18:32.651 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+14:18:32.654 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+14:18:32.655 [C] env node-c-fi, built Oct 24 2026 14:13:33, reset reason: unknown
+14:18:32.655 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+14:18:32.655 [C] esp-now rx 200  queue overflows 0  unknown MAC 0
+14:18:32.655 [C] esp-now tx -> A: 2 delivered, 0 failed (MAC-layer ACK)
+14:18:32.655 [C] esp-now tx -> B: 3 delivered, 0 failed (MAC-layer ACK)
+14:18:32.655 [C] esp-now tx -> D: 2 delivered, 0 failed (MAC-layer ACK)
+14:18:32.655 [C] heap free 174604 (min 165880)  node task stack headroom 13688 bytes
+14:18:32.655 [C] eeprom page writes since boot: total 20, hottest page 42 with 4 (rated 1000000)
+14:18:32.656 [B] eeprom page writes since boot: total 4691, hottest page 415 with 15 (rated 1000000)
+14:18:32.656 [D] eeprom page writes since boot: total 6926, hottest page 198 with 22 (rated 1000000)
