@@ -245,7 +245,7 @@ Questions 1–10 are about the distributed-systems design, 11–22 about the har
 19. **How do the sensors avoid disturbing the radio and the storage?**
     * One node task owns the radio, storage and sampling, so nothing runs concurrently with a storage write.
     * The DHT11 is read in its own low-priority task, every 2 s with ~5 ms interrupts off, on node D, not on the bridge.
-    * The sound sensor's interrupt handler only increments a counter.
+    * The sound sensor (AO) is sampled by its own task: one ADC conversion per 1 ms tick, no interrupts off, no bus lock (the ADC is not on I2C); `status` shows its cost per sample.
     * The BH1750 and the EEPROM share the I2C bus under a lock that an EEPROM write holds until its write cycle has finished (`src/platform/i2c_bus.h`).
     * `BRINGUP.md` §4.8 measures the DHT11's effect: `bench 50` with its bit off vs on.
     * A failing sensor never stalls anything. Its readings become `simulated` (fallback), or `STALE`/`ERROR` for the DHT11.

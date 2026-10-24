@@ -225,12 +225,12 @@ Sensors (each node has one; `config.h:159-165`):
 |---|---|---|---|
 | A (bridge) | GY-302 VCC / GND / SDA / SCL / ADDR | 3V3 / GND / **GPIO8** / **GPIO9** / GND | Same bus as A's EEPROM, address 0x23. **3V3 only**: its pull-ups may go to VCC. Its driver never disables interrupts, so the Pi link is unaffected. |
 | B | AM312 VCC / GND / OUT | 3V3 / GND / **GPIO4** | 3.3 V supply is fine; no pots |
-| C | LM393 VCC / GND / DO | 3V3 / GND / **GPIO4** | **3V3 only**, so DO never exceeds 3.3 V. DO is usually active-low. |
+| C | LM393 VCC / GND / **AO** | 3V3 / GND / **GPIO0** (ADC1_CH0) | **3V3 only**, so AO never exceeds 3.3 V. **DO not connected** (AO only since Sat 24). AO must be on ADC1 (GPIO0-4; `config.h` refuses others). AO rests below 0.6 V on our module (NS, Sat 24) → 0 dB attenuation (0-750 mV) |
 | D | DHT11 module VCC / GND / DATA | 3V3 / GND / **GPIO4** | 3-pin module has its own pull-up. **Wire by silkscreen**: our module's order is S / VCC / GND, VCC in the middle (BRINGUP_LOG problem 17) |
 
 **Placement:** boards at least ~20 cm apart, antenna end (the end opposite the USB-C) clear of wires, breadboards and the laptop. Close together, 30-55 % of the broadcast heartbeats were lost and views flapped every few seconds; spread apart, 80-98 % arrived (BRINGUP_LOG problem 14).
 
-GPIO4 is not a strapping pin, not USB (18/19) and not the bridge UART (20/21). `config.h:262-272` refuses any pin other than 0–10 minus 2/8/9 at compile time. Spare pins: 3, 5, 6, 7, 10.
+GPIO0 and GPIO4 are not strapping pins, not USB (18/19) and not the bridge UART (20/21). `config.h` refuses any sensor pin other than 0–10 minus 2/8/9 at compile time, and an AO pin outside ADC1 (GPIO0-4). Spare pins: 3, 5, 6, 7, 10 (and 0 / 4 where that node does not use them).
 
 ### 3.4 Bring-up order
 
@@ -300,12 +300,12 @@ No driver has run on a board yet. Each module is enabled only after it was check
 |---|---|---|---|---|
 | A (bridge) | GY-302 BH1750 | I2C 0x23 on the EEPROM bus | `BH1750_I2C_ADDRESS` (`:165`), GPIO8/9 | `s/A/light`, lux |
 | B | AM312 mini PIR | digital, push-pull, high ~2 s per detection | `PIR_PIN = 4` (`:161`) | `s/B/motion`: detections per window + seconds since last motion; `settling` after power-on |
-| C | LM393 sound, **DO only** (confirmed DO-only; no AO work) | digital comparator output, active level in `SOUND_ACTIVE_HIGH` (`:182`, default `false` = active-low) | `SOUND_DO_PIN = 4` (`:162`) | `s/C/sound`: events per window + % of window active |
+| C | LM393 sound, **AO only** (since Sat 24; DO not connected) | analog microphone level on ADC1, 0 dB (`SOUND_ADC_ATTENUATION`), sampled at 1 kHz; a 10 ms block is active when its peak-to-peak swing exceeds `SOUND_ACTIVE_SWING_MV` | `SOUND_AO_PIN = 0` (`:162`) | `s/C/sound`: events per window + % of window active (format unchanged); `status` adds `sensor detail:` with rest level and swing |
 | D | DHT11 3-pin module | single-wire, open drain, pull-up on module | `DHT11_PIN = 4` (`:163`) | `s/D/temp`, degC; `STALE` / `ERROR` when it stops reading |
 
 The bridge node A gets the BH1750 because its driver never disables interrupts. The DHT11 library turns interrupts off for ~5 ms per read, so it goes on D (decided 2026-10-17).
 
-**LM393:** DO only (decided). No AO / peak-to-peak work unless requested.
+**LM393:** AO only (decided Sat 24, replacing DO only). Threshold tuned on the bench (4.6), not with the module's pot (the pot only sets the DO comparator, which is unused).
 
 ### 4.3 Per-module design
 
@@ -326,11 +326,12 @@ The bridge node A gets the BH1750 because its driver never disables interrupts. 
 * `PIR_SETTLE_MS = 30000` (`config.h:178`) counts from the first poll, which is about power-on. Until then every reading carries the `settling` flag with value 0, and input is ignored.
 * **Measure the settle time:** set `PIR_SETTLE_MS = 0` temporarily, power-cycle with nobody in view, and note when spurious detections stop. Use that plus a margin.
 
-**LM393 sound (C).**
-* `SoundInput` (`sensors.cpp:135-160`): an `IRAM_ATTR` ISR on the edge into the active level (FALLING when active-low). It only increments a 32-bit counter: no logging, no calls.
-* `SoundSource` (`sensor_sources.h:78`) reads counter differences on every node-task iteration, so wrap-around is handled. Edges closer than `SOUND_EVENT_GAP_MS = 150` (`config.h:185`) form one event, because a clap makes the comparator chatter.
-* "% of window active" is measured by sampling the DO level on each iteration (about 1 ms).
-* DO stuck active with no edges shows as 100 % active, 0 events. That means the knob is too sensitive.
+**LM393 sound (C), AO.**
+* `SoundAoInput` (`src/platform/sensors.cpp`): a task at priority 4 (one above the node task) takes one ADC1 conversion per 1 ms tick (`vTaskDelayUntil`), converts it to mV with the eFuse calibration computed once at `begin()`, and hands each block of `SOUND_BLOCK_SAMPLES = 10` samples (10 ms) to the node task over a 64-block ring (640 ms). No interrupts off, no bus lock (the ADC is not on I2C). `status` shows the measured cost (`us/sample`); a full ring counts `dropped` blocks.
+* Pure logic (`include/sensor_sources.h`, host-tested on synthetic sample arrays): `summarize_sound_block` (min / max / mean, clipped if a sample sits at raw 0 or full scale), `SoundDetector` (a block is active when `max - min > SOUND_ACTIVE_SWING_MV`; an event is a rising crossing, and crossings closer than `SOUND_EVENT_GAP_MS = 150` are one event because a clap rings in and out of the threshold), `SoundSource` (events per window; % active = active blocks × 10 ms / window).
+* Reading format unchanged (value = events, aux = milli-% active), so `pi/edgekv` and the CSV are unchanged. The swing is not in the reading: `status` prints `sensor detail: AO rest … mV, swing max … mV (threshold … mV), a/b blocks active, … clipped, sampled … %, … dropped, … us/sample` for the last window.
+* A window with no block at all (sampling task stalled) is a failed read, so after 3 the fallback serves simulated values and `status` says `(simulated)`.
+* Steady loud noise: one event when it starts, 100 % active while it lasts. AO above the ADC range: 0 events, every block `clipped` (wrong attenuation).
 
 **BH1750 (A, the bridge).**
 * `Bh1750Source` (`sensors.cpp:171`): power-on, then continuous high-res mode (`0x01`, `0x10`) at begin. A read is one 2-byte transfer, and lux = raw / 1.2.
@@ -357,7 +358,7 @@ The bridge node A gets the BH1750 because its driver never disables interrupts. 
 * `test/sensor_test.cpp`: v1/v2 codec byte layout, formatter, kinds, simulated event sources over 24 h.
 * `test/sensor_sources_test.cpp` (new):
   * PIR settling, detections, ages, 100 ms polling;
-  * sound chatter grouping, duty, counter wrap, stuck-active;
+  * sound AO on synthetic 1 kHz sample arrays: block summary, silence, a ringing clap and three claps, steady noise (above and below the threshold), clipping (a clap hitting both rails; AO stuck at full scale), gap and threshold edges, a dead sampler (failed read), the `status` detail line (shown failing against stubs first, Sat 24);
   * DHT keep-last-good and failure count;
   * fallback switching both ways;
   * the switch mask, including the shipped all-simulated default.
@@ -376,7 +377,7 @@ The bridge node A gets the BH1750 because its driver never disables interrupts. 
 |---|---|---|---|
 | DHT11 (D) | breathe on it; then pull DATA for 15 s | temp rises within a few samples; `read failures` stays near 0. With DATA pulled: `STALE` after 10 s, then back to normal when reconnected. | `ERROR (no good temp read since boot)`: DATA not on GPIO4, or the module is powered from the wrong pin. |
 | AM312 (B) | stay still for `PIR_SETTLE_MS`, then wave | `settling` first; then `1 events, last motion 0 s before the sample`; quiet windows show age growing | Detections with nobody there: settle time too short (measure, 4.3). Never any: OUT not on GPIO4. |
-| LM393 (C) | set the knob so the DO LED is off in a quiet room; clap twice | `2 events, x % active` | 100 % active: knob too sensitive or `SOUND_ACTIVE_HIGH` wrong. 0 events but LED flashes: wrong edge (flip `SOUND_ACTIVE_HIGH`). |
+| LM393 (C), AO | quiet baseline (30 s); then clap twice at 30 cm | quiet: `0 events, 0 %`, `sensor detail` swing max well below the threshold, `sampled` ~100 %, 0 clipped; claps: `2 events, x % active`, swing max well above the threshold | Quiet window active: threshold below the quiet swing (raise `SOUND_ACTIVE_SWING_MV`). Claps missed: threshold above the clap swing (lower it). Every block `clipped`: AO outside the ADC range (attenuation). `sampled` well below 100 % or `dropped` growing: the sampling task is held up. Rest ~0 mV and no swing: AO not on GPIO0. |
 | BH1750 (A) | cover / torch | lux drops / rises; `set`/`get` and `bench 50` still OK; `stats` storage errors 0 | `hardware did not start`: ADDR not low, or SDA/SCL swapped. EEPROM FATAL appearing after adding it: bus loaded (check pull-ups, 3V3). |
 
 5. Leave the period at 5 s for the demo (EEPROM wear about 6× the 30 s rate; fine for days), then set it back to 30 s.
@@ -440,4 +441,4 @@ What to expect: no measurable difference. A 5 ms gap holds back at most one or t
 | I2C on GPIO6/7 | `config.h:166-167`, `main.cpp:515` | only if 8/9 misbehave |
 | `RADIO_TX_POWER_QDBM` in config | `config.h`, `transport.cpp:224` | if range needs tuning |
 | Set `REAL_SENSOR_NODES` bits | `config.h:151` | per module, after its check (4.6) |
-| LM393 AO peak-to-peak | `sensor_sources`, `sensors.cpp` | only if the module has AO (4.2) |
+| LM393 AO peak-to-peak | `sensor_sources`, `sensors.cpp` | **done Sat 24** (AO only, 4.2) |

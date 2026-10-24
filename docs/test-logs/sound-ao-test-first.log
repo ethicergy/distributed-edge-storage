@@ -1,0 +1,31 @@
+# LM393 AO driver, test-first (Sat 24 Oct, laptop clock 12:50)
+
+## 1. New tests against compile-only stubs (each test run alone; REQUIRE stops at the first failure)
+
+test_sound_block_summary                 FAIL  line:280: REQUIRE(b.min_mv == 395) failed
+test_sound_silence                       FAIL  line:316: REQUIRE(w.blocks == 1000) failed
+test_sound_clap                          FAIL  line:345: REQUIRE(sample.value_milli == 3000) failed
+test_sound_steady_noise                  FAIL  line:376: REQUIRE(sample.value_milli == 1000) failed
+test_sound_clipping                      FAIL  line:409: REQUIRE(sample.value_milli == 1000) failed
+test_sound_gap_and_threshold             FAIL  line:441: REQUIRE(w.events == 2) failed
+test_sound_no_blocks_is_a_failed_read    FAIL  line:459: REQUIRE(!sound.read(5000, sample)) failed
+test_sound_describe                      FAIL  line:494: REQUIRE(n > 0 && n == std::string(text).size()) failed
+
+cluster_test (stubs): test/cluster_test.cpp:1195: CHECK(history_events(cluster, node::C, &active_windows) == 2) failed
+make test (stubs): 30 passed, 2 failed (sensor_sources_test, cluster_test)
+
+## 2. After the implementation
+
+  describe: AO rest 400 mV, swing max 388 mV (threshold 40 mV), 7/500 blocks active, 0 clipped, sampled 100 %, 3 dropped, 23 us/sample
+Sensor source tests: PASS
+  32 passed, 0 failed
+Ran 40 tests in 16.721s
+OK
+
+## 3. Compile-time ADC1 check (scratch copies of config.h)
+SOUND_AO_PIN = 5 -> static assertion failed: LM393 AO must be on an ADC1 pin (GPIO0-4)
+SOUND_AO_PIN = 2 -> static assertion failed: sensor pins must avoid strapping pins 2/8/9, USB 18/19 and UART 20/21
+SOUND_AO_PIN = 0 -> compiles
+
+## 4. Firmware
+make firmware: node-a..d and node-a-fi..d-fi SUCCESS, no warnings (mask still 0x09 in this commit)

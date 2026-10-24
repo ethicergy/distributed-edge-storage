@@ -39,13 +39,21 @@ every node runs a `sensor::SimulatedSource`:
 |---|---|---|---|---|
 | A | BH1750 (GY-302) | light | lux | 320 ± 330 |
 | B | AM312 PIR | motion | events per window (+ s since last motion) | 0–3 events |
-| C | LM393 sound (DO) | sound | events per window (+ % of window active) | 0–6 events |
+| C | LM393 sound (AO) | sound | events per window (+ % of window active) | 0–6 events |
 | D | DHT11 | temperature | °C | 22.5 ± 3.5 |
 
 (Revised 2026-10-17: the parts were chosen; humidity and pressure
 were the earlier placeholders for B and C. The bridge node A gets the
 BH1750 because its driver never disables interrupts; the DHT11 library
 disables them for ~5 ms per read, so it is on D.)
+
+(Revised Sat 24 Oct: C's LM393 is read on **AO only** (GPIO0, ADC1,
+0 dB), DO not connected. A 1 kHz sampling task takes the peak-to-peak
+swing of each 10 ms block; a block is active above
+`SOUND_ACTIVE_SWING_MV`, events are rising crossings 150 ms apart. The
+reading format stays the same (events, % active), so the Pi side is
+unchanged; the swing and rest level are on the console (`status`).
+Decided by NS; wired AO → GPIO0 before the change.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real

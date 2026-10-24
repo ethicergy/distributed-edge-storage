@@ -159,7 +159,7 @@ constexpr std::uint8_t SENSOR_FALLBACK_AFTER_FAILURES = 3;
 // The bridge node A gets the BH1750, whose driver never disables
 // interrupts; the DHT11 (interrupts off ~5 ms per read) is on D.
 constexpr std::uint8_t PIR_PIN = 4;        // node B, AM312 OUT
-constexpr std::uint8_t SOUND_DO_PIN = 4;   // node C, LM393 DO
+constexpr std::uint8_t SOUND_AO_PIN = 0;   // node C, LM393 AO (ADC1_CH0)
 constexpr std::uint8_t DHT11_PIN = 4;      // node D, DHT11 module DATA
 // Node A's BH1750 shares the EEPROM bus (EEPROM_SDA_PIN/SCL_PIN), ADDR low.
 constexpr std::uint8_t BH1750_I2C_ADDRESS = 0x23;
@@ -177,11 +177,22 @@ constexpr std::uint32_t DHT_STALE_MS = 10000;
 constexpr std::uint32_t PIR_POLL_INTERVAL_MS = 100;
 constexpr std::uint32_t PIR_SETTLE_MS = 30000;
 
-// LM393 DO level while the sound is above the knob setting. Many
-// boards are active-low (their DO LED lights when DO pulls low).
-constexpr bool SOUND_ACTIVE_HIGH = false;
-// Edges closer together than this are one sound event (a clap makes
-// the comparator chatter for tens of ms).
+// LM393 sound module, AO only (node C, Sat 24; DO not connected). A
+// task samples AO every SOUND_SAMPLE_INTERVAL_MS (1 kHz) and takes the
+// peak-to-peak swing of each block of SOUND_BLOCK_SAMPLES samples; a
+// block is active when its swing exceeds SOUND_ACTIVE_SWING_MV.
+constexpr std::uint32_t SOUND_SAMPLE_INTERVAL_MS = 1;
+constexpr std::uint32_t SOUND_BLOCK_SAMPLES = 10;
+constexpr std::uint32_t SOUND_BLOCK_MS = SOUND_SAMPLE_INTERVAL_MS * SOUND_BLOCK_SAMPLES;
+// Tune on the bench (BRINGUP 4.6): above the quiet swing `status`
+// shows, below a clap's at 30 cm.
+constexpr std::uint16_t SOUND_ACTIVE_SWING_MV = 40;
+// ADC1 attenuation, as Arduino's adc_attenuation_t: 0 = 0 dB (~0-750 mV),
+// 1 = 2.5 dB (~0-1050), 2 = 6 dB (~0-1300), 3 = 11 dB (~0-2500). AO rests
+// below 0.6 V on C (NS, Sat 24): 0 dB, >= 150 mV headroom above rest.
+constexpr std::uint8_t SOUND_ADC_ATTENUATION = 0;
+// Crossings closer together than this are one sound event (a clap
+// rings for tens of ms, in and out of the threshold).
 constexpr std::uint32_t SOUND_EVENT_GAP_MS = 150;
 
 // ---------------------------------------------------------------
@@ -267,7 +278,7 @@ constexpr bool sensor_pin_ok(std::uint8_t pin)
 }
 
 static_assert(
-    sensor_pin_ok(DHT11_PIN) && sensor_pin_ok(PIR_PIN) && sensor_pin_ok(SOUND_DO_PIN),
+    sensor_pin_ok(DHT11_PIN) && sensor_pin_ok(PIR_PIN) && sensor_pin_ok(SOUND_AO_PIN),
     "sensor pins must avoid strapping pins 2/8/9, USB 18/19 and UART 20/21"
 );
 
@@ -276,6 +287,16 @@ static_assert(DHT11_READ_INTERVAL_MS >= 1000, "the DHT11 allows at most one read
 static_assert(DHT_STALE_MS > DHT11_READ_INTERVAL_MS, "allow at least one DHT11 read before calling it stale");
 
 static_assert(PIR_POLL_INTERVAL_MS <= 500, "poll several times per ~2 s PIR pulse");
+
+// On the C3 only GPIO0-4 are ADC1 (ADC2 is unusable with the radio on).
+static_assert(SOUND_AO_PIN <= 4, "LM393 AO must be on an ADC1 pin (GPIO0-4)");
+
+static_assert(SOUND_ADC_ATTENUATION <= 3, "SOUND_ADC_ATTENUATION is 0..3 (0, 2.5, 6, 11 dB)");
+
+static_assert(
+    SOUND_BLOCK_SAMPLES >= 2 && SOUND_BLOCK_MS < SOUND_EVENT_GAP_MS,
+    "a swing needs two samples; a block must be shorter than the event gap"
+);
 
 static_assert(REAL_SENSOR_NODES <= 0x0F, "REAL_SENSOR_NODES has one bit per node A..D");
 
@@ -315,7 +336,7 @@ static_assert(
     EEPROM_POWER_PIN == NO_EEPROM_POWER_PIN ||
         (sensor_pin_ok(EEPROM_POWER_PIN) &&
          EEPROM_POWER_PIN != EEPROM_SDA_PIN && EEPROM_POWER_PIN != EEPROM_SCL_PIN &&
-         EEPROM_POWER_PIN != PIR_PIN && EEPROM_POWER_PIN != SOUND_DO_PIN &&
+         EEPROM_POWER_PIN != PIR_PIN && EEPROM_POWER_PIN != SOUND_AO_PIN &&
          EEPROM_POWER_PIN != DHT11_PIN),
     "EEPROM power pin must be a free header GPIO (0-10 minus 2/8/9, not I2C or a sensor pin)"
 );

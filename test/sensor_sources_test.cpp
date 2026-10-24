@@ -1,9 +1,11 @@
 /*
  * Real-sensor logic (sensor_sources.h) over fake inputs: AM312 motion,
- * LM393 sound, DHT11-style latest value, and the fallback switch.
+ * LM393 sound (AO sample arrays), DHT11-style latest value, and the
+ * fallback switch.
  */
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "sensor_sources.h"
@@ -11,8 +13,7 @@
 
 namespace {
 
-// A GPIO whose level the test sets; edges() is what an ISR counting
-// edges into the active level would report.
+// A GPIO whose level the test sets.
 class FakeInput final : public sensor::DigitalInput {
 public:
     bool begin() override
@@ -27,11 +28,8 @@ public:
         return high;
     }
 
-    std::uint32_t edges() override { return edge_count; }
-
     bool begin_ok = true;
     bool high = false;
-    std::uint32_t edge_count = 0;
     int begins = 0;
     int reads = 0;
 };
@@ -177,73 +175,346 @@ void test_motion_high_across_window_counts_once()
     REQUIRE(sample.aux == 0);
 }
 
-void test_sound_events_and_duty()
+// ------------------------------------------------------------------
+// LM393 AO: synthetic 1 kHz sample arrays (mV), cut into blocks the way
+// the sampling task does. 0 dB attenuation: the ADC reads 0..750 mV.
+// ------------------------------------------------------------------
+
+constexpr std::uint16_t CLIP_LOW_MV = 0;
+constexpr std::uint16_t CLIP_HIGH_MV = 750;
+constexpr std::uint16_t REST_MV = 400;
+constexpr std::uint16_t THRESHOLD_MV = 40;
+
+using Samples = std::vector<std::uint16_t>;
+
+// Deterministic noise in [-amplitude, +amplitude].
+std::int32_t noise(std::uint32_t& state, std::int32_t amplitude)
 {
-    FakeInput mic;
-    mic.high = true; // active-low idle
-    sensor::SoundSource sound(mic, false, 150);
+    state = state * 1664525u + 1013904223u;
+    return static_cast<std::int32_t>((state >> 16) % static_cast<std::uint32_t>(2 * amplitude + 1)) - amplitude;
+}
+
+std::uint16_t adc(std::int32_t mv)
+{
+    if (mv < CLIP_LOW_MV) {
+        return CLIP_LOW_MV;
+    }
+    return static_cast<std::uint16_t>(mv > CLIP_HIGH_MV ? CLIP_HIGH_MV : mv);
+}
+
+// Quiet room: rest +- 4 mV of ADC noise.
+void append_silence(Samples& out, std::size_t ms, std::uint16_t rest = REST_MV)
+{
+    static std::uint32_t state = 1;
+    for (std::size_t i = 0; i < ms; ++i) {
+        out.push_back(adc(rest + noise(state, 4)));
+    }
+}
+
+// A sound around rest: alternating sign (kHz content sampled at 1 kHz),
+// amplitude between `low` and `high` mV.
+void append_sound(Samples& out, std::size_t ms, std::int32_t low, std::int32_t high, std::uint16_t rest = REST_MV)
+{
+    static std::uint32_t state = 7;
+    for (std::size_t i = 0; i < ms; ++i) {
+        const std::int32_t amplitude = low + (noise(state, (high - low) / 2) + (high - low) / 2);
+        out.push_back(adc(rest + ((i % 2) != 0 ? amplitude : -amplitude)));
+    }
+}
+
+// A clap: 40 ms loud, 20 ms below the threshold, 30 ms of ringing.
+void append_clap(Samples& out)
+{
+    append_sound(out, 40, 100, 200);
+    append_silence(out, 20);
+    append_sound(out, 30, 30, 60);
+}
+
+class FakeBlocks final : public sensor::SoundBlockInput {
+public:
+    bool begin() override { return begin_ok; }
+
+    std::size_t take(sensor::SoundBlock* out, std::size_t capacity) override
+    {
+        std::size_t n = 0;
+        while (n < capacity && next < blocks.size()) {
+            out[n++] = blocks[next++];
+        }
+        return n;
+    }
+
+    std::uint32_t dropped() const override { return dropped_blocks; }
+    std::uint32_t sample_cost_us() const override { return 23; }
+
+    // Sample k of `samples` is taken at start_ms + k.
+    void feed(const Samples& samples, std::uint64_t start_ms)
+    {
+        for (std::size_t i = 0; i + config::SOUND_BLOCK_SAMPLES <= samples.size(); i += config::SOUND_BLOCK_SAMPLES) {
+            blocks.push_back(sensor::summarize_sound_block(
+                &samples[i], config::SOUND_BLOCK_SAMPLES, CLIP_LOW_MV, CLIP_HIGH_MV,
+                start_ms + i + config::SOUND_BLOCK_SAMPLES - 1
+            ));
+        }
+    }
+
+    bool begin_ok = true;
+    std::vector<sensor::SoundBlock> blocks;
+    std::size_t next = 0;
+    std::uint32_t dropped_blocks = 0;
+};
+
+sensor::SoundBlock block(std::uint16_t min_mv, std::uint16_t max_mv, std::uint64_t end_ms)
+{
+    sensor::SoundBlock b{};
+    b.min_mv = min_mv;
+    b.max_mv = max_mv;
+    b.mean_mv = static_cast<std::uint16_t>((min_mv + max_mv) / 2);
+    b.end_ms = end_ms;
+    return b;
+}
+
+void test_sound_block_summary()
+{
+    const std::uint16_t samples[] = {400, 410, 395, 420, 405};
+    sensor::SoundBlock b = sensor::summarize_sound_block(samples, 5, CLIP_LOW_MV, CLIP_HIGH_MV, 99);
+    REQUIRE(b.min_mv == 395);
+    REQUIRE(b.max_mv == 420);
+    REQUIRE(sensor::swing_mv(b) == 25);
+    REQUIRE(b.mean_mv == 406);
+    REQUIRE(!b.clipped);
+    REQUIRE(b.end_ms == 99);
+
+    const std::uint16_t top[] = {700, 750, 720};
+    REQUIRE(sensor::summarize_sound_block(top, 3, CLIP_LOW_MV, CLIP_HIGH_MV, 0).clipped);
+    const std::uint16_t bottom[] = {0, 30, 10};
+    REQUIRE(sensor::summarize_sound_block(bottom, 3, CLIP_LOW_MV, CLIP_HIGH_MV, 0).clipped);
+
+    // Empty block: no swing, never active.
+    b = sensor::summarize_sound_block(samples, 0, CLIP_LOW_MV, CLIP_HIGH_MV, 5);
+    REQUIRE(sensor::swing_mv(b) == 0);
+    REQUIRE(b.end_ms == 5);
+}
+
+void test_sound_silence()
+{
+    FakeBlocks mic;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
     REQUIRE(sound.begin());
     REQUIRE(sound.kind() == sensor::Kind::SOUND);
 
-    run(sound, 0, 1000);
+    Samples samples;
+    append_silence(samples, 10000);
+    mic.feed(samples, 0);
 
-    // Clap 1: three chattering edges within 40 ms, active 100 ms.
-    for (std::uint64_t t = 1000; t < 1100; ++t) {
-        if (t == 1000 || t == 1020 || t == 1040) {
-            ++mic.edge_count;
-        }
-        mic.high = false;
-        sound.poll(t);
-    }
-    mic.high = true;
-    run(sound, 1100, 3000);
-
-    // Clap 2: one edge, active 300 ms.
-    ++mic.edge_count;
-    mic.high = false;
-    run(sound, 3000, 3300);
-    mic.high = true;
-    run(sound, 3300, 10000);
-
+    sound.poll(0);
     sensor::Sample sample{};
     REQUIRE(sound.read(10000, sample));
-    REQUIRE(sample.value_milli == 2000);
-    REQUIRE(sample.aux == 4000); // 400 ms of 10 s = 4.000 %
-    REQUIRE(sound.total_edges() == 4);
-
-    // Quiet window.
-    run(sound, 10000, 20000);
-    REQUIRE(sound.read(20000, sample));
     REQUIRE(sample.value_milli == 0);
     REQUIRE(sample.aux == 0);
 
-    // Knob too sensitive: DO stuck active, no edges -> 100 % active.
-    mic.high = false;
-    run(sound, 20000, 30000);
-    REQUIRE(sound.read(30000, sample));
-    REQUIRE(sample.value_milli == 0);
-    REQUIRE(sample.aux == 100000);
+    const sensor::SoundWindow& w = sound.last_window();
+    REQUIRE(w.blocks == 1000);
+    REQUIRE(w.active_blocks == 0);
+    REQUIRE(w.clipped_blocks == 0);
+    REQUIRE(w.max_swing_mv <= 8);
+    REQUIRE(w.mean_mv >= REST_MV - 2 && w.mean_mv <= REST_MV + 2);
 }
 
-void test_sound_edges_wrap_and_gap()
+void test_sound_clap()
 {
-    FakeInput mic;
-    mic.edge_count = 0xFFFFFFFEu;
-    sensor::SoundSource sound(mic, true, 150);
+    FakeBlocks mic;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
+    REQUIRE(sound.begin());
+
+    // One clap at 1 s (in and out of the threshold: one event), two
+    // claps 1 s apart from 5 s.
+    Samples samples;
+    append_silence(samples, 1000);
+    append_clap(samples);           // 1000-1089
+    append_silence(samples, 3910);  // to 5000
+    append_clap(samples);           // 5000-5089
+    append_silence(samples, 910);   // to 6000
+    append_clap(samples);           // 6000-6089
+    append_silence(samples, 3910);  // to 10000
+    REQUIRE(samples.size() == 10000);
+    mic.feed(samples, 0);
+
+    sound.poll(0);
+    sensor::Sample sample{};
+    REQUIRE(sound.read(10000, sample));
+    REQUIRE(sample.value_milli == 3000);
+    // 7 active blocks per clap (4 loud + 3 ringing) = 210 ms of 10 s.
+    REQUIRE(sound.last_window().active_blocks == 21);
+    REQUIRE(sample.aux == 2100); // 2.100 %
+    REQUIRE(sound.last_window().max_swing_mv >= 200);
+    REQUIRE(sound.last_window().clipped_blocks == 0);
+
+    // Next window quiet again.
+    samples.clear();
+    append_silence(samples, 10000);
+    mic.feed(samples, 10000);
+    REQUIRE(sound.read(20000, sample));
+    REQUIRE(sample.value_milli == 0);
+    REQUIRE(sample.aux == 0);
+}
+
+void test_sound_steady_noise()
+{
+    FakeBlocks mic;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
+    REQUIRE(sound.begin());
+
+    // Loud steady noise (fan, music) for two windows: one event when it
+    // starts, active the whole time, no new event while it lasts.
+    Samples samples;
+    append_sound(samples, 3000, 30, 60);
+    mic.feed(samples, 0);
+
+    sound.poll(0);
+    sensor::Sample sample{};
+    REQUIRE(sound.read(3000, sample));
+    REQUIRE(sample.value_milli == 1000);
+    REQUIRE(sample.aux == 100000);
+    mic.feed(samples, 3000);
+    REQUIRE(sound.read(6000, sample));
+    REQUIRE(sample.value_milli == 0);
+    REQUIRE(sample.aux == 100000);
+
+    // Noise below the threshold is silence.
+    samples.clear();
+    append_sound(samples, 3000, 5, 15);
+    mic.feed(samples, 6000);
+    REQUIRE(sound.read(9000, sample));
+    REQUIRE(sample.value_milli == 0);
+    REQUIRE(sample.aux == 0);
+}
+
+void test_sound_clipping()
+{
+    FakeBlocks mic;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
+    REQUIRE(sound.begin());
+
+    // A clap loud enough to hit both ADC limits: still one event, the
+    // swing is the full range, and the clipping is counted.
+    Samples samples;
+    append_silence(samples, 1000);
+    append_sound(samples, 40, 500, 600);
+    append_silence(samples, 1960);
+    mic.feed(samples, 0);
+
+    sound.poll(0);
+    sensor::Sample sample{};
+    REQUIRE(sound.read(3000, sample));
+    REQUIRE(sample.value_milli == 1000);
+    REQUIRE(sound.last_window().max_swing_mv == CLIP_HIGH_MV - CLIP_LOW_MV);
+    REQUIRE(sound.last_window().clipped_blocks == 4);
+
+    // AO resting above the ADC range (wrong attenuation): every sample
+    // reads full scale. No swing, so no events, but every block clipped.
+    samples.clear();
+    append_silence(samples, 3000, 900);
+    mic.feed(samples, 3000);
+    REQUIRE(sound.read(6000, sample));
+    REQUIRE(sample.value_milli == 0);
+    REQUIRE(sample.aux == 0);
+    REQUIRE(sound.last_window().clipped_blocks == sound.last_window().blocks);
+    REQUIRE(sound.last_window().mean_mv == CLIP_HIGH_MV);
+}
+
+void test_sound_gap_and_threshold()
+{
+    sensor::SoundDetector detector(THRESHOLD_MV, 150);
+
+    // Exactly the threshold is not active; one above is.
+    detector.add(block(400, 440, 10));
+    REQUIRE(detector.take().active_blocks == 0);
+
+    detector.add(block(400, 441, 20));  // crossing at 20: event 1
+    detector.add(block(400, 401, 30));
+    detector.add(block(380, 500, 160)); // 140 ms later: same event
+    detector.add(block(400, 401, 170));
+    detector.add(block(380, 500, 310)); // 150 ms after the last crossing: event 2
+    detector.add(block(380, 500, 320)); // still active, no crossing
+
+    const sensor::SoundWindow w = detector.take();
+    REQUIRE(w.events == 2);
+    REQUIRE(w.blocks == 6);
+    REQUIRE(w.active_blocks == 4);
+    REQUIRE(w.max_swing_mv == 120);
+
+    // Active across the window boundary: no new event in the next one.
+    detector.add(block(380, 500, 330));
+    REQUIRE(detector.take().events == 0);
+}
+
+void test_sound_no_blocks_is_a_failed_read()
+{
+    FakeBlocks mic;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
     REQUIRE(sound.begin());
 
     sound.poll(0);
-    mic.edge_count += 3; // wraps past zero
-    sound.poll(10);
-    mic.edge_count += 1; // 140 ms later: same event
-    sound.poll(150);
-    mic.edge_count += 1; // 150 ms after the last edge: new event
-    sound.poll(300);
-
     sensor::Sample sample{};
-    REQUIRE(sound.read(1000, sample));
-    REQUIRE(sound.total_edges() == 5);
-    REQUIRE(sample.value_milli == 2000);
+    REQUIRE(!sound.read(5000, sample)); // sampling task stalled
+    REQUIRE(sound.failures() == 1);
+
+    Samples samples;
+    append_silence(samples, 5000);
+    mic.feed(samples, 5000);
+    REQUIRE(sound.read(10000, sample));
+    REQUIRE(sound.failures() == 1);
+
+    FakeBlocks dead;
+    dead.begin_ok = false;
+    sensor::SoundSource no_task(dead);
+    REQUIRE(!no_task.begin());
+}
+
+void test_sound_describe()
+{
+    FakeBlocks mic;
+    mic.dropped_blocks = 3;
+    sensor::SoundSource sound(mic, THRESHOLD_MV, 150, config::SOUND_BLOCK_MS);
+    REQUIRE(sound.begin());
+
+    char text[160];
+    REQUIRE(sound.describe(text, sizeof(text)) == 0); // no window yet
+
+    Samples samples;
+    append_silence(samples, 1000);
+    append_clap(samples);
+    append_silence(samples, 3910);
+    mic.feed(samples, 0);
+    sound.poll(0);
+    sensor::Sample sample{};
+    REQUIRE(sound.read(5000, sample));
+
+    const std::size_t n = sound.describe(text, sizeof(text));
+    REQUIRE(n > 0 && n == std::string(text).size());
+    std::cout << "  describe: " << text << "\n";
+    const std::string rest = "rest " + std::to_string(sound.last_window().mean_mv) + " mV";
+    REQUIRE(std::string(text).find(rest) != std::string::npos);
+    REQUIRE(std::string(text).find("threshold 40 mV") != std::string::npos);
+    REQUIRE(std::string(text).find("7/500 blocks active") != std::string::npos);
+    REQUIRE(std::string(text).find("sampled 100 %") != std::string::npos);
+    REQUIRE(std::string(text).find("3 dropped") != std::string::npos);
+    REQUIRE(std::string(text).find("23 us/sample") != std::string::npos);
+
+    // Truncates safely.
+    char small[8];
+    REQUIRE(sound.describe(small, sizeof(small)) == 7);
+    REQUIRE(std::string(small).size() == 7);
+
+    // The fallback switch shows the real source's detail.
+    sensor::SimulatedSource sim(sensor::Kind::SOUND, 1);
+    sensor::FallbackSource top(&sound, sim);
+    REQUIRE(top.begin());
+    REQUIRE(top.describe(text, sizeof(text)) == n);
+
+    sensor::FallbackSource none(nullptr, sim);
+    REQUIRE(none.begin());
+    REQUIRE(none.describe(text, sizeof(text)) == 0);
 }
 
 void test_latest_value_keeps_last_good()
@@ -475,8 +746,14 @@ int main()
 {
     test_motion_settling_then_detections();
     test_motion_high_across_window_counts_once();
-    test_sound_events_and_duty();
-    test_sound_edges_wrap_and_gap();
+    test_sound_block_summary();
+    test_sound_silence();
+    test_sound_clap();
+    test_sound_steady_noise();
+    test_sound_clipping();
+    test_sound_gap_and_threshold();
+    test_sound_no_blocks_is_a_failed_read();
+    test_sound_describe();
     test_latest_value_keeps_last_good();
     test_latest_value_stale_and_error();
     test_fallback_never_replaces_dht();

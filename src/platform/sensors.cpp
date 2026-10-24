@@ -3,7 +3,7 @@
  *
  *   A  BH1750 (GY-302)   I2C 0x23 on the EEPROM bus    continuous high-res
  *   B  AM312 PIR         OUT  -> config::PIR_PIN       polled by MotionSource
- *   C  LM393 sound (DO)  DO   -> config::SOUND_DO_PIN  ISR edge counter
+ *   C  LM393 sound (AO)  AO   -> config::SOUND_AO_PIN  own task, ADC1 at 1 kHz
  *   D  DHT11 module      DATA -> config::DHT11_PIN     own task, 1 read / 2 s
  *
  * The bridge node A gets the BH1750: its driver never disables
@@ -19,6 +19,7 @@
 #include <Arduino.h>
 #include <DHT.h>
 #include <Wire.h>
+#include <esp_adc_cal.h>
 
 #include <cmath>
 
@@ -140,36 +141,150 @@ public:
 };
 
 // ------------------------------------------------------------------
-// LM393 DO (node C): the ISR only counts edges into the active level.
-// The counter has one writer (this ISR); aligned 32-bit loads are
-// atomic on the C3, and readers only take differences.
+// LM393 AO (node C): a task one priority above the node task takes one
+// ADC1 conversion per tick (config::SOUND_SAMPLE_INTERVAL_MS) and hands
+// each block of config::SOUND_BLOCK_SAMPLES to the node task over a
+// small ring. A sample is a single conversion plus a linear mV
+// conversion (`status` shows the measured us/sample), so the node task
+// keeps nearly all of the CPU. No interrupts are disabled and no bus
+// lock is taken: the ADC is not on I2C.
 // ------------------------------------------------------------------
 
-volatile std::uint32_t sound_edges = 0;
+constexpr std::uint32_t SOUND_TASK_STACK_BYTES = 2048;
+constexpr UBaseType_t SOUND_TASK_PRIORITY = 4; // above the node task (3): steady 1 kHz
+constexpr std::size_t SOUND_RING_BLOCKS = 64;  // 640 ms of node-task delay
+constexpr std::uint32_t ADC_DEFAULT_VREF_MV = 1100; // used only without eFuse calibration
+constexpr std::uint32_t ADC_RAW_MAX = 4095;
 
-void IRAM_ATTR on_sound_edge()
-{
-    sound_edges = sound_edges + 1;
-}
+static_assert(
+    static_cast<int>(ADC_11db) == 3 && static_cast<int>(ADC_ATTEN_DB_12) == 3,
+    "config::SOUND_ADC_ATTENUATION uses the adc_attenuation_t / adc_atten_t numbering"
+);
 
-class SoundInput final : public sensor::DigitalInput {
+class SoundAoInput final : public sensor::SoundBlockInput {
 public:
     bool begin() override
     {
-        // DO is an open-collector output on most boards (with its own
-        // pull-up); the internal pull-up covers boards without one.
-        pinMode(config::SOUND_DO_PIN, INPUT_PULLUP);
-        attachInterrupt(
-            digitalPinToInterrupt(config::SOUND_DO_PIN),
-            on_sound_edge,
-            config::SOUND_ACTIVE_HIGH ? RISING : FALLING
+        analogReadResolution(12);
+        analogSetPinAttenuation(
+            config::SOUND_AO_PIN,
+            static_cast<adc_attenuation_t>(config::SOUND_ADC_ATTENUATION)
         );
-        return true;
+
+        // Once, not per sample: analogReadMilliVolts() re-characterises
+        // (eFuse reads) on every call.
+        esp_adc_cal_characterize(
+            ADC_UNIT_1,
+            static_cast<adc_atten_t>(config::SOUND_ADC_ATTENUATION),
+            ADC_WIDTH_BIT_12,
+            ADC_DEFAULT_VREF_MV,
+            &chars_
+        );
+        clip_low_mv_ = static_cast<std::uint16_t>(esp_adc_cal_raw_to_voltage(0, &chars_));
+        clip_high_mv_ = static_cast<std::uint16_t>(esp_adc_cal_raw_to_voltage(ADC_RAW_MAX, &chars_));
+
+        task_ = xTaskCreateStatic(
+            task_entry,
+            "sound",
+            SOUND_TASK_STACK_BYTES / sizeof(StackType_t),
+            this,
+            SOUND_TASK_PRIORITY,
+            stack_,
+            &task_control_
+        );
+
+        return task_ != nullptr;
     }
 
-    bool level() override { return digitalRead(config::SOUND_DO_PIN) == HIGH; }
+    std::size_t take(sensor::SoundBlock* out, std::size_t capacity) override
+    {
+        portENTER_CRITICAL(&lock_);
 
-    std::uint32_t edges() override { return sound_edges; }
+        std::size_t n = 0;
+
+        while (n < capacity && count_ > 0) {
+            out[n++] = ring_[tail_];
+            tail_ = (tail_ + 1) % SOUND_RING_BLOCKS;
+            --count_;
+        }
+
+        portEXIT_CRITICAL(&lock_);
+        return n;
+    }
+
+    std::uint32_t dropped() const override { return dropped_; }
+
+    std::uint32_t sample_cost_us() const override
+    {
+        portENTER_CRITICAL(&lock_);
+        const std::uint32_t cost = cost_samples_ == 0 ? 0 : static_cast<std::uint32_t>(cost_us_ / cost_samples_);
+        portEXIT_CRITICAL(&lock_);
+        return cost;
+    }
+
+private:
+    static void task_entry(void* context)
+    {
+        static_cast<SoundAoInput*>(context)->run();
+    }
+
+    [[noreturn]] void run()
+    {
+        std::uint16_t samples[config::SOUND_BLOCK_SAMPLES];
+        std::size_t n = 0;
+        std::uint32_t block_cost_us = 0;
+        TickType_t wake = xTaskGetTickCount();
+
+        for (;;) {
+            vTaskDelayUntil(&wake, pdMS_TO_TICKS(config::SOUND_SAMPLE_INTERVAL_MS));
+
+            const std::uint32_t start_us = micros();
+            const std::uint16_t raw = analogReadRaw(config::SOUND_AO_PIN);
+            samples[n++] = static_cast<std::uint16_t>(esp_adc_cal_raw_to_voltage(raw, &chars_));
+            block_cost_us += micros() - start_us;
+
+            if (n < config::SOUND_BLOCK_SAMPLES) {
+                continue;
+            }
+
+            const sensor::SoundBlock block = sensor::summarize_sound_block(
+                samples, n, clip_low_mv_, clip_high_mv_, platform_time::now_ms()
+            );
+
+            portENTER_CRITICAL(&lock_);
+
+            if (count_ == SOUND_RING_BLOCKS) {
+                ++dropped_;
+            } else {
+                ring_[(tail_ + count_) % SOUND_RING_BLOCKS] = block;
+                ++count_;
+            }
+
+            cost_us_ += block_cost_us;
+            cost_samples_ += n;
+
+            portEXIT_CRITICAL(&lock_);
+
+            n = 0;
+            block_cost_us = 0;
+        }
+    }
+
+    esp_adc_cal_characteristics_t chars_{};
+    std::uint16_t clip_low_mv_ = 0;
+    std::uint16_t clip_high_mv_ = 0;
+
+    mutable portMUX_TYPE lock_ = portMUX_INITIALIZER_UNLOCKED;
+    sensor::SoundBlock ring_[SOUND_RING_BLOCKS]{};
+    std::size_t tail_ = 0;
+    std::size_t count_ = 0;
+    volatile std::uint32_t dropped_ = 0;
+    std::uint64_t cost_us_ = 0;
+    std::uint64_t cost_samples_ = 0;
+
+    TaskHandle_t task_ = nullptr;
+    StaticTask_t task_control_{};
+    StackType_t stack_[SOUND_TASK_STACK_BYTES / sizeof(StackType_t)]{};
 };
 
 // ------------------------------------------------------------------
@@ -244,7 +359,7 @@ sensor::Source* real_source(node::Id id)
             return &source;
         }
         case node::C: {
-            static SoundInput mic;
+            static SoundAoInput mic;
             static sensor::SoundSource source(mic);
             return &source;
         }

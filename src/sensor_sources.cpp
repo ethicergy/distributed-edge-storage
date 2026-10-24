@@ -1,5 +1,7 @@
 #include "sensor_sources.h"
 
+#include <cstdio>
+
 namespace sensor {
 
 // ------------------------------------------------------------------
@@ -72,72 +74,170 @@ bool MotionSource::read(std::uint64_t now_ms, Sample& sample)
 }
 
 // ------------------------------------------------------------------
-// SoundSource
+// LM393 AO: block summary, detector, SoundSource
 // ------------------------------------------------------------------
 
-SoundSource::SoundSource(DigitalInput& input, bool active_high, std::uint32_t gap_ms)
-    : input_(input), active_high_(active_high), gap_ms_(gap_ms)
+SoundBlock summarize_sound_block(
+    const std::uint16_t* samples_mv,
+    std::size_t count,
+    std::uint16_t clip_low_mv,
+    std::uint16_t clip_high_mv,
+    std::uint64_t end_ms
+)
+{
+    SoundBlock block{};
+    block.end_ms = end_ms;
+
+    if (count == 0) {
+        return block;
+    }
+
+    std::uint16_t lo = samples_mv[0];
+    std::uint16_t hi = samples_mv[0];
+    std::uint32_t sum = 0;
+
+    for (std::size_t i = 0; i < count; ++i) {
+        const std::uint16_t mv = samples_mv[i];
+        lo = mv < lo ? mv : lo;
+        hi = mv > hi ? mv : hi;
+        sum += mv;
+    }
+
+    block.min_mv = lo;
+    block.max_mv = hi;
+    block.mean_mv = static_cast<std::uint16_t>((sum + count / 2) / count);
+    block.clipped = lo <= clip_low_mv || hi >= clip_high_mv;
+    return block;
+}
+
+SoundDetector::SoundDetector(std::uint16_t threshold_mv, std::uint32_t gap_ms)
+    : threshold_mv_(threshold_mv), gap_ms_(gap_ms)
 {
 }
 
-bool SoundSource::begin()
+void SoundDetector::add(const SoundBlock& block)
 {
-    if (!input_.begin()) {
-        return false;
+    const std::uint16_t swing = swing_mv(block);
+    const bool active = swing > threshold_mv_;
+
+    if (active && !active_) {
+        if (!have_crossing_ || block.end_ms - last_crossing_ms_ >= gap_ms_) {
+            ++window_.events;
+        }
+
+        have_crossing_ = true;
+        last_crossing_ms_ = block.end_ms;
     }
 
-    edges_seen_ = input_.edges();
-    return true;
+    active_ = active;
+
+    ++window_.blocks;
+    window_.active_blocks += active ? 1u : 0u;
+    window_.clipped_blocks += block.clipped ? 1u : 0u;
+    window_.max_swing_mv = swing > window_.max_swing_mv ? swing : window_.max_swing_mv;
+    mean_sum_ += block.mean_mv;
+}
+
+SoundWindow SoundDetector::take()
+{
+    SoundWindow out = window_;
+
+    if (out.blocks > 0) {
+        out.mean_mv = static_cast<std::uint16_t>((mean_sum_ + out.blocks / 2) / out.blocks);
+    }
+
+    window_ = SoundWindow{};
+    mean_sum_ = 0;
+    return out;
+}
+
+SoundSource::SoundSource(SoundBlockInput& input, std::uint16_t threshold_mv, std::uint32_t gap_ms, std::uint32_t block_ms)
+    : input_(input), detector_(threshold_mv, gap_ms), threshold_mv_(threshold_mv), block_ms_(block_ms)
+{
 }
 
 void SoundSource::poll(std::uint64_t now_ms)
 {
-    const std::uint32_t edges = input_.edges();
-    const std::uint32_t new_edges = edges - edges_seen_; // wraps correctly
-    edges_seen_ = edges;
-
-    if (new_edges > 0) {
-        total_edges_ += new_edges;
-
-        if (!have_edge_ || now_ms - last_edge_ms_ >= gap_ms_) {
-            ++events_;
-        }
-
-        have_edge_ = true;
-        last_edge_ms_ = now_ms;
-    }
-
-    const bool active = input_.level() == active_high_;
-
     if (!started_) {
         started_ = true;
         window_start_ms_ = now_ms;
-    } else if (active_) {
-        active_ms_ += now_ms - last_poll_ms_;
     }
 
-    active_ = active;
-    last_poll_ms_ = now_ms;
+    SoundBlock blocks[16];
+    std::size_t n = 0;
+
+    while ((n = input_.take(blocks, sizeof(blocks) / sizeof(blocks[0]))) > 0) {
+        for (std::size_t i = 0; i < n; ++i) {
+            detector_.add(blocks[i]);
+        }
+    }
 }
 
 bool SoundSource::read(std::uint64_t now_ms, Sample& sample)
 {
     poll(now_ms);
 
+    const SoundWindow window = detector_.take();
+    const std::uint64_t window_ms = now_ms - window_start_ms_;
+
+    last_window_ = window;
+    last_window_ms_ = window_ms;
+    window_start_ms_ = now_ms;
+
     sample = Sample{};
 
-    const std::uint64_t window_ms = now_ms - window_start_ms_;
-    const std::uint64_t active_ms = active_ms_ < window_ms ? active_ms_ : window_ms;
+    if (window.blocks == 0) {
+        ++failures_;
+        return false;
+    }
 
-    sample.value_milli = static_cast<std::int32_t>(events_ * 1000u);
+    const std::uint64_t active_ms = static_cast<std::uint64_t>(window.active_blocks) * block_ms_;
+
+    sample.value_milli = static_cast<std::int32_t>(window.events * 1000u);
     sample.aux = window_ms == 0
         ? 0
-        : static_cast<std::int32_t>(active_ms * 100000u / window_ms);
-
-    events_ = 0;
-    active_ms_ = 0;
-    window_start_ms_ = now_ms;
+        : static_cast<std::int32_t>((active_ms < window_ms ? active_ms : window_ms) * 100000u / window_ms);
     return true;
+}
+
+std::size_t SoundSource::describe(char* out, std::size_t capacity) const
+{
+    if (capacity == 0) {
+        return 0;
+    }
+
+    out[0] = '\0';
+
+    if (last_window_ms_ == 0) {
+        return 0;
+    }
+
+    const SoundWindow& w = last_window_;
+    const std::uint64_t sampled_pct =
+        static_cast<std::uint64_t>(w.blocks) * block_ms_ * 100u / last_window_ms_;
+
+    const int n = std::snprintf(
+        out,
+        capacity,
+        "AO rest %u mV, swing max %u mV (threshold %u mV), %lu/%lu blocks active, "
+        "%lu clipped, sampled %lu %%, %lu dropped, %lu us/sample",
+        static_cast<unsigned>(w.mean_mv),
+        static_cast<unsigned>(w.max_swing_mv),
+        static_cast<unsigned>(threshold_mv_),
+        static_cast<unsigned long>(w.active_blocks),
+        static_cast<unsigned long>(w.blocks),
+        static_cast<unsigned long>(w.clipped_blocks),
+        static_cast<unsigned long>(sampled_pct),
+        static_cast<unsigned long>(input_.dropped()),
+        static_cast<unsigned long>(input_.sample_cost_us())
+    );
+
+    if (n <= 0) {
+        out[0] = '\0';
+        return 0;
+    }
+
+    return static_cast<std::size_t>(n) < capacity ? static_cast<std::size_t>(n) : capacity - 1;
 }
 
 // ------------------------------------------------------------------
@@ -251,6 +351,19 @@ bool FallbackSource::read(std::uint64_t now_ms, Sample& sample)
 
     using_simulated_ = true;
     return simulated_.read(now_ms, sample);
+}
+
+std::size_t FallbackSource::describe(char* out, std::size_t capacity) const
+{
+    if (real_ok_) {
+        return real_->describe(out, capacity);
+    }
+
+    if (capacity > 0) {
+        out[0] = '\0';
+    }
+
+    return 0;
 }
 
 std::uint32_t FallbackSource::failures() const
