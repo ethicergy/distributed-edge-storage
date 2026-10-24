@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sat 24 12:51, step 1 of today's plan done)
+## RESUME HERE (updated Sat 24 12:58, steps 1-2 of today's plan done)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -8,10 +8,11 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 
 * **Wiring (NS):** all four nodes wired with their sensors: A BH1750, B AM312 OUT → GPIO4, C LM393 **AO only → GPIO0** (ADC1_CH0, DO not connected; AO rest **below 0.6 V**, NS, exact value not given), D DHT11 S → GPIO4. Every EEPROM and sensor pin continuity-checked with a multimeter (this also closes problem 16, D's jumpers).
 * **EEPROMs:** modules may have been swapped between boards → **fresh parallel format of all four** (step 3).
-* **Images on the boards:** as of Wed 21 09:50, A `node-a` Wed 07:07:54 (`0x01`), B `node-b` Tue 15:46:38 (`0x00`), C `node-c` Tue 15:46:48 (`0x00`, the old DO driver), D `node-d` Wed 08:25:31 (`0x09`). Banners are confirmed at the step-2 reflash.
+* **Images on the boards (Sat 24 12:55, step 2):** the **`-fi`** images on all four, mask **`0x0F`**: `node-a-fi` built 12:54:06, `node-b-fi` 12:54:11, `node-c-fi` 12:54:16, `node-d-fi` 12:54:21 (source = this commit: `a9f483f` + mask). `stats` confirms each env; `status`: all four `sensor … (hardware)`, ACTIVE, view `ABCD`, storage errors 0, aborted 0. `scripts/check_images.sh` passes. Before the flash (12:55:02): storage errors 0 / aborted 0 on all four; old images as logged Wed. `sat24-preflash.log`, `sat24-flash.log`.
+* **First AO window on C (12:56:48):** rest **81 mV**, swing max 54 mV (threshold 40) → 8 active blocks, 8 events in an unattended window: **threshold too low**, tune in step 4. Sampled 100 %, 0 dropped, **67 us/sample** (≈ 6.7 % CPU at 1 kHz). Rest 81 mV leaves ~670 mV above and only ~80 mV below: loud sounds clip at 0 on the low side (counted as `clipped`), the swing still shows.
 * By-id path: `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_14:63:93:<MAC>-if00`, MACs A `C5:D0:18`, B `C5:C3:1C`, C `C8:A3:08`, D `C5:C1:9C`. Pi: **OFF**.
 
-### On the branch, not flashed yet (all go into today's reflash, step 2)
+### In today's images (flashed Sat 24 12:55)
 
 * **AO driver for C (Sat 24, step 1):** 1 kHz ADC1 task (priority 4), 10 ms blocks, active when the block's peak-to-peak swing > `SOUND_ACTIVE_SWING_MV = 40` (initial, tune in step 4), events = rising crossings 150 ms apart, 0 dB attenuation. Reading format unchanged; `status` adds `sensor detail: AO rest … mV, swing max … mV …`. Test-first: `docs/test-logs/sound-ao-test-first.log`.
 * Problem 15: fault logging `24569fb`, F1 `9ded10a` (DHT read under the bus lock), F2 `15a9273` (final write-cycle poll).
@@ -20,7 +21,7 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 ### Today's plan (NS, Sat 24), in order; commit + push after each step
 
 1. ~~AO driver for C, test-first, docs~~ **done** (this commit).
-2. Mask `REAL_SENSOR_NODES = 0x0F`; flash the **`-fi`** images on all four (needed for the loss tests and DEMO step 7); confirm every banner; `scripts/check_images.sh` passes.
+2. ~~Mask `0x0F`, `-fi` images on all four, banners, `check_images.sh`~~ **done 12:55** (above).
 3. Fresh parallel format (samplers off, `format yes` on all four at once): fresh format, 0 test keys, ACTIVE, view `ABCD`, storage errors 0.
 4. Sensor verification one node at a time, `stats` storage errors / aborted compactions before and after each: A light (cover / torch), D temp (breathe), C sound (quiet baseline; claps at 30 cm; tune `SOUND_ACTIVE_SWING_MV` from `sensor detail`), B motion (measure the real PIR settle time; wave test). NS messages at the moment of each action.
 5. Pre-soak validation of F1/F2: 10 min DATA-off on D (expect 0 aborts, 0 storage errors, fault lines if any), `bench 50` on D for F1's latency cost (compare 4.8 run 2: avg 30.7 ms, max 67 ms).
@@ -32,6 +33,7 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * **15:** fixes committed, validated only after the reflash (step 5). A's unexplained errors (Wed 07:12, 07:54-08:21): the fault logging will name them.
 * **16:** closed by NS's continuity check (Sat 24).
 * Pending decision: DHT read back-off after N failures, deferred until after the DATA-off validation.
+* **18 (watch):** B's reset reason was `BROWNOUT` at 12:55 (booted ~12:40 at the replug of B, C, D; uptime 890 s). B is the board with the loose 3V3 header (D10) and now also feeds the AM312. One occurrence, at a plug-in; after the flash the reason is `unknown` (RTS reset). Check B's reset reason and uptime at every health check.
 * Watch: problem 14 (heartbeat loss when boards are close), problems 9/10 (USB output/echo: empty line first).
 
 ### Standing rules
@@ -108,6 +110,7 @@ One row per problem, even small ones: a wrong cable counts. Write the symptom as
 | 16 | Wed 21 08:12:44 | M9d / D replugged after wiring the DHT11 (D off 07:58:30, "D wired" 08:12) | D: `FATAL: AT24C256 not answering on I2C (SDA 8, SCL 9, addr 0x50)` every 5 s; D had run with this EEPROM since Mon 19 (storage errors aside, 0 I2C faults) | open: the EEPROM wiring changed or is loaded by the new module. Candidates: an EEPROM wire (SDA 8 / SCL 9 / 3V3 / GND) knocked loose while wiring; DHT11 DATA or VCC on the wrong pin (e.g. GPIO8/9 instead of GPIO4); a short on the 3V3 rail | **Fixed 08:19** (NS): a jumper cable with bad contact, reseated (continuity not checked with a meter). D booted 08:19:23 `power-on`, `storage recovered: 22 live`, storage errors 0, ACTIVE, `ABCD`. Watch D's storage errors through M9d: an intermittent contact would show there. **Sat 24 (NS): every EEPROM and sensor pin on all four boards continuity-checked with a multimeter → closed** | 0.1 | `sensor-D.log` | NS |
 | 17 | Wed 21 08:26 | M9d / 4.8 run 2 (bit `0x09`, D flashed 08:25:31) | `sensor temp (hardware): … last ERROR (no good temp read since boot) …, 35 read failures` after 45 samples | **wired by position, not silkscreen** (NS): this DHT11 module's pin order is S / VCC / GND (VCC in the middle), so the wires sat on the wrong pins. Same class of mistake as problem 4 | rewired by silkscreen (S → GPIO4, VCC → 3V3, GND → GND), ~08:39; run 2 to be redone once it reads (a failing DHT read is not the load the radio check measures) | | `dht-radio-on-attempt1.log` | NS |
 | 18 | | | | | | | | |
+| 18 | Sat 24 12:55:02 | before the step-2 flash | B `reset reason: BROWNOUT`, uptime 890 s (boot ~12:40, when B, C, D were replugged); A, C, D `power-on` | watch: one brownout at a plug-in; B has the loose 3V3 header history (D10) and now also powers the AM312 | check B's reset reason / uptime at each health check; if it recurs while running: B's USB cable / 3V3 (NS) | | `sat24-preflash.log` | NS |
 
 ## 3. Decisions made on the day
 
