@@ -148,7 +148,7 @@ constexpr std::uint8_t SENSOR_HISTORY_SLOTS = 4;
 // Nodes that use their real sensor: bit (id - 1), A = 0x01 ... D = 0x08.
 // 0 = every node simulated. Set a node's bit only after its module
 // was checked on its own on a board (docs/BRINGUP.md, Phase 4).
-constexpr std::uint8_t REAL_SENSOR_NODES = 0x0F;  // all four real (Sat 24): A BH1750, B AM312, C LM393 DO, D DHT11
+constexpr std::uint8_t REAL_SENSOR_NODES = 0x0D;  // A BH1750, B simulated (AM312 no output, Sat 24), C LM393 DO, D DHT11
 
 // A real sensor that fails this many reads in a row is replaced by
 // the simulated source (readings flagged simulated) until it reads
