@@ -1,13 +1,13 @@
 # Bring-up log
 
-## RESUME HERE (updated Sat 24 12:58, steps 1-2 of today's plan done)
+## RESUME HERE (updated Sat 24 13:00, steps 1-3 of today's plan done)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
 ### State Sat 24 (from NS at the start of the session; nothing was logged Wed 09:50 → Sat)
 
 * **Wiring (NS):** all four nodes wired with their sensors: A BH1750, B AM312 OUT → GPIO4, C LM393 **AO only → GPIO0** (ADC1_CH0, DO not connected; AO rest **below 0.6 V**, NS, exact value not given), D DHT11 S → GPIO4. Every EEPROM and sensor pin continuity-checked with a multimeter (this also closes problem 16, D's jumpers).
-* **EEPROMs:** modules may have been swapped between boards → **fresh parallel format of all four** (step 3).
+* **EEPROMs:** modules may have been swapped between boards → **fresh parallel format of all four, done Sat 24 12:58:14** (step 3). Before: 22-28 keys each, incl. 26 `bench/*` test keys, storage errors 0. `sensor off`, then `format yes` on all four at the same instant (`storage formatted` within 1 ms); all ACTIVE, view `ABCD` by 12:58:19.7, no view change in the next 57 s. 12:59:26: `storage fresh format: 0 live, 0 tombstones, 0/64 keys` and empty `dump` on all four (0 test keys came back), storage errors 0, aborted 0. Samplers back on 12:59:45 (period 30 s, default after the flash). `sat24-format.log`.
 * **Images on the boards (Sat 24 12:55, step 2):** the **`-fi`** images on all four, mask **`0x0F`**: `node-a-fi` built 12:54:06, `node-b-fi` 12:54:11, `node-c-fi` 12:54:16, `node-d-fi` 12:54:21 (source = this commit: `a9f483f` + mask). `stats` confirms each env; `status`: all four `sensor … (hardware)`, ACTIVE, view `ABCD`, storage errors 0, aborted 0. `scripts/check_images.sh` passes. Before the flash (12:55:02): storage errors 0 / aborted 0 on all four; old images as logged Wed. `sat24-preflash.log`, `sat24-flash.log`.
 * **First AO window on C (12:56:48):** rest **81 mV**, swing max 54 mV (threshold 40) → 8 active blocks, 8 events in an unattended window: **threshold too low**, tune in step 4. Sampled 100 %, 0 dropped, **67 us/sample** (≈ 6.7 % CPU at 1 kHz). Rest 81 mV leaves ~670 mV above and only ~80 mV below: loud sounds clip at 0 on the low side (counted as `clipped`), the swing still shows.
 * By-id path: `/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_14:63:93:<MAC>-if00`, MACs A `C5:D0:18`, B `C5:C3:1C`, C `C8:A3:08`, D `C5:C1:9C`. Pi: **OFF**.
@@ -22,7 +22,7 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 
 1. ~~AO driver for C, test-first, docs~~ **done** (this commit).
 2. ~~Mask `0x0F`, `-fi` images on all four, banners, `check_images.sh`~~ **done 12:55** (above).
-3. Fresh parallel format (samplers off, `format yes` on all four at once): fresh format, 0 test keys, ACTIVE, view `ABCD`, storage errors 0.
+3. ~~Fresh parallel format~~ **done 12:58** (above).
 4. Sensor verification one node at a time, `stats` storage errors / aborted compactions before and after each: A light (cover / torch), D temp (breathe), C sound (quiet baseline; claps at 30 cm; tune `SOUND_ACTIVE_SWING_MV` from `sensor detail`), B motion (measure the real PIR settle time; wave test). NS messages at the moment of each action.
 5. Pre-soak validation of F1/F2: 10 min DATA-off on D (expect 0 aborts, 0 storage errors, fault lines if any), `bench 50` on D for F1's latency cost (compare 4.8 run 2: avg 30.7 ms, max 67 ms).
 6. Loss tests (RESULTS.md §3) with `fault loss 10` and `20`.
