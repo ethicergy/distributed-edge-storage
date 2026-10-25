@@ -9,12 +9,16 @@ what was decided and why, so each one can be revisited deliberately.
 | D0 | Spec document | `include/protocol.h` + `docs/DESIGN.md` are the spec |
 | D1 | Sensors | simulated sources behind `sensor::Source` until real parts are chosen |
 | D2 | I2C sharing | no I2C sensor yet; rule for when one is added |
-| D3 | Data model | latest key + 4-slot history ring per node, 20-byte big-endian reading |
+| D3 | Data model | latest key + 4-slot history ring per node, 20-byte (level) / 24-byte (event) big-endian reading |
 | D4 | Timestamps | HLC in the reading; the Pi converts with the bridge's clock offset |
 | D5 | Replica failure | write committed on the primary, reported REPLICATION_FAILED / UNDER_REPLICATED, repaired by anti-entropy; accepted with one live node |
 | D6 | Reads after rejoin | primary-only reads behind a boot/catch-up gate |
 | D7 | Bridge | node A, UART1 GPIO20/21, Python CLI with CSV logging |
 | D8 | Tombstone GC | yes: after 10 min and confirmation from all four nodes; orphan copies too |
+| D9 | EEPROM bring-up failure | no flash-backed fallback, I2C clock stays 400 kHz: the cause was wiring |
+| D10 | Node B's EEPROM supply | ~~workaround: VCC from GPIO6~~ **superseded Tue 20**: B resoldered, VCC on 3V3 like every node; the GPIO6 workaround was never used on the board |
+| D11 | Foreign data on a reused EEPROM | known limitation: no cluster identity in the storage format; rule: `format yes` at first install. Cluster id / format epoch is future work |
+| D12 | "Index full" reported as STORAGE_ERROR | known limitation: a full 64-key index is reported and counted like a storage fault; a distinct `INDEX_FULL` status is future work, not now |
 
 ---
 
@@ -31,12 +35,49 @@ turns up, add it under `docs/` and reconcile any difference explicitly.
 The parts are not described anywhere. Instead of inventing hardware,
 every node runs a `sensor::SimulatedSource`:
 
-| node | kind | unit | simulated range |
-|---|---|---|---|
-| A | temperature | °C | 22.5 ± 3.5 |
-| B | humidity | %RH | 48 ± 15 |
-| C | pressure | hPa | 1013 ± 5 |
-| D | light | lux | 320 ± 330 |
+| node | real part | kind | unit | simulated range |
+|---|---|---|---|---|
+| A | BH1750 (GY-302) | light | lux | 320 ± 330 |
+| B | AM312 PIR | motion | events per window (+ s since last motion) | 0–3 events |
+| C | LM393 sound (DO) | sound | events per window (+ % of window active) | 0–6 events |
+| D | DHT11 | temperature | °C | 22.5 ± 3.5 |
+
+(Revised 2026-10-17: the parts were chosen; humidity and pressure
+were the earlier placeholders for B and C. The bridge node A gets the
+BH1750 because its driver never disables interrupts; the DHT11 library
+disables them for ~5 ms per read, so it is on D.)
+
+(Sat 24 Oct: an AO-only driver for C (GPIO0, ADC1, 1 kHz peak-to-peak,
+commit `a9f483f`) was built and then reverted the same day: on our
+module AO rests at ~0.07 V and a clap at 30 cm stays inside the ADC
+noise (35-73 mV swing vs 33-56 mV in silence), even after raising the
+rest to 134 mV with the pot; a tap on the capsule did not show either.
+Back to DO only, as originally decided. Evidence:
+`docs/test-logs/sat24-sensors.log`, `sound-ao-test-first.log`.
+
+**Module limit, accepted (NS, Sat 24):** with DO, our LM393 board
+detects a loud clap reliably only within ~5 cm of its microphone
+(10 cm: 0-1 of 2; 30 cm: never), at the best of ~16 turns of pot travel.
+C's real sensor stays enabled (bit set); the demo claps within ~5 cm.
+**Future work:** an amplified microphone module (MAX9814 with AGC, or
+MAX4466 with adjustable gain) on an ADC1 pin with the peak-to-peak
+logic of `a9f483f`, which would give a usable range across a room.)
+
+(Sat 24 Oct, B: the AM312 gave no output (BRINGUP_LOG problem 24), so
+B serves **simulated motion**, flagged `simulated`
+(`REAL_SENSOR_NODES = 0x0D`). Future work: replace the PIR.
+
+**Chip temperature, light version (NS, Sat 24):** every node prints
+the ESP32-C3's internal (die) temperature in `status` and `stats`,
+labelled `chip temp NN.N degC (die temperature, not ambient)`; the
+sensor is started once at boot and read on demand. It is a health
+figure logged by the soak capture, not a sensor reading in the store.
+**Considered and deferred:** a full `CHIP_TEMP` sensor kind, with B
+publishing its die temperature as a real reading in place of motion.
+Estimated 1-1.25 h: a new kind in the shared kind table (C++ and Pi),
+`kind_for_node(B)`, simulated fallback, CLI/CSV, the cluster SENSORS
+test reworked, DEMO without the PIR step. Too much risk to the
+reading format just before the soak.)
 
 Sample period 30 s (`config::SENSOR_PERIOD_MS`). Readings carry a
 `simulated` flag so simulated data can never be mistaken for real
@@ -52,8 +93,10 @@ replication and the Pi client stay as they are.
 ## D2 — Sensors on I2C
 
 There is only one hardware I2C controller on the ESP32-C3 and the
-EEPROM uses it (SDA GPIO8, SCL GPIO9). No I2C sensor exists yet, so
-rule R1 stands unchanged. When one is added:
+EEPROM uses it (SDA GPIO8, SCL GPIO9). Node D's BH1750 (0x23) now
+shares it. Every transfer on the bus holds `i2c_bus::Lock`
+(`src/platform/i2c_bus.h`); an EEPROM write keeps it through its write
+cycle. The original rule for adding a device was:
 
 * preferred: put it on the same bus. The node task is the only task
   that touches either device, so no mutex is needed as long as the
@@ -72,13 +115,16 @@ Option (a) + (b) from the prompt:
 That is 5 keys per sensor, 20 in the cluster, about 10 per node with
 RF = 2: well inside the 64-key budget, leaving room for user keys.
 
-Reading encoding v1, 20 bytes, big-endian like the protocol:
+Reading encoding, big-endian like the protocol. v1 (20 bytes) for
+level kinds, v2 (24 bytes) for event kinds:
 
 ```
-0 format (1) | 1 kind | 2 flags (bit0 simulated) | 3 reserved 0
+0 format (1 or 2) | 1 kind | 2 flags (bit0 simulated, bit1 settling, bit2 stale, bit3 error) | 3 reserved 0
 4..7  sequence  (u32)
 8..11 value in thousandths of the unit (i32)
 12..19 HLC of the sample (u64)
+20..23 v2 only: aux (i32): motion = s from last detection to sample
+       (-1: none since boot); sound = milli-% of the window active
 ```
 
 The sequence survives reboots: at start-up the sampler reads its own
@@ -148,5 +194,122 @@ Implemented, conservatively:
   as new.
 
 Both are local, physical drops applied by the next compaction; no
-record is written. Without this the 64-key index would fill
+record is written. A `drop pending` entry is not pushed to a peer that
+lacks it: that peer has already dropped it, and pushing it back made
+GC ping-pong between nodes that compact at different times (found on
+the boards, BRINGUP_LOG problem 11; cluster scenarios `GCSTAG`,
+`ZOMBIE`). Without this the 64-key index would fill
 permanently with tombstones and orphans (audit 5.9).
+
+## D9 — No storage fallback, no lower I2C clock
+
+On the first board the AT24C256 did not answer at any address
+(BRINGUP_LOG problem 4). Two code changes were considered:
+
+* **Flash-backed fallback:** keep the store in the ESP32-C3's own
+  flash when the EEPROM is missing, instead of halting.
+* **Lower I2C clock** (100 kHz instead of 400 kHz) in case of a
+  marginal bus.
+
+Neither was needed. After rewiring by the module silkscreen every
+module answers at 0x50 (and 0x58, its ID block) with the 9.84 kΩ
+pull-ups fitted on the modules. The scan that diagnosed it already ran
+at 100 kHz and still saw nothing, so the clock was never the cause.
+Not adding a fallback keeps the measured EEPROM behaviour (write
+cycles, wear, crash safety) the only storage path, and a missing
+EEPROM stays a loud FATAL instead of silently degrading. Revisit only
+if a module fails during the demo window and no spare is left.
+
+## D10 — Node B's EEPROM powered from GPIO6 (workaround)
+
+**Superseded Tue 20 Oct.** B's 3V3 and GND header pins were resoldered and
+its EEPROM is wired to 3V3 like the other nodes. The flag was removed
+from `node-b`/`node-b-fi`; `scripts/check_images.sh` now checks that no
+image drives an EEPROM power pin. The support code stays, unused
+(`config::EEPROM_POWER_PIN` defaults to none). The workaround never ran on
+a board: B's GND pin turned out to be loose too (Mon 09:22), so it waited
+for soldering instead. The original decision follows.
+
+Board B's 3V3 header pin is loose and there is no soldering iron on
+site (BRINGUP_LOG problem 6). Without B the cluster runs on three
+nodes, which changes the demo, the measurements and the sensor plan.
+Instead, B's EEPROM takes its VCC from GPIO6:
+
+* `-DEDGE_EEPROM_POWER_PIN=6` only in `node-b` and `node-b-fi`
+  (`platformio.ini`); every other image keeps VCC on 3V3.
+  `scripts/check_images.sh` checks this on the banner text.
+* `setup()` drives the pin high at the strongest drive setting
+  (`GPIO_DRIVE_CAP_3`), waits `EEPROM_POWER_SETTLE_MS` = 10 ms, then
+  starts I2C. Nothing reconfigures the pin afterwards.
+  `config.h` refuses, at compile time, a pin that is a strapping pin,
+  USB/UART, I2C or a sensor pin.
+* B's banner and `stats` print `EEPROM power: GPIO6`, so a log always
+  shows which supply a board used.
+
+Why it is enough: the AT24C256 draws about 3 mA at most while writing
+and microamps in standby, well within a GPIO's drive. The pin sits
+low (unpowered EEPROM) only from reset until `setup()` reaches the
+EEPROM, before the store is touched.
+
+Risk to check on the board: until GPIO6 is driven, the module's
+pull-ups connect SDA/SCL to an unpowered VCC. GPIO9 is a strapping
+pin, and low at reset means download mode, so B must still print its
+banner after a power cycle with the EEPROM wired. If it does not,
+fall back to running without B.
+
+**Real fix:** resolder B's 3V3 header pin, wire VCC back to 3V3 and
+drop the flag from the two node-b envs.
+
+## D11 — Foreign data on a reused EEPROM (known limitation)
+
+**What happened:** board B's EEPROM module had been used in earlier
+development tests. When B joined, its old records (`temp`, `humidity`,
+`cmp_deleted`, `phase6_wire_*`) were recovered as valid data and
+anti-entropy copied them to their owners: 23 keys (20 live, 3
+tombstones), about a quarter of each node's 64-key index
+(BRINGUP_LOG problem 7). They were deleted by hand on Tue 20.
+
+**Why the store accepts them:** a record carries a magic number, a
+format version, a CRC and an HLC version (`storage_record.h`), and the
+superblock a generation and bank state (`storage_metadata.h`). Nothing
+says which cluster or deployment wrote it, so a module written by an
+earlier test is indistinguishable from one written by this cluster, and
+last-writer-wins treats its records like any other version.
+
+**Rule for now:** `format yes` on every module at first install
+(BRINGUP.md wiring sheet).
+
+**Future work, not implemented:** a deployment id in the superblock and
+in every record or heartbeat. A node whose storage carries a different
+id formats itself at boot instead of recovering; a frame from a node
+with a different id is dropped. The id has to be chosen per deployment
+(a build-time constant bumped for each install, or random at the first
+cluster formation): a hash of the MAC table would not have caught this
+case, because the earlier tests probably ran with the same four boards.
+
+**Why not now:** it changes the on-disk format (new `FORMAT_VERSION`),
+so all four EEPROMs would need reformatting and refilling, and the
+storage crash tests and the hardware logs would have to be redone on
+the day of the demo. The format-at-install rule removes the risk for
+this deployment.
+
+## D12 — "Index full" reported as STORAGE_ERROR (future work)
+
+**What happened:** on Wed 21 the health check showed `storage errors`
+77 / 24 / 0 / 159 on A-D. The EEPROMs were fine: test keys had filled
+the 64-key index on most nodes, and every rejected anti-entropy repair
+was counted as a storage error (BRINGUP_LOG problem 13).
+
+**Why:** `storage::Result::INDEX_FULL` (and `NO_SPACE`) exist inside the
+storage layer, but `kv::Engine::map_storage_result` (`kv_engine.cpp:327`)
+maps everything it does not name to `STORAGE_ERROR`, and the protocol
+has no other status for it (`protocol.h:82`). A capacity limit and an
+I2C or CRC fault therefore look the same in `stats`, in the logs and to
+a client.
+
+**Future work, not now:** a distinct status (e.g. `INDEX_FULL = 0x0A`
+in `protocol.h`, the kv result, the console text and the Pi decoder)
+and a separate `index full` counter in `stats`. Not done now because it
+changes the frozen protocol and the Pi decoder on the last days of the
+bring-up, and the cause is easy to tell from `status` (`64/64 keys`)
+once you know to look.

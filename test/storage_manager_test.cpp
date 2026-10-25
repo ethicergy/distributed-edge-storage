@@ -211,6 +211,76 @@ void test_no_space_triggers_compaction()
     REQUIRE(read_string(store, "hot") == "after");
 }
 
+// Every way a write can fail is recorded as a Fault for the console
+// (BRINGUP_LOG problem 15), and a later success clears it.
+void test_fault_recorded()
+{
+    using storage::Fault;
+
+    sim::FakeEeprom device;
+    StorageManager store(device);
+    REQUIRE(store.begin() == Result::OK);
+    REQUIRE(store.last_fault() == Fault::NONE);
+
+    std::uint64_t hlc = 1;
+
+    device.fail_next_write(eeprom::Result::I2C_ERROR);
+    REQUIRE(store.set(key_of("k"), value_of("v"), v(hlc++)) == Result::STORAGE_ERROR);
+    REQUIRE(store.last_fault() == Fault::I2C_ERROR);
+
+    device.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    REQUIRE(store.set(key_of("k"), value_of("v"), v(hlc++)) == Result::STORAGE_ERROR);
+    REQUIRE(store.last_fault() == Fault::WRITE_TIMEOUT);
+
+    device.corrupt_next_write();
+    REQUIRE(store.set(key_of("k"), value_of("v"), v(hlc++)) == Result::STORAGE_ERROR);
+    REQUIRE(store.last_fault() == Fault::VERIFY_MISMATCH);
+
+    // A failed append leaves no committed record: the store still works.
+    REQUIRE(store.set(key_of("k"), value_of("ok"), v(hlc++)) == Result::OK);
+    REQUIRE(store.last_fault() == Fault::NONE);
+    REQUIRE(read_string(store, "k") == "ok");
+
+    // Compaction steps record the fault of the write that failed.
+    REQUIRE(store.compaction_begin() == Result::OK);
+    device.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    bool done = false;
+    Result step = Result::OK;
+    while (!done && step == Result::OK) {
+        step = store.compaction_step(done);
+    }
+    REQUIRE(step == Result::STORAGE_ERROR);
+    REQUIRE(store.last_fault() == Fault::WRITE_TIMEOUT);
+
+    // Capacity limits are told apart from bus faults.
+    for (std::size_t i = 0; store.stats().slots_used < storage::MAX_LOGICAL_KEYS; ++i) {
+        REQUIRE(store.set(key_of("f" + std::to_string(i)), value_of("v"), v(hlc++)) == Result::OK);
+    }
+    REQUIRE(store.set(key_of("one-too-many"), value_of("v"), v(hlc++)) == Result::INDEX_FULL);
+    REQUIRE(store.last_fault() == Fault::INDEX_FULL);
+
+    REQUIRE(std::string(storage::to_string(Fault::WRITE_TIMEOUT)) == "WRITE_TIMEOUT");
+    REQUIRE(std::string(storage::to_string(Fault::NONE)) == "no fault recorded");
+}
+
+void test_no_space_fault_recorded()
+{
+    sim::FakeEeprom device;
+    StorageManager store(device);
+    REQUIRE(store.begin() == Result::OK);
+
+    const std::string big(150, 'b');
+    std::uint64_t hlc = 1;
+    Result result = Result::OK;
+
+    for (int i = 0; i < 400 && result == Result::OK; ++i) {
+        result = store.set(key_of("hot"), value_of(big), v(hlc++));
+    }
+
+    REQUIRE(result == Result::NO_SPACE);
+    REQUIRE(store.last_fault() == storage::Fault::NO_SPACE);
+}
+
 void test_compaction_trigger_and_reboot()
 {
     sim::FakeEeprom device;
@@ -599,6 +669,8 @@ int main()
     test_version_rules();
     test_index_full();
     test_no_space_triggers_compaction();
+    test_fault_recorded();
+    test_no_space_fault_recorded();
     test_compaction_trigger_and_reboot();
     test_writes_during_incremental_compaction();
     test_drop_and_revive();

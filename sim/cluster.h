@@ -101,7 +101,7 @@ struct SimNode {
     std::unique_ptr<SimLink> link;
     std::unique_ptr<storage::StorageManager> storage;
     std::unique_ptr<edge::Runtime> runtime;
-    std::unique_ptr<sensor::SimulatedSource> source;
+    std::unique_ptr<sensor::Source> source;
     std::unique_ptr<sensor::Sampler> sampler;
     bool powered = false;
     std::uint64_t boot_at_ms = 0;
@@ -141,6 +141,10 @@ public:
     // Run a simulated sensor sampler on every node (applies to nodes
     // booted afterwards, and to reboots).
     void enable_sensors(std::uint32_t period_ms);
+
+    // Optional: the sensor source of a node at boot (tests plug in the
+    // real-sensor logic over fake inputs). nullptr: SimulatedSource.
+    std::function<std::unique_ptr<sensor::Source>(node::Id)> source_factory;
 
     // Called after every node tick (tools hook bridges in here).
     std::function<void(node::Id, std::uint64_t)> on_node_tick;

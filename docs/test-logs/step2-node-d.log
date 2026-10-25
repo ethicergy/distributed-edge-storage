@@ -1,0 +1,76 @@
+# Step 2 (EEPROM), node D = board label 2, 14:63:93:C5:C1:9C, hub port 5-2. Mon 19.
+# EEPROM wired by the user (silkscreen; A0-A2, WP to GND), plugged in 08:37 (by-id link). Seconds since each port open; first line empty (problem 5).
+# 08:38:26
+[  0.01s port open]
+[  0.06s] > edge-kv firmwarte -> BOOTING
+[  0.06s] unknown command 'edge-kv' (try 'help')
+[  0.31s >>> ]
+[  0.36s] > se
+[  0.36s] unknown command 'se' (try 'help')
+[  2.82s >>> status]
+[  2.87s] > status
+[  2.87s] node D  state ACTIVE  view A-CD  uptime 45s
+[  2.87s] hlc 6191382.0
+[  2.87s] storage fresh format: 17 live, 0 tombstones, 17/64 keys, log 1069/16064 bytes, bank A, 0 compactions
+[  2.87s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  2.87s] sensor temp (simulated): on, 1 samples, last 23.373 degC seq 0, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.92s >>> set z 3]
+[  5.98s] > set z 3
+[  5.98s] SET z: OK (served by A, 1 attempt(s), 29 ms)
+[  8.43s >>> get z]
+[  8.48s] > get z
+[  8.48s] z = "3"
+[  8.48s]    (served by A, 1 attempt(s), 6 ms)
+[ 10.95s >>> stats]
+[ 10.95s] > stats
+[ 10.95s] radio   rx 263 (invalid 0, spoofed 0)  tx 118 (failed 0)
+[ 10.95s] hb      tx 91  rx 196   membership changes 1
+[ 10.95s] server  executed 5  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[ 10.95s] repl    started 4  ok 4  failed 0  stale 0   as replica: applied 2 stale 0
+[ 10.95s] ae      rounds 7  chunks tx 17 rx 33  tables 9  pushes 0  resync tx 0 applied 15 stale 9
+[ 10.95s] gc      orphans 6  tombstones 0  keys dropped 0
+[ 10.95s] client  ok 5  failed 0  attempts 5  local 3
+[ 10.95s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[ 11.00s] env node-d, built Oct 19 2026 07:13:24, reset reason: power-on
+[ 11.00s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[ 11.00s] esp-now rx 263  queue overflows 0  unknown MAC 0
+[ 11.00s] esp-now tx -> A: 6 delivered, 0 failed (MAC-layer ACK)
+[ 11.00s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[ 11.00s] esp-now tx -> C: 4 delivered, 0 failed (MAC-layer ACK)
+[ 11.00s] heap free 179056 (min 170108)  node task stack headroom 13336 bytes
+[ 11.00s] eeprom page writes since boot: total 566, hottest page 18 with 7 (rated 1000000)
+
+# Power cycle (WP check): unplug/replug into 5-2 (by-id link 08:40). 08:41:09:
+[  0.01s port open]
+[  0.31s >>> ]
+[  0.37s] > edge-kv firmwar entry for node
+[  0.37s] unknown command 'edge-kv' (try 'help')
+[  2.83s >>> status]
+[  2.88s] > status
+[  2.88s] node D  state ACTIVE  view A-CD  uptime 23s
+[  2.88s] hlc 6354299.0
+[  2.88s] storage recovered: 20 live, 0 tombstones, 20/64 keys, log 2205/16064 bytes, bank A, 0 compactions
+[  2.88s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.88s] sensor temp (simulated): on, 0 samples, last - seq 0, 0 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.34s >>> get z]
+[  5.39s] > get z
+[  5.39s] z = "3"
+[  5.39s]    (served by A, 1 attempt(s), 15 ms)
+[  7.85s >>> stats]
+[  7.85s] > stats
+[  7.85s] radio   rx 139 (invalid 0, spoofed 0)  tx 66 (failed 0)
+[  7.85s] hb      tx 43  rx 103   membership changes 3
+[  7.85s] server  executed 4  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  7.85s] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 0 stale 0
+[  7.85s] ae      rounds 4  chunks tx 16 rx 23  tables 3  pushes 0  resync tx 0 applied 4 stale 2
+[  7.85s] gc      orphans 6  tombstones 0  keys dropped 0
+[  7.85s] client  ok 2  failed 0  attempts 2  local 1
+[  7.85s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  7.90s] env node-d, built Oct 19 2026 07:13:24, reset reason: power-on
+[  7.90s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  7.90s] esp-now rx 139  queue overflows 0  unknown MAC 0
+[  7.90s] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+[  7.90s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  7.90s] esp-now tx -> C: 3 delivered, 0 failed (MAC-layer ACK)
+[  7.90s] heap free 179056 (min 170232)  node task stack headroom 13592 bytes
+[  7.90s] eeprom page writes since boot: total 20, hottest page 42 with 5 (rated 1000000)

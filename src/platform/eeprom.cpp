@@ -3,6 +3,9 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "eeprom_poll.h"
+#include "i2c_bus.h"
+
 namespace eeprom {
 
 namespace {
@@ -23,23 +26,16 @@ bool valid_range(
         (static_cast<std::size_t>(SIZE_BYTES) - address);
 }
 
+// Logic and its tests: eeprom_poll.h, test/eeprom_poll_test.cpp.
 Result wait_for_write_cycle() {
-    const unsigned long start = millis();
-
-    while ((millis() - start) < WRITE_CYCLE_TIMEOUT_MS) {
-        Wire.beginTransmission(I2C_ADDRESS);
-
-        const std::uint8_t error =
-            Wire.endTransmission(true);
-
-        if (error == 0) {
-            return Result::OK;
-        }
-
-        delay(1);
-    }
-
-    return Result::WRITE_TIMEOUT;
+    return eeprom::wait_for_write_cycle(
+        [] { return static_cast<std::uint32_t>(millis()); },
+        [] {
+            Wire.beginTransmission(I2C_ADDRESS);
+            return Wire.endTransmission(true) == 0;
+        },
+        [] { delay(1); }
+    );
 }
 
 } // namespace
@@ -49,6 +45,8 @@ Result AT24C256::begin(
     std::uint8_t scl_pin
 ) {
     initialized_ = false;
+
+    i2c_bus::Lock lock;
 
     if (!Wire.begin(sda_pin, scl_pin)) {
         return Result::I2C_ERROR;
@@ -90,6 +88,9 @@ Result AT24C256::read(
     if (length == 0) {
         return Result::OK;
     }
+
+    // Held for the whole transfer, write cycles included (i2c_bus.h).
+    i2c_bus::Lock lock;
 
     std::size_t remaining = length;
     std::uint16_t current_address = address;
@@ -174,6 +175,9 @@ Result AT24C256::write(
         return Result::OK;
     }
 
+    // Held for the whole transfer, write cycles included (i2c_bus.h).
+    i2c_bus::Lock lock;
+
     std::size_t remaining = length;
     std::uint16_t current_address = address;
     const std::uint8_t* current_data = data;
@@ -225,6 +229,8 @@ Result AT24C256::write(
             return wait_result;
         }
 
+        ++page_writes_[current_address / PAGE_SIZE];
+
         current_address =
             static_cast<std::uint16_t>(
                 current_address + chunk
@@ -239,6 +245,30 @@ Result AT24C256::write(
 
 bool AT24C256::ready() const {
     return initialized_;
+}
+
+std::uint32_t AT24C256::total_page_writes() const {
+    std::uint32_t total = 0;
+
+    for (std::uint32_t writes : page_writes_) {
+        total += writes;
+    }
+
+    return total;
+}
+
+std::uint32_t AT24C256::hottest_page_writes(std::uint16_t& page) const {
+    std::uint32_t highest = 0;
+    page = 0;
+
+    for (std::uint16_t i = 0; i < SIZE_BYTES / PAGE_SIZE; ++i) {
+        if (page_writes_[i] > highest) {
+            highest = page_writes_[i];
+            page = i;
+        }
+    }
+
+    return highest;
 }
 
 } // namespace eeprom

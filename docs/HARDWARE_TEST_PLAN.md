@@ -77,8 +77,8 @@ four nodes up:
 | B | C | `k4` | | D | B | `k18` |
 | B | D | `k9` | | D | C | `k2` |
 
-Sensor keys: `s/A/temp` (D, B), `s/B/humidity` (C, B),
-`s/C/pressure` (A, B), `s/D/light` (B, D).
+Sensor keys (primary, replica): `s/A/light` (C, A), `s/B/motion` (C, D),
+`s/C/sound` (B, D), `s/D/temp` (B, D).
 
 ---
 
@@ -223,7 +223,7 @@ python3 -m edgekv --port /dev/serial0 sensors
 Unplug C, wait 3 s, repeat `sensors`, `set`, `get`, `del pi-key`.
 
 **Pass:** `bridge is node A`; all commands succeed with C down; C's
-pressure reading is still returned (served by its replica). Save the
+sound reading is still returned (it lives on B and D). Save the
 Pi terminal output as `docs/test-logs/H14-pi.log`.
 
 ---

@@ -1,0 +1,85 @@
+# Step 2, node B = board label 3, 14:63:93:C5:C3:1C, hub port 5-3. Tue 20. B resoldered (3V3, GND), EEPROM on 3V3.
+# B had already booted with this EEPROM before 13:25 (unobserved): storage recovered, not fresh format; the fresh format is shown by H11 (H11-node-b.log).
+# 13:35:54 flashed node-b (built 13:34:25, dd78c40). Seconds since port open:
+[  0.01s port open]
+[  1.21s] 
+[  1.21s] edge-kv firmware, node B
+[  1.21s] env node-b, built Oct 20 2026 13:34:25, reset reason: unknown
+[  1.21s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  1.52s]      1.955 [B] storage recovered: 35 live, 3 tombstones, 5626/16064 log bytes used
+[  1.52s]      1.958 [B] state -> BOOTING
+[  1.52s] sensor motion: simulated (REAL_SENSOR_NODES)
+[  1.52s] 
+[  1.52s] edge-kv node B  (4-node ESP-NOW KV store, RF=2)
+[  1.52s] type 'help' for commands
+[  1.52s]      1.959 [B] view: ABCD
+[  3.79s]      4.204 [B] state -> CATCHUP
+[  6.76s]      7.204 [B] state -> ACTIVE
+[ 11.04s >>> status]
+[ 11.09s] > status
+[ 11.09s] node B  state ACTIVE  view ABCD  uptime 11s
+[ 11.09s] hlc 9898391.0
+[ 11.09s] storage recovered: 35 live, 3 tombstones, 38/64 keys, log 5626/16064 bytes, bank A, 0 compactions
+[ 11.09s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[ 11.09s] sensor motion (simulated): on, 0 samples, last - seq 0, 0 ok, 0 under-replicated, 0 failed, 0 read failures
+[ 13.56s >>> set kb1 from-b]
+[ 13.61s] > set kb1 from-b
+[ 13.61s] SET kb1: OK (served by A, 1 attempt(s), 29 ms)
+[ 16.08s >>> get kb1]
+[ 16.13s] > get kb1
+[ 16.13s] kb1 = "from-b"
+[ 16.13s]    (served by A, 1 attempt(s), 6 ms)
+[ 18.60s >>> stats]
+[ 18.60s] > stats
+[ 18.60s] radio   rx 145 (invalid 0, spoofed 0)  tx 58 (failed 0)
+[ 18.60s] hb      tx 24  rx 105   membership changes 1
+[ 18.60s] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[ 18.60s] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 1 stale 0
+[ 18.60s] ae      rounds 3  chunks tx 24 rx 30  tables 1  pushes 0  resync tx 0 applied 0 stale 0
+[ 18.60s] gc      orphans 0  tombstones 0  keys dropped 0
+[ 18.60s] client  ok 5  failed 0  attempts 5  local 1
+[ 18.60s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[ 18.65s] env node-b, built Oct 20 2026 13:34:25, reset reason: unknown
+[ 18.65s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[ 18.65s] esp-now rx 145  queue overflows 0  unknown MAC 0
+[ 18.65s] esp-now tx -> A: 3 delivered, 0 failed (MAC-layer ACK)
+[ 18.65s] esp-now tx -> C: 5 delivered, 0 failed (MAC-layer ACK)
+[ 18.65s] esp-now tx -> D: 2 delivered, 0 failed (MAC-layer ACK)
+[ 18.65s] heap free 178896 (min 170072)  node task stack headroom 13304 bytes
+[ 18.65s] eeprom page writes since boot: total 11, hottest page 98 with 5 (rated 1000000)
+
+# 13:40:57 user unplugged/replugged B (by-id link). 13:41:14:
+[  0.01s port open]
+[  1.01s] console: ignored 33 character(s) received while the port was opening; type the command again
+[  1.51s >>> status]
+[  1.57s] > status
+[  1.57s] node B  state ACTIVE  view ABCD  uptime 22s
+[  1.57s] hlc 10200883.0
+[  1.57s] storage recovered: 36 live, 3 tombstones, 39/64 keys, log 7935/16064 bytes, bank A, 0 compactions
+[  1.57s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  1.57s] sensor motion (simulated): on, 1 samples, last 0 events, no motion since boot seq 28, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[  2.27s]     23.652 [B] view: -BCD
+[  3.53s >>> get kb1]
+[  3.58s] > get kb1
+[  3.58s] kb1 = "from-b"
+[  3.58s]    (served by B, 1 attempt(s), 0 ms)
+[  3.78s]     25.150 [B] view: ABCD
+[  5.55s >>> stats]
+[  5.55s] > stats
+[  5.55s] radio   rx 210 (invalid 0, spoofed 0)  tx 77 (failed 0)
+[  5.55s] hb      tx 40  rx 143   membership changes 4
+[  5.55s] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  5.55s] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 0 stale 0
+[  5.55s] ae      rounds 4  chunks tx 32 rx 50  tables 4  pushes 0  resync tx 0 applied 6 stale 6
+[  5.55s] gc      orphans 4  tombstones 0  keys dropped 0
+[  5.55s] client  ok 4  failed 0  attempts 4  local 2
+[  5.55s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  5.60s] env node-b, built Oct 20 2026 13:34:25, reset reason: power-on
+[  5.61s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  5.61s] esp-now rx 210  queue overflows 0  unknown MAC 0
+[  5.61s] esp-now tx -> A: 0 delivered, 0 failed (MAC-layer ACK)
+[  5.61s] esp-now tx -> C: 4 delivered, 0 failed (MAC-layer ACK)
+[  5.61s] esp-now tx -> D: 1 delivered, 0 failed (MAC-layer ACK)
+[  5.61s] heap free 178896 (min 170072)  node task stack headroom 13304 bytes
+[  5.61s] eeprom page writes since boot: total 22, hottest page 127 with 4 (rated 1000000)
+[  5.86s]     27.206 [B] gc: 6 key(s) marked for drop (orphans 7, tombstones 3 total)

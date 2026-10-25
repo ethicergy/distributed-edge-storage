@@ -319,16 +319,17 @@ Eventually consistent, last-writer-wins per key, RF = 2:
 
 Each node runs a `sensor::Sampler` over a `sensor::Source`. Until the
 real parts are known every node uses a deterministic `SimulatedSource`
-(A temperature, B humidity, C pressure, D light; a 20-minute "day"
-wave, a ripple and a bounded random walk). A real driver implements
-`Source` (`begin`, `kind`, `read`) and replaces the simulated one in
-`src/platform/main.cpp`; nothing else changes. If a real sensor is on
+(A light, B motion, C sound, D temperature; level kinds follow a
+20-minute "day" wave, a ripple and a bounded random walk, event kinds
+draw a few events per window). A real driver implements `Source`
+(`begin`, `kind`, `read`, optionally `poll`) and replaces the simulated
+one in `src/platform/main.cpp`; nothing else changes. If a real sensor is on
 I2C it must share the EEPROM's bus through a bus owner with a mutex, or
 use other pins (see DECISIONS D2).
 
 Every 30 s (`config::SENSOR_PERIOD_MS`, staggered per node; chosen for
-EEPROM endurance, see §7) a sample is encoded (20 bytes, see
-`sensor.h`) and written to `s/<node>/<kind>` and to the history slot
+EEPROM endurance, see §7) a sample is encoded (20 bytes for level
+kinds, 24 for event kinds, see `sensor.h`) and written to `s/<node>/<kind>` and to the history slot
 `h/<node>/<kind>/<seq % 4>`. At start-up the sampler reads its own
 latest key back from the cluster and continues the sequence number, so
 the history ring stays ordered across reboots.

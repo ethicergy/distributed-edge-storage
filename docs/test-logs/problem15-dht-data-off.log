@@ -1,0 +1,69 @@
+# Problem 15 test (a) vs (b), Wed 21 09:11:30-09:21:37: DHT11 DATA (S) unplugged from GPIO4 (loose end taped), nobody touched the boards (NS). Continuous capture of D, wall-clock timestamps; stats/status at start and end.
+
+[09:11:30.546] --- capture of D started ---
+[09:11:32.556] >>> stats
+[09:11:32.859] >>> status
+[09:11:33.210] > stats
+[09:11:33.210] radio   rx 13453 (invalid 0, spoofed 0)  tx 7312 (failed 0)
+[09:11:33.210] hb      tx 2839  rx 8489   membership changes 4
+[09:11:33.210] server  executed 424  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[09:11:33.210] repl    started 417  ok 417  failed 0  stale 0   as replica: applied 1269 stale 0
+[09:11:33.210] ae      rounds 144  chunks tx 720 rx 1192  tables 407  pushes 13  resync tx 13 applied 16 stale 13
+[09:11:33.210] gc      orphans 0  tombstones 0  keys dropped 0
+[09:11:33.210] client  ok 2242  failed 0  attempts 2249  local 317
+[09:11:33.210] storage errors 25  compactions 7 (aborted 8)  faults injected 0
+[09:11:33.210] env node-d, built Oct 21 2026 08:25:31, reset reason: power-on
+[09:11:33.210] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[09:11:33.210] esp-now rx 13453  queue overflows 0  unknown MAC 0
+[09:11:33.210] esp-now tx -> A: 809 delivered, 0 failed (MAC-layer ACK)
+[09:11:33.210] esp-now tx -> B: 2687 delivered, 0 failed (MAC-layer ACK)
+[09:11:33.210] esp-now tx -> C: 257 delivered, 0 failed (MAC-layer ACK)
+[09:11:33.210] heap free 174992 (min 166168)  node task stack headroom 13240 bytes
+[09:11:33.210] eeprom page writes since boot: total 10209, hottest page 268 with 36 (rated 1000000)
+[09:11:33.210] > status
+[09:11:33.210] node D  state ACTIVE  view ABCD  uptime 1427s
+[09:11:33.210] hlc 29005981.0
+[09:11:33.210] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 2642/16064 bytes, bank B, 7 compactions
+[09:11:33.210] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[09:11:33.210] sensor temp (hardware): on, 882 samples, last 31.300 degC STALE (last good value, no good read lately) seq 2115, 1753 ok, 11 under-replicated, 0 failed, 131 read failures
+[09:13:17.439]   1532.612 [D] anti-entropy: key s/D/temp repaired from B
+[09:16:58.883]   1753.599 [D] compaction started (3033 bytes free)
+[09:17:29.543]   1754.218 [D] compaction aborted (10); old bank stays authoritative
+[09:17:29.543]   1784.179 [D] compaction started (2147 bytes free)
+[09:18:00.390]   1785.073 [D] compaction aborted (10); old bank stays authoritative
+[09:18:00.390]   1815.030 [D] compaction started (1206 bytes free)
+[09:18:31.263]   1815.928 [D] compaction aborted (10); old bank stays authoritative
+[09:18:31.263]   1845.881 [D] compaction started (259 bytes free)
+[09:18:38.742]   1846.783 [D] compaction aborted (10); old bank stays authoritative
+[09:18:38.743]   1853.581 [D] storage error on h/A/light/0
+[09:18:39.144]   1853.990 [D] storage error on h/A/light/0
+[09:18:39.897]   1854.807 [D] storage error on h/A/light/0
+[09:18:41.001]   1855.011 [D] compaction aborted (10); old bank stays authoritative
+[09:18:41.001]   1856.011 [D] storage error on h/A/light/0
+[09:18:42.659]   1857.630 [D] storage error on h/A/light/0
+[09:18:43.563]   1858.555 [D] compaction #8 done: bank A, 22 keys, 14981 bytes free
+[09:21:47.226] >>> stats
+[09:21:47.527] >>> status
+[09:21:47.879] > stats
+[09:21:47.879] radio   rx 18232 (invalid 0, spoofed 0)  tx 9464 (failed 0)
+[09:21:47.879] hb      tx 4069  rx 12159   membership changes 4
+[09:21:47.879] server  executed 505  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[09:21:47.879] repl    started 493  ok 493  failed 0  stale 0   as replica: applied 1540 stale 0
+[09:21:47.879] ae      rounds 206  chunks tx 1028 rx 1686  tables 591  pushes 13  resync tx 13 applied 17 stale 13
+[09:21:47.879] gc      orphans 0  tombstones 0  keys dropped 0
+[09:21:47.880] client  ok 2488  failed 0  attempts 2495  local 348
+[09:21:47.880] storage errors 32  compactions 8 (aborted 13)  faults injected 0
+[09:21:47.880] env node-d, built Oct 21 2026 08:25:31, reset reason: power-on
+[09:21:47.880] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[09:21:47.880] esp-now rx 18232  queue overflows 0  unknown MAC 0
+[09:21:47.880] esp-now tx -> A: 1012 delivered, 0 failed (MAC-layer ACK)
+[09:21:47.880] esp-now tx -> B: 3062 delivered, 0 failed (MAC-layer ACK)
+[09:21:47.880] esp-now tx -> C: 293 delivered, 0 failed (MAC-layer ACK)
+[09:21:47.880] heap free 174992 (min 166168)  node task stack headroom 13240 bytes
+[09:21:47.880] eeprom page writes since boot: total 12839, hottest page 16 with 46 (rated 1000000)
+[09:21:47.880] > status
+[09:21:47.880] node D  state ACTIVE  view ABCD  uptime 2042s
+[09:21:47.880] hlc 29621330.0
+[09:21:47.880] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 7033/16064 bytes, bank A, 8 compactions
+[09:21:47.880] pending: 0 client, 0 replication, 6 dedup entries, 8 free op slots
+[09:21:47.880] sensor temp (hardware): on, 1005 samples, last 31.300 degC STALE (last good value, no good read lately) seq 2238, 1997 ok, 13 under-replicated, 0 failed, 430 read failures

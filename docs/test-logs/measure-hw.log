@@ -1,0 +1,2023 @@
+    3.021 [A] > status
+    3.021 [A] node A  state ACTIVE  view ABCD  uptime 350s
+    3.021 [A] hlc 18070900.0
+    3.021 [A] storage recovered: 47 live, 0 tombstones, 47/64 keys, log 5602/16064 bytes, bank B, 2 compactions
+    3.021 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.023 [B] > status
+    3.023 [B] node B  state ACTIVE  view ABCD  uptime 340s
+    3.023 [B] hlc 18070904.0
+    3.023 [B] storage recovered: 50 live, 0 tombstones, 50/64 keys, log 6021/16064 bytes, bank A, 2 compactions
+    3.023 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.026 [C] > status
+    3.026 [C] node C  state ACTIVE  view ABCD  uptime 329s
+    3.026 [C] hlc 18070906.0
+    3.026 [C] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 5487/16064 bytes, bank B, 1 compactions
+    3.026 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.028 [D] > status
+    3.028 [D] node D  state ACTIVE  view ABCD  uptime 710s
+    3.028 [D] hlc 18070909.0
+    3.028 [D] storage recovered: 57 live, 0 tombstones, 57/64 keys, log 6373/16064 bytes, bank B, 4 compactions
+    3.028 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.121 [A] sensor light (simulated): on, 12 samples, last 588.368 lux seq 501, 24 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.121 [A] > sensor off
+    3.121 [A] sampler off
+    3.123 [B] sensor motion (simulated): on, 11 samples, last 1 events, last motion 17 s before the sample seq 254, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.123 [B] > sensor off
+    3.123 [B] sampler off
+    3.126 [C] sensor sound (simulated): on, 11 samples, last 0 events, 0.0 % active seq 444, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.126 [C] > sensor off
+    3.126 [C] sampler off
+    3.128 [D] sensor temp (simulated): on, 23 samples, last 21.481 degC seq 345, 46 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.128 [D] > sensor off
+    3.128 [D] sampler off
+    3.222 [A] > set lat/A/0 v0
+    3.222 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 26 ms)
+    3.322 [A] > set lat/A/1 v1
+    3.322 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    3.423 [A] > set lat/A/2 v2
+    3.423 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 27 ms)
+    3.523 [A] > set lat/A/3 v3
+    3.523 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 32 ms)
+    3.624 [A] > set lat/A/4 v4
+    3.624 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 25 ms)
+    3.724 [A] > set lat/A/5 v5
+    3.724 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 33 ms)
+    3.825 [A] > set lat/A/6 v6
+    3.825 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 24 ms)
+    3.925 [A] > set lat/A/7 v7
+    3.925 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    4.026 [A] > set lat/A/0 v8
+    4.026 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 29 ms)
+    4.126 [A] > set lat/A/1 v9
+    4.126 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    4.227 [A] > set lat/A/2 v10
+    4.227 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 25 ms)
+    4.328 [A] > set lat/A/3 v11
+    4.328 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 34 ms)
+    4.429 [A] > set lat/A/4 v12
+    4.429 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 30 ms)
+    4.530 [A] > set lat/A/5 v13
+    4.530 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 28 ms)
+    4.631 [A] > set lat/A/6 v14
+    4.631 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 33 ms)
+    4.732 [A] > set lat/A/7 v15
+    4.732 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 26 ms)
+    4.833 [A] > set lat/A/0 v16
+    4.833 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 33 ms)
+    4.934 [A] > set lat/A/1 v17
+    4.934 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 26 ms)
+    5.035 [A] > set lat/A/2 v18
+    5.035 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 33 ms)
+    5.136 [A] > set lat/A/3 v19
+    5.136 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 27 ms)
+    5.237 [A] > set lat/A/4 v20
+    5.237 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 32 ms)
+    5.337 [A] > set lat/A/5 v21
+    5.337 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 32 ms)
+    5.438 [A] > set lat/A/6 v22
+    5.438 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 30 ms)
+    5.539 [A] > set lat/A/7 v23
+    5.539 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    5.639 [A] > set lat/A/0 v24
+    5.639 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 28 ms)
+    5.740 [A] > set lat/A/1 v25
+    5.740 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    5.841 [A] > set lat/A/2 v26
+    5.841 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 28 ms)
+    5.941 [A] > set lat/A/3 v27
+    5.941 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 28 ms)
+    6.042 [A] > set lat/A/4 v28
+    6.042 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 29 ms)
+    6.143 [A] > set lat/A/5 v29
+    6.143 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 30 ms)
+    6.243 [A] > set lat/A/6 v30
+    6.243 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 29 ms)
+    6.344 [A] > set lat/A/7 v31
+    6.344 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 34 ms)
+    6.445 [A] > set lat/A/0 v32
+    6.445 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 25 ms)
+    6.545 [A] > set lat/A/1 v33
+    6.545 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    6.646 [A] > set lat/A/2 v34
+    6.646 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 31 ms)
+    6.747 [A] > set lat/A/3 v35
+    6.747 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 25 ms)
+    6.847 [A] > set lat/A/4 v36
+    6.847 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 32 ms)
+    6.948 [A] > set lat/A/5 v37
+    6.948 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 25 ms)
+    7.049 [A] > set lat/A/6 v38
+    7.049 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 28 ms)
+    7.149 [A] > set lat/A/7 v39
+    7.149 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 29 ms)
+    7.250 [A] > set lat/A/0 v40
+    7.250 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 29 ms)
+    7.351 [A] > set lat/A/1 v41
+    7.351 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 29 ms)
+    7.452 [A] > set lat/A/2 v42
+    7.452 [A] SET lat/A/2: OK (served by D, 1 attempt(s), 36 ms)
+    7.553 [A] > set lat/A/3 v43
+    7.553 [A] SET lat/A/3: OK (served by D, 1 attempt(s), 30 ms)
+    7.654 [A] > set lat/A/4 v44
+    7.654 [A] SET lat/A/4: OK (served by D, 1 attempt(s), 29 ms)
+    7.754 [A] > set lat/A/5 v45
+    7.754 [A] SET lat/A/5: OK (served by D, 1 attempt(s), 33 ms)
+    7.855 [A] > set lat/A/6 v46
+    7.855 [A] SET lat/A/6: OK (served by D, 1 attempt(s), 28 ms)
+    7.956 [A] > set lat/A/7 v47
+    7.956 [A] SET lat/A/7: OK (served by C, 1 attempt(s), 32 ms)
+    8.056 [A] > set lat/A/0 v48
+    8.056 [A] SET lat/A/0: OK (served by D, 1 attempt(s), 28 ms)
+    8.157 [A] > set lat/A/1 v49
+    8.157 [A] SET lat/A/1: OK (served by D, 1 attempt(s), 33 ms)
+    8.257 [A] > get lat/A/0
+    8.257 [A] lat/A/0 = "v48"
+    8.257 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.359 [A] > get lat/A/1
+    8.359 [A] lat/A/1 = "v49"
+    8.359 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.459 [A] > get lat/A/2
+    8.459 [A] lat/A/2 = "v42"
+    8.459 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.560 [A] > get lat/A/3
+    8.560 [A] lat/A/3 = "v43"
+    8.560 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.661 [A] > get lat/A/4
+    8.661 [A] lat/A/4 = "v44"
+    8.661 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.762 [A] > get lat/A/5
+    8.762 [A] lat/A/5 = "v45"
+    8.762 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.863 [A] > get lat/A/6
+    8.863 [A] lat/A/6 = "v46"
+    8.863 [A]    (served by D, 1 attempt(s), 5 ms)
+    8.964 [A] > get lat/A/7
+    8.964 [A] lat/A/7 = "v47"
+    8.964 [A]    (served by C, 1 attempt(s), 6 ms)
+    9.065 [A] > get lat/A/0
+    9.065 [A] lat/A/0 = "v48"
+    9.065 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.165 [A] > get lat/A/1
+    9.165 [A] lat/A/1 = "v49"
+    9.165 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.266 [A] > get lat/A/2
+    9.266 [A] lat/A/2 = "v42"
+    9.266 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.367 [A] > get lat/A/3
+    9.367 [A] lat/A/3 = "v43"
+    9.367 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.468 [A] > get lat/A/4
+    9.468 [A] lat/A/4 = "v44"
+    9.468 [A]    (served by D, 1 attempt(s), 5 ms)
+    9.569 [A] > get lat/A/5
+    9.569 [A] lat/A/5 = "v45"
+    9.569 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.670 [A] > get lat/A/6
+    9.670 [A] lat/A/6 = "v46"
+    9.670 [A]    (served by D, 1 attempt(s), 8 ms)
+    9.770 [A] > get lat/A/7
+    9.770 [A] lat/A/7 = "v47"
+    9.770 [A]    (served by C, 1 attempt(s), 6 ms)
+    9.871 [A] > get lat/A/0
+    9.871 [A] lat/A/0 = "v48"
+    9.871 [A]    (served by D, 1 attempt(s), 6 ms)
+    9.972 [A] > get lat/A/1
+    9.972 [A] lat/A/1 = "v49"
+    9.972 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.073 [A] > get lat/A/2
+   10.073 [A] lat/A/2 = "v42"
+   10.073 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.173 [A] > get lat/A/3
+   10.173 [A] lat/A/3 = "v43"
+   10.173 [A]    (served by D, 1 attempt(s), 6 ms)
+   10.274 [A] > get lat/A/4
+   10.274 [A] lat/A/4 = "v44"
+   10.274 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.374 [A] > get lat/A/5
+   10.374 [A] lat/A/5 = "v45"
+   10.374 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.475 [A] > get lat/A/6
+   10.475 [A] lat/A/6 = "v46"
+   10.475 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.575 [A] > get lat/A/7
+   10.575 [A] lat/A/7 = "v47"
+   10.575 [A]    (served by C, 1 attempt(s), 6 ms)
+   10.676 [A] > get lat/A/0
+   10.676 [A] lat/A/0 = "v48"
+   10.676 [A]    (served by D, 1 attempt(s), 6 ms)
+   10.776 [A] > get lat/A/1
+   10.776 [A] lat/A/1 = "v49"
+   10.776 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.877 [A] > get lat/A/2
+   10.877 [A] lat/A/2 = "v42"
+   10.877 [A]    (served by D, 1 attempt(s), 5 ms)
+   10.977 [A] > get lat/A/3
+   10.977 [A] lat/A/3 = "v43"
+   10.977 [A]    (served by D, 1 attempt(s), 6 ms)
+   11.078 [A] > get lat/A/4
+   11.078 [A] lat/A/4 = "v44"
+   11.078 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.178 [A] > get lat/A/5
+   11.178 [A] lat/A/5 = "v45"
+   11.178 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.279 [A] > get lat/A/6
+   11.279 [A] lat/A/6 = "v46"
+   11.279 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.379 [A] > get lat/A/7
+   11.379 [A] lat/A/7 = "v47"
+   11.379 [A]    (served by C, 1 attempt(s), 6 ms)
+   11.480 [A] > get lat/A/0
+   11.480 [A] lat/A/0 = "v48"
+   11.480 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.580 [A] > get lat/A/1
+   11.580 [A] lat/A/1 = "v49"
+   11.580 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.681 [A] > get lat/A/2
+   11.681 [A] lat/A/2 = "v42"
+   11.681 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.782 [A] > get lat/A/3
+   11.782 [A] lat/A/3 = "v43"
+   11.782 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.882 [A] > get lat/A/4
+   11.882 [A] lat/A/4 = "v44"
+   11.882 [A]    (served by D, 1 attempt(s), 5 ms)
+   11.982 [A] > get lat/A/5
+   11.982 [A] lat/A/5 = "v45"
+   11.982 [A]    (served by D, 1 attempt(s), 6 ms)
+   12.083 [A] > get lat/A/6
+   12.083 [A] lat/A/6 = "v46"
+   12.083 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.183 [A] > get lat/A/7
+   12.183 [A] lat/A/7 = "v47"
+   12.183 [A]    (served by C, 1 attempt(s), 6 ms)
+   12.284 [A] > get lat/A/0
+   12.284 [A] lat/A/0 = "v48"
+   12.284 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.384 [A] > get lat/A/1
+   12.384 [A] lat/A/1 = "v49"
+   12.384 [A]    (served by D, 1 attempt(s), 7 ms)
+   12.485 [A] > get lat/A/2
+   12.485 [A] lat/A/2 = "v42"
+   12.485 [A]    (served by D, 1 attempt(s), 6 ms)
+   12.585 [A] > get lat/A/3
+   12.585 [A] lat/A/3 = "v43"
+   12.585 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.686 [A] > get lat/A/4
+   12.686 [A] lat/A/4 = "v44"
+   12.686 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.787 [A] > get lat/A/5
+   12.787 [A] lat/A/5 = "v45"
+   12.787 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.888 [A] > get lat/A/6
+   12.888 [A] lat/A/6 = "v46"
+   12.888 [A]    (served by D, 1 attempt(s), 5 ms)
+   12.989 [A] > get lat/A/7
+   12.989 [A] lat/A/7 = "v47"
+   12.989 [A]    (served by C, 1 attempt(s), 6 ms)
+   13.090 [A] > get lat/A/0
+   13.090 [A] lat/A/0 = "v48"
+   13.090 [A]    (served by D, 1 attempt(s), 5 ms)
+   13.191 [A] > get lat/A/1
+   13.191 [A] lat/A/1 = "v49"
+   13.191 [A]    (served by D, 1 attempt(s), 5 ms)
+   13.291 [B] > set lat/B/0 v0
+   13.291 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 26 ms)
+   13.392 [B] > set lat/B/1 v1
+   13.392 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 32 ms)
+   13.493 [B] > set lat/B/2 v2
+   13.493 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 30 ms)
+   13.594 [B] > set lat/B/3 v3
+   13.594 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 30 ms)
+   13.694 [B] > set lat/B/4 v4
+   13.694 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 30 ms)
+   13.796 [B] > set lat/B/5 v5
+   13.796 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 29 ms)
+   13.897 [B] > set lat/B/6 v6
+   13.897 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   13.997 [B] > set lat/B/7 v7
+   13.997 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 30 ms)
+   14.098 [B] > set lat/B/0 v8
+   14.098 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   14.199 [B] > set lat/B/1 v9
+   14.199 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 33 ms)
+   14.300 [B] > set lat/B/2 v10
+   14.300 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   14.401 [B] > set lat/B/3 v11
+   14.401 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 29 ms)
+   14.501 [B] > set lat/B/4 v12
+   14.501 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   14.602 [B] > set lat/B/5 v13
+   14.602 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 30 ms)
+   14.702 [B] > set lat/B/6 v14
+   14.702 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   14.803 [B] > set lat/B/7 v15
+   14.803 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 26 ms)
+   14.904 [B] > set lat/B/0 v16
+   14.904 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   15.005 [B] > set lat/B/1 v17
+   15.005 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 30 ms)
+   15.106 [B] > set lat/B/2 v18
+   15.106 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   15.207 [B] > set lat/B/3 v19
+   15.207 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 29 ms)
+   15.308 [B] > set lat/B/4 v20
+   15.308 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 30 ms)
+   15.409 [B] > set lat/B/5 v21
+   15.409 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 30 ms)
+   15.512 [B] > set lat/B/6 v22
+   15.512 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   15.613 [B] > set lat/B/7 v23
+   15.613 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 30 ms)
+   15.714 [B] > set lat/B/0 v24
+   15.714 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 30 ms)
+   15.815 [B] > set lat/B/1 v25
+   15.815 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 26 ms)
+   15.916 [B] > set lat/B/2 v26
+   15.916 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 32 ms)
+   16.017 [B] > set lat/B/3 v27
+   16.017 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 32 ms)
+   16.118 [B] > set lat/B/4 v28
+   16.118 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   16.219 [B] > set lat/B/5 v29
+   16.219 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 25 ms)
+   16.319 [B] > set lat/B/6 v30
+   16.319 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   16.420 [B] > set lat/B/7 v31
+   16.420 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 32 ms)
+   16.521 [B] > set lat/B/0 v32
+   16.521 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 27 ms)
+   16.622 [B] > set lat/B/1 v33
+   16.622 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 29 ms)
+   16.722 [B] > set lat/B/2 v34
+   16.722 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 30 ms)
+   16.824 [B] > set lat/B/3 v35
+   16.824 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 36 ms)
+   16.925 [B] > set lat/B/4 v36
+   16.925 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 34 ms)
+   17.026 [B] > set lat/B/5 v37
+   17.026 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 29 ms)
+   17.126 [B] > set lat/B/6 v38
+   17.126 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 30 ms)
+   17.227 [B] > set lat/B/7 v39
+   17.227 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 29 ms)
+   17.328 [B] > set lat/B/0 v40
+   17.328 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 30 ms)
+   17.429 [B] > set lat/B/1 v41
+   17.429 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 32 ms)
+   17.529 [B] > set lat/B/2 v42
+   17.529 [B] SET lat/B/2: OK (served by C, 1 attempt(s), 29 ms)
+   17.630 [B] > set lat/B/3 v43
+   17.630 [B] SET lat/B/3: OK (served by C, 1 attempt(s), 33 ms)
+   17.731 [B] > set lat/B/4 v44
+   17.731 [B] SET lat/B/4: OK (served by C, 1 attempt(s), 29 ms)
+   17.832 [B] > set lat/B/5 v45
+   17.832 [B] SET lat/B/5: OK (served by D, 1 attempt(s), 33 ms)
+   17.933 [B] > set lat/B/6 v46
+   17.933 [B] SET lat/B/6: OK (served by A, 1 attempt(s), 29 ms)
+   18.034 [B] > set lat/B/7 v47
+   18.034 [B] SET lat/B/7: OK (served by D, 1 attempt(s), 28 ms)
+   18.135 [B] > set lat/B/0 v48
+   18.135 [B] SET lat/B/0: OK (served by D, 1 attempt(s), 32 ms)
+   18.236 [B] > set lat/B/1 v49
+   18.236 [B] SET lat/B/1: OK (served by C, 1 attempt(s), 29 ms)
+   18.337 [B] > get lat/B/0
+   18.337 [B] lat/B/0 = "v48"
+   18.337 [B]    (served by D, 1 attempt(s), 9 ms)
+   18.438 [B] > get lat/B/1
+   18.438 [B] lat/B/1 = "v49"
+   18.438 [B]    (served by C, 1 attempt(s), 9 ms)
+   18.538 [B] > get lat/B/2
+   18.538 [B] lat/B/2 = "v42"
+   18.538 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.639 [B] > get lat/B/3
+   18.639 [B] lat/B/3 = "v43"
+   18.639 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.739 [B] > get lat/B/4
+   18.739 [B] lat/B/4 = "v44"
+   18.739 [B]    (served by C, 1 attempt(s), 6 ms)
+   18.840 [B] > get lat/B/5
+   18.840 [B] lat/B/5 = "v45"
+   18.840 [B]    (served by D, 1 attempt(s), 6 ms)
+   18.940 [B] > get lat/B/6
+   18.940 [B] lat/B/6 = "v46"
+   18.940 [B]    (served by A, 1 attempt(s), 6 ms)
+   19.041 [B] > get lat/B/7
+   19.041 [B] lat/B/7 = "v47"
+   19.041 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.141 [B] > get lat/B/0
+   19.141 [B] lat/B/0 = "v48"
+   19.141 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.242 [B] > get lat/B/1
+   19.242 [B] lat/B/1 = "v49"
+   19.242 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.342 [B] > get lat/B/2
+   19.342 [B] lat/B/2 = "v42"
+   19.342 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.443 [B] > get lat/B/3
+   19.443 [B] lat/B/3 = "v43"
+   19.443 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.543 [B] > get lat/B/4
+   19.543 [B] lat/B/4 = "v44"
+   19.543 [B]    (served by C, 1 attempt(s), 6 ms)
+   19.644 [B] > get lat/B/5
+   19.644 [B] lat/B/5 = "v45"
+   19.644 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.745 [B] > get lat/B/6
+   19.745 [B] lat/B/6 = "v46"
+   19.745 [B]    (served by A, 1 attempt(s), 6 ms)
+   19.846 [B] > get lat/B/7
+   19.846 [B] lat/B/7 = "v47"
+   19.846 [B]    (served by D, 1 attempt(s), 6 ms)
+   19.947 [B] > get lat/B/0
+   19.947 [B] lat/B/0 = "v48"
+   19.947 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.047 [B] > get lat/B/1
+   20.047 [B] lat/B/1 = "v49"
+   20.047 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.148 [B] > get lat/B/2
+   20.148 [B] lat/B/2 = "v42"
+   20.148 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.249 [B] > get lat/B/3
+   20.249 [B] lat/B/3 = "v43"
+   20.249 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.349 [B] > get lat/B/4
+   20.349 [B] lat/B/4 = "v44"
+   20.349 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.450 [B] > get lat/B/5
+   20.450 [B] lat/B/5 = "v45"
+   20.450 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.551 [B] > get lat/B/6
+   20.551 [B] lat/B/6 = "v46"
+   20.551 [B]    (served by A, 1 attempt(s), 6 ms)
+   20.651 [B] > get lat/B/7
+   20.651 [B] lat/B/7 = "v47"
+   20.651 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.752 [B] > get lat/B/0
+   20.752 [B] lat/B/0 = "v48"
+   20.752 [B]    (served by D, 1 attempt(s), 6 ms)
+   20.852 [B] > get lat/B/1
+   20.852 [B] lat/B/1 = "v49"
+   20.852 [B]    (served by C, 1 attempt(s), 6 ms)
+   20.953 [B] > get lat/B/2
+   20.953 [B] lat/B/2 = "v42"
+   20.953 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.054 [B] > get lat/B/3
+   21.054 [B] lat/B/3 = "v43"
+   21.054 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.155 [B] > get lat/B/4
+   21.155 [B] lat/B/4 = "v44"
+   21.155 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.256 [B] > get lat/B/5
+   21.256 [B] lat/B/5 = "v45"
+   21.256 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.356 [B] > get lat/B/6
+   21.356 [B] lat/B/6 = "v46"
+   21.356 [B]    (served by A, 1 attempt(s), 6 ms)
+   21.458 [B] > get lat/B/7
+   21.458 [B] lat/B/7 = "v47"
+   21.458 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.560 [B] > get lat/B/0
+   21.560 [B] lat/B/0 = "v48"
+   21.560 [B]    (served by D, 1 attempt(s), 6 ms)
+   21.661 [B] > get lat/B/1
+   21.661 [B] lat/B/1 = "v49"
+   21.661 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.764 [B] > get lat/B/2
+   21.764 [B] lat/B/2 = "v42"
+   21.764 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.865 [B] > get lat/B/3
+   21.865 [B] lat/B/3 = "v43"
+   21.865 [B]    (served by C, 1 attempt(s), 6 ms)
+   21.966 [B] > get lat/B/4
+   21.966 [B] lat/B/4 = "v44"
+   21.966 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.069 [B] > get lat/B/5
+   22.069 [B] lat/B/5 = "v45"
+   22.069 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.172 [B] > get lat/B/6
+   22.172 [B] lat/B/6 = "v46"
+   22.172 [B]    (served by A, 1 attempt(s), 6 ms)
+   22.275 [B] > get lat/B/7
+   22.275 [B] lat/B/7 = "v47"
+   22.275 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.377 [B] > get lat/B/0
+   22.377 [B] lat/B/0 = "v48"
+   22.377 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.479 [B] > get lat/B/1
+   22.479 [B] lat/B/1 = "v49"
+   22.479 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.582 [B] > get lat/B/2
+   22.582 [B] lat/B/2 = "v42"
+   22.582 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.683 [B] > get lat/B/3
+   22.683 [B] lat/B/3 = "v43"
+   22.683 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.786 [B] > get lat/B/4
+   22.786 [B] lat/B/4 = "v44"
+   22.786 [B]    (served by C, 1 attempt(s), 6 ms)
+   22.889 [B] > get lat/B/5
+   22.889 [B] lat/B/5 = "v45"
+   22.889 [B]    (served by D, 1 attempt(s), 6 ms)
+   22.991 [B] > get lat/B/6
+   22.991 [B] lat/B/6 = "v46"
+   22.991 [B]    (served by A, 1 attempt(s), 6 ms)
+   23.094 [B] > get lat/B/7
+   23.094 [B] lat/B/7 = "v47"
+   23.094 [B]    (served by D, 1 attempt(s), 6 ms)
+   23.195 [B] > get lat/B/0
+   23.195 [B] lat/B/0 = "v48"
+   23.195 [B]    (served by D, 1 attempt(s), 7 ms)
+   23.296 [B] > get lat/B/1
+   23.296 [B] lat/B/1 = "v49"
+   23.296 [B]    (served by C, 1 attempt(s), 7 ms)
+   23.394 [C] > set lat/C/0 v0
+   23.394 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   23.496 [C] > set lat/C/1 v1
+   23.496 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   23.598 [C] > set lat/C/2 v2
+   23.598 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 29 ms)
+   23.699 [C] > set lat/C/3 v3
+   23.699 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   23.801 [C] > set lat/C/4 v4
+   23.801 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 32 ms)
+   23.902 [C] > set lat/C/5 v5
+   23.902 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 33 ms)
+   24.003 [C] > set lat/C/6 v6
+   24.003 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   24.104 [C] > set lat/C/7 v7
+   24.104 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   24.205 [C] > set lat/C/0 v8
+   24.205 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   24.306 [C] > set lat/C/1 v9
+   24.306 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 31 ms)
+   24.407 [C] > set lat/C/2 v10
+   24.407 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 32 ms)
+   24.508 [C] > set lat/C/3 v11
+   24.508 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   24.609 [C] > set lat/C/4 v12
+   24.609 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 32 ms)
+   24.709 [C] > set lat/C/5 v13
+   24.709 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 29 ms)
+   24.811 [C] > set lat/C/6 v14
+   24.811 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 29 ms)
+   24.912 [C] > set lat/C/7 v15
+   24.912 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 29 ms)
+   25.013 [C] > set lat/C/0 v16
+   25.013 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 30 ms)
+   25.114 [C] > set lat/C/1 v17
+   25.114 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   25.215 [C] > set lat/C/2 v18
+   25.215 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 30 ms)
+   25.316 [C] > set lat/C/3 v19
+   25.316 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   25.417 [C] > set lat/C/4 v20
+   25.417 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 30 ms)
+   25.518 [C] > set lat/C/5 v21
+   25.518 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 30 ms)
+   25.619 [C] > set lat/C/6 v22
+   25.619 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 26 ms)
+   25.721 [C] > set lat/C/7 v23
+   25.721 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 29 ms)
+   25.823 [C] > set lat/C/0 v24
+   25.823 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 29 ms)
+   25.924 [C] > set lat/C/1 v25
+   25.924 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 29 ms)
+   26.026 [C] > set lat/C/2 v26
+   26.026 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 29 ms)
+   26.127 [C] > set lat/C/3 v27
+   26.127 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 30 ms)
+   26.229 [C] > set lat/C/4 v28
+   26.229 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 30 ms)
+   26.329 [C] > set lat/C/5 v29
+   26.329 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 31 ms)
+   26.430 [C] > set lat/C/6 v30
+   26.430 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   26.530 [C] > set lat/C/7 v31
+   26.530 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   26.631 [C] > set lat/C/0 v32
+   26.631 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 30 ms)
+   26.732 [C] > set lat/C/1 v33
+   26.732 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 26 ms)
+   26.834 [C] > set lat/C/2 v34
+   26.834 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 30 ms)
+   26.935 [C] > set lat/C/3 v35
+   26.935 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 29 ms)
+   27.036 [C] > set lat/C/4 v36
+   27.036 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 31 ms)
+   27.137 [C] > set lat/C/5 v37
+   27.137 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 29 ms)
+   27.237 [C] > set lat/C/6 v38
+   27.237 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 31 ms)
+   27.338 [C] > set lat/C/7 v39
+   27.338 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 31 ms)
+   27.439 [C] > set lat/C/0 v40
+   27.439 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   27.540 [C] > set lat/C/1 v41
+   27.540 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 31 ms)
+   27.641 [C] > set lat/C/2 v42
+   27.641 [C] SET lat/C/2: OK (served by B, 1 attempt(s), 32 ms)
+   27.741 [C] > set lat/C/3 v43
+   27.741 [C] SET lat/C/3: OK (served by B, 1 attempt(s), 33 ms)
+   27.842 [C] > set lat/C/4 v44
+   27.842 [C] SET lat/C/4: OK (served by D, 1 attempt(s), 28 ms)
+   27.943 [C] > set lat/C/5 v45
+   27.943 [C] SET lat/C/5: OK (served by B, 1 attempt(s), 30 ms)
+   28.044 [C] > set lat/C/6 v46
+   28.044 [C] SET lat/C/6: OK (served by D, 1 attempt(s), 30 ms)
+   28.145 [C] > set lat/C/7 v47
+   28.145 [C] SET lat/C/7: OK (served by D, 1 attempt(s), 30 ms)
+   28.246 [C] > set lat/C/0 v48
+   28.246 [C] SET lat/C/0: OK (served by B, 1 attempt(s), 31 ms)
+   28.346 [C] > set lat/C/1 v49
+   28.346 [C] SET lat/C/1: OK (served by B, 1 attempt(s), 32 ms)
+   28.447 [C] > get lat/C/0
+   28.447 [C] lat/C/0 = "v48"
+   28.447 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.548 [C] > get lat/C/1
+   28.548 [C] lat/C/1 = "v49"
+   28.548 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.649 [C] > get lat/C/2
+   28.649 [C] lat/C/2 = "v42"
+   28.649 [C]    (served by B, 1 attempt(s), 6 ms)
+   28.749 [C] > get lat/C/3
+   28.749 [C] lat/C/3 = "v43"
+   28.749 [C]    (served by B, 1 attempt(s), 7 ms)
+   28.850 [C] > get lat/C/4
+   28.850 [C] lat/C/4 = "v44"
+   28.850 [C]    (served by D, 1 attempt(s), 6 ms)
+   28.951 [C] > get lat/C/5
+   28.951 [C] lat/C/5 = "v45"
+   28.951 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.052 [C] > get lat/C/6
+   29.052 [C] lat/C/6 = "v46"
+   29.052 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.153 [C] > get lat/C/7
+   29.153 [C] lat/C/7 = "v47"
+   29.153 [C]    (served by D, 1 attempt(s), 7 ms)
+   29.254 [C] > get lat/C/0
+   29.254 [C] lat/C/0 = "v48"
+   29.254 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.355 [C] > get lat/C/1
+   29.355 [C] lat/C/1 = "v49"
+   29.355 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.456 [C] > get lat/C/2
+   29.456 [C] lat/C/2 = "v42"
+   29.456 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.557 [C] > get lat/C/3
+   29.557 [C] lat/C/3 = "v43"
+   29.557 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.657 [C] > get lat/C/4
+   29.657 [C] lat/C/4 = "v44"
+   29.657 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.758 [C] > get lat/C/5
+   29.758 [C] lat/C/5 = "v45"
+   29.758 [C]    (served by B, 1 attempt(s), 6 ms)
+   29.860 [C] > get lat/C/6
+   29.860 [C] lat/C/6 = "v46"
+   29.860 [C]    (served by D, 1 attempt(s), 6 ms)
+   29.964 [C] > get lat/C/7
+   29.964 [C] lat/C/7 = "v47"
+   29.964 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.066 [C] > get lat/C/0
+   30.066 [C] lat/C/0 = "v48"
+   30.066 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.167 [C] > get lat/C/1
+   30.167 [C] lat/C/1 = "v49"
+   30.167 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.269 [C] > get lat/C/2
+   30.269 [C] lat/C/2 = "v42"
+   30.269 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.370 [C] > get lat/C/3
+   30.370 [C] lat/C/3 = "v43"
+   30.370 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.471 [C] > get lat/C/4
+   30.471 [C] lat/C/4 = "v44"
+   30.471 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.572 [C] > get lat/C/5
+   30.572 [C] lat/C/5 = "v45"
+   30.572 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.673 [C] > get lat/C/6
+   30.673 [C] lat/C/6 = "v46"
+   30.673 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.775 [C] > get lat/C/7
+   30.775 [C] lat/C/7 = "v47"
+   30.775 [C]    (served by D, 1 attempt(s), 6 ms)
+   30.876 [C] > get lat/C/0
+   30.876 [C] lat/C/0 = "v48"
+   30.876 [C]    (served by B, 1 attempt(s), 6 ms)
+   30.978 [C] > get lat/C/1
+   30.978 [C] lat/C/1 = "v49"
+   30.978 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.079 [C] > get lat/C/2
+   31.079 [C] lat/C/2 = "v42"
+   31.079 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.180 [C] > get lat/C/3
+   31.180 [C] lat/C/3 = "v43"
+   31.180 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.282 [C] > get lat/C/4
+   31.282 [C] lat/C/4 = "v44"
+   31.282 [C]    (served by D, 1 attempt(s), 6 ms)
+   31.383 [C] > get lat/C/5
+   31.383 [C] lat/C/5 = "v45"
+   31.383 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.484 [C] > get lat/C/6
+   31.484 [C] lat/C/6 = "v46"
+   31.484 [C]    (served by D, 1 attempt(s), 6 ms)
+   31.585 [C] > get lat/C/7
+   31.585 [C] lat/C/7 = "v47"
+   31.585 [C]    (served by D, 1 attempt(s), 7 ms)
+   31.686 [C] > get lat/C/0
+   31.686 [C] lat/C/0 = "v48"
+   31.686 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.787 [C] > get lat/C/1
+   31.787 [C] lat/C/1 = "v49"
+   31.787 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.888 [C] > get lat/C/2
+   31.888 [C] lat/C/2 = "v42"
+   31.888 [C]    (served by B, 1 attempt(s), 6 ms)
+   31.989 [C] > get lat/C/3
+   31.989 [C] lat/C/3 = "v43"
+   31.989 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.091 [C] > get lat/C/4
+   32.091 [C] lat/C/4 = "v44"
+   32.091 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.192 [C] > get lat/C/5
+   32.192 [C] lat/C/5 = "v45"
+   32.192 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.293 [C] > get lat/C/6
+   32.293 [C] lat/C/6 = "v46"
+   32.293 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.395 [C] > get lat/C/7
+   32.395 [C] lat/C/7 = "v47"
+   32.395 [C]    (served by D, 1 attempt(s), 6 ms)
+   32.496 [C] > get lat/C/0
+   32.496 [C] lat/C/0 = "v48"
+   32.496 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.597 [C] > get lat/C/1
+   32.597 [C] lat/C/1 = "v49"
+   32.597 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.698 [C] > get lat/C/2
+   32.698 [C] lat/C/2 = "v42"
+   32.698 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.799 [C] > get lat/C/3
+   32.799 [C] lat/C/3 = "v43"
+   32.799 [C]    (served by B, 1 attempt(s), 6 ms)
+   32.900 [C] > get lat/C/4
+   32.900 [C] lat/C/4 = "v44"
+   32.900 [C]    (served by D, 1 attempt(s), 8 ms)
+   33.001 [C] > get lat/C/5
+   33.001 [C] lat/C/5 = "v45"
+   33.001 [C]    (served by B, 1 attempt(s), 6 ms)
+   33.102 [C] > get lat/C/6
+   33.102 [C] lat/C/6 = "v46"
+   33.102 [C]    (served by D, 1 attempt(s), 6 ms)
+   33.203 [C] > get lat/C/7
+   33.203 [C] lat/C/7 = "v47"
+   33.203 [C]    (served by D, 1 attempt(s), 6 ms)
+   33.304 [C] > get lat/C/0
+   33.304 [C] lat/C/0 = "v48"
+   33.304 [C]    (served by B, 1 attempt(s), 10 ms)
+   33.405 [C] > get lat/C/1
+   33.405 [C] lat/C/1 = "v49"
+   33.405 [C]    (served by B, 1 attempt(s), 6 ms)
+   33.507 [D] > set lat/D/0 v0
+   33.507 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 27 ms)
+   33.608 [D] > set lat/D/1 v1
+   33.608 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 26 ms)
+   33.708 [D] > set lat/D/2 v2
+   33.708 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 30 ms)
+   33.809 [D] > set lat/D/3 v3
+   33.809 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 32 ms)
+   33.910 [D] > set lat/D/4 v4
+   33.910 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 34 ms)
+   34.010 [D] > set lat/D/5 v5
+   34.010 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 26 ms)
+   34.111 [D] > set lat/D/6 v6
+   34.111 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 30 ms)
+   34.212 [D] > set lat/D/7 v7
+   34.212 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 26 ms)
+   34.312 [D] > set lat/D/0 v8
+   34.312 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 22 ms)
+   34.413 [D] > set lat/D/1 v9
+   34.413 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 28 ms)
+   34.514 [D] > set lat/D/2 v10
+   34.514 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 27 ms)
+   34.614 [D] > set lat/D/3 v11
+   34.614 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 35 ms)
+   34.715 [D] > set lat/D/4 v12
+   34.715 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 26 ms)
+   34.816 [D] > set lat/D/5 v13
+   34.816 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 30 ms)
+   34.916 [D] > set lat/D/6 v14
+   34.916 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   35.017 [D] > set lat/D/7 v15
+   35.017 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 27 ms)
+   35.117 [D] > set lat/D/0 v16
+   35.117 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 28 ms)
+   35.218 [D] > set lat/D/1 v17
+   35.218 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 27 ms)
+   35.319 [D] > set lat/D/2 v18
+   35.319 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 31 ms)
+   35.419 [D] > set lat/D/3 v19
+   35.419 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 27 ms)
+   35.520 [D] > set lat/D/4 v20
+   35.520 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 33 ms)
+   35.620 [D] > set lat/D/5 v21
+   35.620 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 26 ms)
+   35.721 [D] > set lat/D/6 v22
+   35.721 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 29 ms)
+   35.821 [D] > set lat/D/7 v23
+   35.821 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 23 ms)
+   35.922 [D] > set lat/D/0 v24
+   35.922 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 29 ms)
+   36.023 [D] > set lat/D/1 v25
+   36.023 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 23 ms)
+   36.124 [D] > set lat/D/2 v26
+   36.124 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 35 ms)
+   36.224 [D] > set lat/D/3 v27
+   36.224 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 32 ms)
+   36.325 [D] > set lat/D/4 v28
+   36.325 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 36 ms)
+   36.426 [D] > set lat/D/5 v29
+   36.426 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 37 ms)
+   36.527 [D] > set lat/D/6 v30
+   36.527 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   36.629 [D] > set lat/D/7 v31
+   36.629 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 33 ms)
+   36.730 [D] > set lat/D/0 v32
+   36.730 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 30 ms)
+   36.831 [D] > set lat/D/1 v33
+   36.831 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 41 ms)
+   36.933 [D] > set lat/D/2 v34
+   36.933 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 56 ms)
+   37.034 [D] > set lat/D/3 v35
+   37.034 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 40 ms)
+   37.135 [D] > set lat/D/4 v36
+   37.135 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 32 ms)
+   37.236 [D] > set lat/D/5 v37
+   37.236 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 45 ms)
+   37.337 [D] > set lat/D/6 v38
+   37.337 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 24 ms)
+   37.438 [D] > set lat/D/7 v39
+   37.438 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 29 ms)
+   37.539 [D] > set lat/D/0 v40
+   37.539 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 27 ms)
+   37.639 [D] > set lat/D/1 v41
+   37.639 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 26 ms)
+   37.740 [D] > set lat/D/2 v42
+   37.740 [D] SET lat/D/2: OK (served by B, 1 attempt(s), 29 ms)
+   37.841 [D] > set lat/D/3 v43
+   37.841 [D] SET lat/D/3: OK (served by B, 1 attempt(s), 30 ms)
+   37.942 [D] > set lat/D/4 v44
+   37.942 [D] SET lat/D/4: OK (served by C, 1 attempt(s), 34 ms)
+   38.043 [D] > set lat/D/5 v45
+   38.043 [D] SET lat/D/5: OK (served by B, 1 attempt(s), 31 ms)
+   38.144 [D] > set lat/D/6 v46
+   38.144 [D] SET lat/D/6: OK (served by D, 1 attempt(s), 26 ms)
+   38.245 [D] > set lat/D/7 v47
+   38.245 [D] SET lat/D/7: OK (served by D, 1 attempt(s), 27 ms)
+   38.345 [D] > set lat/D/0 v48
+   38.345 [D] SET lat/D/0: OK (served by D, 1 attempt(s), 26 ms)
+   38.446 [D] > set lat/D/1 v49
+   38.446 [D] SET lat/D/1: OK (served by D, 1 attempt(s), 30 ms)
+   38.548 [D] > get lat/D/0
+   38.548 [D] lat/D/0 = "v48"
+   38.548 [D]    (served by D, 1 attempt(s), 0 ms)
+   38.648 [D] > get lat/D/1
+   38.648 [D] lat/D/1 = "v49"
+   38.648 [D]    (served by D, 1 attempt(s), 0 ms)
+   38.749 [D] > get lat/D/2
+   38.749 [D] lat/D/2 = "v42"
+   38.749 [D]    (served by B, 1 attempt(s), 6 ms)
+   38.850 [D] > get lat/D/3
+   38.850 [D] lat/D/3 = "v43"
+   38.850 [D]    (served by B, 1 attempt(s), 6 ms)
+   38.951 [D] > get lat/D/4
+   38.951 [D] lat/D/4 = "v44"
+   38.951 [D]    (served by C, 1 attempt(s), 6 ms)
+   39.052 [D] > get lat/D/5
+   39.052 [D] lat/D/5 = "v45"
+   39.052 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.153 [D] > get lat/D/6
+   39.153 [D] lat/D/6 = "v46"
+   39.153 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.253 [D] > get lat/D/7
+   39.253 [D] lat/D/7 = "v47"
+   39.253 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.354 [D] > get lat/D/0
+   39.354 [D] lat/D/0 = "v48"
+   39.354 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.455 [D] > get lat/D/1
+   39.455 [D] lat/D/1 = "v49"
+   39.455 [D]    (served by D, 1 attempt(s), 0 ms)
+   39.556 [D] > get lat/D/2
+   39.556 [D] lat/D/2 = "v42"
+   39.556 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.657 [D] > get lat/D/3
+   39.657 [D] lat/D/3 = "v43"
+   39.657 [D]    (served by B, 1 attempt(s), 7 ms)
+   39.758 [D] > get lat/D/4
+   39.758 [D] lat/D/4 = "v44"
+   39.758 [D]    (served by C, 1 attempt(s), 6 ms)
+   39.859 [D] > get lat/D/5
+   39.859 [D] lat/D/5 = "v45"
+   39.859 [D]    (served by B, 1 attempt(s), 6 ms)
+   39.959 [D] > get lat/D/6
+   39.959 [D] lat/D/6 = "v46"
+   39.959 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.060 [D] > get lat/D/7
+   40.060 [D] lat/D/7 = "v47"
+   40.060 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.161 [D] > get lat/D/0
+   40.161 [D] lat/D/0 = "v48"
+   40.161 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.262 [D] > get lat/D/1
+   40.262 [D] lat/D/1 = "v49"
+   40.262 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.363 [D] > get lat/D/2
+   40.363 [D] lat/D/2 = "v42"
+   40.363 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.464 [D] > get lat/D/3
+   40.464 [D] lat/D/3 = "v43"
+   40.464 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.565 [D] > get lat/D/4
+   40.565 [D] lat/D/4 = "v44"
+   40.565 [D]    (served by C, 1 attempt(s), 6 ms)
+   40.666 [D] > get lat/D/5
+   40.666 [D] lat/D/5 = "v45"
+   40.666 [D]    (served by B, 1 attempt(s), 6 ms)
+   40.767 [D] > get lat/D/6
+   40.767 [D] lat/D/6 = "v46"
+   40.767 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.869 [D] > get lat/D/7
+   40.869 [D] lat/D/7 = "v47"
+   40.869 [D]    (served by D, 1 attempt(s), 0 ms)
+   40.970 [D] > get lat/D/0
+   40.970 [D] lat/D/0 = "v48"
+   40.970 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.071 [D] > get lat/D/1
+   41.071 [D] lat/D/1 = "v49"
+   41.071 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.172 [D] > get lat/D/2
+   41.172 [D] lat/D/2 = "v42"
+   41.172 [D]    (served by B, 1 attempt(s), 6 ms)
+   41.273 [D] > get lat/D/3
+   41.273 [D] lat/D/3 = "v43"
+   41.273 [D]    (served by B, 1 attempt(s), 6 ms)
+   41.374 [D] > get lat/D/4
+   41.374 [D] lat/D/4 = "v44"
+   41.374 [D]    (served by C, 1 attempt(s), 6 ms)
+   41.475 [D] > get lat/D/5
+   41.475 [D] lat/D/5 = "v45"
+   41.475 [D]    (served by B, 1 attempt(s), 7 ms)
+   41.575 [D] > get lat/D/6
+   41.575 [D] lat/D/6 = "v46"
+   41.575 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.676 [D] > get lat/D/7
+   41.676 [D] lat/D/7 = "v47"
+   41.676 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.777 [D] > get lat/D/0
+   41.777 [D] lat/D/0 = "v48"
+   41.777 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.878 [D] > get lat/D/1
+   41.878 [D] lat/D/1 = "v49"
+   41.878 [D]    (served by D, 1 attempt(s), 0 ms)
+   41.979 [D] > get lat/D/2
+   41.979 [D] lat/D/2 = "v42"
+   41.979 [D]    (served by B, 1 attempt(s), 9 ms)
+   42.081 [D] > get lat/D/3
+   42.081 [D] lat/D/3 = "v43"
+   42.081 [D]    (served by B, 1 attempt(s), 7 ms)
+   42.182 [D] > get lat/D/4
+   42.182 [D] lat/D/4 = "v44"
+   42.182 [D]    (served by C, 1 attempt(s), 6 ms)
+   42.282 [D] > get lat/D/5
+   42.282 [D] lat/D/5 = "v45"
+   42.282 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.383 [D] > get lat/D/6
+   42.383 [D] lat/D/6 = "v46"
+   42.383 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.484 [D] > get lat/D/7
+   42.484 [D] lat/D/7 = "v47"
+   42.484 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.585 [D] > get lat/D/0
+   42.585 [D] lat/D/0 = "v48"
+   42.585 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.685 [D] > get lat/D/1
+   42.685 [D] lat/D/1 = "v49"
+   42.685 [D]    (served by D, 1 attempt(s), 0 ms)
+   42.786 [D] > get lat/D/2
+   42.786 [D] lat/D/2 = "v42"
+   42.786 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.887 [D] > get lat/D/3
+   42.887 [D] lat/D/3 = "v43"
+   42.887 [D]    (served by B, 1 attempt(s), 6 ms)
+   42.988 [D] > get lat/D/4
+   42.988 [D] lat/D/4 = "v44"
+   42.988 [D]    (served by C, 1 attempt(s), 6 ms)
+   43.088 [D] > get lat/D/5
+   43.088 [D] lat/D/5 = "v45"
+   43.088 [D]    (served by B, 1 attempt(s), 6 ms)
+   43.189 [D] > get lat/D/6
+   43.189 [D] lat/D/6 = "v46"
+   43.189 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.290 [D] > get lat/D/7
+   43.290 [D] lat/D/7 = "v47"
+   43.290 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.391 [D] > get lat/D/0
+   43.391 [D] lat/D/0 = "v48"
+   43.391 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.491 [D] > get lat/D/1
+   43.491 [D] lat/D/1 = "v49"
+   43.491 [D]    (served by D, 1 attempt(s), 0 ms)
+   43.536 [A] > sensor on
+   43.536 [A] sampler on
+   43.593 [B] > sensor on
+   43.593 [B] sampler on
+   43.694 [C] > sensor on
+   43.694 [C] sampler on
+   43.793 [D] > sensor on
+   43.793 [D] sampler on
+    3.035 [A] > status
+    3.035 [A] node A  state ACTIVE  view ABCD  uptime 509s
+    3.035 [A] hlc 18230388.0
+    3.035 [A] storage recovered: 47 live, 0 tombstones, 47/64 keys, log 7675/16064 bytes, bank B, 2 compactions
+    3.035 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.037 [B] > status
+    3.037 [B] node B  state ACTIVE  view ABCD  uptime 499s
+    3.037 [B] hlc 18230392.0
+    3.037 [B] storage recovered: 50 live, 0 tombstones, 50/64 keys, log 10408/16064 bytes, bank A, 2 compactions
+    3.037 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.040 [C] > status
+    3.040 [C] node C  state ACTIVE  view ABCD  uptime 489s
+    3.040 [C] hlc 18230394.0
+    3.040 [C] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 9184/16064 bytes, bank B, 1 compactions
+    3.040 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.042 [D] > status
+    3.042 [D] node D  state ACTIVE  view ABCD  uptime 870s
+    3.042 [D] hlc 18230396.0
+    3.042 [D] storage recovered: 57 live, 0 tombstones, 57/64 keys, log 3071/16064 bytes, bank A, 5 compactions
+    3.042 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.136 [A] sensor light (simulated): on, 16 samples, last 464.860 lux seq 505, 32 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.136 [A] > ring fo/0
+    3.136 [A] key 'fo/0' hash f1ef5fe5
+    3.136 [A]   all nodes up : primary D, replica B
+    3.136 [A]   current view : primary D, replica B
+    3.139 [B] sensor motion (simulated): on, 15 samples, last 0 events, last motion 75 s before the sample seq 258, 30 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.141 [C] sensor sound (simulated): on, 15 samples, last 0 events, 0.0 % active seq 448, 30 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.143 [D] sensor temp (simulated): on, 27 samples, last 19.351 degC seq 349, 54 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.237 [A] > ring fo/1
+    3.237 [A] key 'fo/1' hash f0ef5e52
+    3.237 [A]   all nodes up : primary C, replica D
+    3.237 [A]   current view : primary C, replica D
+    3.338 [A] > ring fo/2
+    3.338 [A] key 'fo/2' hash efef5cbf
+    3.338 [A]   all nodes up : primary C, replica D
+    3.338 [A]   current view : primary C, replica D
+    3.439 [A] > ring fo/3
+    3.439 [A] key 'fo/3' hash eeef5b2c
+    3.439 [A]   all nodes up : primary C, replica D
+    3.439 [A]   current view : primary C, replica D
+    3.540 [A] > ring fo/4
+    3.540 [A] key 'fo/4' hash edef5999
+    3.540 [A]   all nodes up : primary D, replica B
+    3.540 [A]   current view : primary D, replica B
+    3.641 [A] > ring fo/5
+    3.641 [A] key 'fo/5' hash ecef5806
+    3.641 [A]   all nodes up : primary D, replica B
+    3.641 [A]   current view : primary D, replica B
+    3.743 [A] > ring fo/6
+    3.743 [A] key 'fo/6' hash ebef5673
+    3.743 [A]   all nodes up : primary B, replica D
+    3.743 [A]   current view : primary B, replica D
+    3.844 [A] > ring fo/7
+    3.844 [A] key 'fo/7' hash eaef54e0
+    3.844 [A]   all nodes up : primary A, replica B
+    3.844 [A]   current view : primary A, replica B
+    3.945 [A] > ring fo/8
+    3.945 [A] key 'fo/8' hash f9ef6c7d
+    3.945 [A]   all nodes up : primary D, replica B
+    3.945 [A]   current view : primary D, replica B
+    4.046 [A] > ring fo/9
+    4.046 [A] key 'fo/9' hash f8ef6aea
+    4.046 [A]   all nodes up : primary A, replica D
+    4.046 [A]   current view : primary A, replica D
+    4.146 [A] > ring fo/10
+    4.146 [A] key 'fo/10' hash aad19446
+    4.146 [A]   all nodes up : primary D, replica C
+    4.146 [A]   current view : primary D, replica C
+    4.248 [A] > ring fo/11
+    4.248 [A] key 'fo/11' hash abd195d9
+    4.248 [A]   all nodes up : primary D, replica C
+    4.248 [A]   current view : primary D, replica C
+    4.351 [A] > ring fo/12
+    4.351 [A] key 'fo/12' hash a8d19120
+    4.351 [A]   all nodes up : primary D, replica A
+    4.351 [A]   current view : primary D, replica A
+    4.451 [A] > ring fo/13
+    4.451 [A] key 'fo/13' hash a9d192b3
+    4.451 [A]   all nodes up : primary A, replica D
+    4.451 [A]   current view : primary A, replica D
+    4.553 [A] > ring fo/14
+    4.553 [A] key 'fo/14' hash aed19a92
+    4.553 [A]   all nodes up : primary C, replica A
+    4.553 [A]   current view : primary C, replica A
+    4.653 [A] > ring fo/15
+    4.653 [A] key 'fo/15' hash afd19c25
+    4.653 [A]   all nodes up : primary C, replica A
+    4.653 [A]   current view : primary C, replica A
+    4.754 [A] > ring fo/16
+    4.754 [A] key 'fo/16' hash acd1976c
+    4.754 [A]   all nodes up : primary C, replica A
+    4.754 [A]   current view : primary C, replica A
+    4.855 [A] > ring fo/17
+    4.855 [A] key 'fo/17' hash add198ff
+    4.855 [A]   all nodes up : primary C, replica A
+    4.855 [A]   current view : primary C, replica A
+    4.956 [A] > ring fo/18
+    4.956 [A] key 'fo/18' hash b2d1a0de
+    4.956 [A]   all nodes up : primary A, replica B
+    4.956 [A]   current view : primary A, replica B
+    5.057 [A] > ring fo/19
+    5.057 [A] key 'fo/19' hash b3d1a271
+    5.057 [A]   all nodes up : primary A, replica B
+    5.057 [A]   current view : primary A, replica B
+    5.158 [A] > ring fo/20
+    5.158 [A] key 'fo/20' hash 44ceb51d
+    5.158 [A]   all nodes up : primary D, replica B
+    5.158 [A]   current view : primary D, replica B
+    5.259 [A] > ring fo/21
+    5.259 [A] key 'fo/21' hash 43ceb38a
+    5.259 [A]   all nodes up : primary A, replica C
+    5.259 [A]   current view : primary A, replica C
+    5.361 [A] > ring fo/22
+    5.361 [A] key 'fo/22' hash 42ceb1f7
+    5.361 [A]   all nodes up : primary C, replica D
+    5.361 [A]   current view : primary C, replica D
+    5.462 [A] > ring fo/23
+    5.462 [A] key 'fo/23' hash 41ceb064
+    5.462 [A]   all nodes up : primary B, replica C
+    5.462 [A]   current view : primary B, replica C
+    5.563 [A] > ring fo/24
+    5.563 [A] key 'fo/24' hash 40ceaed1
+    5.563 [A]   all nodes up : primary B, replica C
+    5.563 [A]   current view : primary B, replica C
+    5.664 [A] > ring fo/25
+    5.664 [A] key 'fo/25' hash 3fcead3e
+    5.664 [A]   all nodes up : primary B, replica C
+    5.664 [A]   current view : primary B, replica C
+    5.765 [A] > ring fo/26
+    5.765 [A] key 'fo/26' hash 3eceabab
+    5.765 [A]   all nodes up : primary B, replica C
+    5.765 [A]   current view : primary B, replica C
+    5.865 [A] > ring fo/27
+    5.865 [A] key 'fo/27' hash 3dceaa18
+    5.865 [A]   all nodes up : primary B, replica C
+    5.865 [A]   current view : primary B, replica C
+    5.967 [A] > ring fo/28
+    5.967 [A] key 'fo/28' hash 3ccea885
+    5.967 [A]   all nodes up : primary D, replica C
+    5.967 [A]   current view : primary D, replica C
+    6.067 [A] > ring fo/29
+    6.067 [A] key 'fo/29' hash 3bcea6f2
+    6.067 [A]   all nodes up : primary A, replica D
+    6.067 [A]   current view : primary A, replica D
+    6.168 [A] > ring fo/30
+    6.168 [A] key 'fo/30' hash 3ecc6d14
+    6.168 [A]   all nodes up : primary B, replica C
+    6.168 [A]   current view : primary B, replica C
+    6.269 [A] > ring fo/31
+    6.269 [A] key 'fo/31' hash 3fcc6ea7
+    6.269 [A]   all nodes up : primary B, replica C
+    6.269 [A]   current view : primary B, replica C
+    6.370 [A] > ring fo/32
+    6.370 [A] key 'fo/32' hash 40cc703a
+    6.370 [A]   all nodes up : primary B, replica C
+    6.370 [A]   current view : primary B, replica C
+    6.471 [A] > ring fo/33
+    6.471 [A] key 'fo/33' hash 41cc71cd
+    6.471 [A]   all nodes up : primary B, replica C
+    6.471 [A]   current view : primary B, replica C
+    6.572 [A] > ring fo/34
+    6.572 [A] key 'fo/34' hash 3acc66c8
+    6.572 [A]   all nodes up : primary A, replica C
+    6.572 [A]   current view : primary A, replica C
+    6.673 [A] > ring fo/35
+    6.673 [A] key 'fo/35' hash 3bcc685b
+    6.673 [A]   all nodes up : primary A, replica D
+    6.673 [A]   current view : primary A, replica D
+    6.774 [A] > ring fo/36
+    6.774 [A] key 'fo/36' hash 3ccc69ee
+    6.774 [A]   all nodes up : primary D, replica C
+    6.774 [A]   current view : primary D, replica C
+    6.875 [A] > ring fo/37
+    6.875 [A] key 'fo/37' hash 3dcc6b81
+    6.875 [A]   all nodes up : primary B, replica C
+    6.875 [A]   current view : primary B, replica C
+    6.976 [A] > ring fo/38
+    6.976 [A] key 'fo/38' hash 36cc607c
+    6.976 [A]   all nodes up : primary C, replica D
+    6.976 [A]   current view : primary C, replica D
+    7.077 [A] > ring fo/39
+    7.077 [A] key 'fo/39' hash 37cc620f
+    7.077 [A]   all nodes up : primary A, replica C
+    7.077 [A]   current view : primary A, replica C
+    7.178 [A] > ring fo/40
+    7.178 [A] key 'fo/40' hash 38ca250b
+    7.178 [A]   all nodes up : primary A, replica C
+    7.178 [A]   current view : primary A, replica C
+    7.279 [A] > ring fo/41
+    7.279 [A] key 'fo/41' hash 37ca2378
+    7.279 [A]   all nodes up : primary A, replica C
+    7.279 [A]   current view : primary A, replica C
+    7.379 [A] > ring fo/42
+    7.379 [A] key 'fo/42' hash 3aca2831
+    7.379 [A]   all nodes up : primary A, replica C
+    7.379 [A]   current view : primary A, replica C
+    7.480 [A] > ring fo/43
+    7.480 [A] key 'fo/43' hash 39ca269e
+    7.480 [A]   all nodes up : primary C, replica A
+    7.480 [A]   current view : primary C, replica A
+    7.581 [A] > ring fo/44
+    7.581 [A] key 'fo/44' hash 3cca2b57
+    7.581 [A]   all nodes up : primary D, replica C
+    7.581 [A]   current view : primary D, replica C
+    7.682 [A] > ring fo/45
+    7.682 [A] key 'fo/45' hash 3bca29c4
+    7.682 [A]   all nodes up : primary A, replica D
+    7.682 [A]   current view : primary A, replica D
+    7.783 [A] > ring fo/46
+    7.783 [A] key 'fo/46' hash 3eca2e7d
+    7.783 [A]   all nodes up : primary B, replica C
+    7.783 [A]   current view : primary B, replica C
+    7.884 [A] > ring fo/47
+    7.884 [A] key 'fo/47' hash 3dca2cea
+    7.884 [A]   all nodes up : primary B, replica C
+    7.884 [A]   current view : primary B, replica C
+    7.985 [A] > ring fo/48
+    7.985 [A] key 'fo/48' hash 30ca1873
+    7.985 [A]   all nodes up : primary B, replica C
+    7.985 [A]   current view : primary B, replica C
+    8.085 [A] > ring fo/49
+    8.085 [A] key 'fo/49' hash 2fca16e0
+    8.085 [A]   all nodes up : primary B, replica C
+    8.085 [A]   current view : primary B, replica C
+    8.186 [A] > ring fo/50
+    8.186 [A] key 'fo/50' hash 32c7dd02
+    8.186 [A]   all nodes up : primary C, replica B
+    8.186 [A]   current view : primary C, replica B
+    8.287 [A] > set fo/1 before
+    8.287 [A] SET fo/1: OK (served by C, 1 attempt(s), 31 ms)
+   -0.101 [A] ed from D
+   -0.101 [A]    701.022 [A] anti-entropy: key lat/A/4 repaired from D
+   -0.101 [A]    701.065 [A] anti-entropy: key lat/A/5 repaired from D
+   -0.101 [A]    701.105 [A] anti-entropy: key lat/A/7 repaired from D
+   -0.101 [A]    701.142 [A] anti-entropy: key lat/B/0 repaired from D
+   -0.101 [A]    701.185 [A] anti-entropy: key cmp_marker repaired from D
+   -0.101 [A]    701.222 [A] anti-entropy: key lat/B/4 repaired from D
+   -0.101 [A]    701.268 [A] anti-entropy: key lat/B/7 repaired from D
+   -0.101 [A]    758.551 [A] view: ABCD
+   -0.094 [D] entropy: m9/B/3 from A failed (STORAGE_ERROR)
+   -0.094 [D]   1103.146 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+   -0.094 [D]   1103.146 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+   -0.094 [D]   1103.186 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+   -0.094 [D]   1103.228 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+   -0.094 [D]   1103.230 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+   -0.094 [D]   1103.266 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+   -0.094 [D]   1103.266 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+   -0.093 [D]   1103.306 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+   -0.093 [D]   1112.986 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+   -0.093 [D]   1112.987 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+   -0.093 [D]   1113.026 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+   -0.093 [D]   1113.026 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+   -0.093 [D]   1113.066 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+   -0.093 [D]   1113.066 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.106 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1113.106 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.146 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1113.149 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.186 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1113.186 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.226 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1113.226 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.266 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1113.266 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+   -0.092 [D]   1113.306 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+   -0.092 [D]   1118.954 [D] view: ABCD
+   -0.000 [A]    767.208 [A] gc: 16 key(s) marked for drop (orphans 36, tombstones 0 total)
+   -0.000 [A]    767.209 [A] compaction started (6021 bytes free)
+   -0.000 [A]    770.012 [A] compaction #3 done: bank A, 46 keys, 14231 bytes free
+    0.009 [D]   1127.200 [D] gc: 6 key(s) marked for drop (orphans 19, tombstones 0 total)
+    0.009 [D]   1127.200 [D] compaction started (9943 bytes free)
+    0.009 [D]   1130.198 [D] compaction #6 done: bank B, 58 keys, 13707 bytes free
+    3.032 [A] > status
+    3.032 [A] node A  state ACTIVE  view ABCD  uptime 840s
+    3.032 [A] hlc 18560875.0
+    3.032 [A] storage recovered: 46 live, 0 tombstones, 46/64 keys, log 2283/16064 bytes, bank A, 3 compactions
+    3.032 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.034 [B] > status
+    3.034 [B] node B  state ACTIVE  view ABCD  uptime 830s
+    3.034 [B] hlc 18560880.0
+    3.034 [B] storage recovered: 50 live, 0 tombstones, 50/64 keys, log 2408/16064 bytes, bank B, 3 compactions
+    3.034 [B] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+    3.037 [C] > status
+    3.037 [C] node C  state ACTIVE  view ABCD  uptime 88s
+    3.037 [C] hlc 18560882.0
+    3.037 [C] storage recovered: 52 live, 0 tombstones, 52/64 keys, log 10898/16064 bytes, bank B, 0 compactions
+    3.037 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.039 [D] > status
+    3.039 [D] node D  state ACTIVE  view ABCD  uptime 1200s
+    3.039 [D] hlc 18560884.0
+    3.039 [D] storage recovered: 58 live, 0 tombstones, 58/64 keys, log 3163/16064 bytes, bank B, 6 compactions
+    3.039 [D] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+    3.132 [A] sensor light (simulated): on, 27 samples, last 80.629 lux seq 516, 54 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.132 [A] > ring fo/0
+    3.132 [A] key 'fo/0' hash f1ef5fe5
+    3.132 [A]   all nodes up : primary D, replica B
+    3.132 [A]   current view : primary D, replica B
+    3.135 [B] sensor motion (simulated): on, 26 samples, last 0 events, last motion 119 s before the sample seq 269, 52 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.137 [C] sensor sound (simulated): on, 3 samples, last 3 events, 1.8 % active seq 458, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.140 [D] sensor temp (simulated): on, 38 samples, last 22.235 degC seq 360, 76 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.233 [A] > ring fo/1
+    3.233 [A] key 'fo/1' hash f0ef5e52
+    3.233 [A]   all nodes up : primary C, replica D
+    3.233 [A]   current view : primary C, replica D
+    3.334 [A] > ring fo/2
+    3.334 [A] key 'fo/2' hash efef5cbf
+    3.334 [A]   all nodes up : primary C, replica D
+    3.334 [A]   current view : primary C, replica D
+    3.435 [A] > ring fo/3
+    3.435 [A] key 'fo/3' hash eeef5b2c
+    3.435 [A]   all nodes up : primary C, replica D
+    3.435 [A]   current view : primary C, replica D
+    3.536 [A] > ring fo/4
+    3.536 [A] key 'fo/4' hash edef5999
+    3.536 [A]   all nodes up : primary D, replica B
+    3.536 [A]   current view : primary D, replica B
+    3.637 [A] > ring fo/5
+    3.637 [A] key 'fo/5' hash ecef5806
+    3.637 [A]   all nodes up : primary D, replica B
+    3.637 [A]   current view : primary D, replica B
+    3.738 [A] > ring fo/6
+    3.738 [A] key 'fo/6' hash ebef5673
+    3.738 [A]   all nodes up : primary B, replica D
+    3.738 [A]   current view : primary B, replica D
+    3.839 [A] > ring fo/7
+    3.839 [A] key 'fo/7' hash eaef54e0
+    3.839 [A]   all nodes up : primary A, replica B
+    3.839 [A]   current view : primary A, replica B
+    3.940 [A] > ring fo/8
+    3.940 [A] key 'fo/8' hash f9ef6c7d
+    3.940 [A]   all nodes up : primary D, replica B
+    3.940 [A]   current view : primary D, replica B
+    4.041 [A] > ring fo/9
+    4.041 [A] key 'fo/9' hash f8ef6aea
+    4.041 [A]   all nodes up : primary A, replica D
+    4.041 [A]   current view : primary A, replica D
+    4.142 [A] > ring fo/10
+    4.142 [A] key 'fo/10' hash aad19446
+    4.142 [A]   all nodes up : primary D, replica C
+    4.142 [A]   current view : primary D, replica C
+    4.243 [A] > ring fo/11
+    4.243 [A] key 'fo/11' hash abd195d9
+    4.243 [A]   all nodes up : primary D, replica C
+    4.243 [A]   current view : primary D, replica C
+    4.344 [A] > ring fo/12
+    4.344 [A] key 'fo/12' hash a8d19120
+    4.344 [A]   all nodes up : primary D, replica A
+    4.344 [A]   current view : primary D, replica A
+    4.445 [A] > ring fo/13
+    4.445 [A] key 'fo/13' hash a9d192b3
+    4.445 [A]   all nodes up : primary A, replica D
+    4.445 [A]   current view : primary A, replica D
+    4.546 [A] > ring fo/14
+    4.546 [A] key 'fo/14' hash aed19a92
+    4.546 [A]   all nodes up : primary C, replica A
+    4.546 [A]   current view : primary C, replica A
+    4.647 [A] > ring fo/15
+    4.647 [A] key 'fo/15' hash afd19c25
+    4.647 [A]   all nodes up : primary C, replica A
+    4.647 [A]   current view : primary C, replica A
+    4.747 [A] > ring fo/16
+    4.747 [A] key 'fo/16' hash acd1976c
+    4.747 [A]   all nodes up : primary C, replica A
+    4.747 [A]   current view : primary C, replica A
+    4.848 [A] > ring fo/17
+    4.848 [A] key 'fo/17' hash add198ff
+    4.848 [A]   all nodes up : primary C, replica A
+    4.848 [A]   current view : primary C, replica A
+    4.949 [A] > ring fo/18
+    4.949 [A] key 'fo/18' hash b2d1a0de
+    4.949 [A]   all nodes up : primary A, replica B
+    4.949 [A]   current view : primary A, replica B
+    5.050 [A] > ring fo/19
+    5.050 [A] key 'fo/19' hash b3d1a271
+    5.050 [A]   all nodes up : primary A, replica B
+    5.050 [A]   current view : primary A, replica B
+    5.151 [A] > ring fo/20
+    5.151 [A] key 'fo/20' hash 44ceb51d
+    5.151 [A]   all nodes up : primary D, replica B
+    5.151 [A]   current view : primary D, replica B
+    5.252 [A] > ring fo/21
+    5.252 [A] key 'fo/21' hash 43ceb38a
+    5.252 [A]   all nodes up : primary A, replica C
+    5.252 [A]   current view : primary A, replica C
+    5.353 [A] > ring fo/22
+    5.353 [A] key 'fo/22' hash 42ceb1f7
+    5.353 [A]   all nodes up : primary C, replica D
+    5.353 [A]   current view : primary C, replica D
+    5.454 [A] > ring fo/23
+    5.454 [A] key 'fo/23' hash 41ceb064
+    5.454 [A]   all nodes up : primary B, replica C
+    5.454 [A]   current view : primary B, replica C
+    5.555 [A] > ring fo/24
+    5.555 [A] key 'fo/24' hash 40ceaed1
+    5.555 [A]   all nodes up : primary B, replica C
+    5.555 [A]   current view : primary B, replica C
+    5.655 [A] > ring fo/25
+    5.655 [A] key 'fo/25' hash 3fcead3e
+    5.655 [A]   all nodes up : primary B, replica C
+    5.655 [A]   current view : primary B, replica C
+    5.756 [A] > ring fo/26
+    5.756 [A] key 'fo/26' hash 3eceabab
+    5.756 [A]   all nodes up : primary B, replica C
+    5.756 [A]   current view : primary B, replica C
+    5.857 [A] > ring fo/27
+    5.857 [A] key 'fo/27' hash 3dceaa18
+    5.857 [A]   all nodes up : primary B, replica C
+    5.857 [A]   current view : primary B, replica C
+    5.958 [A] > ring fo/28
+    5.958 [A] key 'fo/28' hash 3ccea885
+    5.958 [A]   all nodes up : primary D, replica C
+    5.958 [A]   current view : primary D, replica C
+    6.058 [A] > ring fo/29
+    6.058 [A] key 'fo/29' hash 3bcea6f2
+    6.058 [A]   all nodes up : primary A, replica D
+    6.058 [A]   current view : primary A, replica D
+    6.159 [A] > ring fo/30
+    6.159 [A] key 'fo/30' hash 3ecc6d14
+    6.159 [A]   all nodes up : primary B, replica C
+    6.159 [A]   current view : primary B, replica C
+    6.260 [A] > ring fo/31
+    6.260 [A] key 'fo/31' hash 3fcc6ea7
+    6.260 [A]   all nodes up : primary B, replica C
+    6.260 [A]   current view : primary B, replica C
+    6.360 [A] > ring fo/32
+    6.360 [A] key 'fo/32' hash 40cc703a
+    6.360 [A]   all nodes up : primary B, replica C
+    6.360 [A]   current view : primary B, replica C
+    6.461 [A] > ring fo/33
+    6.461 [A] key 'fo/33' hash 41cc71cd
+    6.461 [A]   all nodes up : primary B, replica C
+    6.461 [A]   current view : primary B, replica C
+    6.562 [A] > ring fo/34
+    6.562 [A] key 'fo/34' hash 3acc66c8
+    6.562 [A]   all nodes up : primary A, replica C
+    6.562 [A]   current view : primary A, replica C
+    6.663 [A] > ring fo/35
+    6.663 [A] key 'fo/35' hash 3bcc685b
+    6.663 [A]   all nodes up : primary A, replica D
+    6.663 [A]   current view : primary A, replica D
+    6.764 [A] > ring fo/36
+    6.764 [A] key 'fo/36' hash 3ccc69ee
+    6.764 [A]   all nodes up : primary D, replica C
+    6.764 [A]   current view : primary D, replica C
+    6.865 [A] > ring fo/37
+    6.865 [A] key 'fo/37' hash 3dcc6b81
+    6.865 [A]   all nodes up : primary B, replica C
+    6.865 [A]   current view : primary B, replica C
+    6.966 [A] > ring fo/38
+    6.966 [A] key 'fo/38' hash 36cc607c
+    6.966 [A]   all nodes up : primary C, replica D
+    6.966 [A]   current view : primary C, replica D
+    7.067 [A] > ring fo/39
+    7.067 [A] key 'fo/39' hash 37cc620f
+    7.067 [A]   all nodes up : primary A, replica C
+    7.067 [A]   current view : primary A, replica C
+    7.168 [A] > ring fo/40
+    7.168 [A] key 'fo/40' hash 38ca250b
+    7.168 [A]   all nodes up : primary A, replica C
+    7.168 [A]   current view : primary A, replica C
+    7.269 [A] > ring fo/41
+    7.269 [A] key 'fo/41' hash 37ca2378
+    7.269 [A]   all nodes up : primary A, replica C
+    7.269 [A]   current view : primary A, replica C
+    7.370 [A] > ring fo/42
+    7.370 [A] key 'fo/42' hash 3aca2831
+    7.370 [A]   all nodes up : primary A, replica C
+    7.370 [A]   current view : primary A, replica C
+    7.471 [A] > ring fo/43
+    7.471 [A] key 'fo/43' hash 39ca269e
+    7.471 [A]   all nodes up : primary C, replica A
+    7.471 [A]   current view : primary C, replica A
+    7.572 [A] > ring fo/44
+    7.572 [A] key 'fo/44' hash 3cca2b57
+    7.572 [A]   all nodes up : primary D, replica C
+    7.572 [A]   current view : primary D, replica C
+    7.673 [A] > ring fo/45
+    7.673 [A] key 'fo/45' hash 3bca29c4
+    7.673 [A]   all nodes up : primary A, replica D
+    7.673 [A]   current view : primary A, replica D
+    7.774 [A] > ring fo/46
+    7.774 [A] key 'fo/46' hash 3eca2e7d
+    7.774 [A]   all nodes up : primary B, replica C
+    7.774 [A]   current view : primary B, replica C
+    7.874 [A] > ring fo/47
+    7.874 [A] key 'fo/47' hash 3dca2cea
+    7.874 [A]   all nodes up : primary B, replica C
+    7.874 [A]   current view : primary B, replica C
+    7.975 [A] > ring fo/48
+    7.975 [A] key 'fo/48' hash 30ca1873
+    7.975 [A]   all nodes up : primary B, replica C
+    7.975 [A]   current view : primary B, replica C
+    8.076 [A] > ring fo/49
+    8.076 [A] key 'fo/49' hash 2fca16e0
+    8.076 [A]   all nodes up : primary B, replica C
+    8.076 [A]   current view : primary B, replica C
+    8.177 [A] > ring fo/50
+    8.177 [A] key 'fo/50' hash 32c7dd02
+    8.177 [A]   all nodes up : primary C, replica B
+    8.177 [A]   current view : primary C, replica B
+    8.277 [A] > set fo/1 before
+    8.277 [A] SET fo/1: OK (served by C, 1 attempt(s), 36 ms)
+  393.788 [C]    479.343 [C] compaction started (3059 bytes free)
+  396.707 [C]    482.255 [C] compaction #1 done: bank A, 52 keys, 14154 bytes free
+  675.173 [C] <<port lost>>
+  675.270 [A] > get fo/1
+  677.081 [A]   1514.094 [A] view: AB-D
+  677.090 [B]   1504.247 [B] view: AB-D
+  677.091 [D]   1874.497 [D] view: AB-D
+  678.596 [A] fo/1 = "before"
+  678.596 [A]    (served by D, 2 attempt(s), 3407 ms)
+  678.602 [B] > set fo/2 while-down-0
+  678.703 [B] SET fo/2: OK (served by D, 1 attempt(s), 31 ms)
+  678.804 [B] > set fo/3 while-down-1
+  678.804 [B] SET fo/3: OK (served by D, 1 attempt(s), 30 ms)
+  678.904 [B] > set fo/14 while-down-2
+  678.904 [B] SET fo/14: OK (served by A, 1 attempt(s), 33 ms)
+  679.005 [B] > set fo/15 while-down-3
+  679.005 [B] SET fo/15: OK (served by A, 1 attempt(s), 32 ms)
+  679.106 [B] > set fo/16 while-down-4
+  679.106 [B] SET fo/16: OK (served by A, 1 attempt(s), 30 ms)
+  679.207 [B] > set fo/17 while-down-5
+  679.207 [B] SET fo/17: OK (served by A, 1 attempt(s), 33 ms)
+  679.308 [B] > set fo/22 while-down-6
+  679.308 [B] SET fo/22: OK (served by D, 1 attempt(s), 35 ms)
+  679.409 [B] > set fo/38 while-down-7
+  679.409 [B] SET fo/38: OK (served by D, 1 attempt(s), 29 ms)
+  679.509 [B] > set fo/43 while-down-8
+  679.509 [B] SET fo/43: OK (served by A, 1 attempt(s), 30 ms)
+  679.610 [B] > set fo/50 while-down-9
+  679.610 [B] SET fo/50: OK (served by B, 1 attempt(s), 29 ms)
+  683.845 [A]   1520.821 [A] anti-entropy: key y repaired from B
+  683.845 [A]   1520.835 [A] anti-entropy: key s/B/motion repaired from D
+  683.845 [A]   1520.865 [A] anti-entropy: key k6 repaired from B
+  683.945 [A]   1520.874 [A] anti-entropy: key lat/A/0 repaired from D
+  683.945 [A]   1520.905 [A] anti-entropy: key lat/A/1 repaired from D
+  683.945 [A]   1520.941 [A] anti-entropy: key k3 repaired from D
+  684.046 [A]   1520.985 [A] anti-entropy: key k24 repaired from D
+  684.046 [A]   1521.024 [A] anti-entropy: key lat/A/2 repaired from D
+  684.046 [A]   1521.061 [A] anti-entropy: key lat/A/3 repaired from D
+  684.146 [A]   1521.104 [A] anti-entropy: key lat/A/4 repaired from D
+  684.146 [A]   1521.133 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  684.146 [A]   1521.172 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  684.247 [A]   1521.212 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  684.247 [A]   1521.253 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  684.347 [A]   1521.293 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  684.347 [A]   1521.332 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  684.451 [B]   1511.564 [B] anti-entropy: key h/B/motion/1 repaired from D
+  684.451 [B]   1511.575 [B] anti-entropy: key s/A/light repaired from A
+  684.451 [B]   1511.600 [B] anti-entropy: key x repaired from A
+  684.451 [B]   1511.610 [B] anti-entropy: key k19 repaired from D
+  684.517 [B]   1511.642 [B] anti-entropy: key m9/D/3 repaired from D
+  684.517 [B]   1511.651 [B] anti-entropy: key k11 repaired from A
+  684.517 [B]   1511.676 [B] anti-entropy: key z repaired from A
+  684.517 [B]   1511.677 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  684.617 [B]   1511.709 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  684.617 [B]   1511.709 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  684.617 [B]   1511.749 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  684.617 [B]   1511.789 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  684.718 [B]   1511.829 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  685.566 [D]   1882.995 [D] anti-entropy: key m9/D/5 repaired from A
+  685.566 [D]   1882.995 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  685.607 [D]   1883.026 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  685.607 [D]   1883.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  685.607 [D]   1883.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  685.686 [D]   1883.067 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  685.686 [D]   1883.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  685.686 [D]   1883.107 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  685.686 [D]   1883.145 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  685.766 [D]   1883.147 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  685.766 [D]   1883.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  685.766 [D]   1883.187 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  685.766 [D]   1883.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  685.844 [D]   1883.227 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  685.844 [D]   1883.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  685.844 [D]   1883.267 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  685.844 [D]   1883.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  685.923 [D]   1883.307 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  685.923 [D]   1883.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  685.923 [D]   1883.347 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  685.923 [D]   1883.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  686.023 [D]   1883.387 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  686.023 [D]   1883.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  694.401 [B]   1521.589 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  694.401 [B]   1521.590 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  694.493 [B]   1521.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  694.493 [B]   1521.629 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  694.493 [B]   1521.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  694.593 [B]   1521.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  695.559 [D]   1892.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  695.559 [D]   1892.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  695.559 [D]   1893.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  695.638 [D]   1893.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  695.638 [D]   1893.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  695.638 [D]   1893.067 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  695.638 [D]   1893.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  695.718 [D]   1893.107 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  695.718 [D]   1893.147 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  695.718 [D]   1893.149 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  695.718 [D]   1893.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  695.798 [D]   1893.187 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  695.798 [D]   1893.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  695.798 [D]   1893.227 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  695.798 [D]   1893.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  695.878 [D]   1893.267 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  695.878 [D]   1893.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  695.878 [D]   1893.307 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  695.878 [D]   1893.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  695.978 [D]   1893.347 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  695.978 [D]   1893.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  695.978 [D]   1893.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  703.914 [A]   1540.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  703.914 [A]   1540.932 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  703.914 [A]   1540.972 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  704.015 [A]   1541.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  704.015 [A]   1541.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  704.115 [A]   1541.092 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  713.960 [A]   1550.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  714.062 [A]   1550.932 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  714.062 [A]   1550.972 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  714.163 [A]   1551.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  714.163 [A]   1551.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  714.163 [A]   1551.092 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  715.688 [D]   1912.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  715.688 [D]   1912.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  715.688 [D]   1913.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  715.769 [D]   1913.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  715.769 [D]   1913.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  715.769 [D]   1913.067 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  715.769 [D]   1913.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  715.850 [D]   1913.107 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  715.850 [D]   1913.146 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  715.850 [D]   1913.147 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  715.850 [D]   1913.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  715.931 [D]   1913.187 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  715.931 [D]   1913.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  715.931 [D]   1913.227 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  715.931 [D]   1913.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  716.012 [D]   1913.267 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  716.012 [D]   1913.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  716.012 [D]   1913.307 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  716.012 [D]   1913.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  716.112 [D]   1913.347 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  716.112 [D]   1913.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  716.112 [D]   1913.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  724.098 [A]   1560.902 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  724.098 [A]   1560.929 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  724.098 [A]   1560.969 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  724.199 [A]   1561.010 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  724.199 [A]   1561.049 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  724.299 [A]   1561.089 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  724.594 [B]   1551.589 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  724.594 [B]   1551.590 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  724.594 [B]   1551.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  724.694 [B]   1551.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  724.694 [B]   1551.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  724.694 [B]   1551.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  725.730 [D]   1922.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  725.730 [D]   1922.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  725.730 [D]   1923.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  725.809 [D]   1923.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  725.809 [D]   1923.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  725.809 [D]   1923.067 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  725.809 [D]   1923.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  725.890 [D]   1923.107 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  725.890 [D]   1923.145 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  725.890 [D]   1923.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  725.890 [D]   1923.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  725.967 [D]   1923.187 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  725.967 [D]   1923.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  725.967 [D]   1923.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  725.967 [D]   1923.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  726.047 [D]   1923.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  726.047 [D]   1923.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  726.047 [D]   1923.307 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  726.047 [D]   1923.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  726.148 [D]   1923.347 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  726.148 [D]   1923.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  726.148 [D]   1923.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  733.979 [A]   1570.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  733.979 [A]   1570.932 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  734.080 [A]   1570.974 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  734.080 [A]   1571.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  734.180 [A]   1571.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  734.180 [A]   1571.092 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  734.516 [B]   1561.589 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  734.516 [B]   1561.590 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  734.516 [B]   1561.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  734.617 [B]   1561.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  734.617 [B]   1561.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  734.617 [B]   1561.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  735.624 [D]   1932.987 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  735.624 [D]   1932.988 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  735.690 [D]   1933.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  735.690 [D]   1933.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  735.690 [D]   1933.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  735.769 [D]   1933.066 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  735.769 [D]   1933.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  735.769 [D]   1933.106 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  735.769 [D]   1933.145 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  735.848 [D]   1933.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  735.848 [D]   1933.187 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  735.848 [D]   1933.189 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  735.848 [D]   1933.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  735.928 [D]   1933.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  735.928 [D]   1933.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  735.928 [D]   1933.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  735.928 [D]   1933.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  736.028 [D]   1933.307 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  736.028 [D]   1933.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  736.028 [D]   1933.347 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  736.028 [D]   1933.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  736.129 [D]   1933.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  743.969 [A]   1580.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  743.969 [A]   1580.932 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  744.070 [A]   1580.972 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  744.070 [A]   1581.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  744.070 [A]   1581.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  744.171 [A]   1581.093 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  744.483 [B]   1571.589 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  744.483 [B]   1571.591 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  744.483 [B]   1571.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  744.584 [B]   1571.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  744.584 [B]   1571.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  744.584 [B]   1571.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  745.628 [D]   1942.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  745.628 [D]   1942.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  745.678 [D]   1943.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  745.678 [D]   1943.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  745.678 [D]   1943.066 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  745.760 [D]   1943.066 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  745.760 [D]   1943.106 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  745.760 [D]   1943.107 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  745.760 [D]   1943.147 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  745.839 [D]   1943.149 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  745.839 [D]   1943.186 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  745.839 [D]   1943.187 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  745.839 [D]   1943.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  745.919 [D]   1943.228 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  745.919 [D]   1943.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  745.919 [D]   1943.266 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  745.919 [D]   1943.306 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  746.019 [D]   1943.306 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  746.019 [D]   1943.346 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  746.019 [D]   1943.346 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  746.019 [D]   1943.386 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  746.120 [D]   1943.427 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  753.760 [B]   1580.881 [B] replica D answered STORAGE_ERROR for h/B/motion/3: under-replicated
+  753.959 [A]   1590.920 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  753.959 [A]   1590.960 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  754.060 [A]   1591.000 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  754.060 [A]   1591.041 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  754.161 [A]   1591.080 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  754.161 [A]   1591.120 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  754.468 [B]   1581.589 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  754.468 [B]   1581.590 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  754.555 [B]   1581.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  754.555 [B]   1581.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  754.555 [B]   1581.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  754.656 [B]   1581.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  755.605 [D]   1952.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  755.605 [D]   1952.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  755.669 [D]   1953.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  755.669 [D]   1953.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  755.669 [D]   1953.066 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  755.745 [D]   1953.069 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  755.745 [D]   1953.106 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  755.745 [D]   1953.108 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  755.745 [D]   1953.145 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  755.825 [D]   1953.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  755.825 [D]   1953.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  755.825 [D]   1953.186 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  755.825 [D]   1953.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  755.905 [D]   1953.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  755.905 [D]   1953.266 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  755.905 [D]   1953.267 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  755.905 [D]   1953.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  756.005 [D]   1953.306 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  756.005 [D]   1953.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  756.005 [D]   1953.346 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  756.005 [D]   1953.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  756.106 [D]   1953.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  763.943 [A]   1600.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  763.943 [A]   1600.932 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  764.043 [A]   1600.972 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  764.043 [A]   1601.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  764.043 [A]   1601.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  764.144 [A]   1601.092 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  765.578 [D]   1962.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  765.578 [D]   1962.988 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  765.578 [D]   1963.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  765.656 [D]   1963.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  765.656 [D]   1963.065 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  765.656 [D]   1963.066 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  765.656 [D]   1963.105 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  765.735 [D]   1963.106 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  765.735 [D]   1963.145 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  765.735 [D]   1963.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  765.735 [D]   1963.185 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  765.814 [D]   1963.186 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  765.814 [D]   1963.225 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  765.814 [D]   1963.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  765.814 [D]   1963.265 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  765.893 [D]   1963.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  765.893 [D]   1963.305 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  765.893 [D]   1963.306 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  765.893 [D]   1963.345 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  765.993 [D]   1963.346 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  765.993 [D]   1963.385 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  765.993 [D]   1963.425 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  773.922 [A]   1610.893 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  773.922 [A]   1610.933 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  774.022 [A]   1610.972 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  774.022 [A]   1611.013 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  774.022 [A]   1611.052 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  774.123 [A]   1611.092 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  774.404 [B]   1601.590 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  774.404 [B]   1601.592 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  774.404 [B]   1601.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  774.505 [B]   1601.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  774.505 [B]   1601.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  774.505 [B]   1601.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  775.547 [D]   1972.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  775.547 [D]   1972.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  775.547 [D]   1973.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  775.627 [D]   1973.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  775.627 [D]   1973.066 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  775.627 [D]   1973.066 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  775.627 [D]   1973.106 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  775.706 [D]   1973.107 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  775.706 [D]   1973.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  775.706 [D]   1973.146 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  775.706 [D]   1973.186 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  775.786 [D]   1973.187 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  775.786 [D]   1973.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  775.786 [D]   1973.227 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  775.786 [D]   1973.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  775.869 [D]   1973.266 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  775.869 [D]   1973.306 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  775.869 [D]   1973.306 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  775.869 [D]   1973.347 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  775.969 [D]   1973.349 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  775.969 [D]   1973.386 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  775.969 [D]   1973.426 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  783.669 [B]   1610.886 [B] replica D answered STORAGE_ERROR for h/B/motion/0: under-replicated
+  783.895 [A]   1620.926 [A] anti-entropy: lat/A/5 from D failed (STORAGE_ERROR)
+  783.895 [A]   1620.964 [A] anti-entropy: lat/A/7 from D failed (STORAGE_ERROR)
+  783.996 [A]   1621.004 [A] anti-entropy: lat/B/0 from D failed (STORAGE_ERROR)
+  783.996 [A]   1621.045 [A] anti-entropy: cmp_marker from D failed (STORAGE_ERROR)
+  783.996 [A]   1621.084 [A] anti-entropy: lat/B/4 from D failed (STORAGE_ERROR)
+  784.097 [A]   1621.124 [A] anti-entropy: lat/B/7 from D failed (STORAGE_ERROR)
+  784.371 [B]   1611.589 [B] anti-entropy: fo/1 from D failed (STORAGE_ERROR)
+  784.371 [B]   1611.590 [B] anti-entropy: lat/B/1 from A failed (STORAGE_ERROR)
+  784.371 [B]   1611.629 [B] anti-entropy: m9/B/0 from D failed (STORAGE_ERROR)
+  784.471 [B]   1611.630 [B] anti-entropy: lat/B/2 from A failed (STORAGE_ERROR)
+  784.471 [B]   1611.669 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+  784.471 [B]   1611.709 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+  785.514 [D]   1982.986 [D] anti-entropy: m9/D/7 from A failed (STORAGE_ERROR)
+  785.514 [D]   1982.987 [D] anti-entropy: h/B/motion/0 from B failed (STORAGE_ERROR)
+  785.514 [D]   1983.026 [D] anti-entropy: m9/D/6 from A failed (STORAGE_ERROR)
+  785.593 [D]   1983.027 [D] anti-entropy: h/B/motion/3 from B failed (STORAGE_ERROR)
+  785.593 [D]   1983.066 [D] anti-entropy: m9/D/4 from A failed (STORAGE_ERROR)
+  785.593 [D]   1983.066 [D] anti-entropy: lat/D/4 from B failed (STORAGE_ERROR)
+  785.593 [D]   1983.106 [D] anti-entropy: m9/D/1 from A failed (STORAGE_ERROR)
+  785.673 [D]   1983.107 [D] anti-entropy: m9/A/3 from B failed (STORAGE_ERROR)
+  785.673 [D]   1983.146 [D] anti-entropy: m9/D/0 from A failed (STORAGE_ERROR)
+  785.673 [D]   1983.146 [D] anti-entropy: m9/A/1 from B failed (STORAGE_ERROR)
+  785.673 [D]   1983.186 [D] anti-entropy: m9/B/3 from A failed (STORAGE_ERROR)
+  785.755 [D]   1983.187 [D] anti-entropy: m9/A/0 from B failed (STORAGE_ERROR)
+  785.755 [D]   1983.226 [D] anti-entropy: m9/B/2 from A failed (STORAGE_ERROR)
+  785.755 [D]   1983.226 [D] anti-entropy: m9/D/2 from B failed (STORAGE_ERROR)
+  785.755 [D]   1983.266 [D] anti-entropy: m9/B/5 from A failed (STORAGE_ERROR)
+  785.832 [D]   1983.269 [D] anti-entropy: m9/A/2 from B failed (STORAGE_ERROR)
+  785.832 [D]   1983.306 [D] anti-entropy: m9/B/6 from A failed (STORAGE_ERROR)
+  785.832 [D]   1983.306 [D] anti-entropy: m9/A/5 from B failed (STORAGE_ERROR)
+  785.832 [D]   1983.346 [D] anti-entropy: m9/B/4 from A failed (STORAGE_ERROR)
+  785.932 [D]   1983.346 [D] anti-entropy: m9/A/7 from B failed (STORAGE_ERROR)
+  785.932 [D]   1983.387 [D] anti-entropy: m9/A/6 from B failed (STORAGE_ERROR)
+  785.932 [D]   1983.426 [D] anti-entropy: m9/A/4 from B failed (STORAGE_ERROR)
+  788.940 [C] <<port back>>
+  789.040 [C] > edge-kv firmwar ent re.B /motion/3 repair
+  789.040 [C] unknown command 'edge-kv' (try 'help')
+  789.040 [C]      4.630 [C] anti-entropy: key fo/14 repaired from A
+  789.040 [C]      4.640 [C] anti-entropy: key fo/2 repaired from B
+  789.141 [C]      4.671 [C] anti-entropy: key fo/15 repaired from A
+  789.141 [C]      4.684 [C] anti-entropy: key fo/3 repaired from D
+  789.141 [C]      4.706 [C] anti-entropy: key fo/16 repaired from A
+  789.141 [C]      4.719 [C] anti-entropy: key fo/22 repaired from D
+  789.242 [C]      4.749 [C] anti-entropy: key fo/17 repaired from A
+  789.242 [C]      4.759 [C] anti-entropy: key fo/38 repaired from D
+  789.242 [C]      4.791 [C] anti-entropy: key fo/43 repaired from D
+  789.343 [C]      4.870 [C] anti-entropy: key fo/50 repaired from B
+  791.632 [B]   1618.862 [B] view: ABCD
+  791.655 [A]   1628.708 [A] view: ABCD
+  791.662 [C]      7.210 [C] state -> ACTIVE
+  791.692 [D]   1989.112 [D] view: ABCD
+  794.666 [C] > stats
+  794.666 [C] radio   rx 105 (invalid 0, spoofed 0)  tx 32 (failed 0)
+  794.666 [C] hb      tx 7  rx 51   membership changes 3
+  794.666 [C] server  executed 0  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+  794.666 [C] repl    started 0  ok 0  failed 0  stale 0   as replica: applied 0 stale 0
+  794.666 [C] ae      rounds 2  chunks tx 24 rx 25  tables 1  pushes 0  resync tx 0 applied 15 stale 13
+  794.666 [C] gc      orphans 0  tombstones 0  keys dropped 0
+  794.666 [C] client  ok 1  failed 0  attempts 1  local 0
+  794.666 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+  794.670 [C] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+  794.670 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+  794.670 [C] esp-now rx 105  queue overflows 0  unknown MAC 0
+  794.670 [C] esp-now tx -> A: 0 delivered, 0 failed (MAC-layer ACK)
+  794.675 [C] esp-now tx -> B: 1 delivered, 0 failed (MAC-layer ACK)
+  794.675 [C] esp-now tx -> D: 0 delivered, 0 failed (MAC-layer ACK)
+  794.675 [C] heap free 178864 (min 170040)  node task stack headroom 13720 bytes
+  794.675 [C] eeprom page writes since boot: total 42, hottest page 66 with 5 (rated 1000000)
+  794.675 [C] > get fo/2
+  794.675 [C] fo/2 = "while-down-0"
+  794.776 [C]    (served by C, 1 attempt(s), 0 ms)
+  794.876 [C] > get fo/3
+  794.876 [C] fo/3 = "while-down-1"
+  794.876 [C]    (served by C, 1 attempt(s), 0 ms)
+  794.977 [C] > get fo/14
+  794.977 [C] fo/14 = "while-down-2"
+  794.977 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.078 [C] > get fo/15
+  795.078 [C] fo/15 = "while-down-3"
+  795.078 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.179 [C] > get fo/16
+  795.179 [C] fo/16 = "while-down-4"
+  795.179 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.280 [C] > get fo/17
+  795.280 [C] fo/17 = "while-down-5"
+  795.280 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.381 [C] > get fo/22
+  795.381 [C] fo/22 = "while-down-6"
+  795.381 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.482 [C] > get fo/38
+  795.482 [C] fo/38 = "while-down-7"
+  795.482 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.583 [C] > get fo/43
+  795.583 [C] fo/43 = "while-down-8"
+  795.583 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.684 [C] > get fo/50
+  795.684 [C] fo/50 = "while-down-9"
+  795.684 [C]    (served by C, 1 attempt(s), 0 ms)
+  795.687 [A] > status
+  795.687 [A] node A  state ACTIVE  view ABCD  uptime 1632s
+  795.687 [A] hlc 19353488.0
+  795.687 [A] storage recovered: 64 live, 0 tombstones, 64/64 keys, log 8366/16064 bytes, bank A, 3 compactions
+  795.687 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+  795.689 [B] > status
+  795.689 [B] node B  state ACTIVE  view ABCD  uptime 1622s
+  795.689 [B] hlc 19353493.0
+  795.689 [B] storage recovered: 64 live, 0 tombstones, 64/64 keys, log 9019/16064 bytes, bank B, 3 compactions
+  795.689 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+  795.691 [C] > status
+  795.691 [C] node C  state ACTIVE  view ABCD  uptime 11s
+  795.691 [C] hlc 19353494.0
+  795.691 [C] storage recovered: 62 live, 0 tombstones, 62/64 keys, log 4068/16064 bytes, bank A, 0 compactions
+  795.691 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+  795.694 [D] > status
+  795.694 [D] node D  state ACTIVE  view ABCD  uptime 1993s
+  795.694 [D] hlc 19353496.0
+  795.694 [D] storage recovered: 64 live, 0 tombstones, 64/64 keys, log 11696/16064 bytes, bank B, 6 compactions
+  795.694 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+  795.788 [A] sensor light (simulated): on, 54 samples, last 513.655 lux seq 543, 108 ok, 0 under-replicated, 0 failed, 0 read failures
+  795.788 [A] > sensor off
+  795.788 [A] sampler off
+  795.790 [B] sensor motion (simulated): on, 53 samples, last 3 events, last motion 25 s before the sample seq 296, 104 ok, 2 under-replicated, 0 failed, 0 read failures
+  795.792 [C] sensor sound (simulated): on, 0 samples, last - seq 0, 0 ok, 0 under-replicated, 0 failed, 0 read failures
+  795.795 [D] sensor temp (simulated): on, 65 samples, last 20.136 degC seq 387, 130 ok, 0 under-replicated, 0 failed, 0 read failures
+  795.891 [B] > sensor off
+  795.891 [B] sampler off
+  795.994 [C] > sensor off
+  795.994 [C] sampler off
+  795.996 [D] > sensor off
+  795.996 [D] sampler off
+  796.091 [A] > sensor on
+  796.091 [A] sampler on
+  796.194 [B] > sensor on
+  796.194 [B] sampler on
+  796.296 [C] > sensor on
+  796.296 [C] sampler on
+  796.298 [D] > sensor on
+  796.298 [D] sampler on

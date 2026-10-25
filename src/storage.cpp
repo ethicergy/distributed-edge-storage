@@ -191,17 +191,19 @@ Result StorageManager::map_eeprom_result(
         return Result::INVALID_ARGUMENT;
 
     case eeprom::Result::OUT_OF_RANGE:
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::OUT_OF_RANGE);
 
     case eeprom::Result::NOT_INITIALIZED:
         return Result::NOT_INITIALIZED;
 
     case eeprom::Result::I2C_ERROR:
+        return fail(Result::STORAGE_ERROR, Fault::I2C_ERROR);
+
     case eeprom::Result::WRITE_TIMEOUT:
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::WRITE_TIMEOUT);
     }
 
-    return Result::STORAGE_ERROR;
+    return fail(Result::STORAGE_ERROR, Fault::I2C_ERROR);
 }
 
 Result StorageManager::write_committed_block(
@@ -262,7 +264,7 @@ Result StorageManager::write_committed_block(
             temporary,
             length
         ) != 0) {
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::VERIFY_MISMATCH);
     }
 
     // Commit marker is deliberately written last.
@@ -296,7 +298,7 @@ Result StorageManager::write_committed_block(
             data,
             length
         ) != 0) {
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::VERIFY_MISMATCH);
     }
 
     return Result::OK;
@@ -629,7 +631,7 @@ Result StorageManager::recover_active_bank(bool& torn_tail)
             torn_tail_limit(current_address, record_end);
 
         if (!erased_range(limit, record_end)) {
-            return Result::CORRUPTED;
+            return fail(Result::CORRUPTED, Fault::CORRUPTED);
         }
 
         const Result clear_result =
@@ -812,7 +814,7 @@ Result StorageManager::recover_active_bank(bool& torn_tail)
                 find_free_index_entry();
 
             if (free_index < 0) {
-                return Result::INDEX_FULL;
+                return fail(Result::INDEX_FULL, Fault::INDEX_FULL);
             }
 
             update_index_entry(
@@ -942,7 +944,7 @@ Result StorageManager::append_record_to_bank(
 
     if (append_address < bank_record_start(bank) ||
         append_address > record_area_end) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     const size_t remaining =
@@ -951,7 +953,7 @@ Result StorageManager::append_record_to_bank(
         );
 
     if (record_length > remaining) {
-        return Result::NO_SPACE;
+        return fail(Result::NO_SPACE, Fault::NO_SPACE);
     }
 
     record_address = append_address;
@@ -989,7 +991,7 @@ Result StorageManager::append_record_to_bank(
             buffer,
             record_length - 1
         ) != 0) {
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::VERIFY_MISMATCH);
     }
 
     // Commit marker is written last.
@@ -1026,7 +1028,7 @@ Result StorageManager::append_record_to_bank(
             buffer,
             record_length
         ) != 0) {
-        return Result::STORAGE_ERROR;
+        return fail(Result::STORAGE_ERROR, Fault::VERIFY_MISMATCH);
     }
 
     append_address =
@@ -1088,6 +1090,8 @@ bool StorageManager::compaction_needed() const
 
 Result StorageManager::compaction_begin()
 {
+    last_fault_ = Fault::NONE;
+
     if (!initialized_) {
         return Result::NOT_INITIALIZED;
     }
@@ -1122,7 +1126,7 @@ Result StorageManager::copy_one_for_compaction(std::size_t slot)
 
     if (entry.state != State::LIVE &&
         entry.state != State::TOMBSTONE) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     uint8_t value_buffer[VALUE_MAX]{};
@@ -1249,6 +1253,8 @@ Result StorageManager::finalize_compaction()
 
 Result StorageManager::compaction_step(bool& done)
 {
+    last_fault_ = Fault::NONE;
+
     done = false;
 
     if (!initialized_) {
@@ -1350,11 +1356,13 @@ Result StorageManager::compaction_step(bool& done)
         }
     }
 
-    return Result::CORRUPTED;
+    return fail(Result::CORRUPTED, Fault::CORRUPTED);
 }
 
 Result StorageManager::compact()
 {
+    last_fault_ = Fault::NONE;
+
     Result result = compaction_begin();
 
     if (result != Result::OK) {
@@ -1415,6 +1423,8 @@ Result StorageManager::apply(
     State state
 )
 {
+    last_fault_ = Fault::NONE;
+
     if (!initialized_) {
         return Result::NOT_INITIALIZED;
     }
@@ -1479,7 +1489,7 @@ Result StorageManager::apply(
         target_index = find_free_index_entry();
 
         if (target_index < 0) {
-            return Result::INDEX_FULL;
+            return fail(Result::INDEX_FULL, Fault::INDEX_FULL);
         }
     }
 
@@ -1499,6 +1509,7 @@ Result StorageManager::apply(
         // The caller gets NO_SPACE for this write; the background
         // compaction makes room for the next one.
         (void)compaction_begin();
+        last_fault_ = Fault::NO_SPACE; // compaction_begin cleared it
     }
 
     if (append_result != Result::OK) {
@@ -1531,6 +1542,8 @@ Result StorageManager::set(
     Version version
 )
 {
+    last_fault_ = Fault::NONE;
+
     return apply(
         key,
         value,
@@ -1544,6 +1557,8 @@ Result StorageManager::remove(
     Version version
 )
 {
+    last_fault_ = Fault::NONE;
+
     return apply(
         key,
         ValueView{nullptr, 0},
@@ -1602,7 +1617,7 @@ Result StorageManager::read_value(
                            record::CRC_SIZE +
                            record::COMMIT_MARKER_SIZE ||
         record_length > record::MAX_RECORD_SIZE) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     eeprom_result =
@@ -1638,7 +1653,7 @@ Result StorageManager::read_value(
         ) != 0 ||
         persistent_record.version.hlc != entry.version_hlc ||
         persistent_record.version.origin != entry.version_origin) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     if (persistent_record.value.len > 0) {
@@ -1820,7 +1835,7 @@ Result StorageManager::begin()
             sizeof(header_buffer),
             header
         ) != Result::OK) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     uint8_t footer_buffer[
@@ -1845,14 +1860,14 @@ Result StorageManager::begin()
             sizeof(footer_buffer),
             footer
         ) != Result::OK) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     if ((header.state != metadata::BankState::OPEN &&
          header.state != metadata::BankState::SEALED) ||
         header.generation != selected.active_bank_generation ||
         footer.generation != header.generation) {
-        return Result::CORRUPTED;
+        return fail(Result::CORRUPTED, Fault::CORRUPTED);
     }
 
     bool torn_tail = false;
@@ -1874,6 +1889,8 @@ Result StorageManager::begin()
 
 Result StorageManager::format()
 {
+    last_fault_ = Fault::NONE;
+
     if (!eeprom_.ready()) {
         return Result::NOT_INITIALIZED;
     }

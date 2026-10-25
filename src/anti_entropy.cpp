@@ -326,6 +326,14 @@ void Tracker::on_chunk(
             continue;
         }
 
+        // GC marked this entry only after every peer confirmed it, so a
+        // peer that lacks it has already dropped it: pushing it back
+        // would undo that peer's GC (BRINGUP_LOG problem 11). A peer
+        // with an older version is still pushed to, above.
+        if (storage.drop_pending(slot)) {
+            continue;
+        }
+
         if (key_owned_by(placement, info, owners_view, sender)) {
             queue_push(static_cast<std::uint8_t>(slot), sender);
         }

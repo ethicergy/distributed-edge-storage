@@ -1,0 +1,397 @@
+# Sat 24 step 3: fresh parallel format of all four (EEPROM modules may have been swapped). Laptop clock. 1) state before: status, dump, stats; 2) 'sensor off' then 'format yes' on all four at once (threads + barrier); 3) 60 s watch, status, dump, stats; 4) samplers back on.
+12:57:43.547 [A] >>> status
+12:57:43.547 [B] >>> status
+12:57:43.548 [C] >>> status
+12:57:43.549 [D] >>> status
+12:57:43.595 [C] > status
+12:57:43.595 [A] > status
+12:57:43.596 [C] node C  state ACTIVE  view ABCD  uptime 118s
+12:57:43.596 [C] hlc 32617579.0
+12:57:43.596 [C] storage recovered: 27 live, 0 tombstones, 27/64 keys, log 11396/16064 bytes, bank A, 0 compactions
+12:57:43.596 [D] > status
+12:57:43.596 [B] > status
+12:57:43.596 [B] node B  state ACTIVE  view ABCD  uptime 128s
+12:57:43.596 [A] node A  state ACTIVE  view ABCD  uptime 139s
+12:57:43.597 [A] hlc 32617577.0
+12:57:43.597 [A] storage recovered: 28 live, 0 tombstones, 28/64 keys, log 11758/16064 bytes, bank B, 0 compactions
+12:57:43.596 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:57:43.596 [D] node D  state ACTIVE  view ABCD  uptime 107s
+12:57:43.597 [D] hlc 32617579.0
+12:57:43.597 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:57:43.597 [C] sensor sound (hardware): on, 4 samples, last 0 events, 0.0 % active seq 891, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+12:57:43.597 [C] sensor detail: AO rest 81 mV, swing max 23 mV (threshold 40 mV), 0/3000 blocks active, 0 clipped, sampled 100 %, 0 dropped, 67 us/sample
+12:57:43.597 [D] storage recovered: 27 live, 0 tombstones, 27/64 keys, log 12013/16064 bytes, bank A, 0 compactions
+12:57:43.597 [D] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+12:57:43.597 [D] sensor temp (hardware): on, 3 samples, last 29.800 degC seq 2535, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+12:57:43.597 [A] sensor light (hardware): on, 5 samples, last 25.000 lux seq 2596, 10 ok, 0 under-replicated, 0 failed, 0 read failures
+12:57:43.596 [B] hlc 32617579.0
+12:57:43.598 [B] storage recovered: 22 live, 0 tombstones, 22/64 keys, log 10694/16064 bytes, bank B, 0 compactions
+12:57:43.598 [B] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+12:57:43.598 [B] sensor motion (hardware): on, 4 samples, last 0 events, no motion since boot seq 715, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+12:57:45.551 [A] >>> dump
+12:57:45.552 [B] >>> dump
+12:57:45.553 [C] >>> dump
+12:57:45.554 [D] >>> dump
+12:57:45.556 [D] > dump
+12:57:45.556 [C] > dump
+12:57:45.556 [B] > dump
+12:57:45.556 [A] > dump
+12:57:45.557 [A]   v=32606335.1@C  s/A/light = 25.000 lux  (seq 2596, sampled at hlc 32606333)
+12:57:45.569 [B]   v=32594434.1@B  h/B/motion/3 = 0 events, no motion since boot  (seq 715, sampled at hlc 32594432)
+12:57:45.569 [B]   v=32612557.0@B  s/C/sound = 0 events, 0.0 % active  (seq 891, sampled at hlc 32612553)
+12:57:45.569 [B]   v=32582571.1@B  h/C/sound/2 = 2 events, 0.0 % active  (seq 890, sampled at hlc 32582553)
+12:57:45.569 [B]   v=32600552.0@B  s/D/temp = 29.800 degC  (seq 2535, sampled at hlc 32600548)
+12:57:45.569 [B]   v=32570567.0@B  h/D/temp/2 = 29.800 degC  (seq 2534, sampled at hlc 32570548)
+12:57:45.570 [A]   v=32570567.0@B  h/D/temp/2 = 29.800 degC  (seq 2534, sampled at hlc 32570548)
+12:57:45.571 [A]   v=32546335.0@A  h/A/light/2 = 25.833 lux  (seq 2594, sampled at hlc 32546333)
+12:57:45.571 [A]   v=32600564.0@B  h/D/temp/3 = 29.800 degC  (seq 2535, sampled at hlc 32600548)
+12:57:45.571 [A]   v=32576335.0@A  h/A/light/3 = 25.833 lux  (seq 2595, sampled at hlc 32576333)
+12:57:45.571 [A]   v=32495640.1@D  h/D/temp/0 = 29.800 degC  (seq 2532, sampled at hlc 32495624)
+12:57:45.571 [A]   v=32522558.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 888, sampled at hlc 32522553)
+12:57:45.571 [D]   v=32546335.0@A  h/A/light/2 = 25.833 lux  (seq 2594, sampled at hlc 32546333)
+12:57:45.571 [D]   v=32612557.0@B  s/C/sound = 0 events, 0.0 % active  (seq 891, sampled at hlc 32612553)
+12:57:45.571 [D]   v=32594435.1@C  s/B/motion = 0 events, no motion since boot  (seq 715, sampled at hlc 32594432)
+12:57:45.571 [D]   v=32576335.0@A  h/A/light/3 = 25.833 lux  (seq 2595, sampled at hlc 32576333)
+12:57:45.571 [D]   v=32582571.1@B  h/C/sound/2 = 2 events, 0.0 % active  (seq 890, sampled at hlc 32582553)
+12:57:45.572 [C]   v=32594435.1@C  s/B/motion = 0 events, no motion since boot  (seq 715, sampled at hlc 32594432)
+12:57:45.572 [C]   v=32606335.1@C  s/A/light = 25.000 lux  (seq 2596, sampled at hlc 32606333)
+12:57:45.572 [C]   v=32594434.1@B  h/B/motion/3 = 0 events, no motion since boot  (seq 715, sampled at hlc 32594432)
+12:57:45.572 [C]   v=32504434.1@B  h/B/motion/0 = settling (PIR warm-up)  (seq 712, sampled at hlc 32504432)
+12:57:45.572 [C]   v=32534450.1@C  h/B/motion/1 = 0 events, no motion since boot  (seq 713, sampled at hlc 32534432)
+12:57:45.572 [C]   v=27671376.1@C  bench/0 = "48"
+12:57:45.583 [B]   v=32516337.0@B  h/A/light/1 = 25.833 lux  (seq 2593, sampled at hlc 32516333)
+12:57:45.583 [B]   v=32504434.1@B  h/B/motion/0 = settling (PIR warm-up)  (seq 712, sampled at hlc 32504432)
+12:57:45.583 [B]   v=32600564.0@B  h/D/temp/3 = 29.800 degC  (seq 2535, sampled at hlc 32600548)
+12:57:45.583 [B]   v=32612572.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 891, sampled at hlc 32612553)
+12:57:45.583 [B]   v=32540554.1@A  h/D/temp/1 = 29.800 degC  (seq 2533, sampled at hlc 32540548)
+12:57:45.583 [B]   v=32420637.1@C (drop pending)  h/B/motion/1 = 0 events, last motion 70 s before the sample  (seq 709, sampled at hlc 32420619, simulated)
+12:57:45.585 [A]   v=32540554.1@A  h/D/temp/1 = 29.800 degC  (seq 2533, sampled at hlc 32540548)
+12:57:45.585 [A]   v=32552558.1@D  h/C/sound/1 = 8 events, 0.2 % active  (seq 889, sampled at hlc 32552553)
+12:57:45.585 [A]   v=32564437.1@D  h/B/motion/2 = 0 events, no motion since boot  (seq 714, sampled at hlc 32564432)
+12:57:45.585 [A]   v=32606336.1@D  h/A/light/0 = 25.000 lux  (seq 2596, sampled at hlc 32606333)
+12:57:45.586 [A]   v=27671160.2@D  bench/4 = "44"
+12:57:45.586 [A]   v=27671203.0@D  bench/5 = "45"
+12:57:45.586 [A]   v=32504437.1@D (drop pending)  s/B/motion = settling (PIR warm-up)  (seq 712, sampled at hlc 32504432)
+12:57:45.588 [D]   v=32534450.1@C  h/B/motion/1 = 0 events, no motion since boot  (seq 713, sampled at hlc 32534432)
+12:57:45.588 [D]   v=27671376.1@C  bench/0 = "48"
+12:57:45.588 [D]   v=32495640.1@D  h/D/temp/0 = 29.800 degC  (seq 2532, sampled at hlc 32495624)
+12:57:45.589 [D]   v=32600552.0@B  s/D/temp = 29.800 degC  (seq 2535, sampled at hlc 32600548)
+12:57:45.589 [D]   v=27671438.1@C  bench/1 = "49"
+12:57:45.589 [D]   v=32522558.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 888, sampled at hlc 32522553)
+12:57:45.589 [D]   v=32516337.0@B  h/A/light/1 = 25.833 lux  (seq 2593, sampled at hlc 32516333)
+12:57:45.589 [D]   v=27671054.0@D  bench/2 = "42"
+12:57:45.591 [C]   v=27671438.1@C  bench/1 = "49"
+12:57:45.591 [C]   v=27671054.0@D  bench/2 = "42"
+12:57:45.591 [C]   v=27671098.2@D  bench/3 = "43"
+12:57:45.591 [C]   v=27671268.1@C  bench/6 = "46"
+12:57:45.591 [C]   v=27671328.1@D  bench/7 = "47"
+12:57:45.591 [C]   v=32488126.1@D (drop pending)  s/C/sound = 0 events, 0.0 % active  (seq 887, sampled at hlc 32488124, simulated)
+12:57:45.591 [C]   v=31467766.1@B (drop pending)  h/D/temp/2 = 29.300 degC  (seq 2498, sampled at hlc 31467748)
+12:57:45.591 [C]   v=32495625.1@D (drop pending)  s/D/temp = 29.800 degC  (seq 2532, sampled at hlc 32495624)
+12:57:45.595 [B]   v=32486337.1@C (drop pending)  s/A/light = 25.833 lux  (seq 2592, sampled at hlc 32486333)
+12:57:45.595 [B]   v=31476658.2@A (drop pending)  h/A/light/2 = 54.166 lux  (seq 2558, sampled at hlc 31476657)
+12:57:45.595 [B]   v=31506658.2@A (drop pending)  h/A/light/3 = 54.166 lux  (seq 2559, sampled at hlc 31506657)
+12:57:45.595 [B]   v=31527750.1@D (drop pending)  h/D/temp/0 = 29.400 degC  (seq 2500, sampled at hlc 31527748)
+12:57:45.595 [B]   v=32398127.1@D (drop pending)  h/C/sound/0 = 4 events, 3.6 % active  (seq 884, sampled at hlc 32398124, simulated)
+12:57:45.601 [A]   v=27671376.1@C (drop pending)  bench/0 = "48"
+12:57:45.601 [A]   v=27671438.1@C (drop pending)  bench/1 = "49"
+12:57:45.601 [A]   v=27671054.0@D (drop pending)  bench/2 = "42"
+12:57:45.601 [A]   v=27671098.2@D (drop pending)  bench/3 = "43"
+12:57:45.601 [A]   v=27671268.1@C (drop pending)  bench/6 = "46"
+12:57:45.601 [A]   v=27671328.1@D (drop pending)  bench/7 = "47"
+12:57:45.601 [A]   v=32516337.0@B (drop pending)  h/A/light/1 = 25.833 lux  (seq 2593, sampled at hlc 32516333)
+12:57:45.601 [A]   v=31512540.1@B (drop pending)  h/B/motion/3 = 1 events, last motion 4 s before the sample  (seq 679, sampled at hlc 31512538, simulated)
+12:57:45.605 [C]   v=32436658.3@A (drop pending)  h/A/light/2 = 25.833 lux  (seq 2590, sampled at hlc 32436657)
+12:57:45.605 [C]   v=31497763.1@B (drop pending)  h/D/temp/3 = 29.400 degC  (seq 2499, sampled at hlc 31497748)
+12:57:45.605 [C]   v=32466658.3@A (drop pending)  h/A/light/3 = 25.833 lux  (seq 2591, sampled at hlc 32466657)
+12:57:45.605 [C]   v=32495640.1@D (drop pending)  h/D/temp/0 = 29.800 degC  (seq 2532, sampled at hlc 32495624)
+12:57:45.605 [C]   v=31532743.1@D (drop pending)  h/C/sound/0 = 0 events, 0.0 % active  (seq 856, sampled at hlc 31532738, simulated)
+12:57:45.606 [B]   v=32428127.1@D (drop pending)  h/C/sound/1 = 0 events, 0.0 % active  (seq 885, sampled at hlc 32428124, simulated)
+12:57:45.606 [B]   v=31482543.1@D (drop pending)  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 678, sampled at hlc 31482538, simulated)
+12:57:45.606 [B]   v=31536662.1@D (drop pending)  h/A/light/0 = 44.166 lux  (seq 2560, sampled at hlc 31536657)
+12:57:45.606 [B]   v=27671160.2@D (drop pending)  bench/4 = "44"
+12:57:45.606 [B]   v=27671203.0@D (drop pending)  bench/5 = "45"
+12:57:45.607 [D]   v=32612572.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 891, sampled at hlc 32612553)
+12:57:45.607 [D]   v=32552558.1@D  h/C/sound/1 = 8 events, 0.2 % active  (seq 889, sampled at hlc 32552553)
+12:57:45.607 [D]   v=27671098.2@D  bench/3 = "43"
+12:57:45.607 [D]   v=32564437.1@D  h/B/motion/2 = 0 events, no motion since boot  (seq 714, sampled at hlc 32564432)
+12:57:45.607 [D]   v=32606336.1@D  h/A/light/0 = 25.000 lux  (seq 2596, sampled at hlc 32606333)
+12:57:45.607 [D]   v=27671268.1@C  bench/6 = "46"
+12:57:45.607 [D]   v=27671160.2@D  bench/4 = "44"
+12:57:45.607 [D]   v=27671328.1@D  bench/7 = "47"
+12:57:45.607 [D]   v=27671203.0@D  bench/5 = "45"
+12:57:45.612 [A]   v=31532741.1@B (drop pending)  s/C/sound = 0 events, 0.0 % active  (seq 856, sampled at hlc 31532738, simulated)
+12:57:45.612 [A]   v=31542540.1@B (drop pending)  h/B/motion/0 = 1 events, last motion 6 s before the sample  (seq 680, sampled at hlc 31542538, simulated)
+12:57:45.612 [A]   v=31452556.0@C (drop pending)  h/B/motion/1 = 0 events, last motion 44 s before the sample  (seq 677, sampled at hlc 31452538, simulated)
+12:57:45.612 [A]   v=32458142.1@B (drop pending)  h/C/sound/2 = 0 events, 0.0 % active  (seq 886, sampled at hlc 32458124, simulated)
+12:57:45.617 [D]   v=32435643.1@B (drop pending)  h/D/temp/2 = 29.800 degC  (seq 2530, sampled at hlc 32435624)
+12:57:45.617 [D]   v=32465643.1@B (drop pending)  h/D/temp/3 = 29.800 degC  (seq 2531, sampled at hlc 32465624)
+12:57:45.617 [D]   v=32405629.1@A (drop pending)  h/D/temp/1 = 29.800 degC  (seq 2529, sampled at hlc 32405624)
+12:57:45.617 [D]   v=32480621.0@B (drop pending)  h/B/motion/3 = 0 events, last motion 43 s before the sample  (seq 711, sampled at hlc 32480619, simulated)
+12:57:45.617 [D]   v=32504434.1@B (drop pending)  h/B/motion/0 = settling (PIR warm-up)  (seq 712, sampled at hlc 32504432)
+12:57:45.620 [C]   v=31557752.1@A (drop pending)  h/D/temp/1 = 29.800 degC  (seq 2501, sampled at hlc 31557748)
+12:57:45.620 [C]   v=31442743.1@D (drop pending)  h/C/sound/1 = 0 events, 0.0 % active  (seq 853, sampled at hlc 31442738, simulated)
+12:57:45.620 [C]   v=32450622.1@D (drop pending)  h/B/motion/2 = 3 events, last motion 13 s before the sample  (seq 710, sampled at hlc 32450619, simulated)
+12:57:45.620 [C]   v=32486338.1@D (drop pending)  h/A/light/0 = 25.833 lux  (seq 2592, sampled at hlc 32486333)
+12:57:45.620 [C]   v=27671160.2@D (drop pending)  bench/4 = "44"
+12:57:45.620 [C]   v=27671203.0@D (drop pending)  bench/5 = "45"
+12:57:45.657 [B]   v=31542540.1@C (drop pending)  s/B/motion = 1 events, last motion 6 s before the sample  (seq 680, sampled at hlc 31542538, simulated)
+12:57:45.657 [B] 22 key(s); log 10694/16064 bytes used
+12:57:45.662 [A]   v=31557751.1@B (drop pending)  s/D/temp = 29.800 degC  (seq 2501, sampled at hlc 31557748)
+12:57:45.662 [A]   v=32488141.1@D (drop pending)  h/C/sound/3 = 0 events, 0.0 % active  (seq 887, sampled at hlc 32488124, simulated)
+12:57:45.662 [A] 28 key(s); log 11758/16064 bytes used
+12:57:45.667 [D] 27 key(s); log 12013/16064 bytes used
+12:57:45.670 [C]   v=31566672.1@A (drop pending)  h/A/light/1 = 45.833 lux  (seq 2561, sampled at hlc 31566657)
+12:57:45.671 [C]   v=31472756.1@B (drop pending)  h/C/sound/2 = 4 events, 3.2 % active  (seq 854, sampled at hlc 31472738, simulated)
+12:57:45.671 [C] 27 key(s); log 11396/16064 bytes used
+12:57:47.556 [A] >>> stats
+12:57:47.557 [B] >>> stats
+12:57:47.557 [A] > stats
+12:57:47.557 [A] radio   rx 1057 (invalid 0, spoofed 0)  tx 406 (failed 0)
+12:57:47.557 [A] hb      tx 273  rx 784   membership changes 7
+12:57:47.557 [A] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:57:47.558 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 16 stale 0
+12:57:47.558 [A] ae      rounds 16  chunks tx 96 rx 241  tables 38  pushes 8  resync tx 8 applied 3 stale 0
+12:57:47.558 [A] gc      orphans 17  tombstones 0  keys dropped 0
+12:57:47.558 [A] client  ok 11  failed 0  attempts 11  local 2
+12:57:47.558 [C] >>> stats
+12:57:47.558 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:57:47.558 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: unknown
+12:57:47.559 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+12:57:47.559 [A] esp-now rx 1057  queue overflows 0  unknown MAC 32
+12:57:47.559 [A] esp-now tx -> B: 7 delivered, 0 failed (MAC-layer ACK)
+12:57:47.559 [A] esp-now tx -> C: 14 delivered, 0 failed (MAC-layer ACK)
+12:57:47.559 [A] esp-now tx -> D: 16 delivered, 0 failed (MAC-layer ACK)
+12:57:47.559 [A] heap free 169448 (min 160724)  node task stack headroom 13240 bytes
+12:57:47.559 [A] eeprom page writes since boot: total 63, hottest page 439 with 5 (rated 1000000)
+12:57:47.559 [B] > stats
+12:57:47.560 [B] radio   rx 1027 (invalid 0, spoofed 0)  tx 369 (failed 0)
+12:57:47.560 [B] hb      tx 252  rx 744   membership changes 5
+12:57:47.560 [D] >>> stats
+12:57:47.560 [B] server  executed 16  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:57:47.561 [B] repl    started 14  ok 14  failed 0  stale 0   as replica: applied 1 stale 0
+12:57:47.561 [B] ae      rounds 15  chunks tx 75 rx 240  tables 40  pushes 3  resync tx 3 applied 5 stale 2
+12:57:47.561 [B] gc      orphans 12  tombstones 0  keys dropped 0
+12:57:47.561 [B] client  ok 9  failed 0  attempts 10  local 2
+12:57:47.561 [C] > stats
+12:57:47.561 [C] radio   rx 935 (invalid 0, spoofed 0)  tx 341 (failed 0)
+12:57:47.561 [C] hb      tx 231  rx 698   membership changes 4
+12:57:47.561 [C] server  executed 8  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:57:47.561 [C] repl    started 8  ok 8  failed 0  stale 0   as replica: applied 1 stale 0
+12:57:47.561 [C] ae      rounds 14  chunks tx 84 rx 204  tables 36  pushes 0  resync tx 0 applied 5 stale 2
+12:57:47.561 [C] gc      orphans 16  tombstones 0  keys dropped 0
+12:57:47.561 [C] client  ok 9  failed 0  attempts 9  local 0
+12:57:47.561 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:57:47.562 [D] > stats
+12:57:47.562 [D] radio   rx 878 (invalid 0, spoofed 0)  tx 312 (failed 0)
+12:57:47.562 [D] hb      tx 210  rx 659   membership changes 1
+12:57:47.562 [D] server  executed 4  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:57:47.562 [D] repl    started 4  ok 4  failed 0  stale 0   as replica: applied 15 stale 0
+12:57:47.562 [D] ae      rounds 12  chunks tx 72 rx 187  tables 33  pushes 0  resync tx 0 applied 1 stale 1
+12:57:47.562 [D] gc      orphans 5  tombstones 0  keys dropped 0
+12:57:47.562 [D] client  ok 7  failed 0  attempts 7  local 0
+12:57:47.562 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:57:47.609 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+12:57:47.611 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:57:47.611 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: unknown
+12:57:47.611 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+12:57:47.611 [B] esp-now rx 1027  queue overflows 0  unknown MAC 18
+12:57:47.611 [B] esp-now tx -> A: 5 delivered, 0 failed (MAC-layer ACK)
+12:57:47.611 [B] esp-now tx -> C: 14 delivered, 3 failed (MAC-layer ACK)
+12:57:47.611 [B] esp-now tx -> D: 20 delivered, 0 failed (MAC-layer ACK)
+12:57:47.611 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+12:57:47.611 [B] eeprom page writes since boot: total 58, hottest page 416 with 5 (rated 1000000)
+12:57:47.612 [C] env node-c-fi, built Oct 24 2026 12:54:16, reset reason: unknown
+12:57:47.612 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+12:57:47.612 [C] esp-now rx 935  queue overflows 0  unknown MAC 20
+12:57:47.612 [C] esp-now tx -> A: 8 delivered, 0 failed (MAC-layer ACK)
+12:57:47.612 [C] esp-now tx -> B: 12 delivered, 0 failed (MAC-layer ACK)
+12:57:47.612 [C] esp-now tx -> D: 6 delivered, 0 failed (MAC-layer ACK)
+12:57:47.612 [C] heap free 171324 (min 162596)  node task stack headroom 13368 bytes
+12:57:47.612 [C] eeprom page writes since boot: total 39, hottest page 175 with 5 (rated 1000000)
+12:57:47.612 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+12:57:47.613 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+12:57:47.613 [D] esp-now rx 878  queue overflows 0  unknown MAC 16
+12:57:47.613 [D] esp-now tx -> A: 8 delivered, 0 failed (MAC-layer ACK)
+12:57:47.613 [D] esp-now tx -> B: 16 delivered, 0 failed (MAC-layer ACK)
+12:57:47.613 [D] esp-now tx -> C: 6 delivered, 0 failed (MAC-layer ACK)
+12:57:47.613 [D] heap free 171568 (min 162740)  node task stack headroom 13320 bytes
+12:57:47.613 [D] eeprom page writes since boot: total 57, hottest page 179 with 5 (rated 1000000)
+12:58:12.250 [C] >>> sensor off  (sent)
+12:58:12.250 [D] >>> sensor off  (sent)
+12:58:12.250 [A] >>> sensor off  (sent)
+12:58:12.250 [B] >>> sensor off  (sent)
+12:58:12.297 [A] > sensor off
+12:58:12.297 [B] > sensor off
+12:58:12.298 [B] sampler off
+12:58:12.298 [C] > sensor off
+12:58:12.298 [A] sampler off
+12:58:12.298 [D] > sensor off
+12:58:12.298 [D] sampler off
+12:58:12.298 [C] sampler off
+12:58:14.253 [A] >>> format yes  (sent)
+12:58:14.254 [D] >>> format yes  (sent)
+12:58:14.254 [B] >>> format yes  (sent)
+12:58:14.255 [C] >>> format yes  (sent)
+12:58:14.255 [A] > format yes
+12:58:14.256 [D] > format yes
+12:58:14.305 [C] > format yes
+12:58:14.306 [B] > format yes
+12:58:16.269 [A]    171.973 [A] state -> BOOTING
+12:58:16.270 [A]    171.973 [A] storage formatted
+12:58:16.270 [A] formatted; peers will push this node's keys back
+12:58:16.271 [D]    140.254 [D] state -> BOOTING
+12:58:16.271 [D]    140.254 [D] storage formatted
+12:58:16.271 [D] formatted; peers will push this node's keys back
+12:58:16.311 [C]    150.750 [C] state -> BOOTING
+12:58:16.311 [B]    161.368 [B] state -> BOOTING
+12:58:16.311 [C]    150.751 [C] storage formatted
+12:58:16.311 [B]    161.368 [B] storage formatted
+12:58:16.312 [C] formatted; peers will push this node's keys back
+12:58:16.312 [B] formatted; peers will push this node's keys back
+12:58:16.312 [B]    161.369 [B] view: -B--
+12:58:16.312 [C]    150.752 [C] view: --C-
+12:58:16.320 [A]    171.974 [A] view: A---
+12:58:16.321 [D]    140.256 [D] view: ---D
+12:58:16.721 [A]    172.426 [A] state -> ACTIVE
+12:58:16.721 [A]    172.428 [A] view: A--D
+12:58:16.721 [A]    172.429 [A] view: A-CD
+12:58:16.722 [D]    140.707 [D] state -> ACTIVE
+12:58:16.723 [D]    140.708 [D] view: A--D
+12:58:16.723 [D]    140.710 [D] view: A-CD
+12:58:16.763 [C]    151.203 [C] state -> ACTIVE
+12:58:16.763 [B]    161.821 [B] state -> CATCHUP
+12:58:16.764 [B]    161.821 [B] view: AB--
+12:58:16.764 [B]    161.822 [B] view: AB-D
+12:58:16.764 [B]    161.823 [B] view: ABCD
+12:58:16.763 [C]    151.204 [C] view: A-CD
+12:58:19.672 [B]    164.822 [B] state -> ACTIVE
+12:58:19.672 [C]    154.206 [C] view: ABCD
+12:58:19.678 [A]    175.430 [A] view: ABCD
+12:58:19.731 [D]    143.711 [D] view: ABCD
+12:59:26.733 [A] >>> status
+12:59:26.734 [B] >>> status
+12:59:26.735 [C] >>> status
+12:59:26.735 [D] >>> status
+12:59:26.781 [C] > status
+12:59:26.781 [B] > status
+12:59:26.781 [B] node B  state ACTIVE  view ABCD  uptime 231s
+12:59:26.781 [B] hlc 32720691.0
+12:59:26.781 [B] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+12:59:26.781 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:59:26.781 [A] > status
+12:59:26.781 [C] node C  state ACTIVE  view ABCD  uptime 221s
+12:59:26.782 [C] hlc 32720692.0
+12:59:26.781 [D] > status
+12:59:26.782 [D] node D  state ACTIVE  view ABCD  uptime 210s
+12:59:26.782 [D] hlc 32720692.0
+12:59:26.782 [D] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+12:59:26.782 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:59:26.781 [A] node A  state ACTIVE  view ABCD  uptime 242s
+12:59:26.782 [C] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+12:59:26.782 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:59:26.782 [C] sensor sound (hardware): off, 5 samples, last 1 events, 0.0 % active seq 892, 10 ok, 0 under-replicated, 0 failed, 0 read failures
+12:59:26.782 [C] sensor detail: AO rest 81 mV, swing max 59 mV (threshold 40 mV), 1/3000 blocks active, 0 clipped, sampled 100 %, 141 dropped, 66 us/sample
+12:59:26.781 [B] sensor motion (hardware): off, 5 samples, last 0 events, no motion since boot seq 716, 10 ok, 0 under-replicated, 0 failed, 0 read failures
+12:59:26.782 [D] sensor temp (hardware): off, 4 samples, last 29.800 degC seq 2536, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+12:59:26.782 [A] hlc 32720690.0
+12:59:26.783 [A] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+12:59:26.783 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+12:59:26.783 [A] sensor light (hardware): off, 6 samples, last 25.000 lux seq 2597, 12 ok, 0 under-replicated, 0 failed, 0 read failures
+12:59:28.737 [A] >>> dump
+12:59:28.738 [B] >>> dump
+12:59:28.739 [C] >>> dump
+12:59:28.739 [C] > dump
+12:59:28.739 [B] > dump
+12:59:28.739 [A] > dump
+12:59:28.740 [D] >>> dump
+12:59:28.740 [B] 0 key(s); log 0/16064 bytes used
+12:59:28.740 [A] 0 key(s); log 0/16064 bytes used
+12:59:28.789 [D] > dump
+12:59:28.789 [C] 0 key(s); log 0/16064 bytes used
+12:59:28.790 [D] 0 key(s); log 0/16064 bytes used
+12:59:30.742 [A] >>> stats
+12:59:30.743 [A] > stats
+12:59:30.743 [A] radio   rx 1703 (invalid 0, spoofed 0)  tx 633 (failed 0)
+12:59:30.743 [A] hb      tx 475  rx 1362   membership changes 11
+12:59:30.743 [A] server  executed 3  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:59:30.743 [A] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 19 stale 0
+12:59:30.743 [A] ae      rounds 26  chunks tx 116 rx 304  tables 68  pushes 8  resync tx 8 applied 3 stale 0
+12:59:30.743 [A] gc      orphans 17  tombstones 0  keys dropped 0
+12:59:30.743 [A] client  ok 13  failed 0  attempts 13  local 2
+12:59:30.744 [B] > stats
+12:59:30.744 [B] radio   rx 1689 (invalid 0, spoofed 0)  tx 592 (failed 0)
+12:59:30.744 [B] hb      tx 448  rx 1334   membership changes 9
+12:59:30.744 [B] server  executed 20  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:59:30.744 [B] repl    started 18  ok 18  failed 0  stale 0   as replica: applied 1 stale 0
+12:59:30.744 [B] ae      rounds 26  chunks tx 94 rx 304  tables 69  pushes 3  resync tx 3 applied 5 stale 2
+12:59:30.744 [B] gc      orphans 12  tombstones 0  keys dropped 0
+12:59:30.744 [B] client  ok 11  failed 0  attempts 12  local 3
+12:59:30.746 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:59:30.746 [B] >>> stats
+12:59:30.746 [A] env node-a-fi, built Oct 24 2026 12:54:06, reset reason: unknown
+12:59:30.746 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+12:59:30.746 [A] esp-now rx 1703  queue overflows 0  unknown MAC 50
+12:59:30.746 [A] esp-now tx -> B: 8 delivered, 0 failed (MAC-layer ACK)
+12:59:30.747 [A] esp-now tx -> C: 16 delivered, 0 failed (MAC-layer ACK)
+12:59:30.747 [A] esp-now tx -> D: 18 delivered, 0 failed (MAC-layer ACK)
+12:59:30.747 [A] heap free 169448 (min 160724)  node task stack headroom 13240 bytes
+12:59:30.747 [A] eeprom page writes since boot: total 581, hottest page 439 with 5 (rated 1000000)
+12:59:30.747 [C] >>> stats
+12:59:30.748 [D] >>> stats
+12:59:30.749 [C] > stats
+12:59:30.749 [C] radio   rx 1589 (invalid 0, spoofed 0)  tx 568 (failed 0)
+12:59:30.749 [C] hb      tx 432  rx 1281   membership changes 7
+12:59:30.749 [C] server  executed 10  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:59:30.749 [C] repl    started 10  ok 10  failed 0  stale 0   as replica: applied 2 stale 0
+12:59:30.749 [C] ae      rounds 23  chunks tx 103 rx 268  tables 67  pushes 0  resync tx 0 applied 5 stale 2
+12:59:30.749 [C] gc      orphans 16  tombstones 0  keys dropped 0
+12:59:30.749 [C] client  ok 11  failed 0  attempts 11  local 0
+12:59:30.750 [D] > stats
+12:59:30.750 [D] radio   rx 1527 (invalid 0, spoofed 0)  tx 546 (failed 0)
+12:59:30.750 [D] hb      tx 411  rx 1242   membership changes 5
+12:59:30.750 [D] server  executed 6  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+12:59:30.750 [D] repl    started 6  ok 6  failed 0  stale 0   as replica: applied 19 stale 0
+12:59:30.750 [D] ae      rounds 22  chunks tx 97 rx 245  tables 63  pushes 0  resync tx 0 applied 1 stale 1
+12:59:30.750 [D] gc      orphans 5  tombstones 0  keys dropped 0
+12:59:30.750 [D] client  ok 9  failed 0  attempts 9  local 1
+12:59:30.750 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:59:30.794 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:59:30.795 [B] env node-b-fi, built Oct 24 2026 12:54:11, reset reason: unknown
+12:59:30.795 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+12:59:30.795 [B] esp-now rx 1689  queue overflows 0  unknown MAC 28
+12:59:30.795 [B] esp-now tx -> A: 6 delivered, 0 failed (MAC-layer ACK)
+12:59:30.795 [B] esp-now tx -> C: 17 delivered, 3 failed (MAC-layer ACK)
+12:59:30.795 [B] esp-now tx -> D: 24 delivered, 0 failed (MAC-layer ACK)
+12:59:30.795 [B] heap free 171424 (min 162600)  node task stack headroom 13304 bytes
+12:59:30.795 [B] eeprom page writes since boot: total 580, hottest page 416 with 5 (rated 1000000)
+12:59:30.797 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+12:59:30.799 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+12:59:30.799 [C] env node-c-fi, built Oct 24 2026 12:54:16, reset reason: unknown
+12:59:30.799 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+12:59:30.799 [C] esp-now rx 1589  queue overflows 0  unknown MAC 34
+12:59:30.799 [C] esp-now tx -> A: 10 delivered, 0 failed (MAC-layer ACK)
+12:59:30.799 [C] esp-now tx -> B: 15 delivered, 0 failed (MAC-layer ACK)
+12:59:30.799 [C] esp-now tx -> D: 8 delivered, 0 failed (MAC-layer ACK)
+12:59:30.799 [C] heap free 171324 (min 162596)  node task stack headroom 13368 bytes
+12:59:30.799 [C] eeprom page writes since boot: total 558, hottest page 175 with 7 (rated 1000000)
+12:59:30.800 [D] env node-d-fi, built Oct 24 2026 12:54:21, reset reason: unknown
+12:59:30.800 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+12:59:30.800 [D] esp-now rx 1527  queue overflows 0  unknown MAC 23
+12:59:30.800 [D] esp-now tx -> A: 10 delivered, 0 failed (MAC-layer ACK)
+12:59:30.800 [D] esp-now tx -> B: 20 delivered, 0 failed (MAC-layer ACK)
+12:59:30.800 [D] esp-now tx -> C: 8 delivered, 0 failed (MAC-layer ACK)
+12:59:30.800 [D] heap free 171568 (min 162740)  node task stack headroom 13304 bytes
+12:59:30.800 [D] eeprom page writes since boot: total 584, hottest page 179 with 7 (rated 1000000)
+12:59:45.413 [A] >>> sensor on
+12:59:45.414 [B] >>> sensor on
+12:59:45.416 [C] >>> sensor on
+12:59:45.417 [D] >>> sensor on
+12:59:45.463 [B] > sensor on
+12:59:45.463 [A] > sensor on
+12:59:45.463 [B] sampler on
+12:59:45.463 [C] > sensor on
+12:59:45.464 [A] sampler on
+12:59:45.464 [D] > sensor on
+12:59:45.464 [C] sampler on
+12:59:45.464 [D] sampler on

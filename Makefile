@@ -72,6 +72,7 @@ check: test test-pi
 firmware:
 	$(PIO) run -e node-a -e node-b -e node-c -e node-d \
 	           -e node-a-fi -e node-b-fi -e node-c-fi -e node-d-fi
+	scripts/check_images.sh
 
 clean:
 	rm -rf build

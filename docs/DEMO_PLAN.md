@@ -14,10 +14,10 @@ drivers, one console command, and a Pi dashboard.
 Two confusions to settle first (also go into README/docs):
 
 **1. Where does the temperature data live?** It does *not* live on the node
-that measures it. The key name decides. `s/A/temp` hashes to the ring → with
-all four nodes up its owners are **primary D, replica B** (checked with the
-simulator's `ring` command). Node A measures it and then sends it over
-ESP-NOW to D, which copies it to B. Each key has a fixed pair of owners
+that measures it. The key name decides. `s/D/temp` hashes to the ring → with
+all four nodes up its owners are **primary B, replica D** (checked with the
+simulator's `ring` command). Node D measures it and then sends it over
+ESP-NOW to B, which copies it back to D as replica. Each key has a fixed pair of owners
 while membership is stable. The history slots `h/A/temp/0..3` are
 different keys, so they land on other pairs (A+C, C+A): one sensor's data
 is spread over the cluster. If D dies, the next live node clockwise takes

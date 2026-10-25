@@ -21,6 +21,9 @@ using WriteFn = void (*)(void* context, const char* text);
 struct Hooks {
     void (*print_platform_stats)(void* context, WriteFn write, void* write_context) = nullptr;
     void (*reboot)(void* context) = nullptr;
+    // Die temperature of the MCU in degC (ESP32-C3 internal sensor);
+    // false if the read failed. Not ambient. nullptr: no line printed.
+    bool (*read_chip_temp)(void* context, float& celsius) = nullptr;
     void* context = nullptr;
 };
 
@@ -36,6 +39,11 @@ public:
 
     // Feed received characters (handles CR/LF and backspace).
     void on_char(char c, std::uint64_t now_ms);
+
+    // Discard received characters, and any partial line, until
+    // now_ms + duration_ms (BRINGUP_LOG problem 5: a host opening the
+    // port can echo the board's own output back as input).
+    void hold_input(std::uint64_t now_ms, std::uint32_t duration_ms);
 
     // Execute one command line.
     void execute(const char* line, std::uint64_t now_ms);
@@ -83,6 +91,7 @@ private:
     void cmd_sensors(std::uint64_t now_ms);
     void cmd_dump();
     void cmd_stats();
+    void print_chip_temp();
     void cmd_log(const char* level);
     void cmd_fault(const char* args);
     void cmd_stale(const char* args);
@@ -101,7 +110,25 @@ private:
     char line_[256]{};
     std::size_t line_length_ = 0;
 
+    std::uint64_t hold_until_ms_ = 0;
+    std::uint32_t held_chars_ = 0;
+
     Bench bench_{};
+};
+
+// When to hold console input (BRINGUP_LOG problems 5 and 10): at boot
+// only. Never in the middle of a session: neither a pause in the output
+// nor the core's USB "plugged" flag (it flickers) means the port was
+// reopened, and both triggers dropped real commands on the boards. A
+// SuperMini is powered by its USB cable, so plugging it in is a boot.
+class InputGuard {
+public:
+    explicit InputGuard(Console& console);
+
+    void begin(std::uint64_t now_ms);
+
+private:
+    Console& console_;
 };
 
 } // namespace console

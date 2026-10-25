@@ -297,6 +297,7 @@ bool Runtime::begin(std::uint64_t now_ms, std::uint32_t random_seed)
 
     counters_ = Counters{};
     last_view_ = 0;
+    loss_rng_ = random_seed != 0 ? random_seed : 0x9E3779B9u;
     started_ = true;
 
     enter_state(NodeState::BOOTING, now_ms);
@@ -568,7 +569,8 @@ void Runtime::handle_client_request(
 
     if (response.result == kv::Result::STORAGE_ERROR) {
         ++counters_.storage_errors;
-        logf(LogLevel::INFO, "storage error on %s", key_text);
+        logf(LogLevel::INFO, "storage error on %s: %s", key_text,
+             storage::to_string(storage_.last_fault()));
     }
 
     if (mutation && response.result == kv::Result::OK) {
@@ -953,6 +955,16 @@ void Runtime::handle_replication_request(
     char key_text[storage::KEY_MAX + 1];
     format_key(response.key, response.key_length, key_text, sizeof(key_text));
 
+    if (response.result == kv::Result::STORAGE_ERROR) {
+        logf(
+            LogLevel::INFO,
+            "storage error on %s (replica write from %c): %s",
+            key_text,
+            letter(header.sender_node_id),
+            cache ? storage::to_string(storage_.last_fault()) : "dedup table full"
+        );
+    }
+
     logf(
         LogLevel::DEBUG,
         "REPL_REQ %s%s from %c -> %s",
@@ -1038,10 +1050,13 @@ void Runtime::handle_resync(
 
         logf(
             LogLevel::INFO,
-            "anti-entropy: %s from %c failed (%s)",
+            "anti-entropy: %s from %c failed (%s%s%s)",
             key_text,
             letter(message.header.sender_node_id),
-            kv::to_string(response.result)
+            kv::to_string(response.result),
+            response.result == kv::Result::STORAGE_ERROR ? ": " : "",
+            response.result == kv::Result::STORAGE_ERROR
+                ? storage::to_string(storage_.last_fault()) : ""
         );
     }
 }
@@ -1117,6 +1132,10 @@ bool Runtime::send(
 {
     ++counters_.frames_tx;
 
+    if (lose_frame()) {
+        return true; // lost in the air: the sender cannot tell
+    }
+
     const bool ok = link_.unicast(destination, data, length);
 
     if (!ok) {
@@ -1124,6 +1143,36 @@ bool Runtime::send(
     }
 
     return ok;
+}
+
+bool Runtime::broadcast(const std::uint8_t* data, std::size_t length)
+{
+    if (lose_frame()) {
+        return true;
+    }
+
+    return link_.broadcast(data, length);
+}
+
+bool Runtime::lose_frame()
+{
+#if EDGE_FAULT_INJECTION
+    if (faults_.tx_loss_percent == 0) {
+        return false;
+    }
+
+    // xorshift32
+    loss_rng_ ^= loss_rng_ << 13;
+    loss_rng_ ^= loss_rng_ >> 17;
+    loss_rng_ ^= loss_rng_ << 5;
+
+    if (loss_rng_ % 100u < faults_.tx_loss_percent) {
+        ++counters_.faults_injected;
+        return true;
+    }
+#endif
+
+    return false;
 }
 
 bool Runtime::reliable_send(
@@ -1767,7 +1816,7 @@ void Runtime::tick_heartbeat(std::uint64_t now_ms)
     ++counters_.heartbeats_tx;
     ++counters_.frames_tx;
 
-    if (!link_.broadcast(out.data, out.length)) {
+    if (!broadcast(out.data, out.length)) {
         ++counters_.frames_tx_failed;
     }
 }
@@ -1850,7 +1899,7 @@ void Runtime::tick_anti_entropy(std::uint64_t now_ms)
                 if (packet::build_version_table(local_node_id_, clock_.now(), table, out)) {
                     ++counters_.frames_tx;
 
-                    if (!link_.broadcast(out.data, out.length)) {
+                    if (!broadcast(out.data, out.length)) {
                         ++counters_.frames_tx_failed;
                     }
                 }
@@ -1898,8 +1947,9 @@ void Runtime::tick_storage(std::uint64_t now_ms)
             compaction_retry_ms_ = now_ms + 30000;
             logf(
                 LogLevel::INFO,
-                "compaction aborted (%u); old bank stays authoritative",
-                static_cast<unsigned>(result)
+                "compaction aborted (%u, %s); old bank stays authoritative",
+                static_cast<unsigned>(result),
+                storage::to_string(storage_.last_fault())
             );
             return;
         }

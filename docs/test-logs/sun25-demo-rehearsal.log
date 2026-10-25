@@ -1,0 +1,559 @@
+# Sun 25 DEMO.md rehearsal 1 on hardware, no-Pi variant (Pi off). Final firmware (-fi), mask 0x0D. WSL clock = UTC.
+02:10:46.414 [B] --- port open
+02:10:46.414 [C] --- port open
+02:10:46.414 [D] --- port open
+02:10:46.414 [A] --- port open
+# 02:10:49 SETUP
+02:10:49.142 [A] >>> sensor period 5000
+02:10:49.143 [B] >>> sensor period 5000
+02:10:49.144 [C] >>> sensor period 5000
+02:10:49.145 [D] >>> sensor period 5000
+02:10:49.175 [A] > sensor period 5000
+02:10:49.176 [A] sampler on
+02:10:49.176 [C] > sensor period 5000
+02:10:49.176 [C] sampler on
+02:10:49.176 [D] > sensor period 5000
+02:10:49.176 [D] sampler on
+02:10:49.176 [B] > sensor period 5000
+02:10:49.176 [B] sampler on
+02:10:50.145 [B] >>> log off
+02:10:50.153 [D] >>> log off
+02:10:50.180 [B] > log off
+02:10:50.181 [B] log level set
+02:10:50.181 [D] > log off
+02:10:50.181 [D] log level set
+# 02:10:52 STEP 1 start
+02:10:52.163 [A] >>> status
+02:10:52.164 [B] >>> status
+02:10:52.165 [C] >>> status
+02:10:52.166 [D] >>> status
+02:10:52.190 [A] > status
+02:10:52.190 [A] node A  state ACTIVE  view ABCD  uptime 129s
+02:10:52.190 [A] hlc 80152531.0
+02:10:52.190 [A] storage recovered: 21 live, 4 tombstones, 25/64 keys, log 10938/16064 bytes, bank B, 0 compactions
+02:10:52.190 [A] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+02:10:52.191 [D] > status
+02:10:52.191 [D] node D  state ACTIVE  view ABCD  uptime 116s
+02:10:52.191 [D] hlc 80152532.0
+02:10:52.191 [D] storage recovered: 18 live, 2 tombstones, 20/64 keys, log 3667/16064 bytes, bank B, 0 compactions
+02:10:52.191 [D] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+02:10:52.191 [D] sensor temp (hardware): on, 3 samples, last 29.300 degC seq 4472, 6 ok, 0 under-replicated, 0 failed, 0 read failures
+02:10:52.191 [D] chip temp 51.6 degC (die temperature, not ambient)
+02:10:52.191 [A] sensor light (hardware): on, 5 samples, last 10.833 lux seq 4210, 8 ok, 2 under-replicated, 0 failed, 0 read failures
+02:10:52.191 [A] chip temp 58.1 degC (die temperature, not ambient)
+02:10:52.191 [C] > status
+02:10:52.191 [C] node C  state ACTIVE  view ABCD  uptime 122s
+02:10:52.191 [B] > status
+02:10:52.191 [B] node B  state ACTIVE  view ABCD  uptime 125s
+02:10:52.191 [B] hlc 80152531.0
+02:10:52.191 [B] storage recovered: 23 live, 2 tombstones, 25/64 keys, log 9038/16064 bytes, bank A, 0 compactions
+02:10:52.191 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+02:10:52.192 [B] sensor motion (simulated): on, 4 samples, last 0 events, last motion 45 s before the sample seq 2687, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+02:10:52.192 [B] chip temp 53.5 degC (die temperature, not ambient)
+02:10:52.192 [C] hlc 80152531.0
+02:10:52.192 [C] storage recovered: 19 live, 4 tombstones, 23/64 keys, log 6224/16064 bytes, bank B, 0 compactions
+02:10:52.192 [C] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+02:10:52.192 [C] sensor sound (hardware): on, 4 samples, last 0 events, 0.0 % active seq 3090, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+02:10:52.192 [C] chip temp 51.4 degC (die temperature, not ambient)
+02:10:54.167 [A] >>> members
+02:10:54.199 [A] > members
+02:10:54.199 [A]   A  self    ACTIVE
+02:10:54.199 [A]   B  alive   last heard 102 ms ago, 217 heartbeats
+02:10:54.199 [A]   C  alive   last heard 399 ms ago, 213 heartbeats
+02:10:54.199 [A]   D  alive   last heard 288 ms ago, 217 heartbeats
+# 02:10:56 STEP 1 end (4.01 s of commands)
+02:11:58.360 [A]    195.251 [A] compaction started (3050 bytes free)
+02:12:00.637 [A]    197.635 [A] compaction #1 done: bank A, 15 keys, 15326 bytes free
+# 02:12:17 STEP 2 start (NS: go): B sensors every 5 s for 60 s; NS covers A, claps at C (5 cm), breathes on D
+02:12:17.251 [B] >>> sensors
+02:12:17.262 [B] > sensors
+02:12:17.262 [B] s/C/sound = 0 events, 0.0 % active  (seq 3103, sampled at hlc 80233223)
+02:12:17.262 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:17.262 [B] s/D/temp = 29.300 degC  (seq 4489, sampled at hlc 80236319)
+02:12:17.262 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:17.262 [B] s/A/light = 0.000 lux  (seq 4222, sampled at hlc 80233602)
+02:12:17.262 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:17.262 [B] s/B/motion = 3 events, last motion 4 s before the sample  (seq 2702, sampled at hlc 80232521, simulated)
+02:12:17.262 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:22.255 [B] >>> sensors
+02:12:22.292 [B] > sensors
+02:12:22.292 [B] s/C/sound = 0 events, 0.0 % active  (seq 3104, sampled at hlc 80238223)
+02:12:22.292 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:22.292 [B] s/D/temp = 29.300 degC  (seq 4490, sampled at hlc 80241319)
+02:12:22.292 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:22.292 [B] s/A/light = 0.000 lux  (seq 4223, sampled at hlc 80238602)
+02:12:22.292 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:22.292 [B] s/B/motion = 0 events, last motion 9 s before the sample  (seq 2703, sampled at hlc 80237521, simulated)
+02:12:22.292 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:27.257 [B] >>> sensors
+02:12:27.292 [B] > sensors
+02:12:27.292 [B] s/C/sound = 0 events, 0.0 % active  (seq 3105, sampled at hlc 80243223)
+02:12:27.292 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:27.292 [B] s/D/temp = 29.300 degC  (seq 4491, sampled at hlc 80246319)
+02:12:27.292 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:27.292 [B] s/A/light = 0.000 lux  (seq 4224, sampled at hlc 80243602)
+02:12:27.292 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:27.292 [B] s/B/motion = 0 events, last motion 14 s before the sample  (seq 2704, sampled at hlc 80242521, simulated)
+02:12:27.292 [B]    (served by C, 1 attempt(s), 10 ms)
+02:12:32.261 [B] >>> sensors
+02:12:32.278 [B] > sensors
+02:12:32.278 [B] s/C/sound = 0 events, 0.0 % active  (seq 3106, sampled at hlc 80248223)
+02:12:32.278 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:32.278 [B] s/D/temp = 29.300 degC  (seq 4492, sampled at hlc 80251319)
+02:12:32.278 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:32.278 [B] s/A/light = 0.000 lux  (seq 4225, sampled at hlc 80248602)
+02:12:32.278 [B]    (served by C, 1 attempt(s), 8 ms)
+02:12:32.278 [B] s/B/motion = 1 events, last motion 4 s before the sample  (seq 2705, sampled at hlc 80247521, simulated)
+02:12:32.278 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:37.271 [B] >>> sensors
+02:12:37.312 [B] > sensors
+02:12:37.312 [B] s/C/sound = 0 events, 0.0 % active  (seq 3107, sampled at hlc 80253223)
+02:12:37.312 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:37.312 [B] s/D/temp = 29.400 degC  (seq 4493, sampled at hlc 80256319)
+02:12:37.312 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:37.312 [B] s/A/light = 24.166 lux  (seq 4226, sampled at hlc 80253602)
+02:12:37.312 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:37.312 [B] s/B/motion = 0 events, last motion 6 s before the sample  (seq 2707, sampled at hlc 80257521, simulated)
+02:12:37.312 [B]    (served by C, 1 attempt(s), 11 ms)
+02:12:43.727 [B] >>> sensors
+02:12:43.755 [B] > sensors
+02:12:43.755 [B] s/C/sound = 0 events, 0.0 % active  (seq 3108, sampled at hlc 80258223)
+02:12:43.755 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:43.755 [B] s/D/temp = 29.400 degC  (seq 4494, sampled at hlc 80261319)
+02:12:43.755 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:43.755 [B] s/A/light = 24.166 lux  (seq 4227, sampled at hlc 80258602)
+02:12:43.755 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:43.755 [B] s/B/motion = 3 events, last motion 3 s before the sample  (seq 2708, sampled at hlc 80262521, simulated)
+02:12:43.755 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:48.738 [B] >>> sensors
+02:12:48.744 [B] > sensors
+02:12:48.794 [B] s/C/sound = 0 events, 0.0 % active  (seq 3109, sampled at hlc 80263223)
+02:12:48.794 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:48.794 [B] s/D/temp = 29.800 degC  (seq 4495, sampled at hlc 80266319)
+02:12:48.794 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:48.794 [B] s/A/light = 23.333 lux  (seq 4228, sampled at hlc 80263602)
+02:12:48.794 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:48.794 [B] s/B/motion = 0 events, last motion 8 s before the sample  (seq 2709, sampled at hlc 80267521, simulated)
+02:12:48.794 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:53.740 [B] >>> sensors
+02:12:53.783 [B] > sensors
+02:12:53.783 [B] s/C/sound = 0 events, 0.0 % active  (seq 3111, sampled at hlc 80273223)
+02:12:53.783 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:53.783 [B] s/D/temp = 29.800 degC  (seq 4496, sampled at hlc 80271319)
+02:12:53.783 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:53.783 [B] s/A/light = 23.333 lux  (seq 4229, sampled at hlc 80268602)
+02:12:53.783 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:53.783 [B] s/B/motion = 3 events, last motion 0 s before the sample  (seq 2710, sampled at hlc 80272521, simulated)
+02:12:53.783 [B]    (served by C, 1 attempt(s), 9 ms)
+02:12:58.736 [B] >>> sensors
+02:12:58.770 [B] > sensors
+02:12:58.770 [B] s/C/sound = 0 events, 0.0 % active  (seq 3112, sampled at hlc 80278223)
+02:12:58.770 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:58.770 [B] s/D/temp = 29.800 degC  (seq 4497, sampled at hlc 80276319)
+02:12:58.770 [B]    (served by B, 1 attempt(s), 0 ms)
+02:12:58.770 [B] s/A/light = 24.166 lux  (seq 4231, sampled at hlc 80278602)
+02:12:58.770 [B]    (served by C, 1 attempt(s), 7 ms)
+02:12:58.770 [B] s/B/motion = 3 events, last motion 2 s before the sample  (seq 2711, sampled at hlc 80277521, simulated)
+02:12:58.770 [B]    (served by C, 1 attempt(s), 9 ms)
+02:13:03.739 [B] >>> sensors
+02:13:03.742 [B] > sensors
+02:13:03.792 [B] s/C/sound = 0 events, 0.0 % active  (seq 3113, sampled at hlc 80283223)
+02:13:03.792 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:03.792 [B] s/D/temp = 29.800 degC  (seq 4498, sampled at hlc 80281319)
+02:13:03.792 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:03.792 [B] s/A/light = 24.166 lux  (seq 4232, sampled at hlc 80283602)
+02:13:03.792 [B]    (served by C, 1 attempt(s), 7 ms)
+02:13:03.793 [B] s/B/motion = 3 events, last motion 1 s before the sample  (seq 2712, sampled at hlc 80282521, simulated)
+02:13:03.793 [B]    (served by C, 1 attempt(s), 9 ms)
+# 02:13:04 NS: step 2 stimuli done
+02:13:08.752 [B] >>> sensors
+02:13:08.763 [B] > sensors
+02:13:08.763 [B] s/C/sound = 0 events, 0.0 % active  (seq 3114, sampled at hlc 80288223)
+02:13:08.763 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:08.763 [B] s/D/temp = 29.800 degC  (seq 4499, sampled at hlc 80286319)
+02:13:08.763 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:08.763 [B] s/A/light = 24.166 lux  (seq 4233, sampled at hlc 80288602)
+02:13:08.763 [B]    (served by C, 1 attempt(s), 7 ms)
+02:13:08.763 [B] s/B/motion = 0 events, last motion 6 s before the sample  (seq 2713, sampled at hlc 80287521, simulated)
+02:13:08.763 [B]    (served by C, 1 attempt(s), 9 ms)
+02:13:15.198 [B] >>> sensors
+02:13:15.236 [B] > sensors
+02:13:15.236 [B] s/C/sound = 0 events, 0.0 % active  (seq 3115, sampled at hlc 80293223)
+02:13:15.237 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:15.237 [B] s/D/temp = 29.800 degC  (seq 4500, sampled at hlc 80291319)
+02:13:15.237 [B]    (served by B, 1 attempt(s), 0 ms)
+02:13:15.237 [B] s/A/light = 24.166 lux  (seq 4234, sampled at hlc 80293602)
+02:13:15.237 [B]    (served by C, 1 attempt(s), 7 ms)
+02:13:15.237 [B] s/B/motion = 3 events, last motion 0 s before the sample  (seq 2714, sampled at hlc 80292521, simulated)
+02:13:15.237 [B]    (served by C, 1 attempt(s), 9 ms)
+# 02:13:20 STEP 2 loop end
+# 02:13:24 STEP 3 start (no-Pi: Pi set skipped)
+02:13:24.597 [B] >>> set demo/greeting hello-from-B
+02:13:24.626 [B] > set demo/greeting hello-from-B
+02:13:24.676 [B] SET demo/greeting: OK (served by C, 1 attempt(s), 36 ms)
+02:13:26.101 [D] >>> get demo/greeting
+02:13:26.132 [D] > get demo/greeting
+02:13:26.132 [D] demo/greeting = "hello-from-B"
+02:13:26.132 [D]    (served by C, 1 attempt(s), 6 ms)
+# 02:13:27 STEP 3 end (3 s)
+# 02:13:27 STEP 4 start
+02:13:27.616 [A] >>> ring demo/greeting
+02:13:27.639 [A] > ring demo/greeting
+02:13:27.640 [A] key 'demo/greeting' hash c52e626c
+02:13:27.640 [A]   all nodes up : primary C, replica B
+02:13:27.640 [A]   current view : primary C, replica B
+02:13:28.419 [A] >>> ring s/B/motion
+02:13:28.443 [A] > ring s/B/motion
+02:13:28.443 [A] key 's/B/motion' hash a8053102
+02:13:28.443 [A]   all nodes up : primary C, replica D
+02:13:28.443 [A]   current view : primary C, replica D
+02:13:29.222 [A] >>> ring k6
+02:13:29.246 [A] > ring k6
+02:13:29.246 [A] key 'k6' hash 993d8254
+02:13:29.246 [A]   all nodes up : primary C, replica B
+02:13:29.246 [A]   current view : primary C, replica B
+# 02:13:30 STEP 4 end (3 s)
+# 02:13:42 STEP 5 armed
+02:14:37.782 [C]    347.542 [C] compaction started (3021 bytes free)
+02:14:40.003 [C]    349.867 [C] compaction #1 done: bank A, 10 keys, 15601 bytes free
+02:14:43.250 [C] --- port lost, reopening
+# 02:14:43.281 STEP 5 start: C unplugged
+02:14:45.119 [A]    361.883 [A] view: AB-D
+02:14:45.796 [A] >>> members
+02:14:45.823 [A] > members
+02:14:45.823 [A]   A  self    ACTIVE
+02:14:45.823 [A]   B  alive   last heard 405 ms ago, 677 heartbeats
+02:14:45.823 [A]   C  DEAD    last heard 2713 ms ago, 658 heartbeats
+02:14:45.823 [A]   D  alive   last heard 80 ms ago, 665 heartbeats
+02:14:47.299 [B] >>> sensors
+02:14:47.332 [B] > sensors
+02:14:47.333 [B] s/C/sound = 0 events, 0.0 % active  (seq 3133, sampled at hlc 80383236)
+02:14:47.333 [B]    (served by B, 1 attempt(s), 0 ms)
+02:14:47.333 [B] s/D/temp = 29.800 degC  (seq 4519, sampled at hlc 80386319)
+02:14:47.333 [B]    (served by B, 1 attempt(s), 0 ms)
+02:14:47.333 [B] s/B/motion = 2 events, last motion 4 s before the sample  (seq 2733, sampled at hlc 80387521, simulated)
+02:14:47.333 [B]    (served by D, 1 attempt(s), 7 ms)
+02:14:47.333 [B] s/A/light = 23.333 lux  (seq 4252, sampled at hlc 80383602)
+02:14:47.333 [B]    (served by A, 1 attempt(s), 7 ms)
+02:14:48.802 [B] >>> set k6 written-while-C-down
+02:14:48.839 [B] > set k6 written-while-C-down
+02:14:48.889 [B] SET k6: OK (served by B, 1 attempt(s), 26 ms)
+02:14:50.306 [A] >>> ring k6
+02:14:50.346 [A] > ring k6
+02:14:50.346 [A] key 'k6' hash 993d8254
+02:14:50.346 [A]   all nodes up : primary C, replica B
+02:14:50.346 [A]   current view : primary B, replica A
+02:14:50.547 [A]    367.558 [A] anti-entropy: tombstone h12/2 repaired from D
+02:14:51.809 [D] >>> get k6
+02:14:51.852 [D] > get k6
+02:14:51.852 [D] k6 = "written-while-C-down"
+02:14:51.852 [D]    (served by B, 1 attempt(s), 6 ms)
+# 02:14:53.314 STEP 5 commands done
+02:16:00.597 [C] --- port open
+02:16:00.648 [C] > edge-kv firmwar:C.3 3
+02:16:00.648 [C] unknown command 'edge-kv' (try 'help')
+02:16:01.851 [C]      7.211 [C] state -> ACTIVE
+02:16:01.895 [A]    439.062 [A] view: ABCD
+# 02:16:07 STEP 6 start (NS: C in)
+02:16:08.372 [A]    444.224 [A] gc: 3 key(s) marked for drop (orphans 13, tombstones 0 total)
+02:16:11.688 [A]    447.698 [A] view: A-CD
+02:16:12.492 [A]    448.516 [A] view: A-C-
+02:16:12.492 [A]    448.562 [A] view: A---
+02:16:12.994 [A]    449.062 [A] view: A-C-
+02:16:13.145 [A]    449.197 [A] view: ABC-
+02:16:14.855 [A]    451.015 [A] view: ABCD
+02:16:15.860 [A]    452.063 [A] view: AB-D
+02:16:17.415 [A]    453.698 [A] view: A--D
+02:16:18.320 [A]    454.697 [A] view: AB-D
+02:16:18.672 [A]    455.062 [A] view: ABCD
+02:16:19.125 [A]    455.516 [A] view: ABC-
+02:16:21.486 [A]    458.015 [A] view: ABCD
+02:16:21.988 [A]    458.563 [A] view: AB-D
+02:16:22.491 [A]    459.062 [A] view: ABCD
+02:16:27.643 [C] >>> dump
+02:16:27.654 [C] > dump
+02:16:27.654 [C]   v=80483603.1@C  s/A/light = 24.166 lux  (seq 4272, sampled at hlc 80483602)
+02:16:27.654 [C]   v=80487523.1@C  s/B/motion = 2 events, last motion 1 s before the sample  (seq 2753, sampled at hlc 80487521, simulated)
+02:16:27.654 [C]   v=80487538.1@C  h/B/motion/1 = 2 events, last motion 1 s before the sample  (seq 2753, sampled at hlc 80487521, simulated)
+02:16:27.654 [C]   v=80477523.0@B  h/B/motion/3 = 0 events, last motion 9 s before the sample  (seq 2751, sampled at hlc 80477521, simulated)
+02:16:27.704 [C]   v=80482523.0@B  h/B/motion/0 = 1 events, last motion 4 s before the sample  (seq 2752, sampled at hlc 80482521, simulated)
+02:16:27.705 [C]   k0                       TOMBSTONE  v=80111724.1@C
+02:16:27.705 [C]   h12/0                    TOMBSTONE  v=80107522.1@A
+02:16:27.705 [C]   h12/2                    TOMBSTONE  v=80109623.1@D
+02:16:27.705 [C]   h12/3                    TOMBSTONE  v=80110669.1@C
+02:16:27.705 [C]   v=80304159.1@C  demo/greeting = "hello-from-B"
+02:16:27.705 [C]   v=80389123.1@B  k6 = "written-while-C-down"
+02:16:27.705 [C]   v=80473603.1@A  h/A/light/2 = 24.166 lux  (seq 4270, sampled at hlc 80473602)
+02:16:27.705 [C] 12 key(s); log 1911/16064 bytes used
+02:16:27.815 [A]    464.698 [A] view: A-CD
+02:16:28.860 [C]     33.931 [C] view: -BCD
+02:16:29.313 [C]     34.430 [C] view: ABCD
+# 02:16:30 STEP 6 end
+02:16:30.225 [A]    467.197 [A] view: ABCD
+02:16:31.222 [C]     36.431 [C] view: -BCD
+02:16:32.132 [A]    469.198 [A] view: A-CD
+02:16:34.084 [C]     39.430 [C] view: ABCD
+02:16:34.489 [A]    471.697 [A] view: ABCD
+02:16:41.689 [A]    477.487 [A] anti-entropy: key h/B/motion/2 repaired from C
+02:16:43.196 [C]     47.212 [C] gc: 1 key(s) marked for drop (orphans 1, tombstones 0 total)
+02:16:52.592 [C]     57.212 [C] gc: 1 key(s) marked for drop (orphans 2, tombstones 0 total)
+# 02:17:02 STEP 7 start
+02:17:02.436 [A] >>> fault loss 20
+02:17:02.437 [B] >>> fault loss 20
+02:17:02.438 [A] > fault loss 20
+02:17:02.438 [A] frame loss 20 % on every frame this node sends
+02:17:02.438 [B] > fault loss 20
+02:17:02.438 [B] frame loss 20 % on every frame this node sends
+02:17:02.439 [C] >>> fault loss 20
+02:17:02.440 [D] >>> fault loss 20
+02:17:02.488 [C] > fault loss 20
+02:17:02.488 [C] frame loss 20 % on every frame this node sends
+02:17:02.488 [D] > fault loss 20
+02:17:02.488 [D] frame loss 20 % on every frame this node sends
+02:17:03.939 [A] >>> bench 50
+02:17:03.944 [A] > bench 50
+02:17:03.944 [A] bench: 50 sequential SETs on keys bench/0..7
+02:17:07.460 [C]     72.733 [C] SET_REQ bench/1 from A#2586506400: duplicate, cached response replayed
+02:17:08.615 [C]     73.978 [C] SET_REQ s/A/light from A#2586506403: duplicate, cached response replayed
+02:17:10.173 [C]     75.621 [C] replica D did not answer for bench/6: under-replicated
+02:17:10.676 [A]    507.974 [A] compaction started (3028 bytes free)
+02:17:14.720 [A]    510.466 [A] compaction #2 done: bank B, 17 keys, 15149 bytes free
+02:17:15.223 [C]     79.098 [C] SET_REQ s/B/motion from B#3281315197: duplicate, cached response replayed
+02:17:15.273 [A]    511.026 [A] REPL_REQ D#4084169797 duplicate: cached REPL_ACK replayed
+02:17:15.976 [A]    511.749 [A] replica D did not answer for h/A/light/2: under-replicated
+02:17:18.036 [C]     81.950 [C] SET_REQ bench/1 from A#2586506422: duplicate, cached response replayed
+02:17:18.237 [A]    514.062 [A] view: AB-D
+02:17:18.238 [A]    514.065 [A] view: ABCD
+02:17:18.288 [C]     82.256 [C] REPL_REQ D#4084169801 duplicate: cached REPL_ACK replayed
+02:17:19.495 [C]     83.464 [C] REPL_REQ D#4084169802 duplicate: cached REPL_ACK replayed
+02:17:21.253 [C]     85.328 [C] SET_REQ bench/6 from A#2586506430: duplicate, cached response replayed
+02:17:23.716 [C]     87.897 [C] SET_REQ s/B/motion from B#3281315208: duplicate, cached response replayed
+02:17:25.223 [C]     89.472 [C] SET_REQ bench/0 from A#2586506440: duplicate, cached response replayed
+02:17:28.135 [C]     92.572 [C] replica D did not answer for bench/0: under-replicated
+02:17:30.244 [C]     94.835 [C] SET_REQ bench/1 from A#2586506454: duplicate, cached response replayed
+02:17:31.399 [C]     96.035 [C] SET_REQ bench/1 from A#2586506454: duplicate, cached response replayed
+02:17:32.201 [C]     96.941 [C] REPL_REQ D#4084169826 duplicate: cached REPL_ACK replayed
+02:17:32.502 [C]     97.249 [C] REPL_REQ D#4084169827 duplicate: cached REPL_ACK replayed
+02:17:34.610 [A] bench: 50 ok, 0 failed in 30400 ms; latency min 26 avg 608 max 4904 ms
+02:17:35.031 [A] >>> fault clear
+02:17:35.032 [B] >>> fault clear
+02:17:35.033 [C] >>> fault clear
+02:17:35.034 [D] >>> fault clear
+02:17:35.062 [A] > fault clear
+02:17:35.062 [A] fault armed
+02:17:35.062 [B] > fault clear
+02:17:35.062 [B] fault armed
+02:17:35.063 [D] > fault clear
+02:17:35.063 [D] fault armed
+02:17:35.063 [C] > fault clear
+02:17:35.063 [C] fault armed
+# 02:17:36 STEP 7 end (34 s)
+02:17:55.040 [C] >>> del bench/0
+02:17:55.077 [C] > del bench/0
+02:17:55.077 [C] DEL bench/0: OK (served by C, 1 attempt(s), 21 ms)
+02:17:55.842 [C] >>> del bench/1
+02:17:55.881 [C] > del bench/1
+02:17:55.881 [C] DEL bench/1: OK (served by C, 1 attempt(s), 27 ms)
+02:17:56.646 [C] >>> del bench/2
+02:17:56.685 [C] > del bench/2
+02:17:56.685 [C] DEL bench/2: OK (served by D, 1 attempt(s), 24 ms)
+02:17:57.450 [C] >>> del bench/3
+02:17:57.489 [C] > del bench/3
+02:17:57.489 [C] DEL bench/3: OK (served by D, 1 attempt(s), 32 ms)
+02:17:58.252 [C] >>> del bench/4
+02:17:58.293 [C] > del bench/4
+02:17:58.293 [C] DEL bench/4: OK (served by D, 1 attempt(s), 29 ms)
+02:17:59.056 [C] >>> del bench/5
+02:17:59.097 [C] > del bench/5
+02:17:59.097 [C] DEL bench/5: OK (served by D, 1 attempt(s), 25 ms)
+02:17:59.858 [C] >>> del bench/6
+02:17:59.901 [C] > del bench/6
+02:17:59.901 [C] DEL bench/6: OK (served by C, 1 attempt(s), 29 ms)
+02:18:00.662 [C] >>> del bench/7
+02:18:00.704 [C] > del bench/7
+02:18:00.704 [C] DEL bench/7: OK (served by D, 1 attempt(s), 26 ms)
+02:18:01.465 [C] >>> del demo/greeting
+02:18:01.508 [C] > del demo/greeting
+02:18:01.508 [C] DEL demo/greeting: OK (served by C, 1 attempt(s), 29 ms)
+02:18:02.269 [C] >>> del k6
+02:18:02.311 [C] > del k6
+02:18:02.311 [C] DEL k6: OK (served by C, 1 attempt(s), 21 ms)
+02:18:03.073 [A] >>> sensor period 30000
+02:18:03.074 [B] >>> sensor period 30000
+02:18:03.075 [C] >>> sensor period 30000
+02:18:03.075 [D] >>> sensor period 30000
+02:18:03.076 [B] >>> log info
+02:18:03.077 [D] >>> log info
+02:18:03.077 [A] >>> stats
+02:18:03.078 [B] >>> stats
+02:18:03.078 [C] >>> stats
+02:18:03.079 [D] >>> stats
+02:18:03.080 [B] > sensor period 30000
+02:18:03.080 [B] sampler on
+02:18:03.080 [B] > log info
+02:18:03.080 [B] log level set
+02:18:03.080 [B] > stats
+02:18:03.080 [B] radio   rx 4474 (invalid 0, spoofed 0)  tx 2096 (failed 0)
+02:18:03.080 [B] hb      tx 1098  rx 3061   membership changes 9
+02:18:03.080 [B] server  executed 309  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+02:18:03.080 [B] repl    started 279  ok 279  failed 0  stale 0   as replica: applied 48 stale 0
+02:18:03.080 [B] ae      rounds 57  chunks tx 234 rx 671  tables 148  pushes 21  resync tx 21 applied 12 stale 0
+02:18:03.080 [B] gc      orphans 18  tombstones 0  keys dropped 17
+02:18:03.081 [C] > sensor period 30000
+02:18:03.081 [C] sampler on
+02:18:03.081 [C] > stats
+02:18:03.081 [C] radio   rx 1067 (invalid 0, spoofed 0)  tx 529 (failed 0)
+02:18:03.081 [C] hb      tx 242  rx 688   membership changes 8
+02:18:03.081 [C] server  executed 82  not-ready 0  dedup replays 13  suppressed 3  table-full 0
+02:18:03.081 [C] repl    started 82  ok 80  failed 2  stale 0   as replica: applied 36 stale 0
+02:18:03.081 [C] ae      rounds 14  chunks tx 46 rx 144  tables 29  pushes 3  resync tx 3 applied 6 stale 6
+02:18:03.081 [C] gc      orphans 2  tombstones 0  keys dropped 0
+02:18:03.081 [C] client  ok 19  failed 0  attempts 19  local 5
+02:18:03.081 [A] > sensor period 30000
+02:18:03.081 [A] sampler on
+02:18:03.081 [A] > stats
+02:18:03.081 [A] radio   rx 4058 (invalid 0, spoofed 0)  tx 1919 (failed 0)
+02:18:03.081 [A] hb      tx 1111  rx 2902   membership changes 34
+02:18:03.081 [A] server  executed 93  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+02:18:03.081 [A] repl    started 83  ok 82  failed 1  stale 0   as replica: applied 237 stale 0
+02:18:03.081 [A] ae      rounds 56  chunks tx 227 rx 631  tables 133  pushes 26  resync tx 26 applied 9 stale 1
+02:18:03.081 [A] gc      orphans 13  tombstones 0  keys dropped 13
+02:18:03.081 [A] client  ok 227  failed 0  attempts 232  local 64
+02:18:03.082 [A] storage errors 0  compactions 2 (aborted 0)  faults injected 37
+02:18:03.082 [A] chip temp 59.1 degC (die temperature, not ambient)
+02:18:03.082 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: power-on
+02:18:03.082 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+02:18:03.082 [A] esp-now rx 4058  queue overflows 0  unknown MAC 74
+02:18:03.082 [A] esp-now tx -> B: 120 delivered, 0 failed (MAC-layer ACK)
+02:18:03.082 [A] esp-now tx -> C: 180 delivered, 3 failed (MAC-layer ACK)
+02:18:03.082 [A] esp-now tx -> D: 253 delivered, 0 failed (MAC-layer ACK)
+02:18:03.082 [B] client  ok 237  failed 0  attempts 239  local 72
+02:18:03.082 [B] storage errors 0  compactions 2 (aborted 0)  faults injected 30
+02:18:03.082 [B] chip temp 53.5 degC (die temperature, not ambient)
+02:18:03.082 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+02:18:03.083 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+02:18:03.083 [B] esp-now rx 4474  queue overflows 0  unknown MAC 59
+02:18:03.083 [B] esp-now tx -> A: 116 delivered, 0 failed (MAC-layer ACK)
+02:18:03.083 [B] esp-now tx -> C: 252 delivered, 0 failed (MAC-layer ACK)
+02:18:03.083 [B] esp-now tx -> D: 386 delivered, 0 failed (MAC-layer ACK)
+02:18:03.083 [D] > sensor period 30000
+02:18:03.083 [D] sampler on
+02:18:03.084 [D] > log info
+02:18:03.084 [D] log level set
+02:18:03.084 [D] > stats
+02:18:03.084 [D] radio   rx 4498 (invalid 0, spoofed 0)  tx 2150 (failed 0)
+02:18:03.084 [D] hb      tx 1081  rx 3038   membership changes 12
+02:18:03.084 [D] server  executed 159  not-ready 0  dedup replays 9  suppressed 1  table-full 0
+02:18:03.084 [D] repl    started 148  ok 147  failed 1  stale 0   as replica: applied 353 stale 0
+02:18:03.084 [D] ae      rounds 56  chunks tx 234 rx 635  tables 143  pushes 6  resync tx 6 applied 15 stale 3
+02:18:03.084 [D] gc      orphans 12  tombstones 0  keys dropped 12
+02:18:03.084 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 49
+02:18:03.084 [C] chip temp 51.4 degC (die temperature, not ambient)
+02:18:03.084 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: power-on
+02:18:03.084 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+02:18:03.084 [C] esp-now rx 1067  queue overflows 0  unknown MAC 10
+02:18:03.084 [C] esp-now tx -> A: 69 delivered, 0 failed (MAC-layer ACK)
+02:18:03.084 [C] esp-now tx -> B: 54 delivered, 0 failed (MAC-layer ACK)
+02:18:03.084 [C] esp-now tx -> D: 92 delivered, 0 failed (MAC-layer ACK)
+02:18:03.084 [C] heap free 174324 (min 165864)  node task stack headroom 13288 bytes
+02:18:03.084 [D] client  ok 185  failed 0  attempts 187  local 24
+02:18:03.084 [D] storage errors 0  compactions 2 (aborted 0)  faults injected 50
+02:18:03.084 [D] chip temp 52.6 degC (die temperature, not ambient)
+02:18:03.084 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:18:03.084 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:18:03.084 [D] esp-now rx 4498  queue overflows 0  unknown MAC 74
+02:18:03.084 [D] esp-now tx -> A: 243 delivered, 0 failed (MAC-layer ACK)
+02:18:03.084 [D] esp-now tx -> B: 382 delivered, 0 failed (MAC-layer ACK)
+02:18:03.084 [D] esp-now tx -> C: 182 delivered, 0 failed (MAC-layer ACK)
+02:18:03.132 [A] heap free 172592 (min 164132)  node task stack headroom 13176 bytes
+02:18:03.133 [A] eeprom page writes since boot: total 2048, hottest page 18 with 7 (rated 1000000)
+02:18:03.133 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+02:18:03.133 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+02:18:03.133 [B] eeprom page writes since boot: total 2059, hottest page 11 with 7 (rated 1000000)
+02:18:03.134 [C] eeprom page writes since boot: total 338, hottest page 31 with 5 (rated 1000000)
+02:18:03.135 [D] heap free 174712 (min 166152)  node task stack headroom 13304 bytes
+02:18:03.135 [D] eeprom page writes since boot: total 2583, hottest page 315 with 12 (rated 1000000)
+02:18:26.628 [A] >>> stats
+02:18:26.637 [A] > stats
+02:18:26.637 [A] radio   rx 4222 (invalid 0, spoofed 0)  tx 1978 (failed 0)
+02:18:26.637 [A] hb      tx 1157  rx 3038   membership changes 34
+02:18:26.637 [A] server  executed 93  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+02:18:26.637 [A] repl    started 83  ok 82  failed 1  stale 0   as replica: applied 240 stale 0
+02:18:26.637 [A] ae      rounds 58  chunks tx 235 rx 654  tables 138  pushes 26  resync tx 26 applied 9 stale 1
+02:18:26.637 [A] gc      orphans 13  tombstones 0  keys dropped 13
+02:18:26.637 [A] client  ok 229  failed 0  attempts 234  local 64
+02:18:26.637 [A] storage errors 0  compactions 2 (aborted 0)  faults injected 37
+02:18:26.637 [A] chip temp 58.1 degC (die temperature, not ambient)
+02:18:26.637 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: power-on
+02:18:26.637 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+02:18:26.637 [A] esp-now rx 4222  queue overflows 0  unknown MAC 80
+02:18:26.637 [A] esp-now tx -> B: 121 delivered, 0 failed (MAC-layer ACK)
+02:18:26.637 [A] esp-now tx -> C: 182 delivered, 3 failed (MAC-layer ACK)
+02:18:26.637 [A] esp-now tx -> D: 255 delivered, 0 failed (MAC-layer ACK)
+02:18:26.637 [A] heap free 172592 (min 164132)  node task stack headroom 13176 bytes
+02:18:26.637 [B] >>> stats
+02:18:26.638 [C] >>> stats
+02:18:26.639 [B] > stats
+02:18:26.639 [B] radio   rx 4646 (invalid 0, spoofed 0)  tx 2158 (failed 0)
+02:18:26.639 [B] hb      tx 1144  rx 3197   membership changes 9
+02:18:26.639 [B] server  executed 313  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+02:18:26.639 [B] repl    started 283  ok 283  failed 0  stale 0   as replica: applied 48 stale 0
+02:18:26.639 [B] ae      rounds 59  chunks tx 240 rx 697  tables 154  pushes 21  resync tx 21 applied 12 stale 0
+02:18:26.639 [B] gc      orphans 18  tombstones 0  keys dropped 17
+02:18:26.639 [B] client  ok 239  failed 0  attempts 241  local 72
+02:18:26.639 [D] >>> stats
+02:18:26.640 [C] > stats
+02:18:26.640 [C] radio   rx 1234 (invalid 0, spoofed 0)  tx 590 (failed 0)
+02:18:26.640 [C] hb      tx 287  rx 823   membership changes 8
+02:18:26.640 [C] server  executed 85  not-ready 0  dedup replays 13  suppressed 3  table-full 0
+02:18:26.640 [C] repl    started 85  ok 83  failed 2  stale 0   as replica: applied 36 stale 0
+02:18:26.640 [C] ae      rounds 16  chunks tx 54 rx 168  tables 35  pushes 3  resync tx 3 applied 6 stale 6
+02:18:26.640 [C] gc      orphans 2  tombstones 0  keys dropped 0
+02:18:26.640 [C] client  ok 21  failed 0  attempts 21  local 5
+02:18:26.641 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 49
+02:18:26.641 [C] chip temp 51.4 degC (die temperature, not ambient)
+02:18:26.641 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: power-on
+02:18:26.641 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+02:18:26.641 [C] esp-now rx 1234  queue overflows 0  unknown MAC 13
+02:18:26.641 [C] esp-now tx -> A: 71 delivered, 0 failed (MAC-layer ACK)
+02:18:26.641 [C] esp-now tx -> B: 58 delivered, 0 failed (MAC-layer ACK)
+02:18:26.641 [C] esp-now tx -> D: 94 delivered, 0 failed (MAC-layer ACK)
+02:18:26.641 [C] heap free 174324 (min 165864)  node task stack headroom 13288 bytes
+02:18:26.641 [B] storage errors 0  compactions 2 (aborted 0)  faults injected 30
+02:18:26.641 [B] chip temp 53.5 degC (die temperature, not ambient)
+02:18:26.641 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+02:18:26.641 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+02:18:26.642 [B] esp-now rx 4646  queue overflows 0  unknown MAC 62
+02:18:26.642 [B] esp-now tx -> A: 117 delivered, 0 failed (MAC-layer ACK)
+02:18:26.642 [B] esp-now tx -> C: 256 delivered, 0 failed (MAC-layer ACK)
+02:18:26.642 [B] esp-now tx -> D: 391 delivered, 0 failed (MAC-layer ACK)
+02:18:26.642 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+02:18:26.642 [D] > stats
+02:18:26.642 [D] radio   rx 4664 (invalid 0, spoofed 0)  tx 2214 (failed 0)
+02:18:26.642 [D] hb      tx 1126  rx 3173   membership changes 12
+02:18:26.642 [D] server  executed 160  not-ready 0  dedup replays 9  suppressed 1  table-full 0
+02:18:26.642 [D] repl    started 149  ok 148  failed 1  stale 0   as replica: applied 358 stale 0
+02:18:26.642 [D] ae      rounds 58  chunks tx 244 rx 657  tables 149  pushes 6  resync tx 6 applied 15 stale 3
+02:18:26.642 [D] gc      orphans 12  tombstones 0  keys dropped 12
+02:18:26.642 [D] client  ok 187  failed 0  attempts 189  local 24
+02:18:26.643 [D] storage errors 0  compactions 2 (aborted 0)  faults injected 50
+02:18:26.643 [D] chip temp 51.6 degC (die temperature, not ambient)
+02:18:26.643 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:18:26.643 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:18:26.643 [D] esp-now rx 4664  queue overflows 0  unknown MAC 78
+02:18:26.643 [D] esp-now tx -> A: 245 delivered, 0 failed (MAC-layer ACK)
+02:18:26.643 [D] esp-now tx -> B: 387 delivered, 0 failed (MAC-layer ACK)
+02:18:26.643 [D] esp-now tx -> C: 184 delivered, 0 failed (MAC-layer ACK)
+02:18:26.643 [D] heap free 174712 (min 166152)  node task stack headroom 13304 bytes
+02:18:26.687 [A] eeprom page writes since boot: total 2057, hottest page 18 with 7 (rated 1000000)
+02:18:26.687 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+02:18:26.691 [C] eeprom page writes since boot: total 347, hottest page 31 with 5 (rated 1000000)
+02:18:26.692 [B] eeprom page writes since boot: total 2071, hottest page 11 with 7 (rated 1000000)
+02:18:26.693 [D] eeprom page writes since boot: total 2601, hottest page 315 with 12 (rated 1000000)
+02:20:07.834 [A]    684.224 [A] gc: 1 key(s) marked for drop (orphans 13, tombstones 1 total)
+02:20:12.280 [C]    257.211 [C] gc: 4 key(s) marked for drop (orphans 2, tombstones 4 total)
+02:20:12.652 [D]    677.217 [D] gc: 2 key(s) marked for drop (orphans 12, tombstones 2 total)
+02:20:13.876 [B]    687.210 [B] gc: 2 key(s) marked for drop (orphans 18, tombstones 2 total)
+02:20:18.567 [A]    694.224 [A] gc: 3 key(s) marked for drop (orphans 13, tombstones 4 total)
+02:21:19.141 [A]    756.058 [A] view: ABC-
+02:21:20.146 [A]    757.057 [A] view: ABCD

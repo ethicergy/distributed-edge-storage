@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "config.h"
 #include "hash_ring.h"
 #include "consistent_hash.h"
 
@@ -131,6 +132,11 @@ void Console::print_banner()
 
 void Console::on_char(char c, std::uint64_t now_ms)
 {
+    if (now_ms < hold_until_ms_) {
+        ++held_chars_;
+        return;
+    }
+
     if (c == '\r' || c == '\n') {
         if (line_length_ == 0) {
             return;
@@ -226,7 +232,13 @@ void Console::execute(const char* input, std::uint64_t now_ms)
 
 void Console::cmd_help()
 {
-    printf(
+    if (write_ == nullptr) {
+        return;
+    }
+
+    // Written directly: the text is longer than printf's buffer.
+    write_(
+        write_context_,
         "status                node state, clock, view, storage summary\n"
         "members               liveness of every node (H1)\n"
         "ring <key>            primary/replica of a key\n"
@@ -246,8 +258,10 @@ void Console::cmd_help()
     );
 
 #if EDGE_FAULT_INJECTION
-    printf(
+    write_(
+        write_context_,
         "fault <kind> [n]      kinds: drop-req drop-ack drop-repl drop-repl-ack dup\n"
+        "fault loss <percent>  drop that share of every frame sent (until 'fault clear')\n"
         "stale <key> <node>    send an outdated version of key to node (H10)\n"
     );
 #endif
@@ -295,22 +309,26 @@ void Console::cmd_status(std::uint64_t now_ms)
     if (sampler_ != nullptr) {
         const sensor::SamplerStats& s = sampler_->stats();
         const sensor::Kind kind = sampler_->source().kind();
+        char last[64];
+
+        sensor::format_value(kind, s.last_value_milli, s.last_aux, s.last_flags, last, sizeof(last));
 
         printf(
-            "sensor %s (%s): %s, %lu samples, last %ld.%03ld %s seq %lu, %lu ok, %lu under-replicated, %lu failed\n",
+            "sensor %s (%s): %s, %lu samples, last %s seq %lu, %lu ok, %lu under-replicated, %lu failed, %lu read failures\n",
             sensor::kind_key(kind),
             sampler_->source().simulated() ? "simulated" : "hardware",
             sampler_->enabled() ? "on" : "off",
             static_cast<unsigned long>(s.samples),
-            static_cast<long>(s.last_value_milli / 1000),
-            static_cast<long>(std::labs(s.last_value_milli % 1000)),
-            sensor::kind_unit(kind),
+            s.samples > 0 ? last : "-",
             static_cast<unsigned long>(s.last_sequence),
             static_cast<unsigned long>(s.writes_ok),
             static_cast<unsigned long>(s.writes_under_replicated),
-            static_cast<unsigned long>(s.writes_failed)
+            static_cast<unsigned long>(s.writes_failed),
+            static_cast<unsigned long>(sampler_->source().failures())
         );
     }
+
+    print_chip_temp();
 }
 
 void Console::cmd_members(std::uint64_t now_ms)
@@ -464,17 +482,15 @@ void Console::print_value(
     sensor::Reading reading{};
 
     if (sensor::decode(value, value_length, reading)) {
-        const long whole = static_cast<long>(reading.value_milli / 1000);
-        const long frac = static_cast<long>(std::labs(reading.value_milli % 1000));
+        char text[64];
+
+        sensor::format_value(reading.kind, reading.value_milli, reading.aux, reading.flags, text, sizeof(text));
 
         printf(
-            "%.*s = %s%ld.%03ld %s  (seq %lu, sampled at hlc %llu%s)\n",
+            "%.*s = %s  (seq %lu, sampled at hlc %llu%s)\n",
             static_cast<int>(key_length),
             reinterpret_cast<const char*>(key),
-            (reading.value_milli < 0 && whole == 0) ? "-" : "",
-            whole,
-            frac,
-            sensor::kind_unit(reading.kind),
+            text,
             static_cast<unsigned long>(reading.sequence),
             static_cast<unsigned long long>(hlc::physical(reading.hlc)),
             (reading.flags & sensor::READING_FLAG_SIMULATED) ? ", simulated" : ""
@@ -613,35 +629,52 @@ void Console::cmd_stats()
     const ae::Counters& a = runtime_.ae_counters();
     const storage::Stats s = runtime_.storage().stats();
 
-    printf(
-        "radio   rx %lu (invalid %lu, spoofed %lu)  tx %lu (failed %lu)\n"
-        "hb      tx %lu  rx %lu   membership changes %lu\n"
-        "server  executed %lu  not-ready %lu  dedup replays %lu  suppressed %lu  table-full %lu\n"
-        "repl    started %lu  ok %lu  failed %lu  stale %lu   as replica: applied %lu stale %lu\n"
-        "ae      rounds %lu  chunks tx %lu rx %lu  tables %lu  pushes %lu  resync tx %lu applied %lu stale %lu\n"
-        "gc      orphans %lu  tombstones %lu  keys dropped %lu\n"
-        "client  ok %lu  failed %lu  attempts %lu  local %lu\n"
-        "storage errors %lu  compactions %lu (aborted %lu)  faults injected %lu\n",
+    // One printf per line: the whole block is longer than printf's
+    // buffer and would be cut off.
+    printf("radio   rx %lu (invalid %lu, spoofed %lu)  tx %lu (failed %lu)\n",
         (unsigned long)c.frames_rx, (unsigned long)c.frames_rx_invalid, (unsigned long)c.frames_rx_spoofed,
-        (unsigned long)c.frames_tx, (unsigned long)c.frames_tx_failed,
-        (unsigned long)c.heartbeats_tx, (unsigned long)c.heartbeats_rx, (unsigned long)c.membership_changes,
+        (unsigned long)c.frames_tx, (unsigned long)c.frames_tx_failed);
+    printf("hb      tx %lu  rx %lu   membership changes %lu\n",
+        (unsigned long)c.heartbeats_tx, (unsigned long)c.heartbeats_rx, (unsigned long)c.membership_changes);
+    printf("server  executed %lu  not-ready %lu  dedup replays %lu  suppressed %lu  table-full %lu\n",
         (unsigned long)c.requests_executed, (unsigned long)c.requests_rejected_not_ready,
-        (unsigned long)c.dedup_replays, (unsigned long)c.dedup_suppressed, (unsigned long)c.dedup_table_full,
+        (unsigned long)c.dedup_replays, (unsigned long)c.dedup_suppressed, (unsigned long)c.dedup_table_full);
+    printf("repl    started %lu  ok %lu  failed %lu  stale %lu   as replica: applied %lu stale %lu\n",
         (unsigned long)c.replications_started, (unsigned long)c.replications_ok,
         (unsigned long)c.replications_failed, (unsigned long)c.replications_stale,
-        (unsigned long)c.replicas_applied, (unsigned long)c.replicas_stale,
+        (unsigned long)c.replicas_applied, (unsigned long)c.replicas_stale);
+    printf("ae      rounds %lu  chunks tx %lu rx %lu  tables %lu  pushes %lu  resync tx %lu applied %lu stale %lu\n",
         (unsigned long)a.rounds_started, (unsigned long)a.chunks_sent, (unsigned long)a.chunks_received,
         (unsigned long)a.tables_completed, (unsigned long)a.pushes_queued,
-        (unsigned long)c.resync_tx, (unsigned long)c.resync_applied, (unsigned long)c.resync_stale,
-        (unsigned long)a.gc_orphans, (unsigned long)a.gc_tombstones, (unsigned long)s.keys_dropped,
+        (unsigned long)c.resync_tx, (unsigned long)c.resync_applied, (unsigned long)c.resync_stale);
+    printf("gc      orphans %lu  tombstones %lu  keys dropped %lu\n",
+        (unsigned long)a.gc_orphans, (unsigned long)a.gc_tombstones, (unsigned long)s.keys_dropped);
+    printf("client  ok %lu  failed %lu  attempts %lu  local %lu\n",
         (unsigned long)c.client_ops_ok, (unsigned long)c.client_ops_failed,
-        (unsigned long)c.client_attempts, (unsigned long)c.client_local_fast_path,
+        (unsigned long)c.client_attempts, (unsigned long)c.client_local_fast_path);
+    printf("storage errors %lu  compactions %lu (aborted %lu)  faults injected %lu\n",
         (unsigned long)c.storage_errors, (unsigned long)s.compactions_completed,
-        (unsigned long)s.compactions_aborted, (unsigned long)c.faults_injected
-    );
+        (unsigned long)s.compactions_aborted, (unsigned long)c.faults_injected);
+
+    print_chip_temp();
 
     if (hooks_.print_platform_stats != nullptr) {
         hooks_.print_platform_stats(hooks_.context, write_, write_context_);
+    }
+}
+
+void Console::print_chip_temp()
+{
+    if (hooks_.read_chip_temp == nullptr) {
+        return;
+    }
+
+    float celsius = 0.0f;
+
+    if (hooks_.read_chip_temp(hooks_.context, celsius)) {
+        printf("chip temp %.1f degC (die temperature, not ambient)\n", static_cast<double>(celsius));
+    } else {
+        printf("chip temp n/a (die temperature, not ambient)\n");
     }
 }
 
@@ -683,10 +716,16 @@ void Console::cmd_fault(const char* input)
         faults.drop_repl_acks = count;
     } else if (std::strcmp(args, "dup") == 0) {
         faults.duplicate_client_requests = count;
+    } else if (std::strcmp(args, "loss") == 0 && count_text[0] != '\0' && parsed >= 0 && parsed <= 100) {
+        faults.tx_loss_percent = count;
+        printf("frame loss %u %% on every frame this node sends\n", static_cast<unsigned>(count));
+        return;
     } else if (std::strcmp(args, "clear") == 0) {
         faults = edge::Faults{};
+        printf("faults cleared\n");
+        return;
     } else {
-        printf("usage: fault drop-req|drop-ack|drop-repl|drop-repl-ack|dup|clear [n]\n");
+        printf("usage: fault drop-req|drop-ack|drop-repl|drop-repl-ack|dup|clear [n] | fault loss <percent>\n");
         return;
     }
 
@@ -749,8 +788,28 @@ void Console::cmd_bench(const char* args, std::uint64_t now_ms)
     printf("bench: %ld sequential SETs on keys bench/0..7\n", count);
 }
 
+void Console::hold_input(std::uint64_t now_ms, std::uint32_t duration_ms)
+{
+    if (line_length_ > 0) {
+        held_chars_ += static_cast<std::uint32_t>(line_length_);
+        line_length_ = 0;
+    }
+
+    if (now_ms + duration_ms > hold_until_ms_) {
+        hold_until_ms_ = now_ms + duration_ms;
+    }
+}
+
 void Console::tick(std::uint64_t now_ms)
 {
+    if (held_chars_ > 0 && now_ms >= hold_until_ms_) {
+        printf(
+            "console: ignored %lu character(s) received while the port was opening; type the command again\n",
+            static_cast<unsigned long>(held_chars_)
+        );
+        held_chars_ = 0;
+    }
+
     if (!bench_.active || bench_.waiting) {
         return;
     }
@@ -794,6 +853,16 @@ void Console::tick(std::uint64_t now_ms)
         ++bench_.issued;
         bench_.waiting = true;
     }
+}
+
+InputGuard::InputGuard(Console& console)
+    : console_(console)
+{
+}
+
+void InputGuard::begin(std::uint64_t now_ms)
+{
+    console_.hold_input(now_ms, config::CONSOLE_INPUT_HOLD_MS);
 }
 
 } // namespace console

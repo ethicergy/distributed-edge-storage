@@ -8,6 +8,10 @@
  *   bytes reach the array; the write that crosses the budget is
  *   torn at that byte and every access fails until power_cycle().
  *   This models a brown-out in the middle of an I2C page write.
+ * - One-shot write faults: fail_next_write(r) makes the next write
+ *   return r without touching the array; corrupt_next_write() stores
+ *   the next write with its first byte flipped and reports OK, so only
+ *   the read-back notices.
  */
 
 #include <cstddef>
@@ -80,6 +84,12 @@ public:
             return eeprom::Result::OK;
         }
 
+        if (next_write_fault_ != eeprom::Result::OK) {
+            const eeprom::Result fault = next_write_fault_;
+            next_write_fault_ = eeprom::Result::OK;
+            return fault;
+        }
+
         // One write cycle per page touched, like the driver's one I2C
         // page-write transaction per page segment.
         for (std::size_t page = address / eeprom::PAGE_SIZE;
@@ -102,6 +112,11 @@ public:
             ++bytes_written_;
         }
 
+        if (corrupt_next_write_) {
+            corrupt_next_write_ = false;
+            memory_[address] = static_cast<std::uint8_t>(~memory_[address]);
+        }
+
         ++write_calls_;
         return eeprom::Result::OK;
     }
@@ -115,6 +130,16 @@ public:
     {
         budget_armed_ = true;
         budget_ = bytes_until_loss;
+    }
+
+    void fail_next_write(eeprom::Result result)
+    {
+        next_write_fault_ = result;
+    }
+
+    void corrupt_next_write()
+    {
+        corrupt_next_write_ = true;
     }
 
     void power_cycle()
@@ -142,6 +167,13 @@ public:
         return highest;
     }
 
+    static constexpr std::size_t PAGE_COUNT = eeprom::SIZE_BYTES / eeprom::PAGE_SIZE;
+
+    std::uint64_t page_cycles(std::size_t page) const
+    {
+        return page < PAGE_COUNT ? page_cycles_[page] : 0;
+    }
+
     void copy_from(const FakeEeprom& other)
     {
         std::memcpy(memory_, other.memory_, sizeof(memory_));
@@ -156,6 +188,8 @@ private:
     std::uint64_t bytes_written_ = 0;
     std::uint64_t write_calls_ = 0;
     std::uint64_t read_calls_ = 0;
+    eeprom::Result next_write_fault_ = eeprom::Result::OK;
+    bool corrupt_next_write_ = false;
 };
 
 } // namespace sim

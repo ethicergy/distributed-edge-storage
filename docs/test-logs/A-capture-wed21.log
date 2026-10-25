@@ -1,0 +1,191 @@
+# Continuous capture of node A, Wed 21 08:25-09:01 (wall-clock timestamps, log clock). Lines '>>>' are commands sent from the capture.
+
+[08:25:06.587] --- capture of A started ---
+[08:25:13.938] >>> stats
+[08:25:14.290] > stats
+[08:25:14.290] radio   rx 32924 (invalid 0, spoofed 0)  tx 15248 (failed 0)
+[08:25:14.290] hb      tx 9240  rx 24971   membership changes 8
+[08:25:14.290] server  executed 688  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[08:25:14.290] repl    started 686  ok 686  failed 0  stale 0   as replica: applied 1727 stale 0
+[08:25:14.290] ae      rounds 464  chunks tx 1682 rx 3642  tables 1222  pushes 27  resync tx 27 applied 14 stale 1
+[08:25:14.290] gc      orphans 13  tombstones 1  keys dropped 11
+[08:25:14.290] client  ok 2331  failed 0  attempts 2334  local 575
+[08:25:14.290] storage errors 4  compactions 10 (aborted 0)  faults injected 0
+[08:25:14.290] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[08:25:14.290] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[08:25:14.290] esp-now rx 32924  queue overflows 0  unknown MAC 0
+[08:25:14.290] esp-now tx -> B: 620 delivered, 0 failed (MAC-layer ACK)
+[08:25:14.290] esp-now tx -> C: 2522 delivered, 0 failed (MAC-layer ACK)
+[08:25:14.290] esp-now tx -> D: 1181 delivered, 3 failed (MAC-layer ACK)
+[08:25:14.290] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[08:25:14.290] eeprom page writes since boot: total 12387, hottest page 11 with 35 (rated 1000000)
+[08:25:14.290] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[08:25:33.898]   4649.341 [A] compaction started (3045 bytes free)
+[08:25:36.263]   4651.741 [A] compaction #11 done: bank B, 13 keys, 15373 bytes free
+[08:25:38.879]   4654.448 [A] view: ABC-
+[08:25:44.817]   4660.528 [A] anti-entropy: key h/C/sound/2 repaired from B
+[08:25:44.868]   4660.543 [A] anti-entropy: key s/B/motion repaired from C
+[08:25:44.868]   4660.562 [A] anti-entropy: key bench/0 repaired from C
+[08:25:44.868]   4660.576 [A] anti-entropy: key h/C/sound/3 repaired from B
+[08:25:44.918]   4660.605 [A] anti-entropy: key bench/1 repaired from C
+[08:25:44.968]   4660.642 [A] anti-entropy: key bench/2 repaired from C
+[08:25:44.968]   4660.685 [A] anti-entropy: key bench/3 repaired from C
+[08:25:45.019]   4660.725 [A] anti-entropy: key bench/6 repaired from C
+[08:25:45.069]   4660.762 [A] anti-entropy: key bench/7 repaired from C
+[08:25:47.886]   4663.660 [A] view: ABCD
+[08:26:01.246] >>> stats
+[08:26:01.598] > stats
+[08:26:01.598] radio   rx 33304 (invalid 0, spoofed 0)  tx 15435 (failed 0)
+[08:26:01.598] hb      tx 9334  rx 25229   membership changes 10
+[08:26:01.598] server  executed 699  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[08:26:01.598] repl    started 697  ok 697  failed 0  stale 0   as replica: applied 1758 stale 0
+[08:26:01.598] ae      rounds 469  chunks tx 1699 rx 3694  tables 1236  pushes 39  resync tx 39 applied 23 stale 1
+[08:26:01.598] gc      orphans 13  tombstones 1  keys dropped 11
+[08:26:01.598] client  ok 2349  failed 0  attempts 2353  local 580
+[08:26:01.598] storage errors 4  compactions 11 (aborted 0)  faults injected 0
+[08:26:01.598] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[08:26:01.598] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[08:26:01.598] esp-now rx 33304  queue overflows 0  unknown MAC 0
+[08:26:01.598] esp-now tx -> B: 643 delivered, 0 failed (MAC-layer ACK)
+[08:26:01.598] esp-now tx -> C: 2548 delivered, 0 failed (MAC-layer ACK)
+[08:26:01.598] esp-now tx -> D: 1205 delivered, 6 failed (MAC-layer ACK)
+[08:26:01.598] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[08:26:01.598] eeprom page writes since boot: total 13076, hottest page 263 with 42 (rated 1000000)
+[08:26:01.598] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[08:26:01.800]   4677.208 [A] gc: 8 key(s) marked for drop (orphans 21, tombstones 1 total)
+[08:26:11.663]   4687.208 [A] gc: 2 key(s) marked for drop (orphans 23, tombstones 1 total)
+[08:26:33.952]   4709.291 [A] replica D answered STORAGE_ERROR for h/A/light/3: under-replicated
+[08:26:58.380] >>> stats
+[08:26:58.731] > stats
+[08:26:58.732] radio   rx 33849 (invalid 0, spoofed 0)  tx 15717 (failed 0)
+[08:26:58.732] hb      tx 9449  rx 25571   membership changes 10
+[08:26:58.732] server  executed 717  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[08:26:58.732] repl    started 715  ok 714  failed 1  stale 0   as replica: applied 1846 stale 0
+[08:26:58.732] ae      rounds 475  chunks tx 1729 rx 3763  tables 1251  pushes 40  resync tx 40 applied 23 stale 1
+[08:26:58.732] gc      orphans 23  tombstones 1  keys dropped 11
+[08:26:58.732] client  ok 2371  failed 0  attempts 2377  local 586
+[08:26:58.732] storage errors 4  compactions 11 (aborted 0)  faults injected 0
+[08:26:58.732] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[08:26:58.732] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[08:26:58.732] esp-now rx 33849  queue overflows 0  unknown MAC 0
+[08:26:58.732] esp-now tx -> B: 682 delivered, 0 failed (MAC-layer ACK)
+[08:26:58.732] esp-now tx -> C: 2571 delivered, 0 failed (MAC-layer ACK)
+[08:26:58.732] esp-now tx -> D: 1280 delivered, 6 failed (MAC-layer ACK)
+[08:26:58.732] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[08:26:58.732] eeprom page writes since boot: total 13363, hottest page 263 with 42 (rated 1000000)
+[08:26:58.732] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[08:28:19.780]   4815.276 [A] compaction started (3024 bytes free)
+[08:28:22.140]   4817.673 [A] compaction #12 done: bank A, 13 keys, 15373 bytes free
+[08:29:48.343]   4904.366 [A] replica D answered STORAGE_ERROR for h/A/light/2: under-replicated
+[08:31:04.956]   4980.422 [A] compaction started (3035 bytes free)
+[08:31:07.213]   4982.819 [A] compaction #13 done: bank B, 13 keys, 15373 bytes free
+[08:32:48.842]   5084.369 [A] replica D answered STORAGE_ERROR for h/A/light/2: under-replicated
+[08:33:42.708]   5138.817 [A] view: ABC-
+[08:33:44.414]   5140.574 [A] anti-entropy: key h/C/sound/2 repaired from B
+[08:33:44.414]   5140.589 [A] anti-entropy: key s/B/motion repaired from C
+[08:33:44.464]   5140.614 [A] anti-entropy: key h/C/sound/3 repaired from B
+[08:33:44.464]   5140.623 [A] anti-entropy: key bench/0 repaired from C
+[08:33:44.464]   5140.648 [A] anti-entropy: key bench/1 repaired from C
+[08:33:44.514]   5140.691 [A] anti-entropy: key bench/2 repaired from C
+[08:33:44.565]   5140.728 [A] anti-entropy: key bench/3 repaired from C
+[08:33:44.615]   5140.771 [A] anti-entropy: key bench/6 repaired from C
+[08:33:44.665]   5140.808 [A] anti-entropy: key bench/7 repaired from C
+[08:33:52.996]   5149.364 [A] compaction started (3043 bytes free)
+[08:33:55.462]   5151.879 [A] compaction #14 done: bank A, 23 keys, 14934 bytes free
+[08:34:00.129]   5155.491 [A] view: ABCD
+[08:34:01.835]   5157.229 [A] gc: 10 key(s) marked for drop (orphans 33, tombstones 1 total)
+[08:34:35.182]   5190.529 [A] view: ABC-
+[08:34:35.182]   5190.587 [A] anti-entropy: key h/A/light/1 repaired from B
+[08:34:35.232]   5190.628 [A] anti-entropy: key s/B/motion repaired from C
+[08:34:35.433]   5190.837 [A] replica D did not answer for h/A/light/3: under-replicated
+[08:34:41.201]   5196.724 [A] view: ABCD
+[08:34:51.482]   5207.229 [A] gc: 2 key(s) marked for drop (orphans 35, tombstones 1 total)
+[08:34:59.306]   5215.244 [A] view: ABC-
+[08:35:05.300]   5220.625 [A] anti-entropy: key s/B/motion repaired from C
+[08:35:05.953]   5221.284 [A] view: ABCD
+[08:35:21.510]   5237.229 [A] gc: 2 key(s) marked for drop (orphans 37, tombstones 1 total)
+[08:36:49.009]   5324.389 [A] view: ABC-
+[08:36:50.365]   5325.837 [A] replica D did not answer for h/A/light/2: under-replicated
+[08:36:55.026]   5330.588 [A] anti-entropy: key h/A/light/1 repaired from B
+[08:36:55.077]   5330.628 [A] anti-entropy: key s/B/motion repaired from C
+[08:36:55.077]   5330.643 [A] anti-entropy: key h/C/sound/2 repaired from B
+[08:36:55.127]   5330.668 [A] anti-entropy: key h/C/sound/3 repaired from B
+[08:41:38.257]   5614.352 [A] compaction started (3022 bytes free)
+[08:41:40.636]   5616.800 [A] compaction #15 done: bank B, 17 keys, 15138 bytes free
+[08:41:45.098]   5620.624 [A] anti-entropy: key bench/0 repaired from C
+[08:41:45.149]   5620.660 [A] anti-entropy: key bench/1 repaired from C
+[08:41:45.199]   5620.708 [A] anti-entropy: key bench/2 repaired from C
+[08:41:45.200]   5620.740 [A] anti-entropy: key bench/3 repaired from C
+[08:41:45.250]   5620.784 [A] anti-entropy: key bench/6 repaired from C
+[08:41:45.300]   5620.820 [A] anti-entropy: key bench/7 repaired from C
+[08:47:52.143]   5987.982 [A] view: ABCD
+[08:48:01.132]   5997.229 [A] gc: 10 key(s) marked for drop (orphans 47, tombstones 1 total)
+[08:48:32.803] >>> stats
+[08:48:33.154] > stats
+[08:48:33.154] radio   rx 42724 (invalid 0, spoofed 0)  tx 20368 (failed 0)
+[08:48:33.154] hb      tx 12037  rx 31855   membership changes 18
+[08:48:33.154] server  executed 998  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[08:48:33.155] repl    started 996  ok 991  failed 5  stale 0   as replica: applied 2523 stale 0
+[08:48:33.155] ae      rounds 604  chunks tx 2307 rx 4904  tables 1559  pushes 92  resync tx 92 applied 45 stale 2
+[08:48:33.155] gc      orphans 47  tombstones 1  keys dropped 27
+[08:48:33.155] client  ok 2889  failed 0  attempts 2895  local 751
+[08:48:33.155] storage errors 4  compactions 15 (aborted 0)  faults injected 0
+[08:48:33.155] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[08:48:33.155] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[08:48:33.155] esp-now rx 42724  queue overflows 0  unknown MAC 0
+[08:48:33.155] esp-now tx -> B: 1117 delivered, 0 failed (MAC-layer ACK)
+[08:48:33.155] esp-now tx -> C: 3246 delivered, 0 failed (MAC-layer ACK)
+[08:48:33.155] esp-now tx -> D: 1647 delivered, 14 failed (MAC-layer ACK)
+[08:48:33.155] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[08:48:33.155] eeprom page writes since boot: total 18360, hottest page 263 with 56 (rated 1000000)
+[08:48:33.155] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[08:48:53.232]   6049.528 [A] compaction started (3071 bytes free)
+[08:48:56.654]   6051.978 [A] compaction #16 done: bank A, 13 keys, 15373 bytes free
+[08:49:30.311] >>> stats
+[08:49:30.663] > stats
+[08:49:30.663] radio   rx 43268 (invalid 0, spoofed 0)  tx 20639 (failed 0)
+[08:49:30.663] hb      tx 12151  rx 32193   membership changes 18
+[08:49:30.663] server  executed 1015  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[08:49:30.663] repl    started 1013  ok 1008  failed 5  stale 0   as replica: applied 2610 stale 0
+[08:49:30.663] ae      rounds 610  chunks tx 2331 rx 4976  tables 1577  pushes 92  resync tx 92 applied 45 stale 3
+[08:49:30.663] gc      orphans 47  tombstones 1  keys dropped 37
+[08:49:30.663] client  ok 2913  failed 0  attempts 2919  local 757
+[08:49:30.663] storage errors 4  compactions 16 (aborted 0)  faults injected 0
+[08:49:30.663] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[08:49:30.663] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[08:49:30.663] esp-now rx 43268  queue overflows 0  unknown MAC 0
+[08:49:30.663] esp-now tx -> B: 1154 delivered, 0 failed (MAC-layer ACK)
+[08:49:30.663] esp-now tx -> C: 3270 delivered, 0 failed (MAC-layer ACK)
+[08:49:30.663] esp-now tx -> D: 1719 delivered, 14 failed (MAC-layer ACK)
+[08:49:30.663] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[08:49:30.663] eeprom page writes since boot: total 19190, hottest page 11 with 56 (rated 1000000)
+[08:49:30.663] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[08:51:25.245]   6200.557 [A] compaction started (3061 bytes free)
+[08:51:27.553]   6202.960 [A] compaction #17 done: bank B, 13 keys, 15373 bytes free
+[08:54:09.824]   6365.584 [A] compaction started (3045 bytes free)
+[08:54:12.130]   6367.986 [A] compaction #18 done: bank A, 13 keys, 15373 bytes free
+[08:56:53.618]   6529.352 [A] compaction started (3028 bytes free)
+[08:56:55.974]   6531.783 [A] compaction #19 done: bank B, 13 keys, 15373 bytes free
+[08:57:08.205]   6544.373 [A] replica D answered STORAGE_ERROR for h/A/light/2: under-replicated
+[08:59:42.825]   6698.710 [A] compaction started (3045 bytes free)
+[08:59:45.180]   6701.129 [A] compaction #20 done: bank A, 13 keys, 15373 bytes free
+[09:00:07.841]   6724.373 [A] replica D answered STORAGE_ERROR for h/A/light/2: under-replicated
+[09:01:31.424] >>> stats
+[09:01:31.775] > stats
+[09:01:31.776] radio   rx 49710 (invalid 0, spoofed 0)  tx 23683 (failed 0)
+[09:01:31.776] hb      tx 13596  rx 36488   membership changes 18
+[09:01:31.776] server  executed 1266  not-ready 0  dedup replays 8  suppressed 0  table-full 0
+[09:01:31.776] repl    started 1264  ok 1257  failed 7  stale 0   as replica: applied 3345 stale 0
+[09:01:31.776] ae      rounds 682  chunks tx 2547 rx 5729  tables 1785  pushes 94  resync tx 94 applied 45 stale 16
+[09:01:31.776] gc      orphans 47  tombstones 1  keys dropped 37
+[09:01:31.776] client  ok 3201  failed 0  attempts 3207  local 829
+[09:01:31.776] storage errors 4  compactions 20 (aborted 0)  faults injected 0
+[09:01:31.776] env node-a, built Oct 21 2026 07:07:54, reset reason: unknown
+[09:01:31.776] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[09:01:31.776] esp-now rx 49710  queue overflows 0  unknown MAC 0
+[09:01:31.776] esp-now tx -> B: 1727 delivered, 0 failed (MAC-layer ACK)
+[09:01:31.776] esp-now tx -> C: 3558 delivered, 0 failed (MAC-layer ACK)
+[09:01:31.776] esp-now tx -> D: 2241 delivered, 14 failed (MAC-layer ACK)
+[09:01:31.776] heap free 172872 (min 164148)  node task stack headroom 13176 bytes
+[09:01:31.776] eeprom page writes since boot: total 24173, hottest page 11 with 70 (rated 1000000)
+[09:01:31.776] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0

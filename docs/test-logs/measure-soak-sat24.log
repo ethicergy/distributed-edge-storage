@@ -1,0 +1,165 @@
+    3.026 [A] > status
+    3.026 [A] node A  state ACTIVE  view ABCD  uptime 30949s
+    3.026 [A] hlc 78145818.0
+    3.026 [A] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 623/16064 bytes, bank B, 17 compactions
+    3.026 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.029 [B] > status
+    3.029 [B] node B  state ACTIVE  view ABCD  uptime 30939s
+    3.029 [B] hlc 78145823.0
+    3.029 [B] storage recovered: 10 live, 0 tombstones, 10/64 keys, log 11230/16064 bytes, bank B, 18 compactions
+    3.029 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.031 [C] > status
+    3.031 [C] node C  state ACTIVE  view ABCD  uptime 30929s
+    3.031 [C] hlc 78145824.0
+    3.031 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 7742/16064 bytes, bank A, 13 compactions
+    3.031 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.034 [D] > status
+    3.034 [D] node D  state ACTIVE  view ABCD  uptime 30918s
+    3.034 [D] hlc 78145826.0
+    3.034 [D] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 4433/16064 bytes, bank B, 28 compactions
+    3.034 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.126 [A] sensor light (hardware): on, 1029 samples, last 0.000 lux seq 4160, 2057 ok, 1 under-replicated, 0 failed, 0 read failures
+    3.126 [A] chip temp 64.1 degC (die temperature, not ambient)
+    3.126 [A] > sensor on
+    3.126 [A] sampler on
+    3.129 [B] sensor motion (simulated): on, 1028 samples, last 2 events, last motion 24 s before the sample seq 2635, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.129 [B] chip temp 60.5 degC (die temperature, not ambient)
+    3.129 [B] > sensor on
+    3.129 [B] sampler on
+    3.132 [C] sensor sound (hardware): on, 1028 samples, last 0 events, 0.0 % active seq 3060, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.132 [C] chip temp 57.4 degC (die temperature, not ambient)
+    3.132 [C] > sensor on
+    3.132 [C] sampler on
+    3.134 [D] sensor temp (hardware): on, 1027 samples, last 29.400 degC seq 4431, 2054 ok, 0 under-replicated, 0 failed, 21 read failures
+    3.134 [D] chip temp 57.6 degC (die temperature, not ambient)
+    3.134 [D] > sensor on
+    3.134 [D] sampler on
+    3.136 [A] > status
+    3.136 [A] node A  state ACTIVE  view ABCD  uptime 30950s
+    3.136 [A] hlc 78145931.0
+    3.136 [A] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 623/16064 bytes, bank B, 17 compactions
+    3.136 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.237 [A] sensor light (hardware): on, 1029 samples, last 0.000 lux seq 4160, 2057 ok, 1 under-replicated, 0 failed, 0 read failures
+    3.237 [A] chip temp 64.1 degC (die temperature, not ambient)
+    3.239 [B] > status
+    3.239 [B] node B  state ACTIVE  view ABCD  uptime 30939s
+    3.239 [B] hlc 78146037.0
+    3.239 [B] storage recovered: 10 live, 0 tombstones, 10/64 keys, log 11230/16064 bytes, bank B, 18 compactions
+    3.239 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.339 [B] sensor motion (simulated): on, 1028 samples, last 2 events, last motion 24 s before the sample seq 2635, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.339 [B] chip temp 60.5 degC (die temperature, not ambient)
+    3.342 [C] > status
+    3.342 [C] node C  state ACTIVE  view ABCD  uptime 30929s
+    3.342 [C] hlc 78146141.0
+    3.342 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 7742/16064 bytes, bank A, 13 compactions
+    3.342 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.442 [C] sensor sound (hardware): on, 1028 samples, last 0 events, 0.0 % active seq 3060, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.442 [C] chip temp 58.4 degC (die temperature, not ambient)
+    3.444 [D] > status
+    3.444 [D] node D  state ACTIVE  view ABCD  uptime 30919s
+    3.444 [D] hlc 78146255.0
+    3.444 [D] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 4433/16064 bytes, bank B, 28 compactions
+    3.444 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.545 [D] sensor temp (hardware): on, 1027 samples, last 29.400 degC seq 4431, 2054 ok, 0 under-replicated, 0 failed, 21 read failures
+    3.545 [D] chip temp 57.6 degC (die temperature, not ambient)
+    3.547 [A] > status
+    3.547 [A] node A  state ACTIVE  view ABCD  uptime 30950s
+    3.547 [A] hlc 78146369.0
+    3.547 [A] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 623/16064 bytes, bank B, 17 compactions
+    3.547 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.549 [A] sensor light (hardware): on, 1029 samples, last 0.000 lux seq 4160, 2057 ok, 1 under-replicated, 0 failed, 0 read failures
+    3.549 [A] chip temp 65.1 degC (die temperature, not ambient)
+    3.549 [A] > stats
+    3.549 [A] radio   rx 209290 (invalid 0, spoofed 0)  tx 76881 (failed 0)
+    3.549 [A] hb      tx 61884  rx 184183   membership changes 26
+    3.549 [A] server  executed 771  not-ready 0  dedup replays 15  suppressed 0  table-full 0
+    3.549 [A] repl    started 771  ok 771  failed 0  stale 0   as replica: applied 2880 stale 2
+    3.550 [A] ae      rounds 3097  chunks tx 9348 rx 19509  tables 9075  pushes 12  resync tx 12 applied 13 stale 0
+    3.550 [A] gc      orphans 11  tombstones 2  keys dropped 12
+    3.550 [A] client  ok 2171  failed 0  attempts 2174  local 514
+    3.550 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 76
+    3.550 [A] chip temp 64.1 degC (die temperature, not ambient)
+    3.550 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+    3.550 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+    3.550 [A] esp-now rx 209291  queue overflows 0  unknown MAC 4875
+    3.550 [A] esp-now tx -> B: 1036 delivered, 0 failed (MAC-layer ACK)
+    3.551 [A] esp-now tx -> C: 2127 delivered, 0 failed (MAC-layer ACK)
+    3.551 [A] esp-now tx -> D: 2453 delivered, 0 failed (MAC-layer ACK)
+    3.551 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+    3.551 [A] eeprom page writes since boot: total 19621, hottest page 161 with 61 (rated 1000000)
+    3.553 [B] > status
+    3.553 [B] node B  state ACTIVE  view ABCD  uptime 30940s
+    3.553 [B] hlc 78146377.0
+    3.553 [B] storage recovered: 10 live, 0 tombstones, 10/64 keys, log 11230/16064 bytes, bank B, 18 compactions
+    3.553 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.555 [B] sensor motion (simulated): on, 1028 samples, last 2 events, last motion 24 s before the sample seq 2635, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.555 [B] chip temp 60.5 degC (die temperature, not ambient)
+    3.555 [B] > stats
+    3.556 [B] radio   rx 216987 (invalid 0, spoofed 0)  tx 77370 (failed 0)
+    3.556 [B] hb      tx 61865  rx 185191   membership changes 10
+    3.556 [B] server  executed 3865  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+    3.556 [B] repl    started 3855  ok 3855  failed 0  stale 0   as replica: applied 257 stale 0
+    3.556 [B] ae      rounds 3095  chunks tx 6335 rx 22681  tables 9234  pushes 6  resync tx 6 applied 4 stale 0
+    3.556 [B] gc      orphans 4  tombstones 0  keys dropped 4
+    3.556 [B] client  ok 2161  failed 0  attempts 2168  local 516
+    3.556 [B] storage errors 0  compactions 18 (aborted 0)  faults injected 73
+    3.557 [B] chip temp 60.5 degC (die temperature, not ambient)
+    3.557 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+    3.557 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+    3.557 [B] esp-now rx 216987  queue overflows 0  unknown MAC 4548
+    3.557 [B] esp-now tx -> A: 1032 delivered, 0 failed (MAC-layer ACK)
+    3.557 [B] esp-now tx -> C: 3401 delivered, 3 failed (MAC-layer ACK)
+    3.557 [B] esp-now tx -> D: 4710 delivered, 0 failed (MAC-layer ACK)
+    3.557 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+    3.651 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+    3.658 [B] eeprom page writes since boot: total 21433, hottest page 413 with 68 (rated 1000000)
+    3.660 [C] > status
+    3.660 [C] node C  state ACTIVE  view ABCD  uptime 30929s
+    3.660 [C] hlc 78146495.0
+    3.660 [C] storage recovered: 5 live, 0 tombstones, 5/64 keys, log 7742/16064 bytes, bank A, 13 compactions
+    3.660 [C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.662 [C] sensor sound (hardware): on, 1028 samples, last 0 events, 0.0 % active seq 3060, 2056 ok, 0 under-replicated, 0 failed, 0 read failures
+    3.662 [C] chip temp 58.4 degC (die temperature, not ambient)
+    3.662 [C] > stats
+    3.662 [C] radio   rx 217921 (invalid 0, spoofed 0)  tx 73160 (failed 0)
+    3.663 [C] hb      tx 61845  rx 185221   membership changes 10
+    3.663 [C] server  executed 2408  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+    3.663 [C] repl    started 2400  ok 2396  failed 3  stale 1   as replica: applied 587 stale 0
+    3.663 [C] ae      rounds 3094  chunks tx 3790 rx 25198  tables 9217  pushes 2  resync tx 2 applied 12 stale 2
+    3.663 [C] gc      orphans 9  tombstones 6  keys dropped 15
+    3.663 [C] client  ok 2061  failed 0  attempts 2061  local 2
+    3.663 [C] storage errors 0  compactions 13 (aborted 0)  faults injected 97
+    3.663 [C] chip temp 57.4 degC (die temperature, not ambient)
+    3.663 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+    3.663 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+    3.663 [C] esp-now rx 217921  queue overflows 0  unknown MAC 3965
+    3.663 [C] esp-now tx -> A: 2104 delivered, 0 failed (MAC-layer ACK)
+    3.763 [C] esp-now tx -> B: 3385 delivered, 0 failed (MAC-layer ACK)
+    3.763 [C] esp-now tx -> D: 1987 delivered, 0 failed (MAC-layer ACK)
+    3.763 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+    3.763 [C] eeprom page writes since boot: total 15391, hottest page 13 with 49 (rated 1000000)
+    3.766 [D] > status
+    3.766 [D] node D  state ACTIVE  view ABCD  uptime 30919s
+    3.766 [D] hlc 78146612.0
+    3.766 [D] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 4433/16064 bytes, bank B, 28 compactions
+    3.766 [D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+    3.768 [D] sensor temp (hardware): on, 1027 samples, last 29.400 degC seq 4431, 2054 ok, 0 under-replicated, 0 failed, 21 read failures
+    3.768 [D] chip temp 57.6 degC (die temperature, not ambient)
+    3.768 [D] > stats
+    3.768 [D] radio   rx 213714 (invalid 0, spoofed 0)  tx 80606 (failed 0)
+    3.769 [D] hb      tx 61822  rx 185189   membership changes 8
+    3.769 [D] server  executed 1412  not-ready 0  dedup replays 42  suppressed 12  table-full 0
+    3.769 [D] repl    started 1412  ok 1407  failed 3  stale 2   as replica: applied 4710 stale 1
+    3.769 [D] ae      rounds 3093  chunks tx 9606 rx 19382  tables 9230  pushes 3  resync tx 3 applied 4 stale 2
+    3.769 [D] gc      orphans 7  tombstones 8  keys dropped 13
+    3.769 [D] client  ok 2059  failed 0  attempts 2059  local 256
+    3.769 [D] storage errors 0  compactions 28 (aborted 0)  faults injected 113
+    3.769 [D] chip temp 57.6 degC (die temperature, not ambient)
+    3.770 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+    3.770 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+    3.770 [D] esp-now rx 213714  queue overflows 0  unknown MAC 4005
+    3.770 [D] esp-now tx -> A: 2443 delivered, 0 failed (MAC-layer ACK)
+    3.870 [D] esp-now tx -> B: 4688 delivered, 0 failed (MAC-layer ACK)
+    3.870 [D] esp-now tx -> C: 1975 delivered, 0 failed (MAC-layer ACK)
+    3.870 [D] heap free 174712 (min 166152)  node task stack headroom 13272 bytes
+    3.870 [D] eeprom page writes since boot: total 32939, hottest page 335 with 98 (rated 1000000)

@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <random>
 #include <iostream>
 #include <string>
@@ -16,6 +17,7 @@
 
 #include "cluster.h"
 #include "sensor.h"
+#include "sensor_sources.h"
 #include "test_support.h"
 
 using edge::ClientStatus;
@@ -239,6 +241,49 @@ void h6_replica_failure()
     CHECK(cluster.run_until([&] { return cluster.converged(); }, 15000));
     CHECK(cluster.run_until([&] { return cluster.local_value(node::C, key) == "after"; },
                             3 * config::AE_PERIOD_MS));
+}
+
+// ------------------------------------------------------------------
+// Storage faults are named on the console (BRINGUP_LOG problem 15):
+// a replica's failed write was counted silently before, and every
+// fault read only "STORAGE_ERROR".
+// ------------------------------------------------------------------
+
+bool logged(Cluster& cluster, node::Id id, const std::string& text)
+{
+    for (const std::string& line : cluster.node(id).log) {
+        if (line.find(text) != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void storage_fault_logged()
+{
+    Cluster cluster(16, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    // Replica C's write times out: C names it, B reports it.
+    const std::string key = cluster.key_owned_by("fault-", node::B, node::C);
+    cluster.node(node::C).eeprom.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    const sim::OpOutcome out = cluster.set(node::A, key, "v1");
+    CHECK(out.completed);
+    CHECK(logged(cluster, node::C, "storage error on " + key + " (replica write from B): WRITE_TIMEOUT"));
+    CHECK(logged(cluster, node::B, "replica C answered STORAGE_ERROR for " + key));
+
+    // Primary B's own write fails on the bus.
+    cluster.node(node::B).eeprom.fail_next_write(eeprom::Result::I2C_ERROR);
+    cluster.set(node::A, key, "v2");
+    CHECK(logged(cluster, node::B, "storage error on " + key + ": I2C_ERROR"));
+
+    // A failed write inside a compaction step names the fault too
+    // (what D showed on Wed 21 as "compaction aborted (10)").
+    CHECK(cluster.runtime(node::D).storage().compaction_begin() == storage::Result::OK);
+    cluster.node(node::D).eeprom.fail_next_write(eeprom::Result::WRITE_TIMEOUT);
+    CHECK(cluster.run_until([&] { return logged(cluster, node::D, "compaction aborted (10, WRITE_TIMEOUT)"); },
+                            5000));
 }
 
 // ------------------------------------------------------------------
@@ -633,6 +678,64 @@ void lossy_radio()
 }
 
 // ------------------------------------------------------------------
+// TXLOSS: the on-board loss fault ('fault loss <percent>', -fi images)
+// at 20 % on every node: writes still commit and read back, nothing is
+// applied twice, and the injected drops are counted.
+// ------------------------------------------------------------------
+void injected_tx_loss()
+{
+    Cluster cluster(33, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).faults().tx_loss_percent = 20;
+    }
+
+    std::uint32_t executed_before = 0;
+
+    for (node::Id id : ALL) {
+        executed_before += cluster.runtime(id).counters().requests_executed;
+    }
+
+    const int sets = 30;
+
+    for (int i = 0; i < sets; ++i) {
+        const std::string key = "txloss-" + std::to_string(i);
+        const node::Id from = static_cast<node::Id>(node::MIN + i % 4);
+
+        const sim::OpOutcome set = cluster.set(from, key, "v" + std::to_string(i));
+        CHECK(set.completed);
+        CHECK(edge::write_committed(set.status));
+    }
+
+    std::uint32_t executed = 0;
+    std::uint32_t injected = 0;
+
+    for (node::Id id : ALL) {
+        executed += cluster.runtime(id).counters().requests_executed;
+        injected += cluster.runtime(id).counters().faults_injected;
+        CHECK(cluster.runtime(id).counters().faults_injected > 0);
+    }
+
+    // Exactly once: one execution per SET, retries were deduplicated.
+    // Only a whole-attempt timeout makes a new request (idempotent).
+    CHECK(executed - executed_before >= static_cast<std::uint32_t>(sets));
+    CHECK(executed - executed_before <= static_cast<std::uint32_t>(sets) + 3);
+    CHECK(injected > 20);
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).faults() = edge::Faults{};
+    }
+
+    for (int i = 0; i < sets; ++i) {
+        const sim::OpOutcome get = cluster.get(node::A, "txloss-" + std::to_string(i));
+        CHECK(get.status == ClientStatus::OK);
+        CHECK(get.value == "v" + std::to_string(i));
+    }
+}
+
+// ------------------------------------------------------------------
 // Garbage collection (D8): a tombstone confirmed by all nodes and
 // older than TOMBSTONE_GC_MIN_AGE_MS disappears everywhere; an
 // orphan copy left on a temporary replica is dropped after hand-back.
@@ -849,6 +952,363 @@ void h13_sensor_soak()
     }
 }
 
+// ------------------------------------------------------------------
+// SENSORS: the real-sensor logic on every node over fake inputs driven
+// by cluster time: A a broken BH1750 behind the fallback switch, B PIR
+// (settling, then two detections), C sound (two claps), D DHT11-style
+// latest value with failed reads that later dies (stale). Readings are read back through
+// the cluster like any client would.
+// ------------------------------------------------------------------
+namespace {
+
+constexpr std::uint32_t RIG_PERIOD_MS = 4000;
+constexpr std::uint32_t RIG_PIR_SETTLE_MS = 8000;
+
+struct FakePir final : sensor::DigitalInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
+
+    bool begin() override { return true; }
+
+    bool level() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return (t >= 10000 && t < 12000) || (t >= 14000 && t < 16000);
+    }
+};
+
+struct FakeMic final : sensor::DigitalInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
+
+    bool begin() override { return true; }
+
+    // Active-low DO: low while a clap is above the threshold.
+    bool level() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return !((t >= 11000 && t < 11100) || (t >= 13000 && t < 13300));
+    }
+
+    // What the ISR would have counted: 3 chattering edges, then 1.
+    std::uint32_t edges() override
+    {
+        const std::uint64_t t = cluster->now() - t0;
+        return (t >= 11000) + (t >= 11020) + (t >= 11040) + (t >= 13000);
+    }
+};
+
+struct FakeDht final : sensor::ValueInput {
+    const Cluster* cluster = nullptr;
+    std::uint64_t t0 = 0;
+    std::uint32_t attempts = 0;
+
+    bool begin() override { return true; }
+
+    // One attempt per take(); every third one fails, and from t0 + 26 s
+    // on the sensor is dead.
+    sensor::ValueAttempts take() override
+    {
+        sensor::ValueAttempts out{};
+
+        if (++attempts % 3 == 0 || cluster->now() - t0 >= 26000) {
+            out.failed = 1;
+        } else {
+            out.ok = 1;
+            out.last_good_milli = 21500;
+            out.last_good_ms = cluster->now();
+        }
+
+        return out;
+    }
+};
+
+struct BrokenLight final : sensor::Source {
+    std::uint32_t failed = 0;
+
+    bool begin() override { return true; }
+    sensor::Kind kind() const override { return sensor::Kind::LIGHT; }
+    bool simulated() const override { return false; }
+
+    bool read(std::uint64_t, sensor::Sample&) override
+    {
+        ++failed;
+        return false;
+    }
+
+    std::uint32_t failures() const override { return failed; }
+};
+
+// Owns a node's inputs and sources; behaves as the top source.
+struct Rig final : sensor::Source {
+    std::unique_ptr<sensor::DigitalInput> input;
+    std::unique_ptr<sensor::ValueInput> value_input;
+    std::unique_ptr<sensor::Source> real;
+    std::unique_ptr<sensor::Source> simulated_source;
+    std::unique_ptr<sensor::FallbackSource> top;
+
+    bool begin() override { return top->begin(); }
+    sensor::Kind kind() const override { return top->kind(); }
+    bool simulated() const override { return top->simulated(); }
+    void poll(std::uint64_t now_ms) override { top->poll(now_ms); }
+    bool read(std::uint64_t now_ms, sensor::Sample& sample) override { return top->read(now_ms, sample); }
+    std::uint32_t failures() const override { return top->failures(); }
+};
+
+std::unique_ptr<sensor::Source> make_rig(const Cluster& cluster, node::Id id, std::uint64_t t0)
+{
+    auto rig = std::make_unique<Rig>();
+
+    switch (id) {
+        case node::D: {
+            auto dht = std::make_unique<FakeDht>();
+            dht->cluster = &cluster;
+            dht->t0 = t0;
+            rig->real = std::make_unique<sensor::LatestValueSource>(sensor::Kind::TEMPERATURE, *dht);
+            rig->value_input = std::move(dht);
+            break;
+        }
+        case node::B: {
+            auto pir = std::make_unique<FakePir>();
+            pir->cluster = &cluster;
+            pir->t0 = t0;
+            rig->real = std::make_unique<sensor::MotionSource>(*pir, RIG_PIR_SETTLE_MS);
+            rig->input = std::move(pir);
+            break;
+        }
+        case node::C: {
+            auto mic = std::make_unique<FakeMic>();
+            mic->cluster = &cluster;
+            mic->t0 = t0;
+            rig->real = std::make_unique<sensor::SoundSource>(*mic, false);
+            rig->input = std::move(mic);
+            break;
+        }
+        default: // node A
+            rig->real = std::make_unique<BrokenLight>();
+            break;
+    }
+
+    rig->simulated_source = std::make_unique<sensor::SimulatedSource>(sensor::kind_for_node(id), 7u + id);
+    rig->top = std::make_unique<sensor::FallbackSource>(rig->real.get(), *rig->simulated_source);
+    return rig;
+}
+
+bool read_sensor_key(Cluster& cluster, const std::string& key, sensor::Reading& reading)
+{
+    const sim::OpOutcome get = cluster.get(node::A, key);
+    return get.status == ClientStatus::OK &&
+           sensor::decode(reinterpret_cast<const std::uint8_t*>(get.value.data()), get.value.size(), reading);
+}
+
+bool read_latest(Cluster& cluster, node::Id id, sensor::Reading& reading)
+{
+    char key[storage::KEY_MAX + 1];
+    sensor::latest_key(id, sensor::kind_for_node(id), key, sizeof(key));
+    return read_sensor_key(cluster, key, reading);
+}
+
+// Sum of events over the history ring (the last SENSOR_HISTORY_SLOTS windows).
+std::int32_t history_events(Cluster& cluster, node::Id id, std::int32_t* windows_with_events_and_activity = nullptr)
+{
+    std::int32_t events = 0;
+
+    for (std::uint32_t slot = 0; slot < config::SENSOR_HISTORY_SLOTS; ++slot) {
+        char key[storage::KEY_MAX + 1];
+        sensor::history_key(id, sensor::kind_for_node(id), slot, key, sizeof(key));
+
+        sensor::Reading reading{};
+        CHECK(read_sensor_key(cluster, key, reading));
+        CHECK(!(reading.flags & sensor::READING_FLAG_SIMULATED));
+        events += reading.value_milli / 1000;
+
+        if (windows_with_events_and_activity != nullptr && reading.value_milli > 0 && reading.aux > 0) {
+            ++*windows_with_events_and_activity;
+        }
+    }
+
+    return events;
+}
+
+} // namespace
+
+void real_sensor_logic_end_to_end()
+{
+    Cluster cluster(31, g_verbose);
+    Scope scope(cluster);
+
+    const std::uint64_t t0 = cluster.now();
+    cluster.source_factory = [&cluster, t0](node::Id id) { return make_rig(cluster, id, t0); };
+    cluster.enable_sensors(RIG_PERIOD_MS);
+    CHECK(cluster.start_all());
+
+    // B's first sample comes before the PIR settled.
+    CHECK(cluster.run_until(
+        [&] {
+            sensor::Reading reading{};
+            return read_latest(cluster, node::B, reading);
+        },
+        10000
+    ));
+
+    sensor::Reading reading{};
+    CHECK(read_latest(cluster, node::B, reading));
+    CHECK(reading.kind == sensor::Kind::MOTION);
+    CHECK(reading.flags == sensor::READING_FLAG_SETTLING);
+    CHECK(reading.value_milli == 0);
+
+    // Run past both detections and both claps (t0 + 10..16 s).
+    cluster.run_for(t0 + 24000 - cluster.now());
+
+    // B: two detections in the last four windows; the latest reading
+    // dates the last one (ended at t0 + 16 s).
+    CHECK(history_events(cluster, node::B) == 2);
+    CHECK(read_latest(cluster, node::B, reading));
+    CHECK(reading.flags == 0);
+    CHECK(reading.aux >= 0 && reading.aux <= 8);
+
+    // C: three chattering edges + one = two claps, each window with
+    // events also shows activity.
+    std::int32_t active_windows = 0;
+    CHECK(history_events(cluster, node::C, &active_windows) == 2);
+    CHECK(active_windows >= 1);
+    CHECK(read_latest(cluster, node::C, reading));
+    CHECK(reading.kind == sensor::Kind::SOUND);
+
+    // D: every third DHT read fails; the last good value is kept and
+    // the failures are counted.
+    CHECK(read_latest(cluster, node::D, reading));
+    CHECK(reading.kind == sensor::Kind::TEMPERATURE);
+    CHECK(reading.value_milli == 21500);
+    CHECK(reading.flags == 0);
+    CHECK(cluster.node(node::D).source->failures() >= 1);
+    CHECK(cluster.node(node::D).sampler->stats().read_errors == 0);
+
+    // A (the bridge): the broken BH1750 is replaced by the simulated
+    // source.
+    CHECK(read_latest(cluster, node::A, reading));
+    CHECK(reading.kind == sensor::Kind::LIGHT);
+    CHECK(reading.flags & sensor::READING_FLAG_SIMULATED);
+    CHECK(cluster.node(node::A).source->simulated());
+    CHECK(cluster.node(node::A).source->failures() >= config::SENSOR_FALLBACK_AFTER_FAILURES);
+
+    // D's DHT dies at t0 + 26 s. More than DHT_STALE_MS later its
+    // readings are flagged stale, keep the last good value, and are
+    // never replaced by simulated values.
+    cluster.run_for(t0 + 26000 + config::DHT_STALE_MS + 2 * RIG_PERIOD_MS - cluster.now());
+    CHECK(read_latest(cluster, node::D, reading));
+    CHECK(reading.flags == sensor::READING_FLAG_STALE);
+    CHECK(reading.value_milli == 21500);
+    CHECK(!cluster.node(node::D).source->simulated());
+}
+
+// ------------------------------------------------------------------
+// GC with staggered compaction (BRINGUP_LOG problem 11): on the boards
+// the nodes compact at different times. A node that has dropped a
+// GC-confirmed tombstone must not get it pushed back by a peer that
+// still holds it (drop pending), and a dropped tombstone must never
+// let an older live value come back.
+// ------------------------------------------------------------------
+static bool holds(Cluster& cluster, node::Id id, const std::string& key)
+{
+    return cluster.runtime(id).storage().find_slot(
+               storage::KeyView{reinterpret_cast<const std::uint8_t*>(key.data()), key.size()}) >= 0;
+}
+
+static bool holds_live(Cluster& cluster, node::Id id, const std::string& key)
+{
+    storage::Version version{};
+    storage::State state{};
+    return cluster.local_version(id, key, version, state) && state == storage::State::LIVE;
+}
+
+static bool drop_pending_everywhere(Cluster& cluster, const std::string& key)
+{
+    for (node::Id id : ALL) {
+        storage::StorageManager& store = cluster.runtime(id).storage();
+        const int slot = store.find_slot(
+            storage::KeyView{reinterpret_cast<const std::uint8_t*>(key.data()), key.size()});
+
+        if (slot >= 0 && !store.drop_pending(static_cast<std::size_t>(slot))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Compact one node at a time, a few anti-entropy rounds apart, and
+// check after each that the compacted nodes stay clean.
+static void compact_staggered(Cluster& cluster, const std::string& key)
+{
+    std::vector<node::Id> compacted;
+
+    for (node::Id id : ALL) {
+        cluster.runtime(id).request_compaction();
+        compacted.push_back(id);
+        cluster.run_for(3 * config::AE_PERIOD_MS);
+
+        for (node::Id done : compacted) {
+            CHECK(!holds(cluster, done, key));
+        }
+        for (node::Id any : ALL) {
+            CHECK(!holds_live(cluster, any, key));
+        }
+    }
+
+    cluster.run_for(6 * config::AE_PERIOD_MS);
+
+    for (node::Id id : ALL) {
+        CHECK(!holds(cluster, id, key));
+        CHECK(cluster.get(id, key).status == ClientStatus::NOT_FOUND);
+    }
+}
+
+static void tombstone_gc_staggered_compaction()
+{
+    Cluster cluster(25, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    const std::string key = cluster.key_owned_by("gc-stagger-", node::B, node::C);
+    CHECK(cluster.set(node::A, key, "x").status == ClientStatus::OK);
+    CHECK(cluster.del(node::A, key).status == ClientStatus::OK);
+
+    CHECK(cluster.run_until([&] { return drop_pending_everywhere(cluster, key); },
+                            config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS));
+
+    compact_staggered(cluster, key);
+}
+
+static void no_zombie_after_tombstone_gc()
+{
+    Cluster cluster(26, g_verbose);
+    Scope scope(cluster);
+    CHECK(cluster.start_all());
+
+    // C (replica) keeps the old live value while it is off for the delete.
+    const std::string key = cluster.key_owned_by("gc-zombie-", node::B, node::C);
+    CHECK(cluster.set(node::A, key, "old").status == ClientStatus::OK);
+    CHECK(cluster.local_value(node::C, key) == "old");
+
+    cluster.power_off(node::C);
+    cluster.run_for(config::MEMBERSHIP_TIMEOUT_MS + 500);
+    const ClientStatus deleted = cluster.del(node::A, key).status;
+    CHECK(deleted == ClientStatus::OK || deleted == ClientStatus::UNDER_REPLICATED);
+
+    // No GC while a node is down, however old the tombstone.
+    cluster.run_for(config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS);
+    CHECK(!drop_pending_everywhere(cluster, key));
+
+    cluster.power_on(node::C);
+    CHECK(cluster.run_until([&] { return cluster.converged(); }, 15000));
+    CHECK(!holds_live(cluster, node::C, key));
+
+    CHECK(cluster.run_until([&] { return drop_pending_everywhere(cluster, key); },
+                            config::TOMBSTONE_GC_MIN_AGE_MS + 6 * config::AE_PERIOD_MS));
+
+    compact_staggered(cluster, key);
+}
+
 int main(int argc, char** argv)
 {
     std::string only;
@@ -881,8 +1341,13 @@ int main(int argc, char** argv)
         {"H12", h12_power_cycle_persistence},
         {"SPLIT", split_brain_converges},
         {"LOSS", lossy_radio},
+        {"TXLOSS", injected_tx_loss},
         {"GC", garbage_collection},
+        {"GCSTAG", tombstone_gc_staggered_compaction},
+        {"ZOMBIE", no_zombie_after_tombstone_gc},
         {"H13", h13_sensor_soak},
+        {"SENSORS", real_sensor_logic_end_to_end},
+        {"FAULTLOG", storage_fault_logged},
     };
 
     for (const Scenario& scenario : scenarios) {

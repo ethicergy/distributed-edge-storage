@@ -1,0 +1,885 @@
+# Wed 21 06:54-06:58: final state before the format (status + dump of all four), then 'sensor off' and 'format yes' sent to all four ports at the same moment (one script, threads + barrier), then a 60 s watch and a 30 s heartbeat-rate check. Seconds since port open (par.py: common t0 for all four).
+
+## final status + dump (06:54, evidence of the full index)
+
+[   0.00s port open, node A, Wed 21 06:54:08]
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node A  state ACTIVE  view ABCD  uptime 582s
+[   1.36s] hlc 20762433.0
+[   1.36s] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 4897/16064 bytes, bank A, 1 compactions
+[   1.36s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[   1.36s] sensor light (simulated): on, 20 samples, last 333.598 lux seq 591, 33 ok, 7 under-replicated, 0 failed, 0 read failures
+[   3.33s >>> dump]
+[   3.39s] > dump
+[   3.39s]   v=20754782.1@C  s/A/light = 333.598 lux  (seq 591, sampled at hlc 20754778, simulated)
+[   3.39s]   v=20664781.1@D  h/A/light/0 = 466.681 lux  (seq 588, sampled at hlc 20664778, simulated)
+[   3.39s]   v=40148.1@A  x = "1"
+[   3.39s]   v=20725791.0@A  h/A/light/2 = 371.049 lux  (seq 590, sampled at hlc 20724778, simulated)
+[   3.39s]   v=20754779.2@A  h/A/light/3 = 333.598 lux  (seq 591, sampled at hlc 20754778, simulated)
+[   3.39s]   v=20647738.1@D  h/C/sound/0 = 4 events, 3.2 % active  (seq 520, sampled at hlc 20647735, simulated)
+[   3.39s]   v=20677738.1@D  h/C/sound/1 = 3 events, 1.7 % active  (seq 521, sampled at hlc 20677735, simulated)
+[   3.39s]   v=10562441.1@B  k14 = "from-b"
+[   3.39s]   v=10913643.1@A  k20 = "local"
+[   3.39s]   v=3948021.1@A  k11 = "hello-ac"
+[   3.39s]   v=20756326.1@D  h/D/temp/0 = 24.400 degC  (seq 432, sampled at hlc 20756325, simulated)
+[   3.39s]   v=6193158.1@A  z = "3"
+[   3.39s]   v=20666330.1@A  h/D/temp/1 = 25.365 degC  (seq 429, sampled at hlc 20666324, simulated)
+[   3.39s]   v=20696342.1@B  h/D/temp/2 = 24.429 degC  (seq 430, sampled at hlc 20696325, simulated)
+[   3.39s]   v=20726342.1@B  h/D/temp/3 = 24.295 degC  (seq 431, sampled at hlc 20726325, simulated)
+[   3.39s]   v=6674842.1@A  k8 = "down-6"
+[   3.39s]   v=9900928.1@A  kb1 = "from-b"
+[   3.39s]   v=0.1020@A  cmp_sensor = "30"
+[   3.39s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[   3.39s]   v=8496.0@A  phase6_100 = "99"
+[   3.39s]   v=20675033.1@D  h/B/motion/2 = 2 events, last motion 11 s before the sample  (seq 338, sampled at hlc 20675029, simulated)
+[   3.39s]   v=18075663.1@D  lat/A/6 = "v46"
+[   3.39s]   v=18086073.1@C  lat/B/1 = "v49"
+[   3.39s]   v=18085367.1@C  lat/B/2 = "v42"
+[   3.39s]   v=18085468.1@C  lat/B/3 = "v43"
+[   3.44s]   v=18085669.1@D  lat/B/5 = "v45"
+[   3.44s]   v=18085769.1@A  lat/B/6 = "v46"
+[   3.44s]   v=17874859.1@A  m9/C/2 = "v72"
+[   3.44s]   v=17850260.1@A  m9/C/5 = "v739"
+[   3.44s]   v=17850202.1@A  m9/D/5 = "v739"
+[   3.44s]   v=17860810.1@A  m9/C/7 = "v347"
+[   3.44s]   v=17860768.1@A  m9/D/7 = "v347"
+[   3.44s]   v=17840811.1@C  m9/C/6 = "v401"
+[   3.44s]   v=17867861.1@A  m9/C/4 = "v15"
+[   3.44s]   v=17840751.1@C  m9/D/6 = "v401"
+[   3.44s]   v=17867799.1@A  m9/D/4 = "v15"
+[   3.44s]   v=17863108.1@A  m9/C/3 = "v992"
+[   3.44s]   v=17855158.1@A  m9/D/1 = "v271"
+[   3.44s]   v=17858476.0@C  m9/D/0 = "v820"
+[   3.44s]   v=17855179.1@A  m9/B/1 = "v271"
+[   3.44s]   v=17863084.3@C  m9/B/3 = "v992"
+[   3.44s]   v=17874819.1@A  m9/B/2 = "v72"
+[   3.44s]   v=17850222.1@A  m9/B/5 = "v739"
+[   3.44s]   v=17860787.1@B  m9/B/7 = "v347"
+[   3.44s]   v=19236570.2@A  fo/14 = "while-down-2"
+[   3.44s]   v=17840771.0@A  m9/B/6 = "v401"
+[   3.44s]   v=17867818.1@A  m9/B/4 = "v15"
+[   3.44s]   v=19236670.2@A  fo/15 = "while-down-3"
+[   3.44s]   v=19236771.2@A  fo/16 = "while-down-4"
+[   3.44s]   v=19236872.2@A  fo/17 = "while-down-5"
+[   3.44s]   v=19237173.2@A  fo/43 = "while-down-8"
+[   3.44s] 51 key(s); log 4897/16064 bytes used
+
+[   0.00s port open, node B, Wed 21 06:54:15]
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node B  state ACTIVE  view ABCD  uptime 500s
+[   1.36s] hlc 20770054.0
+[   1.36s] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 5514/16064 bytes, bank A, 1 compactions
+[   1.36s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   1.36s] sensor motion (simulated): on, 17 samples, last 3 events, last motion 14 s before the sample seq 341, 34 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.33s >>> dump]
+[   3.38s] > dump
+[   3.38s]   v=18096001.1@B  lat/C/0 = "v48"
+[   3.38s]   v=20767737.1@B  s/C/sound = 0 events, 0.0 % active  (seq 524, sampled at hlc 20767735, simulated)
+[   3.38s]   v=20694782.1@B  h/A/light/1 = 451.419 lux  (seq 589, sampled at hlc 20694778, simulated)
+[   3.38s]   v=3245024.1@C  y = "2"
+[   3.38s]   v=3957822.1@C  k6 = "cb-key"
+[   3.38s]   v=20707751.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 522, sampled at hlc 20707735, simulated)
+[   3.38s]   v=18096102.1@B  lat/C/1 = "v49"
+[   3.38s]   v=20737748.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 523, sampled at hlc 20737735, simulated)
+[   3.38s]   v=20756327.1@B  s/D/temp = 24.400 degC  (seq 432, sampled at hlc 20756325, simulated)
+[   3.38s]   v=20735031.1@B  h/B/motion/0 = 3 events, last motion 13 s before the sample  (seq 340, sampled at hlc 20735029, simulated)
+[   3.38s]   v=10567483.1@B  k9 = "from-c"
+[   3.38s]   v=20666330.1@A  h/D/temp/1 = 25.365 degC  (seq 429, sampled at hlc 20666324, simulated)
+[   3.38s]   v=6670241.1@C  k18 = "down-4"
+[   3.38s]   v=20696342.1@B  h/D/temp/2 = 24.429 degC  (seq 430, sampled at hlc 20696325, simulated)
+[   3.38s]   v=20705031.1@B  h/B/motion/3 = 3 events, last motion 15 s before the sample  (seq 339, sampled at hlc 20705029, simulated)
+[   3.38s]   v=20726342.1@B  h/D/temp/3 = 24.295 degC  (seq 431, sampled at hlc 20726325, simulated)
+[   3.38s]   v=18095396.1@B  lat/C/2 = "v42"
+[   3.38s]   v=18095495.1@B  lat/C/3 = "v43"
+[   3.38s]   v=18095596.1@D  lat/C/4 = "v44"
+[   3.38s]   v=9900928.1@A  kb1 = "from-b"
+[   3.38s]   v=18095697.1@B  lat/C/5 = "v45"
+[   3.38s]   v=18095798.1@D  lat/C/6 = "v46"
+[   3.38s]   v=18095899.1@D  lat/C/7 = "v47"
+[   3.38s]   v=18106123.1@D  lat/D/0 = "v48"
+[   3.38s]   v=18106224.1@D  lat/D/1 = "v49"
+[   3.43s]   v=18105521.1@B  lat/D/2 = "v42"
+[   3.43s]   v=18105623.0@B  lat/D/3 = "v43"
+[   3.43s]   v=18105723.1@C  lat/D/4 = "v44"
+[   3.43s]   v=18105823.0@B  lat/D/5 = "v45"
+[   3.43s]   v=18105921.1@D  lat/D/6 = "v46"
+[   3.43s]   v=18106023.1@D  lat/D/7 = "v47"
+[   3.43s]   v=17863124.0@C  m9/A/3 = "v992"
+[   3.43s]   v=10562441.1@B  k14 = "from-b"
+[   3.43s]   v=10913643.1@A  k20 = "local"
+[   3.43s]   v=17855209.1@B  m9/A/1 = "v271"
+[   3.43s]   v=17858517.1@B  m9/A/0 = "v820"
+[   3.43s]   v=17855200.1@B  m9/C/1 = "v271"
+[   3.43s]   v=17863108.1@A  m9/C/3 = "v992"
+[   3.43s]   v=17858526.1@B  m9/C/0 = "v820"
+[   3.43s]   v=17874796.1@B  m9/D/2 = "v72"
+[   3.43s]   v=17874859.1@A  m9/C/2 = "v72"
+[   3.43s]   v=17850260.1@A  m9/C/5 = "v739"
+[   3.43s]   v=17860810.1@A  m9/C/7 = "v347"
+[   3.43s]   v=17867861.1@A  m9/C/4 = "v15"
+[   3.43s]   v=17874847.2@C  m9/A/2 = "v72"
+[   3.43s]   v=17850248.3@C  m9/A/5 = "v739"
+[   3.43s]   v=17860787.1@B  m9/B/7 = "v347"
+[   3.43s]   v=17860837.2@B  m9/A/7 = "v347"
+[   3.43s]   v=17840798.2@C  m9/A/6 = "v401"
+[   3.43s]   v=17867843.2@C  m9/A/4 = "v15"
+[   3.43s]   v=19237273.1@B  fo/50 = "while-down-9"
+[   3.43s] 51 key(s); log 5514/16064 bytes used
+
+[   0.00s port open, node C, Wed 21 06:54:22]
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node C  state ACTIVE  view ABCD  uptime 483s
+[   1.36s] hlc 20777630.0
+[   1.36s] storage recovered: 62 live, 0 tombstones, 62/64 keys, log 11227/16064 bytes, bank A, 0 compactions
+[   1.36s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[   1.36s] sensor sound (simulated): on, 16 samples, last 0 events, 0.0 % active seq 524, 30 ok, 2 under-replicated, 0 failed, 0 read failures
+[   3.32s >>> dump]
+[   3.38s] > dump
+[   3.38s]   v=20754782.1@C  s/A/light = 333.598 lux  (seq 591, sampled at hlc 20754778, simulated)
+[   3.38s]   v=40148.1@A  x = "1"
+[   3.38s]   v=3245024.1@C  y = "2"
+[   3.38s]   v=3948021.1@A  k11 = "hello-ac"
+[   3.38s]   v=3957822.1@C  k6 = "cb-key"
+[   3.38s]   v=18075864.1@D  lat/A/0 = "v48"
+[   3.38s]   v=6193158.1@A  z = "3"
+[   3.38s]   v=18075965.1@D  lat/A/1 = "v49"
+[   3.38s]   v=18075261.1@D  lat/A/2 = "v42"
+[   3.38s]   v=18075361.1@D  lat/A/3 = "v43"
+[   3.38s]   v=18075462.1@D  lat/A/4 = "v44"
+[   3.38s]   v=18075564.1@D  lat/A/5 = "v45"
+[   3.38s]   v=18075763.1@C  lat/A/7 = "v47"
+[   3.38s]   v=18085972.1@D  lat/B/0 = "v48"
+[   3.38s]   v=18086073.1@C  lat/B/1 = "v49"
+[   3.38s]   v=18085367.1@C  lat/B/2 = "v42"
+[   3.38s]   v=18085468.1@C  lat/B/3 = "v43"
+[   3.38s]   v=18085568.1@C  lat/B/4 = "v44"
+[   3.38s]   v=6665607.1@C  k3 = "down-2"
+[   3.38s]   v=6667924.1@C  k24 = "down-3"
+[   3.38s]   v=6672538.1@C  k19 = "down-5"
+[   3.38s]   v=0.1050@A  cmp_marker = "DONE"
+[   3.38s]   v=20765033.1@C  s/B/motion = 3 events, last motion 14 s before the sample  (seq 341, sampled at hlc 20765029, simulated)
+[   3.38s]   v=20735031.1@B  h/B/motion/0 = 3 events, last motion 13 s before the sample  (seq 340, sampled at hlc 20735029, simulated)
+[   3.38s]   v=20765046.0@C  h/B/motion/1 = 3 events, last motion 14 s before the sample  (seq 341, sampled at hlc 20765029, simulated)
+[   3.38s]   v=20705031.1@B  h/B/motion/3 = 3 events, last motion 15 s before the sample  (seq 339, sampled at hlc 20705029, simulated)
+[   3.43s]   v=18085873.1@D  lat/B/7 = "v47"
+[   3.43s]   v=18105723.1@C  lat/D/4 = "v44"
+[   3.43s]   v=17855158.1@A  m9/D/1 = "v271"
+[   3.43s]   v=17863061.1@D  m9/D/3 = "v992"
+[   3.43s]   v=17858476.0@C  m9/D/0 = "v820"
+[   3.43s]   v=17874796.1@B  m9/D/2 = "v72"
+[   3.43s]   v=17850202.1@A  m9/D/5 = "v739"
+[   3.43s]   v=17860768.1@A  m9/D/7 = "v347"
+[   3.43s]   v=17840811.1@C  m9/C/6 = "v401"
+[   3.43s]   v=17840751.1@C  m9/D/6 = "v401"
+[   3.43s]   v=17867799.1@A  m9/D/4 = "v15"
+[   3.43s]   v=17863124.0@C  m9/A/3 = "v992"
+[   3.43s]   v=17863084.3@C  m9/B/3 = "v992"
+[   3.43s]   v=17855209.1@B  m9/A/1 = "v271"
+[   3.43s]   v=17858498.1@D  m9/B/0 = "v820"
+[   3.43s]   v=17858517.1@B  m9/A/0 = "v820"
+[   3.43s]   v=17874819.1@A  m9/B/2 = "v72"
+[   3.43s]   v=17874847.2@C  m9/A/2 = "v72"
+[   3.43s]   v=17850222.1@A  m9/B/5 = "v739"
+[   3.43s]   v=17850248.3@C  m9/A/5 = "v739"
+[   3.43s]   v=17860837.2@B  m9/A/7 = "v347"
+[   3.43s]   v=17840771.0@A  m9/B/6 = "v401"
+[   3.43s]   v=17840798.2@C  m9/A/6 = "v401"
+[   3.43s]   v=17867818.1@A  m9/B/4 = "v15"
+[   3.43s]   v=17867843.2@C  m9/A/4 = "v15"
+[   3.43s]   v=18566026.1@C  fo/1 = "before"
+[   3.43s]   v=19236570.2@A  fo/14 = "while-down-2"
+[   3.43s]   v=19236363.1@D  fo/2 = "while-down-0"
+[   3.43s]   v=19236670.2@A  fo/15 = "while-down-3"
+[   3.48s]   v=19236470.1@D  fo/3 = "while-down-1"
+[   3.48s]   v=19236771.2@A  fo/16 = "while-down-4"
+[   3.48s]   v=19236973.1@D  fo/22 = "while-down-6"
+[   3.48s]   v=19236872.2@A  fo/17 = "while-down-5"
+[   3.48s]   v=19237074.1@D  fo/38 = "while-down-7"
+[   3.48s]   v=19237173.2@A  fo/43 = "while-down-8"
+[   3.48s]   v=19237273.1@B  fo/50 = "while-down-9"
+[   3.48s] 62 key(s); log 11227/16064 bytes used
+
+[   0.00s port open, node D, Wed 21 06:54:30]
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node D  state ACTIVE  view ABCD  uptime 539s
+[   1.36s] hlc 20785157.0
+[   1.36s] storage recovered: 62 live, 0 tombstones, 62/64 keys, log 5165/16064 bytes, bank B, 5 compactions
+[   1.36s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   1.36s] sensor temp (simulated): on, 17 samples, last 24.400 degC seq 432, 34 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.33s >>> dump]
+[   3.38s] > dump
+[   3.38s]   v=20784782.0@D  h/A/light/0 = 326.122 lux  (seq 592, sampled at hlc 20784778, simulated)
+[   3.38s]   v=20694782.1@B  h/A/light/1 = 451.419 lux  (seq 589, sampled at hlc 20694778, simulated)
+[   3.38s]   v=20725791.0@A  h/A/light/2 = 371.049 lux  (seq 590, sampled at hlc 20724778, simulated)
+[   3.38s]   v=20754779.2@A  h/A/light/3 = 333.598 lux  (seq 591, sampled at hlc 20754778, simulated)
+[   3.38s]   v=20767737.1@B  s/C/sound = 0 events, 0.0 % active  (seq 524, sampled at hlc 20767735, simulated)
+[   3.38s]   v=20767738.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 524, sampled at hlc 20767735, simulated)
+[   3.38s]   v=20677738.1@D  h/C/sound/1 = 3 events, 1.7 % active  (seq 521, sampled at hlc 20677735, simulated)
+[   3.38s]   v=20707751.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 522, sampled at hlc 20707735, simulated)
+[   3.38s]   v=20737748.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 523, sampled at hlc 20737735, simulated)
+[   3.38s]   v=20786327.1@B  s/D/temp = 23.387 degC  (seq 433, sampled at hlc 20786325, simulated)
+[   3.38s]   v=20756326.1@D  h/D/temp/0 = 24.400 degC  (seq 432, sampled at hlc 20756325, simulated)
+[   3.38s]   v=20765033.1@C  s/B/motion = 3 events, last motion 14 s before the sample  (seq 341, sampled at hlc 20765029, simulated)
+[   3.38s]   v=18075864.1@D  lat/A/0 = "v48"
+[   3.38s]   v=20765046.0@C  h/B/motion/1 = 3 events, last motion 14 s before the sample  (seq 341, sampled at hlc 20765029, simulated)
+[   3.38s]   v=18075965.1@D  lat/A/1 = "v49"
+[   3.38s]   v=6674842.1@A  k8 = "down-6"
+[   3.38s]   v=10567483.1@B  k9 = "from-c"
+[   3.38s]   v=6665607.1@C  k3 = "down-2"
+[   3.38s]   v=6667924.1@C  k24 = "down-3"
+[   3.38s]   v=6670241.1@C  k18 = "down-4"
+[   3.38s]   v=6672538.1@C  k19 = "down-5"
+[   3.38s]   v=20675033.1@D  h/B/motion/2 = 2 events, last motion 11 s before the sample  (seq 338, sampled at hlc 20675029, simulated)
+[   3.43s]   v=18075261.1@D  lat/A/2 = "v42"
+[   3.43s]   v=18075361.1@D  lat/A/3 = "v43"
+[   3.43s]   v=18075462.1@D  lat/A/4 = "v44"
+[   3.43s]   v=18075564.1@D  lat/A/5 = "v45"
+[   3.43s]   v=18075663.1@D  lat/A/6 = "v46"
+[   3.43s]   v=18075763.1@C  lat/A/7 = "v47"
+[   3.43s]   v=0.1020@A  cmp_sensor = "30"
+[   3.43s]   v=18085972.1@D  lat/B/0 = "v48"
+[   3.43s]   v=0.1050@A  cmp_marker = "DONE"
+[   3.43s]   v=18085568.1@C  lat/B/4 = "v44"
+[   3.43s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[   3.43s]   v=18085669.1@D  lat/B/5 = "v45"
+[   3.43s]   v=8496.0@A  phase6_100 = "99"
+[   3.43s]   v=18085769.1@A  lat/B/6 = "v46"
+[   3.43s]   v=18085873.1@D  lat/B/7 = "v47"
+[   3.43s]   v=18096001.1@B  lat/C/0 = "v48"
+[   3.43s]   v=18096102.1@B  lat/C/1 = "v49"
+[   3.43s]   v=18095396.1@B  lat/C/2 = "v42"
+[   3.43s]   v=18095495.1@B  lat/C/3 = "v43"
+[   3.43s]   v=18095596.1@D  lat/C/4 = "v44"
+[   3.43s]   v=18095697.1@B  lat/C/5 = "v45"
+[   3.43s]   v=18095798.1@D  lat/C/6 = "v46"
+[   3.43s]   v=18095899.1@D  lat/C/7 = "v47"
+[   3.43s]   v=18106123.1@D  lat/D/0 = "v48"
+[   3.43s]   v=18106224.1@D  lat/D/1 = "v49"
+[   3.43s]   v=18105521.1@B  lat/D/2 = "v42"
+[   3.43s]   v=18105623.0@B  lat/D/3 = "v43"
+[   3.43s]   v=18105823.0@B  lat/D/5 = "v45"
+[   3.43s]   v=18105921.1@D  lat/D/6 = "v46"
+[   3.48s]   v=18106023.1@D  lat/D/7 = "v47"
+[   3.48s]   v=17855200.1@B  m9/C/1 = "v271"
+[   3.48s]   v=17858526.1@B  m9/C/0 = "v820"
+[   3.48s]   v=17863061.1@D  m9/D/3 = "v992"
+[   3.48s]   v=17855179.1@A  m9/B/1 = "v271"
+[   3.48s]   v=18566026.1@C  fo/1 = "before"
+[   3.48s]   v=17858498.1@D  m9/B/0 = "v820"
+[   3.48s]   v=19236363.1@D  fo/2 = "while-down-0"
+[   3.48s]   v=19236470.1@D  fo/3 = "while-down-1"
+[   3.48s]   v=19236973.1@D  fo/22 = "while-down-6"
+[   3.48s]   v=19237074.1@D  fo/38 = "while-down-7"
+[   3.48s] 62 key(s); log 5218/16064 bytes used
+
+## parallel format (06:54:53)
+
+# par.py Wed 21 06:54:53, steps: ['sensor off', 'format yes', 'wait:15', 'status', 'stats', 'members']
+[   1.31s C] >>> sensor off (sent)
+[   1.31s D] >>> sensor off (sent)
+[   1.31s B] >>> sensor off (sent)
+[   1.31s A] >>> sensor off (sent)
+[   1.32s A] > sensor off
+[   1.32s A] sampler off
+[   1.32s B] > sensor off
+[   1.32s B] sampler off
+[   1.33s D] > sensor off
+[   1.33s D] sampler off
+[   1.33s C] > sensor off
+[   1.33s C] sampler off
+[   3.32s D] >>> format yes (sent)
+[   3.32s B] >>> format yes (sent)
+[   3.32s A] >>> format yes (sent)
+[   3.32s C] >>> format yes (sent)
+[   3.33s A] > format yes
+[   3.33s D] > format yes
+[   3.33s C] > format yes
+[   3.33s B] > format yes
+[   5.54s C]    517.408 [C] state -> BOOTING
+[   5.54s C]    517.408 [C] storage formatted
+[   5.54s C] formatted; peers will push this node's keys back
+[   5.54s C]    517.409 [C] view: --C-
+[   5.55s A]    632.365 [A] state -> BOOTING
+[   5.55s A]    632.366 [A] storage formatted
+[   5.55s A] formatted; peers will push this node's keys back
+[   5.55s A]    632.367 [A] view: A---
+[   5.55s D]    566.312 [D] state -> BOOTING
+[   5.55s D]    566.312 [D] storage formatted
+[   5.55s D] formatted; peers will push this node's keys back
+[   5.55s D]    566.313 [D] view: ---D
+[   5.56s B]    542.612 [B] state -> BOOTING
+[   5.56s B]    542.612 [B] storage formatted
+[   5.56s B] formatted; peers will push this node's keys back
+[   5.56s B]    542.613 [B] view: -B--
+[   6.04s D]    566.764 [D] state -> ACTIVE
+[   6.04s D]    566.767 [D] view: --CD
+[   6.04s D]    566.767 [D] view: -BCD
+[   6.04s B]    543.064 [B] state -> ACTIVE
+[   6.04s B]    543.066 [B] view: -BC-
+[   6.04s B]    543.066 [B] view: -BCD
+[   6.05s C]    517.860 [C] state -> ACTIVE
+[   6.05s C]    517.863 [C] view: --CD
+[   6.05s C]    517.863 [C] view: -BCD
+[   6.05s A]    632.819 [A] state -> ACTIVE
+[   6.05s A]    632.821 [A] view: A-CD
+[   7.04s C]    518.863 [C] view: ABCD
+[   7.05s B]    544.067 [B] view: ABCD
+[   7.05s D]    567.767 [D] view: ABCD
+[   7.06s A]    633.821 [A] view: ABCD
+[  10.55s C]    522.363 [C] view: -BCD
+[  10.55s B]    547.567 [B] view: -BCD
+[  11.04s C]    522.863 [C] view: ABCD
+[  11.56s B]    548.567 [B] view: ABCD
+[  13.06s A]    639.823 [A] view: A-CD
+[  13.55s A]    640.323 [A] view: ABCD
+[  20.32s D] >>> status (sent)
+[  20.32s C] >>> status (sent)
+[  20.32s A] >>> status (sent)
+[  20.32s B] >>> status (sent)
+[  20.33s B] > status
+[  20.33s B] node B  state ACTIVE  view ABCD  uptime 557s
+[  20.33s B] hlc 20826674.0
+[  20.33s B] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 1 compactions
+[  20.33s B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  20.33s B] sensor motion (simulated): off, 18 samples, last 0 events, last motion 44 s before the sample seq 342, 36 ok, 0 under-replicated, 0 failed, 0 read failures
+[  20.33s A] > status
+[  20.33s A] node A  state ACTIVE  view ABCD  uptime 647s
+[  20.33s A] hlc 20826673.0
+[  20.33s A] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 1 compactions
+[  20.33s A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  20.33s A] sensor light (simulated): off, 21 samples, last 326.122 lux seq 592, 35 ok, 7 under-replicated, 0 failed, 0 read failures
+[  20.33s D] > status
+[  20.33s D] node D  state ACTIVE  view ABCD  uptime 581s
+[  20.33s D] hlc 20826673.0
+[  20.33s D] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 5 compactions
+[  20.33s D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  20.33s D] sensor temp (simulated): off, 18 samples, last 23.387 degC seq 433, 36 ok, 0 under-replicated, 0 failed, 0 read failures
+[  20.33s C] > status
+[  20.33s C] node C  state ACTIVE  view ABCD  uptime 532s
+[  20.33s C] hlc 20826674.0
+[  20.33s C] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+[  20.33s C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  20.33s C] sensor sound (simulated): off, 17 samples, last 0 events, 0.0 % active seq 525, 32 ok, 2 under-replicated, 0 failed, 0 read failures
+[  20.55s A]    647.322 [A] view: A-CD
+[  21.54s A]    648.324 [A] view: ABCD
+[  22.33s C] >>> stats (sent)
+[  22.33s B] >>> stats (sent)
+[  22.33s A] >>> stats (sent)
+[  22.33s D] >>> stats (sent)
+[  22.34s C] > stats
+[  22.34s C] radio   rx 5037 (invalid 0, spoofed 0)  tx 1865 (failed 0)
+[  22.34s C] hb      tx 1050  rx 3110   membership changes 7
+[  22.34s C] server  executed 38  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+[  22.34s C] repl    started 38  ok 37  failed 1  stale 0   as replica: applied 8 stale 0
+[  22.34s C] ae      rounds 55  chunks tx 691 rx 1799  tables 141  pushes 1  resync tx 1 applied 3 stale 3
+[  22.34s C] gc      orphans 0  tombstones 0  keys dropped 0
+[  22.34s C] client  ok 35  failed 0  attempts 35  local 0
+[  22.34s C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  22.34s C] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+[  22.34s C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  22.34s C] esp-now rx 5037  queue overflows 0  unknown MAC 0
+[  22.34s C] esp-now tx -> A: 38 delivered, 0 failed (MAC-layer ACK)
+[  22.34s C] esp-now tx -> B: 55 delivered, 0 failed (MAC-layer ACK)
+[  22.34s C] esp-now tx -> D: 31 delivered, 0 failed (MAC-layer ACK)
+[  22.34s C] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[  22.34s C] eeprom page writes since boot: total 649, hottest page 164 with 7 (rated 1000000)
+[  22.34s D] > stats
+[  22.34s D] radio   rx 5460 (invalid 0, spoofed 0)  tx 2159 (failed 0)
+[  22.34s D] hb      tx 1147  rx 3230   membership changes 7
+[  22.34s D] server  executed 29  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+[  22.34s D] repl    started 27  ok 25  failed 2  stale 0   as replica: applied 77 stale 0
+[  22.34s D] ae      rounds 60  chunks tx 756 rx 1904  tables 141  pushes 98  resync tx 98 applied 9 stale 0
+[  22.34s D] gc      orphans 6  tombstones 0  keys dropped 6
+[  22.34s D] client  ok 37  failed 0  attempts 37  local 7
+[  22.34s D] storage errors 159  compactions 5 (aborted 0)  faults injected 0
+[  22.34s D] env node-d, built Oct 20 2026 15:38:19, reset reason: power-on
+[  22.34s D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  22.34s D] esp-now rx 5460  queue overflows 0  unknown MAC 0
+[  22.34s D] esp-now tx -> A: 132 delivered, 0 failed (MAC-layer ACK)
+[  22.34s D] esp-now tx -> B: 92 delivered, 0 failed (MAC-layer ACK)
+[  22.34s D] esp-now tx -> C: 32 delivered, 0 failed (MAC-layer ACK)
+[  22.34s D] heap free 179008 (min 170180)  node task stack headroom 13320 bytes
+[  22.34s D] eeprom page writes since boot: total 4205, hottest page 271 with 21 (rated 1000000)
+[  22.34s B] > stats
+[  22.34s B] radio   rx 5389 (invalid 0, spoofed 0)  tx 1920 (failed 0)
+[  22.34s B] hb      tx 1100  rx 3209   membership changes 10
+[  22.34s B] server  executed 63  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  22.34s B] repl    started 62  ok 62  failed 0  stale 0   as replica: applied 6 stale 0
+[  22.34s B] ae      rounds 57  chunks tx 615 rx 1982  tables 154  pushes 53  resync tx 53 applied 16 stale 6
+[  22.34s B] gc      orphans 13  tombstones 0  keys dropped 13
+[  22.34s B] client  ok 37  failed 0  attempts 37  local 8
+[  22.34s B] storage errors 24  compactions 1 (aborted 0)  faults injected 0
+[  22.34s B] env node-b, built Oct 20 2026 15:46:38, reset reason: power-on
+[  22.34s B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  22.34s B] esp-now rx 5389  queue overflows 0  unknown MAC 0
+[  22.34s B] esp-now tx -> A: 23 delivered, 0 failed (MAC-layer ACK)
+[  22.34s B] esp-now tx -> C: 57 delivered, 0 failed (MAC-layer ACK)
+[  22.34s B] esp-now tx -> D: 125 delivered, 0 failed (MAC-layer ACK)
+[  22.34s B] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[  22.34s B] eeprom page writes since boot: total 1388, hottest page 8 with 9 (rated 1000000)
+[  22.34s A] > stats
+[  22.34s A] radio   rx 5449 (invalid 0, spoofed 0)  tx 2247 (failed 0)
+[  22.34s A] hb      tx 1282  rx 3226   membership changes 11
+[  22.34s A] server  executed 23  not-ready 0  dedup replays 3  suppressed 0  table-full 0
+[  22.34s A] repl    started 15  ok 15  failed 0  stale 0   as replica: applied 48 stale 0
+[  22.34s A] ae      rounds 65  chunks tx 705 rx 2031  tables 144  pushes 159  resync tx 159 applied 15 stale 0
+[  22.34s A] gc      orphans 13  tombstones 0  keys dropped 13
+[  22.34s A] client  ok 43  failed 0  attempts 44  local 18
+[  22.34s A] storage errors 80  compactions 1 (aborted 1)  faults injected 0
+[  22.34s A] env node-a, built Oct 20 2026 15:46:27, reset reason: power-on
+[  22.34s A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  22.34s A] esp-now rx 5454  queue overflows 5  unknown MAC 0
+[  22.34s A] esp-now tx -> B: 51 delivered, 0 failed (MAC-layer ACK)
+[  22.34s A] esp-now tx -> C: 39 delivered, 0 failed (MAC-layer ACK)
+[  22.34s A] esp-now tx -> D: 170 delivered, 0 failed (MAC-layer ACK)
+[  22.34s A] heap free 176888 (min 168164)  node task stack headroom 13176 bytes
+[  22.34s A] eeprom page writes since boot: total 1386, hottest page 8 with 9 (rated 1000000)
+[  22.34s A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[  24.33s D] >>> members (sent)
+[  24.33s A] >>> members (sent)
+[  24.33s B] >>> members (sent)
+[  24.33s C] >>> members (sent)
+[  24.34s A] > members
+[  24.34s A]   A  self    ACTIVE
+[  24.34s A]   B  alive   last heard 1298 ms ago, 1055 heartbeats
+[  24.34s A]   C  alive   last heard 299 ms ago, 1043 heartbeats
+[  24.34s A]   D  alive   last heard 298 ms ago, 1137 heartbeats
+[  24.34s C] > members
+[  24.34s C]   A  alive   last heard 798 ms ago, 1029 heartbeats
+[  24.34s C]   B  alive   last heard 297 ms ago, 1048 heartbeats
+[  24.34s C]   C  self    ACTIVE
+[  24.34s C]   D  alive   last heard 298 ms ago, 1042 heartbeats
+[  24.34s B] > members
+[  24.34s B]   A  alive   last heard 798 ms ago, 1071 heartbeats
+[  24.34s B]   B  self    ACTIVE
+[  24.34s B]   C  alive   last heard 299 ms ago, 1049 heartbeats
+[  24.34s B]   D  alive   last heard 298 ms ago, 1098 heartbeats
+[  24.34s D] > members
+[  24.34s D]   A  alive   last heard 798 ms ago, 1131 heartbeats
+[  24.34s D]   B  alive   last heard 297 ms ago, 1066 heartbeats
+[  24.34s D]   C  alive   last heard 299 ms ago, 1042 heartbeats
+[  24.34s D]   D  self    ACTIVE
+[  25.59s A]    651.822 [A] view: A-CD
+[  26.08s A]    652.322 [A] view: ABCD
+
+## 60 s watch (06:55:30)
+
+# par.py Wed 21 06:55:30, steps: ['wait:60', 'status', 'stats', 'members']
+[   4.78s C]    554.363 [C] view: ABC-
+[   4.78s C]    554.364 [C] view: ABCD
+[  12.63s B]    587.568 [B] view: -BCD
+[  12.63s D]    611.269 [D] view: -BCD
+[  13.14s B]    588.067 [B] view: ABCD
+[  13.14s D]    611.768 [D] view: ABCD
+[  20.75s B]    595.068 [B] view: -BCD
+[  21.75s B]    596.067 [B] view: ABCD
+[  29.58s B]    604.067 [B] view: -BCD
+[  30.05s B]    604.567 [B] view: ABCD
+[  34.79s C]    584.364 [C] view: ABC-
+[  35.31s B]    610.067 [B] view: -BCD
+[  35.31s A]    699.823 [A] view: ABC-
+[  35.31s D]    633.767 [D] view: -BCD
+[  35.80s A]    700.321 [A] view: ABCD
+[  35.80s C]    585.363 [C] view: ABCD
+[  35.80s B]    610.568 [B] view: ABCD
+[  35.80s D]    634.268 [D] view: ABCD
+[  40.69s B]    615.568 [B] view: -BCD
+[  41.69s B]    616.567 [B] view: ABCD
+[  59.22s B]    633.567 [B] view: -BCD
+[  59.71s B]    634.067 [B] view: ABCD
+[  61.61s B]    636.068 [B] view: -BCD
+[  62.06s B]    636.567 [B] view: ABCD
+[  62.53s A]    726.823 [A] view: A-CD
+[  62.53s D]    660.768 [D] view: A-CD
+[  62.56s B] >>> status (sent)
+[  62.56s D] >>> status (sent)
+[  62.56s C] >>> status (sent)
+[  62.56s A] >>> status (sent)
+[  62.57s B] > status
+[  62.57s B] node B  state ACTIVE  view ABCD  uptime 637s
+[  62.57s B] hlc 20906446.0
+[  62.57s B] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 1 compactions
+[  62.57s B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  62.57s B] sensor motion (simulated): off, 18 samples, last 0 events, last motion 44 s before the sample seq 342, 36 ok, 0 under-replicated, 0 failed, 0 read failures
+[  62.57s A] > status
+[  62.57s A] node A  state ACTIVE  view A-CD  uptime 726s
+[  62.57s A] hlc 20906445.0
+[  62.57s A] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 1 compactions
+[  62.57s A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  62.57s A] sensor light (simulated): off, 21 samples, last 326.122 lux seq 592, 35 ok, 7 under-replicated, 0 failed, 0 read failures
+[  62.57s D] > status
+[  62.57s D] node D  state ACTIVE  view A-CD  uptime 660s
+[  62.57s D] hlc 20906444.0
+[  62.57s D] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 5 compactions
+[  62.57s D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  62.57s D] sensor temp (simulated): off, 18 samples, last 23.387 degC seq 433, 36 ok, 0 under-replicated, 0 failed, 0 read failures
+[  62.57s C] > status
+[  62.57s C] node C  state ACTIVE  view ABCD  uptime 611s
+[  62.57s C] hlc 20906446.0
+[  62.57s C] storage fresh format: 0 live, 0 tombstones, 0/64 keys, log 0/16064 bytes, bank A, 0 compactions
+[  62.57s C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  62.57s C] sensor sound (simulated): off, 17 samples, last 0 events, 0.0 % active seq 525, 32 ok, 2 under-replicated, 0 failed, 0 read failures
+[  62.97s A]    727.322 [A] view: ABCD
+[  62.98s D]    661.268 [D] view: ABCD
+[  64.57s D] >>> stats (sent)
+[  64.57s B] >>> stats (sent)
+[  64.57s A] >>> stats (sent)
+[  64.57s C] >>> stats (sent)
+[  64.58s A] > stats
+[  64.58s A] radio   rx 5827 (invalid 0, spoofed 0)  tx 2415 (failed 0)
+[  64.58s A] hb      tx 1442  rx 3580   membership changes 21
+[  64.58s A] server  executed 23  not-ready 0  dedup replays 3  suppressed 0  table-full 0
+[  64.58s A] repl    started 15  ok 15  failed 0  stale 0   as replica: applied 48 stale 0
+[  64.58s A] ae      rounds 73  chunks tx 713 rx 2055  tables 168  pushes 159  resync tx 159 applied 15 stale 0
+[  64.58s A] gc      orphans 13  tombstones 0  keys dropped 13
+[  64.58s A] client  ok 43  failed 0  attempts 44  local 18
+[  64.58s A] storage errors 80  compactions 1 (aborted 1)  faults injected 0
+[  64.58s A] env node-a, built Oct 20 2026 15:46:27, reset reason: power-on
+[  64.58s A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  64.58s A] esp-now rx 5832  queue overflows 5  unknown MAC 0
+[  64.58s A] esp-now tx -> B: 51 delivered, 0 failed (MAC-layer ACK)
+[  64.58s A] esp-now tx -> C: 39 delivered, 0 failed (MAC-layer ACK)
+[  64.58s A] esp-now tx -> D: 170 delivered, 0 failed (MAC-layer ACK)
+[  64.58s A] heap free 176888 (min 168164)  node task stack headroom 13176 bytes
+[  64.58s A] eeprom page writes since boot: total 1386, hottest page 8 with 9 (rated 1000000)
+[  64.58s A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[  64.58s B] > stats
+[  64.58s B] radio   rx 5767 (invalid 0, spoofed 0)  tx 2088 (failed 0)
+[  64.58s B] hb      tx 1260  rx 3563   membership changes 26
+[  64.58s B] server  executed 63  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  64.58s B] repl    started 62  ok 62  failed 0  stale 0   as replica: applied 6 stale 0
+[  64.58s B] ae      rounds 65  chunks tx 623 rx 2006  tables 178  pushes 53  resync tx 53 applied 16 stale 6
+[  64.58s B] gc      orphans 13  tombstones 0  keys dropped 13
+[  64.58s B] client  ok 37  failed 0  attempts 37  local 8
+[  64.58s B] storage errors 24  compactions 1 (aborted 0)  faults injected 0
+[  64.58s B] env node-b, built Oct 20 2026 15:46:38, reset reason: power-on
+[  64.58s B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[  64.58s B] esp-now rx 5767  queue overflows 0  unknown MAC 0
+[  64.58s B] esp-now tx -> A: 23 delivered, 0 failed (MAC-layer ACK)
+[  64.58s B] esp-now tx -> C: 57 delivered, 0 failed (MAC-layer ACK)
+[  64.58s B] esp-now tx -> D: 125 delivered, 0 failed (MAC-layer ACK)
+[  64.58s B] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[  64.58s B] eeprom page writes since boot: total 1388, hottest page 8 with 9 (rated 1000000)
+[  64.58s D] > stats
+[  64.58s D] radio   rx 5833 (invalid 0, spoofed 0)  tx 2327 (failed 0)
+[  64.58s D] hb      tx 1307  rx 3579   membership changes 17
+[  64.58s D] server  executed 29  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+[  64.58s D] repl    started 27  ok 25  failed 2  stale 0   as replica: applied 77 stale 0
+[  64.58s D] ae      rounds 68  chunks tx 764 rx 1928  tables 165  pushes 98  resync tx 98 applied 9 stale 0
+[  64.58s D] gc      orphans 6  tombstones 0  keys dropped 6
+[  64.58s D] client  ok 37  failed 0  attempts 37  local 7
+[  64.58s D] storage errors 159  compactions 5 (aborted 0)  faults injected 0
+[  64.58s D] env node-d, built Oct 20 2026 15:38:19, reset reason: power-on
+[  64.58s D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  64.58s D] esp-now rx 5833  queue overflows 0  unknown MAC 0
+[  64.58s D] esp-now tx -> A: 132 delivered, 0 failed (MAC-layer ACK)
+[  64.58s D] esp-now tx -> B: 92 delivered, 0 failed (MAC-layer ACK)
+[  64.58s D] esp-now tx -> C: 32 delivered, 0 failed (MAC-layer ACK)
+[  64.58s D] heap free 179008 (min 170180)  node task stack headroom 13320 bytes
+[  64.58s D] eeprom page writes since boot: total 4205, hottest page 271 with 21 (rated 1000000)
+[  64.58s C] > stats
+[  64.58s C] radio   rx 5415 (invalid 0, spoofed 0)  tx 2033 (failed 0)
+[  64.58s C] hb      tx 1210  rx 3464   membership changes 11
+[  64.58s C] server  executed 38  not-ready 0  dedup replays 1  suppressed 0  table-full 0
+[  64.58s C] repl    started 38  ok 37  failed 1  stale 0   as replica: applied 8 stale 0
+[  64.58s C] ae      rounds 63  chunks tx 699 rx 1823  tables 165  pushes 1  resync tx 1 applied 3 stale 3
+[  64.58s C] gc      orphans 0  tombstones 0  keys dropped 0
+[  64.58s C] client  ok 35  failed 0  attempts 35  local 0
+[  64.58s C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  64.58s C] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+[  64.58s C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  64.58s C] esp-now rx 5415  queue overflows 0  unknown MAC 0
+[  64.58s C] esp-now tx -> A: 38 delivered, 0 failed (MAC-layer ACK)
+[  64.58s C] esp-now tx -> B: 55 delivered, 0 failed (MAC-layer ACK)
+[  64.58s C] esp-now tx -> D: 31 delivered, 0 failed (MAC-layer ACK)
+[  64.58s C] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[  64.58s C] eeprom page writes since boot: total 649, hottest page 164 with 7 (rated 1000000)
+[  65.83s B]    640.568 [B] view: -BCD
+[  65.83s B]    640.568 [B] view: ABCD
+[  66.57s A] >>> members (sent)
+[  66.57s D] >>> members (sent)
+[  66.57s B] >>> members (sent)
+[  66.57s C] >>> members (sent)
+[  66.58s A] > members
+[  66.58s A]   A  self    ACTIVE
+[  66.58s A]   B  alive   last heard 267 ms ago, 1135 heartbeats
+[  66.58s A]   C  alive   last heard 767 ms ago, 1194 heartbeats
+[  66.58s A]   D  alive   last heard 268 ms ago, 1259 heartbeats
+[  66.58s B] > members
+[  66.58s B]   A  alive   last heard 268 ms ago, 1146 heartbeats
+[  66.58s B]   B  self    ACTIVE
+[  66.58s B]   C  alive   last heard 267 ms ago, 1205 heartbeats
+[  66.58s B]   D  alive   last heard 1267 ms ago, 1220 heartbeats
+[  66.58s D] > members
+[  66.58s D]   A  alive   last heard 268 ms ago, 1241 heartbeats
+[  66.58s D]   B  alive   last heard 267 ms ago, 1154 heartbeats
+[  66.58s D]   C  alive   last heard 767 ms ago, 1192 heartbeats
+[  66.58s D]   D  self    ACTIVE
+[  66.59s C] > members
+[  66.59s C]   A  alive   last heard 268 ms ago, 1132 heartbeats
+[  66.59s C]   B  alive   last heard 267 ms ago, 1204 heartbeats
+[  66.59s C]   C  self    ACTIVE
+[  66.59s C]   D  alive   last heard 1267 ms ago, 1136 heartbeats
+
+## heartbeat rate, two 'members' 30.6 s apart (06:57:18)
+
+# par.py Wed 21 06:57:18, steps: ['members', 'wait:28', 'members']
+[   0.21s D]    706.268 [D] view: A-CD
+[   0.21s C]    657.363 [C] view: -BCD
+[   0.21s A]    772.323 [A] view: A-CD
+[   0.70s A]    772.822 [A] view: ABCD
+[   0.70s C]    657.863 [C] view: ABCD
+[   0.72s D]    706.767 [D] view: ABCD
+[   1.31s A] >>> members (sent)
+[   1.31s D] >>> members (sent)
+[   1.31s B] >>> members (sent)
+[   1.31s C] >>> members (sent)
+[   1.32s C] > members
+[   1.32s C]   A  alive   last heard 614 ms ago, 1179 heartbeats
+[   1.32s C]   B  alive   last heard 114 ms ago, 1289 heartbeats
+[   1.32s C]   C  self    ACTIVE
+[   1.32s C]   D  alive   last heard 113 ms ago, 1191 heartbeats
+[   1.32s B] > members
+[   1.32s B]   A  DEAD    last heard 3613 ms ago, 1176 heartbeats
+[   1.32s B]   B  self    ACTIVE
+[   1.32s B]   C  alive   last heard 114 ms ago, 1290 heartbeats
+[   1.32s B]   D  alive   last heard 112 ms ago, 1292 heartbeats
+[   1.32s A] > members
+[   1.32s A]   A  self    ACTIVE
+[   1.32s A]   B  alive   last heard 612 ms ago, 1176 heartbeats
+[   1.32s A]   C  alive   last heard 114 ms ago, 1277 heartbeats
+[   1.32s A]   D  alive   last heard 112 ms ago, 1322 heartbeats
+[   1.32s D] > members
+[   1.32s D]   A  alive   last heard 113 ms ago, 1289 heartbeats
+[   1.32s D]   B  alive   last heard 612 ms ago, 1206 heartbeats
+[   1.32s D]   C  alive   last heard 114 ms ago, 1275 heartbeats
+[   1.32s D]   D  self    ACTIVE
+[   2.69s C]    659.863 [C] view: -BCD
+[   2.69s C]    659.864 [C] view: ABCD
+[   2.69s B]    685.067 [B] view: ABCD
+[   6.14s C]    663.365 [C] view: ABC-
+[   6.14s C]    663.367 [C] view: ABCD
+[  12.08s A]    784.323 [A] view: A-CD
+[  13.08s D]    719.268 [D] view: A-CD
+[  13.08s C]    670.364 [C] view: ABC-
+[  13.10s B]    695.567 [B] view: ABC-
+[  13.57s B]    696.067 [B] view: ABCD
+[  13.57s D]    719.766 [D] view: ABCD
+[  13.58s A]    785.821 [A] view: ABCD
+[  15.07s C]    672.363 [C] view: ABCD
+[  15.08s B]    697.567 [B] view: -BCD
+[  16.08s B]    698.567 [B] view: ABCD
+[  20.08s D]    726.267 [D] view: A-CD
+[  20.09s A]    792.322 [A] view: A-CD
+[  20.57s A]    792.822 [A] view: ABCD
+[  20.58s D]    726.768 [D] view: ABCD
+[  26.61s C]    683.864 [C] view: ABC-
+[  26.62s D]    732.767 [D] view: A-CD
+[  26.63s B]    709.068 [B] view: ABC-
+[  26.65s A]    798.822 [A] view: A-CD
+[  27.80s D]    733.268 [D] view: ABCD
+[  27.80s B]    709.567 [B] view: ABCD
+[  27.80s A]    799.322 [A] view: ABCD
+[  27.80s C]    684.364 [C] view: ABCD
+[  31.96s A] >>> members (sent)
+[  31.96s D] >>> members (sent)
+[  31.96s C] >>> members (sent)
+[  31.96s B] >>> members (sent)
+[  31.96s B] > members
+[  31.96s B]   A  alive   last heard 629 ms ago, 1205 heartbeats
+[  31.96s B]   B  self    ACTIVE
+[  31.96s B]   C  alive   last heard 131 ms ago, 1349 heartbeats
+[  31.96s B]   D  alive   last heard 130 ms ago, 1330 heartbeats
+[  31.97s D] > members
+[  31.97s D]   A  alive   last heard 629 ms ago, 1330 heartbeats
+[  31.97s D]   B  alive   last heard 129 ms ago, 1234 heartbeats
+[  31.97s D]   C  alive   last heard 131 ms ago, 1332 heartbeats
+[  31.97s D]   D  self    ACTIVE
+[  31.98s C] > members
+[  31.98s C]   A  alive   last heard 131 ms ago, 1213 heartbeats
+[  31.98s C]   B  alive   last heard 130 ms ago, 1348 heartbeats
+[  31.98s C]   C  self    ACTIVE
+[  31.98s C]   D  alive   last heard 1629 ms ago, 1223 heartbeats
+[  31.98s A] > members
+[  31.98s A]   A  self    ACTIVE
+[  31.98s A]   B  alive   last heard 129 ms ago, 1201 heartbeats
+[  31.98s A]   C  alive   last heard 131 ms ago, 1335 heartbeats
+[  31.98s A]   D  alive   last heard 630 ms ago, 1365 heartbeats
+[  32.35s C]    688.865 [C] view: ABC-
+[  32.84s C]    689.364 [C] view: ABCD
+
+## samplers back on (07:03:15)
+
+# par.py Wed 21 07:03:15, steps: ['sensor on']
+[   0.02s A] w: ABCD
+[   0.03s A]    931.822 [A] view: A-CD
+[   0.03s A]    931.824 [A] view: ABCD
+[   0.03s A]    937.823 [A] view: A-CD
+[   0.03s A]    938.321 [A] view: ABCD
+[   0.03s A]    952.824 [A] view: A-CD
+[   0.03s A]    954.321 [A] view: ABCD
+[   0.03s A]   1046.821 [A] view: A-CD
+[   0.03s A]   1047.820 [A] view: ABCD
+[   0.03s A]   1052.822 [A] view: A-CD
+[   0.03s A]   1053.324 [A] view: ABCD
+[   0.03s A]   1066.822 [A] view: A-CD
+[   0.03s A]   1067.322 [A] view: ABCD
+[   0.03s A]   1075.822 [A] view: A-CD
+[   0.03s A]   1076.321 [A] view: ABCD
+[   0.03s A]   1083.321 [A] view: A-CD
+[   0.03s A]   1083.322 [A] view: ABCD
+[   0.03s A]   1106.821 [A] view: A-CD
+[   0.03s A]   1107.821 [A] view: ABCD
+[   0.03s A]   1115.322 [A] view: A-CD
+[   0.03s A]   1116.823 [A] view: ABCD
+[   1.31s A] >>> sensor on (sent)
+[   1.31s B] >>> sensor on (sent)
+[   1.31s C] >>> sensor on (sent)
+[   1.31s D] >>> sensor on (sent)
+[   1.32s D] > sensor on
+[   1.32s D] sampler on
+[   1.32s A] > sensor on
+[   1.32s A] sampler on
+[   1.32s C] > sensor on
+[   1.32s C] sampler on
+[   1.32s B] > sensor on
+[   1.32s B] sampler on
+
+## re-check 07:04:11: heartbeat rate + status, then dump (07:05)
+
+# par.py Wed 21 07:04:11, steps: ['members', 'wait:28', 'members', 'status']
+[   1.31s D] >>> members (sent)
+[   1.31s A] >>> members (sent)
+[   1.31s B] >>> members (sent)
+[   1.31s C] >>> members (sent)
+[   1.33s A] > members
+[   1.33s A]   A  self    ACTIVE
+[   1.33s A]   B  alive   last heard 120 ms ago, 1632 heartbeats
+[   1.33s A]   C  alive   last heard 121 ms ago, 2069 heartbeats
+[   1.33s A]   D  alive   last heard 118 ms ago, 1980 heartbeats
+[   1.33s B] > members
+[   1.33s B]   A  alive   last heard 118 ms ago, 1663 heartbeats
+[   1.33s B]   B  self    ACTIVE
+[   1.33s B]   C  alive   last heard 120 ms ago, 2101 heartbeats
+[   1.33s B]   D  alive   last heard 118 ms ago, 1907 heartbeats
+[   1.33s D] > members
+[   1.33s D]   A  alive   last heard 119 ms ago, 1914 heartbeats
+[   1.33s D]   B  alive   last heard 120 ms ago, 1688 heartbeats
+[   1.33s D]   C  alive   last heard 120 ms ago, 2063 heartbeats
+[   1.33s D]   D  self    ACTIVE
+[   1.33s C] > members
+[   1.33s C]   A  alive   last heard 120 ms ago, 1762 heartbeats
+[   1.33s C]   B  alive   last heard 121 ms ago, 2096 heartbeats
+[   1.33s C]   C  self    ACTIVE
+[   1.33s C]   D  alive   last heard 119 ms ago, 1703 heartbeats
+[  31.96s A] >>> members (sent)
+[  31.96s B] >>> members (sent)
+[  31.96s D] >>> members (sent)
+[  31.96s C] >>> members (sent)
+[  31.96s D] > members
+[  31.96s D]   A  alive   last heard 282 ms ago, 1965 heartbeats
+[  31.96s D]   B  alive   last heard 283 ms ago, 1746 heartbeats
+[  31.96s D]   C  alive   last heard 283 ms ago, 2122 heartbeats
+[  31.96s D]   D  self    ACTIVE
+[  31.96s A] > members
+[  31.96s A]   A  self    ACTIVE
+[  31.96s A]   B  alive   last heard 282 ms ago, 1687 heartbeats
+[  31.96s A]   C  alive   last heard 283 ms ago, 2129 heartbeats
+[  31.96s A]   D  alive   last heard 280 ms ago, 2031 heartbeats
+[  31.96s C] > members
+[  31.96s C]   A  alive   last heard 282 ms ago, 1820 heartbeats
+[  31.96s C]   B  alive   last heard 283 ms ago, 2156 heartbeats
+[  31.96s C]   C  self    ACTIVE
+[  31.96s C]   D  alive   last heard 281 ms ago, 1752 heartbeats
+[  31.97s B] > members
+[  31.97s B]   A  alive   last heard 281 ms ago, 1714 heartbeats
+[  31.97s B]   B  self    ACTIVE
+[  31.97s B]   C  alive   last heard 283 ms ago, 2161 heartbeats
+[  31.97s B]   D  alive   last heard 281 ms ago, 1963 heartbeats
+[  33.97s C] >>> status (sent)
+[  33.97s A] >>> status (sent)
+[  33.97s D] >>> status (sent)
+[  33.97s B] >>> status (sent)
+[  33.97s C] > status
+[  33.97s C] node C  state ACTIVE  view ABCD  uptime 1104s
+[  33.97s C] hlc 21399189.0
+[  33.97s C] storage fresh format: 5 live, 0 tombstones, 5/64 keys, log 522/16064 bytes, bank A, 0 compactions
+[  33.97s C] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s C] sensor sound (simulated): on, 20 samples, last 0 events, 0.0 % active seq 528, 38 ok, 2 under-replicated, 0 failed, 0 read failures
+[  33.97s A] > status
+[  33.97s A] node A  state ACTIVE  view ABCD  uptime 1219s
+[  33.97s A] hlc 21399187.0
+[  33.97s A] storage fresh format: 7 live, 0 tombstones, 7/64 keys, log 499/16064 bytes, bank A, 1 compactions
+[  33.97s A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s A] sensor light (simulated): on, 24 samples, last 321.983 lux seq 595, 41 ok, 7 under-replicated, 0 failed, 0 read failures
+[  33.97s D] > status
+[  33.97s D] node D  state ACTIVE  view ABCD  uptime 1153s
+[  33.97s D] hlc 21399187.0
+[  33.97s D] storage fresh format: 11 live, 0 tombstones, 11/64 keys, log 974/16064 bytes, bank A, 5 compactions
+[  33.97s D] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.97s D] sensor temp (simulated): on, 21 samples, last 21.209 degC seq 436, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+[  33.98s B] > status
+[  33.98s B] node B  state ACTIVE  view ABCD  uptime 1129s
+[  33.98s B] hlc 21399188.0
+[  33.98s B] storage fresh format: 9 live, 0 tombstones, 9/64 keys, log 741/16064 bytes, bank A, 1 compactions
+[  33.98s B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  33.98s B] sensor motion (simulated): on, 21 samples, last 1 events, last motion 6 s before the sample seq 345, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+
+# par.py Wed 21 07:04:57, steps: ['dump']
+[   1.31s D] >>> dump (sent)
+[   1.31s A] >>> dump (sent)
+[   1.31s B] >>> dump (sent)
+[   1.31s C] >>> dump (sent)
+[   1.32s A] > dump
+[   1.32s A]   v=21399917.0@C  s/A/light = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.32s A]   v=21309956.1@B  h/D/temp/2 = 20.601 degC  (seq 434, sampled at hlc 21309892, simulated)
+[   1.32s A]   v=21339893.2@A  h/A/light/2 = 248.054 lux  (seq 594, sampled at hlc 21339892, simulated)
+[   1.32s A]   v=21339941.1@B  h/D/temp/3 = 21.441 degC  (seq 435, sampled at hlc 21339892, simulated)
+[   1.32s A]   v=21369893.2@A  h/A/light/3 = 321.983 lux  (seq 595, sampled at hlc 21369892, simulated)
+[   1.32s A]   v=21369893.1@D  h/D/temp/0 = 21.209 degC  (seq 436, sampled at hlc 21369891, simulated)
+[   1.32s A]   v=21369909.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 528, sampled at hlc 21369893, simulated)
+[   1.32s C] > dump
+[   1.32s C]   v=21399901.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.32s C]   v=21399917.0@C  s/A/light = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.32s C]   v=21309895.1@B  h/B/motion/3 = 0 events, last motion 559 s before the sample  (seq 343, sampled at hlc 21309894, simulated)
+[   1.32s C]   v=21339895.1@B  h/B/motion/0 = 1 events, last motion 4 s before the sample  (seq 344, sampled at hlc 21339893, simulated)
+[   1.32s C]   v=21369928.1@C  h/B/motion/1 = 1 events, last motion 6 s before the sample  (seq 345, sampled at hlc 21369893, simulated)
+[   1.32s C] 5 key(s); log 635/16064 bytes used
+[   1.32s D] > dump
+[   1.32s D]   v=21399901.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.32s D]   v=21399907.1@B  s/C/sound = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.32s D]   v=21309927.0@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 526, sampled at hlc 21309894, simulated)
+[   1.32s D]   v=21399896.0@B  s/D/temp = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.32s D]   v=21309968.1@B  h/A/light/1 = 187.619 lux  (seq 593, sampled at hlc 21309892, simulated)
+[   1.32s D]   v=21339893.2@A  h/A/light/2 = 248.054 lux  (seq 594, sampled at hlc 21339892, simulated)
+[   1.32s B] > dump
+[   1.32s B]   v=21309895.1@B  h/B/motion/3 = 0 events, last motion 559 s before the sample  (seq 343, sampled at hlc 21309894, simulated)
+[   1.32s B]   v=21399907.1@B  s/C/sound = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.32s B]   v=21309927.0@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 526, sampled at hlc 21309894, simulated)
+[   1.32s B]   v=21399896.0@B  s/D/temp = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.32s B]   v=21309956.1@B  h/D/temp/2 = 20.601 degC  (seq 434, sampled at hlc 21309892, simulated)
+[   1.32s B]   v=21309968.1@B  h/A/light/1 = 187.619 lux  (seq 593, sampled at hlc 21309892, simulated)
+[   1.32s B]   v=21339895.1@B  h/B/motion/0 = 1 events, last motion 4 s before the sample  (seq 344, sampled at hlc 21339893, simulated)
+[   1.34s A]   v=21399897.1@A  h/D/temp/1 = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.34s A]   v=21399898.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.34s A]   v=21399914.0@D  h/B/motion/2 = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.34s A]   v=21399929.1@D  h/A/light/0 = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.34s A] 11 key(s); log 785/16064 bytes used
+[   1.34s B]   v=21339941.1@B  h/D/temp/3 = 21.441 degC  (seq 435, sampled at hlc 21339892, simulated)
+[   1.34s B]   v=21339954.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 527, sampled at hlc 21339893, simulated)
+[   1.34s B]   v=21399897.1@A  h/D/temp/1 = 21.608 degC  (seq 437, sampled at hlc 21399891, simulated)
+[   1.34s B] 10 key(s); log 907/16064 bytes used
+[   1.34s D]   v=21339954.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 527, sampled at hlc 21339893, simulated)
+[   1.34s D]   v=21369893.1@D  h/D/temp/0 = 21.209 degC  (seq 436, sampled at hlc 21369891, simulated)
+[   1.34s D]   v=21369909.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 528, sampled at hlc 21369893, simulated)
+[   1.34s D]   v=21369893.2@A  h/A/light/3 = 321.983 lux  (seq 595, sampled at hlc 21369892, simulated)
+[   1.34s D]   v=21369928.1@C  h/B/motion/1 = 1 events, last motion 6 s before the sample  (seq 345, sampled at hlc 21369893, simulated)
+[   1.34s D]   v=21399898.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 529, sampled at hlc 21399893, simulated)
+[   1.34s D]   v=21399914.0@D  h/B/motion/2 = 0 events, last motion 36 s before the sample  (seq 346, sampled at hlc 21399893, simulated)
+[   1.34s D]   v=21399929.1@D  h/A/light/0 = 330.186 lux  (seq 596, sampled at hlc 21399892, simulated)
+[   1.34s D] 14 key(s); log 1321/16064 bytes used
+

@@ -1,0 +1,1426 @@
+# Problem 7: deleting the foreign keys from B's module, and their tombstone GC. Tue 20.
+
+# 13:59:09 before, node A:
+[  0.00s port open]
+[  1.54s >>> status]
+[  1.60s] > status
+[  1.60s] node A  state ACTIVE  view ABCD  uptime 2186s
+[  1.60s] hlc 11275803.0
+[  1.60s] storage recovered: 33 live, 2 tombstones, 35/64 keys, log 6963/16064 bytes, bank A, 2 compactions
+[  1.60s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  1.60s] sensor light (simulated): on, 67 samples, last 82.603 lux seq 371, 126 ok, 8 under-replicated, 0 failed, 0 read failures
+[  3.07s >>> dump]
+[  3.09s] > dump
+[  3.09s]   v=11251352.1@C  s/A/light = 82.603 lux  (seq 371, sampled at hlc 11251348, simulated)
+[  3.09s]   v=11161355.1@D  h/A/light/0 = 60.599 lux  (seq 368, sampled at hlc 11161348, simulated)
+[  3.09s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  3.09s]   v=40148.1@A  x = "1"
+[  3.09s]   v=11221349.2@A  h/A/light/2 = 47.095 lux  (seq 370, sampled at hlc 11221348, simulated)
+[  3.09s]   v=11251349.2@A  h/A/light/3 = 82.603 lux  (seq 371, sampled at hlc 11251348, simulated)
+[  3.11s]   v=11204594.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 248, sampled at hlc 11204587, simulated)
+[  3.11s]   v=11234590.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 249, sampled at hlc 11234587, simulated)
+[  3.11s]   v=10562441.1@B  k14 = "from-b"
+[  3.11s]   v=10913643.1@A  k20 = "local"
+[  3.11s]   k0                       TOMBSTONE  v=10836036.1@C
+[  3.11s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.11s]   v=11271176.1@D  h/D/temp/0 = 19.449 degC  (seq 152, sampled at hlc 11271174, simulated)
+[  3.11s]   v=6193158.1@A  z = "3"
+[  3.11s]   v=11181179.1@A  h/D/temp/1 = 19.811 degC  (seq 149, sampled at hlc 11181174, simulated)
+[  3.13s]   v=11211197.1@B  h/D/temp/2 = 19.450 degC  (seq 150, sampled at hlc 11211175, simulated)
+[  3.13s]   v=11241193.1@B  h/D/temp/3 = 19.901 degC  (seq 151, sampled at hlc 11241174, simulated)
+[  3.13s]   v=6674842.1@A  k8 = "down-6"
+[  3.13s]   v=9900928.1@A  kb1 = "from-b"
+[  3.13s]   v=0.1020@A  cmp_sensor = "30"
+[  3.13s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.13s]   v=8496.0@A  phase6_100 = "99"
+[  3.13s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  3.13s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  3.15s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  3.15s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  3.15s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  3.15s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  3.20s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  3.20s]   v=11257970.1@D  h/B/motion/2 = 1 events, last motion 6 s before the sample  (seq 58, sampled at hlc 11257967, simulated)
+[  3.20s] 35 key(s); log 6963/16064 bytes used
+
+# 13:59:09 before, node B:
+[  0.00s port open]
+[  1.52s >>> status]
+[  1.58s] > status
+[  1.58s] node B  state ACTIVE  view ABCD  uptime 1103s
+[  1.58s] hlc 11281822.0
+[  1.58s] storage fresh format: 30 live, 4 tombstones, 34/64 keys, log 8626/16064 bytes, bank A, 0 compactions
+[  1.58s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.58s] sensor motion (simulated): on, 31 samples, last 1 events, last motion 6 s before the sample seq 58, 62 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.04s >>> dump]
+[  3.06s] > dump
+[  3.06s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  3.06s]   v=11264590.1@B  s/C/sound = 0 events, 0.0 % active  (seq 250, sampled at hlc 11264587, simulated)
+[  3.06s]   v=11191353.1@B  h/A/light/1 = 19.760 lux  (seq 369, sampled at hlc 11191348, simulated)
+[  3.06s]   v=3245024.1@C  y = "2"
+[  3.06s]   v=3957822.1@C  k6 = "cb-key"
+[  3.06s]   v=11264605.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 250, sampled at hlc 11264587, simulated)
+[  3.06s]   k4                       TOMBSTONE  v=10806520.1@B
+[  3.07s]   v=11174602.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 247, sampled at hlc 11174587, simulated)
+[  3.07s]   v=11271178.1@B  s/D/temp = 19.449 degC  (seq 152, sampled at hlc 11271174, simulated)
+[  3.07s]   v=11197969.1@B  h/B/motion/0 = 0 events, last motion 196 s before the sample  (seq 56, sampled at hlc 11197967, simulated)
+[  3.07s]   v=10567483.1@B  k9 = "from-c"
+[  3.07s]   v=11181179.1@A  h/D/temp/1 = 19.811 degC  (seq 149, sampled at hlc 11181174, simulated)
+[  3.07s]   v=6670241.1@C  k18 = "down-4"
+[  3.09s]   v=11211197.1@B  h/D/temp/2 = 19.450 degC  (seq 150, sampled at hlc 11211175, simulated)
+[  3.09s]   v=11167969.1@B  h/B/motion/3 = 0 events, last motion 166 s before the sample  (seq 55, sampled at hlc 11167967, simulated)
+[  3.09s]   v=11241193.1@B  h/D/temp/3 = 19.901 degC  (seq 151, sampled at hlc 11241174, simulated)
+[  3.09s]   v=0.400@A  humidity = "60"
+[  3.09s]   v=0.303@A  temp = "55"
+[  3.09s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  3.09s]   v=9900928.1@A  kb1 = "from-b"
+[  3.09s]   v=5248.0@C  phase6_wire_3215_000 = "distributed"
+[  3.09s]   v=5248.0@C  phase6_wire_3849341009_010 = "distributed"
+[  3.11s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  3.11s]   v=5250.0@C  phase6_wire_795334085_028 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_1596117061_000 = "distributed"
+[  3.11s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  3.11s]   v=5249.0@C  phase6_wire_1656710395_000 = "distributed"
+[  3.11s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_3259223076_010 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  3.16s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  3.16s]   v=10562441.1@B  k14 = "from-b"
+[  3.16s]   v=10913643.1@A  k20 = "local"
+[  3.16s] 34 key(s); log 8626/16064 bytes used
+
+# 13:59:09 before, node C:
+[  0.00s port open]
+[  1.51s >>> status]
+[  1.57s] > status
+[  1.57s] node C  state ACTIVE  view ABCD  uptime 1861s
+[  1.57s] hlc 11287893.0
+[  1.57s] storage recovered: 21 live, 3 tombstones, 24/64 keys, log 5261/16064 bytes, bank A, 1 compactions
+[  1.57s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.57s] sensor sound (simulated): on, 56 samples, last 0 events, 0.0 % active seq 250, 112 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.03s >>> dump]
+[  3.05s] > dump
+[  3.05s]   v=11281352.1@C  s/A/light = 63.483 lux  (seq 372, sampled at hlc 11281348, simulated)
+[  3.05s]   v=40148.1@A  x = "1"
+[  3.05s]   k0                       TOMBSTONE  v=10836036.1@C
+[  3.05s]   v=3245024.1@C  y = "2"
+[  3.05s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.05s]   v=3957822.1@C  k6 = "cb-key"
+[  3.05s]   k4                       TOMBSTONE  v=10806520.1@B
+[  3.05s]   v=6193158.1@A  z = "3"
+[  3.05s]   k2                       TOMBSTONE  v=10865486.1@D
+[  3.05s]   v=6665607.1@C  k3 = "down-2"
+[  3.05s]   v=6667924.1@C  k24 = "down-3"
+[  3.05s]   v=6672538.1@C  k19 = "down-5"
+[  3.05s]   v=0.303@A  temp = "55"
+[  3.06s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.06s]   v=11287970.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 59, sampled at hlc 11287967, simulated)
+[  3.06s]   v=11197969.1@B  h/B/motion/0 = 0 events, last motion 196 s before the sample  (seq 56, sampled at hlc 11197967, simulated)
+[  3.06s]   v=5248.0@C  phase6_wire_2117106867_000 = "distributed"
+[  3.06s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  3.11s]   v=11227985.1@C  h/B/motion/1 = 1 events, last motion 4 s before the sample  (seq 57, sampled at hlc 11227967, simulated)
+[  3.11s]   v=5249.0@C  phase6_wire_245014700_010 = "distributed"
+[  3.11s]   v=11287969.1@B  h/B/motion/3 = 0 events, last motion 36 s before the sample  (seq 59, sampled at hlc 11287967, simulated)
+[  3.11s]   v=5249.0@C  phase6_wire_3115246074_010 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_1715376659_000 = "distributed"
+[  3.11s]   v=5249.0@C  phase6_wire_1799184098_004 = "distributed"
+[  3.11s] 24 key(s); log 5381/16064 bytes used
+
+# 13:59:09 before, node D:
+[  0.00s port open]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.57s] node D  state ACTIVE  view ABCD  uptime 2108s
+[  1.57s] hlc 11293995.0
+[  1.57s] storage recovered: 32 live, 3 tombstones, 35/64 keys, log 10332/16064 bytes, bank A, 4 compactions
+[  1.57s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.57s] sensor temp (simulated): on, 64 samples, last 19.449 degC seq 152, 128 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.03s >>> dump]
+[  3.04s] > dump
+[  3.04s]   v=11281352.1@D  h/A/light/0 = 63.483 lux  (seq 372, sampled at hlc 11281348, simulated)
+[  3.04s]   v=11191353.1@B  h/A/light/1 = 19.760 lux  (seq 369, sampled at hlc 11191348, simulated)
+[  3.04s]   v=11221349.2@A  h/A/light/2 = 47.095 lux  (seq 370, sampled at hlc 11221348, simulated)
+[  3.04s]   v=11251349.2@A  h/A/light/3 = 82.603 lux  (seq 371, sampled at hlc 11251348, simulated)
+[  3.04s]   v=11294590.1@B  s/C/sound = 6 events, 4.5 % active  (seq 251, sampled at hlc 11294587, simulated)
+[  3.05s]   v=11204594.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 248, sampled at hlc 11204587, simulated)
+[  3.05s]   v=11234590.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 249, sampled at hlc 11234587, simulated)
+[  3.05s]   v=11264605.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 250, sampled at hlc 11264587, simulated)
+[  3.05s]   v=11294605.1@B  h/C/sound/3 = 6 events, 4.5 % active  (seq 251, sampled at hlc 11294587, simulated)
+[  3.05s]   v=11271178.1@B  s/D/temp = 19.449 degC  (seq 152, sampled at hlc 11271174, simulated)
+[  3.07s]   v=11271176.1@D  h/D/temp/0 = 19.449 degC  (seq 152, sampled at hlc 11271174, simulated)
+[  3.07s]   v=11287970.1@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 59, sampled at hlc 11287967, simulated)
+[  3.07s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  3.07s]   v=11227985.1@C  h/B/motion/1 = 1 events, last motion 4 s before the sample  (seq 57, sampled at hlc 11227967, simulated)
+[  3.07s]   k2                       TOMBSTONE  v=10865486.1@D
+[  3.07s]   v=6674842.1@A  k8 = "down-6"
+[  3.07s]   v=10567483.1@B  k9 = "from-c"
+[  3.07s]   v=6665607.1@C  k3 = "down-2"
+[  3.09s]   v=6667924.1@C  k24 = "down-3"
+[  3.09s]   v=6670241.1@C  k18 = "down-4"
+[  3.09s]   v=6672538.1@C  k19 = "down-5"
+[  3.09s]   v=11257970.1@D  h/B/motion/2 = 1 events, last motion 6 s before the sample  (seq 58, sampled at hlc 11257967, simulated)
+[  3.09s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  3.09s]   v=0.1020@A  cmp_sensor = "30"
+[  3.09s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.09s]   v=0.400@A  humidity = "60"
+[  3.09s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.09s]   v=8496.0@A  phase6_100 = "99"
+[  3.09s]   v=5249.0@C  phase6_wire_3321_000 = "distributed"
+[  3.14s]   v=5248.0@C  phase6_wire_3320_000 = "distributed"
+[  3.14s]   v=5249.0@C  phase6_wire_3216_000 = "distributed"
+[  3.14s]   v=5248.0@C  phase6_wire_2020787800_000 = "distributed"
+[  3.14s]   v=5249.0@C  phase6_wire_4258761444_000 = "distributed"
+[  3.14s]   v=5251.0@C  phase6_wire_3923394165_000 = "distributed"
+[  3.14s]   v=5249.0@C  phase6_wire_4101553140_000 = "distributed"
+[  3.14s] 35 key(s); log 10450/16064 bytes used
+
+# 13:59:47 del of the 20 live foreign keys from A (two were discarded by the echo guard, problem 10):
+[  0.00s port open]
+[  1.52s >>> del humidity]
+[  1.57s] > del humidity
+[  1.57s] DEL humidity: OK (served by B, 1 attempt(s), 28 ms)
+[  2.23s >>> del phase6_wire_1596117061_000]
+[  2.28s] > del phase6_wire_1596117061_000
+[  2.28s] DEL phase6_wire_1596117061_000: OK (served by B, 1 attempt(s), 33 ms)
+[  2.94s >>> del phase6_wire_1656710395_000]
+[  2.99s] > del phase6_wire_1656710395_000
+[  2.99s] DEL phase6_wire_1656710395_000: OK (served by B, 1 attempt(s), 35 ms)
+[  3.65s >>> del phase6_wire_1715376659_000]
+[  3.70s] > del phase6_wire_1715376659_000
+[  3.70s] DEL phase6_wire_1715376659_000: OK (served by A, 1 attempt(s), 29 ms)
+[  4.36s >>> del phase6_wire_1799184098_004]
+[  4.41s] > del phase6_wire_1799184098_004
+[  4.41s] DEL phase6_wire_1799184098_004: OK (served by A, 1 attempt(s), 24 ms)
+[  5.06s >>> del phase6_wire_2020787800_000]
+[  5.12s] > del phase6_wire_2020787800_000
+[  5.12s] DEL phase6_wire_2020787800_000: OK (served by D, 1 attempt(s), 30 ms)
+[  5.77s >>> del phase6_wire_2117106867_000]
+[  5.82s] > del phase6_wire_2117106867_000
+[  5.82s] DEL phase6_wire_2117106867_000: OK (served by C, 1 attempt(s), 34 ms)
+[  6.48s >>> del phase6_wire_245014700_010]
+[  6.53s] > del phase6_wire_245014700_010
+[  6.53s] DEL phase6_wire_245014700_010: OK (served by C, 1 attempt(s), 34 ms)
+[  7.19s >>> del phase6_wire_3115246074_010]
+[  7.24s] > del phase6_wire_3115246074_010
+[  7.24s] DEL phase6_wire_3115246074_010: OK (served by A, 1 attempt(s), 31 ms)
+[  7.89s >>> del phase6_wire_3215_000]
+[  7.94s] > del phase6_wire_3215_000
+[  8.60s >>> del phase6_wire_3216_000]
+[  8.65s] DEL phase6_wire_3215_000: OK (served by B, 1 attempt(s), 30 ms)
+[  8.65s] > del phase6_wire_3216_000
+[  9.31s >>> del phase6_wire_3259223076_010]
+[  9.36s] DEL phase6_wire_3216_000: OK (served by B, 1 attempt(s), 35 ms)
+[  9.36s] > del phase6_wire_3259223076_010
+[  9.36s] DEL phase6_wire_3259223076_010: OK (served by B, 1 attempt(s), 33 ms)
+[ 10.01s >>> del phase6_wire_3320_000]
+[ 10.72s >>> del phase6_wire_3321_000]
+[ 10.77s] console: ignored 26 character(s) received while the port was opening; type the command again
+[ 10.77s] > del phase6_wire_3321_000
+[ 11.42s >>> del phase6_wire_3849341009_010]
+[ 11.78s] DEL phase6_wire_3321_000: OK (served by A, 1 attempt(s), 29 ms)
+[ 11.78s] console: ignored 32 character(s) received while the port was opening; type the command again
+[ 12.13s >>> del phase6_wire_3923394165_000]
+[ 12.18s] > del phase6_wire_3923394165_000
+[ 12.18s] DEL phase6_wire_3923394165_000: OK (served by B, 1 attempt(s), 42 ms)
+[ 12.84s >>> del phase6_wire_4101553140_000]
+[ 12.89s] > del phase6_wire_4101553140_000
+[ 12.89s] DEL phase6_wire_4101553140_000: OK (served by B, 1 attempt(s), 40 ms)
+[ 13.54s >>> del phase6_wire_4258761444_000]
+[ 13.59s] > del phase6_wire_4258761444_000
+[ 13.59s] DEL phase6_wire_4258761444_000: OK (served by B, 1 attempt(s), 38 ms)
+[ 14.25s >>> del phase6_wire_795334085_028]
+[ 14.30s] > del phase6_wire_795334085_028
+[ 14.95s >>> del temp]
+[ 15.01s] DEL phase6_wire_795334085_028: OK (served by A, 1 attempt(s), 30 ms)
+[ 15.01s] > del temp
+[ 15.01s] DEL temp: OK (served by C, 1 attempt(s), 28 ms)
+[ 15.66s >>> status]
+[ 15.96s] console: ignored 8 character(s) received while the port was opening; type the command again
+
+# 14:01:32 / 14:01:37 the two again:
+[  0.00s port open]
+[  1.52s >>> del phase6_wire_3320_000]
+[  1.57s] > del phase6_wire_3320_000
+[  3.53s >>> get phase6_wire_3320_000]
+[  3.58s] DEL phase6_wire_3320_000: OK (served by B, 1 attempt(s), 30 ms)
+[  3.58s] > get phase6_wire_3320_000
+[  0.00s port open]
+[  1.51s >>> del phase6_wire_3849341009_010]
+[  1.57s] GET phase6_wire_3320_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[  1.57s] > del phase6_wire_3849341009_010
+[  1.57s] DEL phase6_wire_3849341009_010: OK (served by A, 1 attempt(s), 32 ms)
+[  3.53s >>> get phase6_wire_3849341009_010]
+[  3.58s] > get phase6_wire_3849341009_010
+[  3.58s] GET phase6_wire_3849341009_010: NOT_FOUND (served by A, 1 attempt(s), 0 ms)
+
+# get of all 20 from C:
+[  0.00s port open]
+[  1.51s >>> get humidity]
+[  1.56s] > get humidity
+[  1.56s] GET humidity: NOT_FOUND (served by B, 1 attempt(s), 8 ms)
+[  2.72s >>> get phase6_wire_1596117061_000]
+[  2.77s] > get phase6_wire_1596117061_000
+[  2.77s] GET phase6_wire_1596117061_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[  3.93s >>> get phase6_wire_1656710395_000]
+[  3.98s] > get phase6_wire_1656710395_000
+[  3.98s] GET phase6_wire_1656710395_000: NOT_FOUND (served by B, 1 attempt(s), 5 ms)
+[  5.13s >>> get phase6_wire_1715376659_000]
+[  5.18s] > get phase6_wire_1715376659_000
+[  5.18s] GET phase6_wire_1715376659_000: NOT_FOUND (served by A, 1 attempt(s), 6 ms)
+[  6.34s >>> get phase6_wire_1799184098_004]
+[  6.39s] > get phase6_wire_1799184098_004
+[  6.39s] GET phase6_wire_1799184098_004: NOT_FOUND (served by A, 1 attempt(s), 4 ms)
+[  7.55s >>> get phase6_wire_2020787800_000]
+[  7.60s] > get phase6_wire_2020787800_000
+[  7.60s] GET phase6_wire_2020787800_000: NOT_FOUND (served by D, 1 attempt(s), 5 ms)
+[  8.78s >>> get phase6_wire_2117106867_000]
+[  8.84s] > get phase6_wire_2117106867_000
+[  8.84s] GET phase6_wire_2117106867_000: NOT_FOUND (served by C, 1 attempt(s), 0 ms)
+[ 10.01s >>> get phase6_wire_245014700_010]
+[ 10.06s] > get phase6_wire_245014700_010
+[ 10.06s] GET phase6_wire_245014700_010: NOT_FOUND (served by C, 1 attempt(s), 0 ms)
+[ 11.23s >>> get phase6_wire_3115246074_010]
+[ 11.29s] > get phase6_wire_3115246074_010
+[ 11.29s] GET phase6_wire_3115246074_010: NOT_FOUND (served by A, 1 attempt(s), 5 ms)
+[ 12.45s >>> get phase6_wire_3215_000]
+[ 12.50s] > get phase6_wire_3215_000
+[ 12.50s] GET phase6_wire_3215_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 13.67s >>> get phase6_wire_3216_000]
+[ 13.72s] > get phase6_wire_3216_000
+[ 13.72s] GET phase6_wire_3216_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 14.88s >>> get phase6_wire_3259223076_010]
+[ 14.94s] > get phase6_wire_3259223076_010
+[ 14.94s] GET phase6_wire_3259223076_010: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 16.10s]   2017.213 [C] gc: 1 key(s) marked for drop (orphans 28, tombstones 2 total)
+[ 16.10s >>> get phase6_wire_3320_000]
+[ 16.15s] > get phase6_wire_3320_000
+[ 16.15s] GET phase6_wire_3320_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 17.31s >>> get phase6_wire_3321_000]
+[ 17.36s] > get phase6_wire_3321_000
+[ 17.36s] GET phase6_wire_3321_000: NOT_FOUND (served by A, 1 attempt(s), 4 ms)
+[ 18.52s >>> get phase6_wire_3849341009_010]
+[ 18.57s] > get phase6_wire_3849341009_010
+[ 19.73s >>> get phase6_wire_3923394165_000]
+[ 19.78s] GET phase6_wire_3849341009_010: NOT_FOUND (served by A, 1 attempt(s), 4 ms)
+[ 19.78s] > get phase6_wire_3923394165_000
+[ 19.78s] GET phase6_wire_3923394165_000: NOT_FOUND (served by B, 1 attempt(s), 5 ms)
+[ 20.94s >>> get phase6_wire_4101553140_000]
+[ 20.99s] > get phase6_wire_4101553140_000
+[ 20.99s] GET phase6_wire_4101553140_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 22.15s >>> get phase6_wire_4258761444_000]
+[ 22.20s] > get phase6_wire_4258761444_000
+[ 23.36s >>> get phase6_wire_795334085_028]
+[ 23.41s] GET phase6_wire_4258761444_000: NOT_FOUND (served by B, 1 attempt(s), 4 ms)
+[ 23.41s] > get phase6_wire_795334085_028
+[ 23.41s] GET phase6_wire_795334085_028: NOT_FOUND (served by A, 1 attempt(s), 4 ms)
+[ 24.57s >>> get temp]
+[ 24.62s] > get temp
+[ 24.62s] GET temp: NOT_FOUND (served by C, 1 attempt(s), 0 ms)
+
+# 14:38:17 A absent (unplugged), view -BCD: no tombstone drop pending:
+[  0.00s port open]
+[  0.00s] ntropy: tombstone k4 repaired from C
+[  0.00s]   3017.422 [B] anti-entropy: tombstone phase6_wire_4101553140_000 repaired from D
+[  0.00s]   3017.431 [B] anti-entropy: tombstone temp repaired from C
+[  0.00s]   3017.462 [B] anti-entropy: tombstone phase6_wire_4144886006_000 repaired from D
+[  0.00s]   3017.476 [B] anti-entropy: tombstone phase6_wire_3215_000 repaired from C
+[  0.00s]   3017.502 [B] anti-entropy: tombstone phase6_wire_3849341009_010 repaired from D
+[  0.00s]   3017.512 [B] anti-entropy: tombstone phase6_wire_795334085_028 repaired from C
+[  0.01s]   3017.545 [B] anti-entropy: tombstone phase6_wire_1596117061_000 repaired from C
+[  0.01s]   3017.557 [B] anti-entropy: tombstone cmp_deleted repaired from D
+[  0.01s]   3017.579 [B] anti-entropy: tombstone phase6_wire_1656710395_000 repaired from D
+[  0.01s]   3017.619 [B] anti-entropy: tombstone phase6_wire_3259223076_010 repaired from D
+[  0.01s]   3017.662 [B] anti-entropy: tombstone phase6_wire_760764433_000 repaired from D
+[  0.01s]   3017.701 [B] anti-entropy: tombstone phase6_wire_3320_000 repaired from D
+[  0.01s]   3017.737 [B] anti-entropy: tombstone phase6_wire_3216_000 repaired from D
+[  0.01s]   3017.781 [B] anti-entropy: tombstone phase6_wire_4258761444_000 repaired from D
+[  0.01s]   3017.822 [B] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from D
+[  0.01s]   3196.476 [B] view: -B-D
+[  0.01s]   3197.506 [B] anti-entropy: key h/A/light/0 repaired from D
+[  0.01s]   3197.545 [B] anti-entropy: key h/A/light/2 repaired from D
+[  0.01s]   3197.585 [B] anti-entropy: key h/A/light/3 repaired from D
+[  0.01s]   3197.624 [B] anti-entropy: key h/D/temp/0 repaired from D
+[  0.01s]   3197.665 [B] anti-entropy: key s/B/motion repaired from D
+[  0.01s]   3197.705 [B] anti-entropy: key h/B/motion/1 repaired from D
+[  0.01s]   3197.737 [B] anti-entropy: tombstone k2 repaired from D
+[  0.01s]   3197.778 [B] anti-entropy: key k3 repaired from D
+[  0.01s]   3197.818 [B] anti-entropy: key k24 repaired from D
+[  0.01s]   3197.861 [B] anti-entropy: key k19 repaired from D
+[  0.01s]   3197.905 [B] anti-entropy: key h/B/motion/2 repaired from D
+[  0.01s]   3197.939 [B] anti-entropy: key cmp_sensor repaired from D
+[  0.01s]   3197.983 [B] anti-entropy: key cmp_marker repaired from D
+[  0.01s]   3198.018 [B] anti-entropy: tombstone phase6_wire_3321_000 repaired from D
+[  0.01s]   3198.063 [B] anti-entropy: tombstone phase6_wire_2117106867_000 repaired from D
+[  0.01s]   3198.104 [B] anti-entropy: key phase6_100 repaired from D
+[  0.01s]   3198.142 [B] anti-entropy: tombstone phase6_wire_245014700_010 repaired from D
+[  0.01s]   3198.180 [B] anti-entropy: tombstone phase6_wire_3115246074_010 repaired from D
+[  0.01s]   3198.223 [B] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from D
+[  0.01s]   3198.263 [B] anti-entropy: tombstone phase6_wire_1715376659_000 repaired from D
+[  0.06s]   3198.377 [B] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from D
+[  0.06s]   3245.837 [B] view: -BCD
+[  0.06s]   3253.264 [B] gc: 21 key(s) marked for drop (orphans 28, tombstones 24 total)
+[  0.06s]   3253.264 [B] compaction started (11134 bytes free)
+[  0.06s]   3256.028 [B] compaction #3 done: bank B, 43 keys, 14128 bytes free
+[  1.52s >>> status]
+[  1.57s] > status
+[  1.57s] node B  state ACTIVE  view -BCD  uptime 3451s
+[  1.57s] hlc 13629923.0
+[  1.57s] storage fresh format: 25 live, 18 tombstones, 43/64 keys, log 3599/16064 bytes, bank B, 3 compactions
+[  1.57s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.57s] sensor motion (simulated): on, 110 samples, last 1 events, last motion 8 s before the sample seq 137, 220 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.03s >>> dump]
+[  3.05s] > dump
+[  3.05s]   humidity                 TOMBSTONE  v=11314009.1@B
+[  3.05s]   v=13619809.1@B  s/C/sound = 5 events, 4.6 % active  (seq 327, sampled at hlc 13619805, simulated)
+[  3.05s]   v=12271356.1@B  h/A/light/1 = 76.258 lux  (seq 405, sampled at hlc 12271350, simulated)
+[  3.05s]   v=3245024.1@C  y = "2"
+[  3.05s]   v=3957822.1@C  k6 = "cb-key"
+[  3.05s]   v=13589824.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 326, sampled at hlc 13589805, simulated)
+[  3.05s]   k4                       TOMBSTONE  v=10806520.1@B
+[  3.06s]   v=13619824.1@B  h/C/sound/3 = 5 events, 4.6 % active  (seq 327, sampled at hlc 13619805, simulated)
+[  3.06s]   v=13611185.1@B  s/D/temp = 19.470 degC  (seq 230, sampled at hlc 13611180, simulated)
+[  3.06s]   v=13597969.1@B  h/B/motion/0 = 1 events, last motion 6 s before the sample  (seq 136, sampled at hlc 13597967, simulated)
+[  3.06s]   v=10567483.1@B  k9 = "from-c"
+[  3.06s]   v=13581199.1@B  h/D/temp/1 = 20.298 degC  (seq 229, sampled at hlc 13581180, simulated)
+[  3.06s]   v=6670241.1@C  k18 = "down-4"
+[  3.06s]   v=13611200.1@B  h/D/temp/2 = 19.470 degC  (seq 230, sampled at hlc 13611180, simulated)
+[  3.07s]   v=13567969.1@B  h/B/motion/3 = 0 events, last motion 413 s before the sample  (seq 135, sampled at hlc 13567967, simulated)
+[  3.07s]   v=13521199.1@B  h/D/temp/3 = 20.132 degC  (seq 227, sampled at hlc 13521180, simulated)
+[  3.07s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B
+[  3.07s]   temp                     TOMBSTONE  v=11327471.1@C
+[  3.07s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C
+[  3.07s]   v=9900928.1@A  kb1 = "from-b"
+[  3.07s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B
+[  3.07s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A
+[  3.07s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A
+[  3.07s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B
+[  3.07s]   cmp_deleted              TOMBSTONE  v=0.1040@A
+[  3.07s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B
+[  3.07s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B
+[  3.07s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C
+[  3.07s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B
+[  3.07s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B
+[  3.07s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B
+[  3.09s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B
+[  3.09s]   v=10562441.1@B  k14 = "from-b"
+[  3.09s]   v=10913643.1@A  k20 = "local"
+[  3.09s]   v=13529809.1@D  h/C/sound/0 = 4 events, 1.9 % active  (seq 324, sampled at hlc 13529805, simulated)
+[  3.09s]   v=12331354.1@C  s/A/light = 70.805 lux  (seq 407, sampled at hlc 12331350, simulated)
+[  3.09s]   v=13559817.1@D  h/C/sound/1 = 1 events, 0.7 % active  (seq 325, sampled at hlc 13559805, simulated)
+[  3.09s]   v=40148.1@A  x = "1"
+[  3.09s]   k0                       TOMBSTONE  v=10836036.1@C
+[  3.09s]   v=6674842.1@A  k8 = "down-6"
+[  3.14s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.14s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.14s]   v=6193158.1@A  z = "3"
+[  3.14s] 43 key(s); log 3599/16064 bytes used
+[  0.01s port open]
+[  1.52s >>> status]
+[  1.57s] console: ignored 33 character(s) received while the port was opening; type the command again
+[  1.57s] > status
+[  1.57s] node C  state ACTIVE  view -BCD  uptime 219s
+[  1.57s] hlc 13635992.0
+[  1.57s] storage recovered: 22 live, 14 tombstones, 36/64 keys, log 6045/16064 bytes, bank B, 0 compactions
+[  1.57s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.57s] sensor sound (simulated): on, 7 samples, last 5 events, 4.6 % active seq 327, 14 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.04s >>> dump]
+[  3.06s] > dump
+[  3.06s]   v=12331354.1@C  s/A/light = 70.805 lux  (seq 407, sampled at hlc 12331350, simulated)
+[  3.06s]   v=40148.1@A  x = "1"
+[  3.06s]   v=3245024.1@C  y = "2"
+[  3.06s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.06s]   v=3957822.1@C  k6 = "cb-key"
+[  3.06s]   v=13537970.1@D  h/B/motion/2 = 0 events, last motion 383 s before the sample  (seq 134, sampled at hlc 13537967, simulated)
+[  3.06s]   v=6193158.1@A  z = "3"
+[  3.06s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B
+[  3.06s]   v=12241355.1@D  h/A/light/0 = 131.351 lux  (seq 404, sampled at hlc 12241350, simulated)
+[  3.07s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A
+[  3.07s]   v=12301351.2@A  h/A/light/2 = 93.041 lux  (seq 406, sampled at hlc 12301350, simulated)
+[  3.07s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B
+[  3.07s]   v=12331351.2@A  h/A/light/3 = 70.805 lux  (seq 407, sampled at hlc 12331350, simulated)
+[  3.07s]   v=10562441.1@B  k14 = "from-b"
+[  3.07s]   v=13551182.1@D  h/D/temp/0 = 20.223 degC  (seq 228, sampled at hlc 13551180, simulated)
+[  3.07s]   v=0.1020@A  cmp_sensor = "30"
+[  3.07s]   v=8496.0@A  phase6_100 = "99"
+[  3.09s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A
+[  3.09s]   v=6665607.1@C  k3 = "down-2"
+[  3.09s]   v=6667924.1@C  k24 = "down-3"
+[  3.09s]   v=6672538.1@C  k19 = "down-5"
+[  3.09s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.09s]   v=13627970.1@C  s/B/motion = 1 events, last motion 8 s before the sample  (seq 137, sampled at hlc 13627967, simulated)
+[  3.09s]   v=13597969.1@B  h/B/motion/0 = 1 events, last motion 6 s before the sample  (seq 136, sampled at hlc 13597967, simulated)
+[  3.09s]   v=13627982.1@C  h/B/motion/1 = 1 events, last motion 8 s before the sample  (seq 137, sampled at hlc 13627967, simulated)
+[  3.09s]   v=13567969.1@B  h/B/motion/3 = 0 events, last motion 413 s before the sample  (seq 135, sampled at hlc 13567967, simulated)
+[  3.09s]   k4                       TOMBSTONE  v=10806520.1@B
+[  3.09s]   k2                       TOMBSTONE  v=10865486.1@D
+[  3.09s]   temp                     TOMBSTONE  v=11327471.1@C
+[  3.09s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C
+[  3.09s]   k0                       TOMBSTONE  v=10836036.1@C
+[  3.09s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C
+[  3.09s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A
+[  3.14s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D
+[  3.14s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A
+[  3.14s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A
+[  3.14s] 36 key(s); log 6045/16064 bytes used
+[  0.00s port open]
+[  0.00s] rked for drop (orphans 41, tombstones 13 total)
+[  0.00s]   2747.208 [D] gc: 4 key(s) marked for drop (orphans 41, tombstones 17 total)
+[  0.00s]   2837.208 [D] gc: 1 key(s) marked for drop (orphans 41, tombstones 18 total)
+[  0.00s]   3148.495 [D] view: -BCD
+[  0.00s]   3153.116 [D] anti-entropy: tombstone phase6_wire_4144886006_000 repaired from B
+[  0.00s]   3153.158 [D] anti-entropy: key h/D/temp/1 repaired from B
+[  0.00s]   3153.198 [D] anti-entropy: key h/D/temp/2 repaired from B
+[  0.00s]   3153.237 [D] anti-entropy: key h/D/temp/3 repaired from B
+[  0.00s]   3153.271 [D] anti-entropy: key kb1 repaired from B
+[  0.00s]   3153.316 [D] anti-entropy: tombstone phase6_wire_3849341009_010 repaired from B
+[  0.00s]   3153.330 [D] anti-entropy: tombstone phase6_wire_2117106867_000 repaired from C
+[  0.00s]   3153.356 [D] anti-entropy: tombstone phase6_wire_1656710395_000 repaired from B
+[  0.00s]   3153.366 [D] anti-entropy: tombstone phase6_wire_245014700_010 repaired from C
+[  0.00s]   3153.395 [D] anti-entropy: tombstone phase6_wire_3259223076_010 repaired from B
+[  0.00s]   3153.409 [D] anti-entropy: tombstone phase6_wire_3115246074_010 repaired from C
+[  0.00s]   3153.436 [D] anti-entropy: tombstone phase6_wire_1715376659_000 repaired from C
+[  0.00s]   3153.445 [D] anti-entropy: key k20 repaired from B
+[  0.00s]   3153.446 [D] compaction started (4526 bytes free)
+[  0.00s]   3153.495 [D] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from C
+[  0.00s]   3156.190 [D] compaction #6 done: bank A, 38 keys, 14207 bytes free
+[  0.00s]   3162.870 [D] anti-entropy: tombstone humidity repaired from B
+[  0.00s]   3162.901 [D] anti-entropy: tombstone k2 repaired from C
+[  0.00s]   3162.916 [D] anti-entropy: tombstone phase6_wire_4101553140_000 repaired from B
+[  0.00s]   3162.939 [D] anti-entropy: tombstone phase6_wire_3321_000 repaired from C
+[  0.00s]   3162.953 [D] anti-entropy: tombstone cmp_deleted repaired from B
+[  0.00s]   3162.982 [D] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from C
+[  0.00s]   3162.992 [D] anti-entropy: tombstone phase6_wire_760764433_000 repaired from B
+[  0.00s]   3163.034 [D] anti-entropy: tombstone phase6_wire_3320_000 repaired from B
+[  0.00s]   3163.074 [D] anti-entropy: tombstone phase6_wire_3216_000 repaired from B
+[  0.01s]   3163.115 [D] anti-entropy: tombstone phase6_wire_4258761444_000 repaired from B
+[  0.01s]   3163.155 [D] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from B
+[  0.01s]   4172.213 [D] compaction started (3056 bytes free)
+[  0.01s]   4175.071 [D] compaction #7 done: bank B, 49 keys, 13722 bytes free
+[  0.01s]   4188.656 [D] view: -B-D
+[  0.01s]   4192.968 [D] anti-entropy: key y repaired from B
+[  0.01s]   4193.003 [D] anti-entropy: key k6 repaired from B
+[  0.01s]   4193.041 [D] anti-entropy: tombstone k4 repaired from B
+[  0.01s]   4193.088 [D] anti-entropy: key h/B/motion/0 repaired from B
+[  0.01s]   4193.129 [D] anti-entropy: key h/B/motion/3 repaired from B
+[  0.01s]   4193.165 [D] anti-entropy: tombstone temp repaired from B
+[  0.01s]   4193.205 [D] anti-entropy: tombstone phase6_wire_3215_000 repaired from B
+[  0.01s]   4193.244 [D] anti-entropy: tombstone phase6_wire_795334085_028 repaired from B
+[  0.01s]   4193.287 [D] anti-entropy: tombstone phase6_wire_1596117061_000 repaired from B
+[  0.01s]   4193.326 [D] anti-entropy: key k14 repaired from B
+[  0.01s]   4193.366 [D] anti-entropy: key s/A/light repaired from B
+[  0.06s]   4193.402 [D] anti-entropy: key x repaired from B
+[  0.06s]   4193.441 [D] anti-entropy: tombstone k0 repaired from B
+[  0.06s]   4193.487 [D] anti-entropy: key k11 repaired from B
+[  0.06s]   4193.522 [D] anti-entropy: key z repaired from B
+[  0.06s]   4238.017 [D] view: -BCD
+[  0.06s]   4247.208 [D] gc: 15 key(s) marked for drop (orphans 56, tombstones 18 total)
+[  0.06s]   4247.208 [D] compaction started (12451 bytes free)
+[  0.06s]   4250.064 [D] compaction #8 done: bank A, 49 keys, 13722 bytes free
+[  1.52s >>> status]
+[  1.57s] > status
+[  1.57s] node D  state ACTIVE  view -BCD  uptime 4456s
+[  1.57s] hlc 13642047.0
+[  1.57s] storage recovered: 29 live, 20 tombstones, 49/64 keys, log 4520/16064 bytes, bank A, 8 compactions
+[  1.57s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  1.57s] sensor temp (simulated): on, 143 samples, last 19.400 degC seq 231, 286 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.04s >>> dump]
+[  3.05s] > dump
+[  3.05s]   v=12241355.1@D  h/A/light/0 = 131.351 lux  (seq 404, sampled at hlc 12241350, simulated)
+[  3.05s]   v=12271356.1@B  h/A/light/1 = 76.258 lux  (seq 405, sampled at hlc 12271350, simulated)
+[  3.05s]   v=12301351.2@A  h/A/light/2 = 93.041 lux  (seq 406, sampled at hlc 12301350, simulated)
+[  3.05s]   v=12331351.2@A  h/A/light/3 = 70.805 lux  (seq 407, sampled at hlc 12331350, simulated)
+[  3.05s]   v=13619809.1@B  s/C/sound = 5 events, 4.6 % active  (seq 327, sampled at hlc 13619805, simulated)
+[  3.07s]   v=13529809.1@D  h/C/sound/0 = 4 events, 1.9 % active  (seq 324, sampled at hlc 13529805, simulated)
+[  3.07s]   v=13559817.1@D  h/C/sound/1 = 1 events, 0.7 % active  (seq 325, sampled at hlc 13559805, simulated)
+[  3.07s]   v=13589824.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 326, sampled at hlc 13589805, simulated)
+[  3.07s]   v=13619824.1@B  h/C/sound/3 = 5 events, 4.6 % active  (seq 327, sampled at hlc 13619805, simulated)
+[  3.07s]   v=13641185.1@B  s/D/temp = 19.400 degC  (seq 231, sampled at hlc 13641180, simulated)
+[  3.08s]   v=13551182.1@D  h/D/temp/0 = 20.223 degC  (seq 228, sampled at hlc 13551180, simulated)
+[  3.08s]   v=13627970.1@C  s/B/motion = 1 events, last motion 8 s before the sample  (seq 137, sampled at hlc 13627967, simulated)
+[  3.08s]   humidity                 TOMBSTONE  v=11314009.1@B
+[  3.08s]   v=13627982.1@C  h/B/motion/1 = 1 events, last motion 8 s before the sample  (seq 137, sampled at hlc 13627967, simulated)
+[  3.08s]   k2                       TOMBSTONE  v=10865486.1@D
+[  3.08s]   v=6674842.1@A  k8 = "down-6"
+[  3.08s]   v=10567483.1@B  k9 = "from-c"
+[  3.08s]   v=6665607.1@C  k3 = "down-2"
+[  3.08s]   v=6667924.1@C  k24 = "down-3"
+[  3.09s]   v=6670241.1@C  k18 = "down-4"
+[  3.09s]   v=6672538.1@C  k19 = "down-5"
+[  3.09s]   v=13537970.1@D  h/B/motion/2 = 0 events, last motion 383 s before the sample  (seq 134, sampled at hlc 13537967, simulated)
+[  3.09s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B
+[  3.09s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C
+[  3.09s]   v=13581199.1@B  h/D/temp/1 = 20.298 degC  (seq 229, sampled at hlc 13581180, simulated)
+[  3.09s]   v=13611200.1@B  h/D/temp/2 = 19.470 degC  (seq 230, sampled at hlc 13611180, simulated)
+[  3.10s]   v=13641200.1@B  h/D/temp/3 = 19.400 degC  (seq 231, sampled at hlc 13641180, simulated)
+[  3.10s]   v=9900928.1@A  kb1 = "from-b"
+[  3.10s]   v=0.1020@A  cmp_sensor = "30"
+[  3.10s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A
+[  3.10s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.10s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A
+[  3.10s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.10s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C
+[  3.10s]   v=8496.0@A  phase6_100 = "99"
+[  3.10s]   cmp_deleted              TOMBSTONE  v=0.1040@A
+[  3.10s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B
+[  3.10s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C
+[  3.10s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B
+[  3.10s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A
+[  3.10s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D
+[  3.10s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A
+[  3.10s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C
+[  3.10s]   v=10913643.1@A  k20 = "local"
+[  3.10s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B
+[  3.10s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A
+[  3.10s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B
+[  3.15s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B
+[  3.15s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B
+[  3.15s] 49 key(s); log 4520/16064 bytes used
+
+# 14:53:12 all four up (A reflashed 14:52): every tombstone drop pending:
+[  0.00s port open]
+[  1.52s >>> ]
+[  3.03s >>> status]
+[  3.08s] > status
+[  3.08s] node A  state ACTIVE  view ABCD  uptime 66s
+[  3.08s] hlc 14520701.0
+[  3.08s] storage recovered: 21 live, 14 tombstones, 35/64 keys, log 4735/16064 bytes, bank B, 0 compactions
+[  3.08s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  3.08s] sensor light (simulated): on, 2 samples, last 390.570 lux seq 412, 4 ok, 0 under-replicated, 0 failed, 0 read failures
+[  4.55s >>> dump]
+[  4.56s] > dump
+[  4.56s]   v=14492383.0@C  s/A/light = 390.570 lux  (seq 412, sampled at hlc 14492378, simulated)
+[  4.56s]   v=14492384.0@D  h/A/light/0 = 390.570 lux  (seq 412, sampled at hlc 14492378, simulated)
+[  4.56s]   v=40148.1@A  x = "1"
+[  4.56s]   v=14428576.2@A  h/A/light/2 = 392.395 lux  (seq 410, sampled at hlc 14428575, simulated)
+[  4.56s]   v=14462380.0@A  h/A/light/3 = 344.738 lux  (seq 411, sampled at hlc 14462378, simulated)
+[  4.56s]   v=14490670.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 356, sampled at hlc 14490666, simulated)
+[  4.58s]   v=14520670.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 357, sampled at hlc 14520666, simulated)
+[  4.58s]   v=10562441.1@B  k14 = "from-b"
+[  4.58s]   v=10913643.1@A  k20 = "local"
+[  4.58s]   v=3948021.1@A  k11 = "hello-ac"
+[  4.58s]   v=14518396.2@D  h/D/temp/0 = 25.766 degC  (seq 260, sampled at hlc 14518395, simulated)
+[  4.58s]   v=6193158.1@A  z = "3"
+[  4.58s]   v=14428398.1@A  h/D/temp/1 = 25.595 degC  (seq 257, sampled at hlc 14428394, simulated)
+[  4.58s]   v=14458443.0@B  h/D/temp/2 = 25.496 degC  (seq 258, sampled at hlc 14458397, simulated)
+[  4.59s]   v=14488414.0@B  h/D/temp/3 = 25.140 degC  (seq 259, sampled at hlc 14488394, simulated)
+[  4.59s]   v=6674842.1@A  k8 = "down-6"
+[  4.59s]   v=9900928.1@A  kb1 = "from-b"
+[  4.59s]   v=0.1020@A  cmp_sensor = "30"
+[  4.59s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  4.59s]   v=8496.0@A  phase6_100 = "99"
+[  4.59s]   v=14492716.0@D  h/B/motion/2 = 1 events, last motion 17 s before the sample  (seq 166, sampled at hlc 14492712, simulated)
+[  4.59s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  4.59s]   k0                       TOMBSTONE  v=10836036.1@C  (drop pending)
+[  4.59s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A  (drop pending)
+[  4.59s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B  (drop pending)
+[  4.59s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C  (drop pending)
+[  4.59s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C  (drop pending)
+[  4.59s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A  (drop pending)
+[  4.59s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A  (drop pending)
+[  4.59s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A  (drop pending)
+[  4.64s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A  (drop pending)
+[  4.64s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B  (drop pending)
+[  4.64s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A  (drop pending)
+[  4.64s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B  (drop pending)
+[  4.64s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B  (drop pending)
+[  4.64s] 35 key(s); log 4735/16064 bytes used
+[  0.00s port open]
+[  0.00s] ompaction started (6733 bytes free)
+[  0.00s]     38.527 [B] view: -BC-
+[  0.00s]     39.961 [B] compaction #1 done: bank A, 43 keys, 14128 bytes free
+[  0.00s]     41.441 [B] anti-entropy: key h/B/motion/2 repaired from C
+[  0.00s]     41.480 [B] anti-entropy: key h/A/light/0 repaired from C
+[  0.00s]     41.521 [B] anti-entropy: key h/A/light/2 repaired from C
+[  0.00s]     41.561 [B] anti-entropy: key h/A/light/3 repaired from C
+[  0.00s]     41.600 [B] anti-entropy: key h/D/temp/0 repaired from C
+[  0.00s]     41.635 [B] anti-entropy: key cmp_sensor repaired from C
+[  0.00s]     41.679 [B] anti-entropy: key phase6_100 repaired from C
+[  0.00s]     41.717 [B] anti-entropy: tombstone phase6_wire_3321_000 repaired from C
+[  0.00s]     41.755 [B] anti-entropy: key k3 repaired from C
+[  0.00s]     41.798 [B] anti-entropy: key k24 repaired from C
+[  0.00s]     41.841 [B] anti-entropy: key k19 repaired from C
+[  0.00s]     41.878 [B] anti-entropy: key cmp_marker repaired from C
+[  0.00s]     41.921 [B] anti-entropy: key s/B/motion repaired from C
+[  0.00s]     41.961 [B] anti-entropy: key h/B/motion/1 repaired from C
+[  0.00s]     41.992 [B] anti-entropy: tombstone k2 repaired from C
+[  0.00s]     42.038 [B] anti-entropy: tombstone phase6_wire_2117106867_000 repaired from C
+[  0.00s]     42.077 [B] anti-entropy: tombstone phase6_wire_245014700_010 repaired from C
+[  0.00s]     42.115 [B] anti-entropy: tombstone phase6_wire_3115246074_010 repaired from C
+[  0.00s]     42.158 [B] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from C
+[  0.00s]     42.198 [B] anti-entropy: tombstone phase6_wire_1715376659_000 repaired from C
+[  0.00s]     42.238 [B] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from C
+[  0.01s]     47.894 [B] view: -BCD
+[  0.01s]     57.200 [B] gc: 21 key(s) marked for drop (orphans 42, tombstones 0 total)
+[  0.01s]     57.200 [B] compaction started (12895 bytes free)
+[  0.01s]     59.959 [B] compaction #2 done: bank B, 43 keys, 14128 bytes free
+[  0.01s]    190.567 [B] view: ABCD
+[  0.01s]    197.200 [B] gc: 26 key(s) marked for drop (orphans 51, tombstones 17 total)
+[  0.01s]    274.568 [B] view: -BCD
+[  0.01s]    281.362 [B] anti-entropy: key h/C/sound/0 repaired from D
+[  0.01s]    281.401 [B] anti-entropy: key s/A/light repaired from C
+[  0.06s]    281.416 [B] anti-entropy: key h/C/sound/1 repaired from D
+[  0.06s]    284.370 [B] view: ABCD
+[  0.06s]    287.200 [B] gc: 3 key(s) marked for drop (orphans 54, tombstones 17 total)
+[  1.52s >>> ]
+[  3.06s >>> status]
+[  3.11s] console: ignored 2 character(s) received while the port was opening; type the command again
+[  3.11s] > status
+[  3.11s] node B  state ACTIVE  view ABCD  uptime 350s
+[  3.11s] hlc 14527777.0
+[  3.11s] storage recovered: 25 live, 18 tombstones, 43/64 keys, log 4382/16064 bytes, bank B, 2 compactions
+[  3.11s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  3.11s] sensor motion (simulated): on, 12 samples, last 0 events, last motion 47 s before the sample seq 167, 24 ok, 0 under-replicated, 0 failed, 0 read failures
+[  4.59s >>> dump]
+[  4.61s] > dump
+[  4.61s]   humidity                 TOMBSTONE  v=11314009.1@B  (drop pending)
+[  4.61s]   v=14520670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 357, sampled at hlc 14520666, simulated)
+[  4.61s]   v=14522385.0@B  h/A/light/1 = 392.314 lux  (seq 413, sampled at hlc 14522378, simulated)
+[  4.61s]   v=3245024.1@C  y = "2"
+[  4.61s]   v=3957822.1@C  k6 = "cb-key"
+[  4.61s]   v=14430684.1@B  h/C/sound/2 = 2 events, 1.4 % active  (seq 354, sampled at hlc 14430665, simulated)
+[  4.61s]   k4                       TOMBSTONE  v=10806520.1@B  (drop pending)
+[  4.62s]   v=14460685.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 355, sampled at hlc 14460665, simulated)
+[  4.62s]   v=14518399.1@B  s/D/temp = 25.766 degC  (seq 260, sampled at hlc 14518395, simulated)
+[  4.62s]   v=14432713.2@B  h/B/motion/0 = 3 events, last motion 18 s before the sample  (seq 164, sampled at hlc 14432712, simulated)
+[  4.62s]   v=10567483.1@B  k9 = "from-c"
+[  4.62s]   v=14428398.1@A  h/D/temp/1 = 25.595 degC  (seq 257, sampled at hlc 14428394, simulated)
+[  4.62s]   v=6670241.1@C  k18 = "down-4"
+[  4.63s]   v=14458443.0@B  h/D/temp/2 = 25.496 degC  (seq 258, sampled at hlc 14458397, simulated)
+[  4.63s]   v=14522713.2@B  h/B/motion/3 = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  4.63s]   v=14488414.0@B  h/D/temp/3 = 25.140 degC  (seq 259, sampled at hlc 14488394, simulated)
+[  4.63s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B  (drop pending)
+[  4.63s]   temp                     TOMBSTONE  v=11327471.1@C  (drop pending)
+[  4.63s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  4.63s]   v=9900928.1@A  kb1 = "from-b"
+[  4.63s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B  (drop pending)
+[  4.63s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A  (drop pending)
+[  4.63s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A  (drop pending)
+[  4.63s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B  (drop pending)
+[  4.63s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  4.63s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B  (drop pending)
+[  4.63s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B  (drop pending)
+[  4.63s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  4.63s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B  (drop pending)
+[  4.63s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B  (drop pending)
+[  4.63s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B  (drop pending)
+[  4.63s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B  (drop pending)
+[  4.63s]   v=10562441.1@B  k14 = "from-b"
+[  4.63s]   v=10913643.1@A  k20 = "local"
+[  4.63s]   v=14370669.1@D (drop pending)  h/C/sound/0 = 0 events, 0.0 % active  (seq 352, sampled at hlc 14370665, simulated)
+[  4.65s]   v=14428582.0@C (drop pending)  s/A/light = 392.395 lux  (seq 410, sampled at hlc 14428575, simulated)
+[  4.65s]   v=14400673.1@D (drop pending)  h/C/sound/1 = 5 events, 4.6 % active  (seq 353, sampled at hlc 14400665, simulated)
+[  4.65s]   v=40148.1@A (drop pending)  x = "1"
+[  4.65s]   k0                       TOMBSTONE  v=10836036.1@C  (drop pending)
+[  4.65s]   v=6674842.1@A (drop pending)  k8 = "down-6"
+[  4.65s]   v=8340.24@A (drop pending)  hlc_probe = 0x0000000020940018 (8 bytes)
+[  4.65s]   v=3948021.1@A (drop pending)  k11 = "hello-ac"
+[  4.65s]   v=6193158.1@A (drop pending)  z = "3"
+[  4.70s] 43 key(s); log 4382/16064 bytes used
+[  0.00s port open]
+[  0.00s] _010 repaired from B
+[  0.00s]     22.710 [C] anti-entropy: tombstone cmp_deleted repaired from B
+[  0.00s]     22.750 [C] anti-entropy: tombstone phase6_wire_1656710395_000 repaired from B
+[  0.00s]     22.787 [C] anti-entropy: tombstone phase6_wire_3259223076_010 repaired from B
+[  0.00s]     22.830 [C] anti-entropy: tombstone phase6_wire_760764433_000 repaired from B
+[  0.00s]     22.870 [C] anti-entropy: tombstone phase6_wire_3320_000 repaired from B
+[  0.00s]     22.909 [C] anti-entropy: tombstone phase6_wire_3216_000 repaired from B
+[  0.00s]     22.947 [C] anti-entropy: tombstone phase6_wire_4258761444_000 repaired from B
+[  0.00s]     22.990 [C] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from B
+[  0.00s]     23.032 [C] anti-entropy: key k20 repaired from B
+[  0.00s]     27.445 [C] view: -BCD
+[  0.00s]     37.206 [C] gc: 24 key(s) marked for drop (orphans 48, tombstones 0 total)
+[  0.00s]     37.206 [C] compaction started (13090 bytes free)
+[  0.00s]     39.861 [C] compaction #2 done: bank B, 36 keys, 14480 bytes free
+[  0.00s]    170.118 [C] view: ABCD
+[  0.05s]    177.206 [C] gc: 22 key(s) marked for drop (orphans 60, tombstones 10 total)
+[  0.05s]    254.119 [C] view: -BCD
+[  0.05s]    261.867 [C] anti-entropy: key h/B/motion/2 repaired from D
+[  0.05s]    261.908 [C] anti-entropy: key h/A/light/0 repaired from D
+[  0.05s]    261.947 [C] anti-entropy: key h/A/light/2 repaired from D
+[  0.05s]    261.987 [C] anti-entropy: key h/D/temp/0 repaired from D
+[  0.05s]    263.921 [C] view: ABCD
+[  0.05s]    267.206 [C] gc: 4 key(s) marked for drop (orphans 64, tombstones 10 total)
+[  1.53s >>> ]
+[  3.05s >>> status]
+[  3.11s] > status
+[  3.11s] node C  state ACTIVE  view ABCD  uptime 337s
+[  3.11s] hlc 14534791.0
+[  3.11s] storage recovered: 22 live, 14 tombstones, 36/64 keys, log 3269/16064 bytes, bank B, 2 compactions
+[  3.11s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.11s] sensor sound (simulated): on, 11 samples, last 0 events, 0.0 % active seq 357, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+[  4.58s >>> dump]
+[  4.60s] > dump
+[  4.60s]   v=14522383.0@C  s/A/light = 392.314 lux  (seq 413, sampled at hlc 14522378, simulated)
+[  4.60s]   v=40148.1@A  x = "1"
+[  4.60s]   v=3245024.1@C  y = "2"
+[  4.60s]   v=3948021.1@A  k11 = "hello-ac"
+[  4.60s]   v=3957822.1@C  k6 = "cb-key"
+[  4.60s]   v=14372715.0@D (drop pending)  h/B/motion/2 = 0 events, last motion 42 s before the sample  (seq 162, sampled at hlc 14372712, simulated)
+[  4.60s]   v=6193158.1@A  z = "3"
+[  4.60s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B  (drop pending)
+[  4.61s]   v=14368580.0@D (drop pending)  h/A/light/0 = 344.992 lux  (seq 408, sampled at hlc 14368574, simulated)
+[  4.61s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A  (drop pending)
+[  4.61s]   v=14428576.2@A (drop pending)  h/A/light/2 = 392.395 lux  (seq 410, sampled at hlc 14428575, simulated)
+[  4.61s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B  (drop pending)
+[  4.61s]   v=12331351.2@A (drop pending)  h/A/light/3 = 70.805 lux  (seq 407, sampled at hlc 12331350, simulated)
+[  4.61s]   v=10562441.1@B (drop pending)  k14 = "from-b"
+[  4.63s]   v=14398395.2@D (drop pending)  h/D/temp/0 = 24.648 degC  (seq 256, sampled at hlc 14398394, simulated)
+[  4.63s]   v=0.1020@A (drop pending)  cmp_sensor = "30"
+[  4.63s]   v=8496.0@A (drop pending)  phase6_100 = "99"
+[  4.63s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A  (drop pending)
+[  4.63s]   v=6665607.1@C  k3 = "down-2"
+[  4.63s]   v=6667924.1@C  k24 = "down-3"
+[  4.63s]   v=6672538.1@C  k19 = "down-5"
+[  4.63s]   v=0.1050@A  cmp_marker = "DONE"
+[  4.63s]   v=14522714.1@C  s/B/motion = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  4.63s]   v=14432713.2@B  h/B/motion/0 = 3 events, last motion 18 s before the sample  (seq 164, sampled at hlc 14432712, simulated)
+[  4.63s]   v=14462729.1@C  h/B/motion/1 = 3 events, last motion 26 s before the sample  (seq 165, sampled at hlc 14462712, simulated)
+[  4.63s]   v=14522713.2@B  h/B/motion/3 = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  4.63s]   k4                       TOMBSTONE  v=10806520.1@B  (drop pending)
+[  4.63s]   k2                       TOMBSTONE  v=10865486.1@D  (drop pending)
+[  4.63s]   temp                     TOMBSTONE  v=11327471.1@C  (drop pending)
+[  4.63s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C  (drop pending)
+[  4.63s]   k0                       TOMBSTONE  v=10836036.1@C  (drop pending)
+[  4.63s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C  (drop pending)
+[  4.63s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A  (drop pending)
+[  4.63s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D  (drop pending)
+[  4.63s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A  (drop pending)
+[  4.63s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A  (drop pending)
+[  4.68s] 36 key(s); log 3269/16064 bytes used
+[  0.00s port open]
+[  0.00s] _2117106867_000 repaired from C
+[  0.00s]    242.816 [D] anti-entropy: key h/D/temp/1 repaired from B
+[  0.00s]    242.839 [D] anti-entropy: tombstone phase6_wire_245014700_010 repaired from C
+[  0.00s]    242.853 [D] anti-entropy: key h/D/temp/3 repaired from B
+[  0.00s]    242.876 [D] anti-entropy: tombstone phase6_wire_4144886006_000 repaired from B
+[  0.00s]    242.889 [D] anti-entropy: tombstone phase6_wire_3115246074_010 repaired from C
+[  0.00s]    242.920 [D] anti-entropy: tombstone phase6_wire_1715376659_000 repaired from C
+[  0.01s]    242.930 [D] anti-entropy: key kb1 repaired from B
+[  0.01s]    242.956 [D] anti-entropy: tombstone phase6_wire_3849341009_010 repaired from B
+[  0.01s]    242.970 [D] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from C
+[  0.01s]    243.036 [D] anti-entropy: tombstone phase6_wire_1656710395_000 repaired from B
+[  0.01s]    243.062 [D] anti-entropy: tombstone phase6_wire_3259223076_010 repaired from B
+[  0.01s]    243.062 [D] compaction started (12957 bytes free)
+[  0.01s]    243.106 [D] anti-entropy: key k20 repaired from B
+[  0.01s]    243.701 [D] view: ABCD
+[  0.01s]    245.841 [D] compaction #3 done: bank A, 38 keys, 14207 bytes free
+[  0.01s]    252.798 [D] anti-entropy: tombstone phase6_wire_3321_000 repaired from C
+[  0.01s]    252.808 [D] anti-entropy: tombstone humidity repaired from B
+[  0.01s]    252.838 [D] anti-entropy: tombstone k2 repaired from C
+[  0.01s]    252.849 [D] anti-entropy: tombstone phase6_wire_4101553140_000 repaired from B
+[  0.01s]    252.878 [D] anti-entropy: tombstone cmp_deleted repaired from B
+[  0.01s]    252.892 [D] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from C
+[  0.01s]    252.919 [D] anti-entropy: tombstone phase6_wire_760764433_000 repaired from B
+[  0.01s]    252.955 [D] anti-entropy: tombstone phase6_wire_3320_000 repaired from B
+[  0.01s]    252.999 [D] anti-entropy: tombstone phase6_wire_3216_000 repaired from B
+[  0.01s]    253.040 [D] anti-entropy: tombstone phase6_wire_4258761444_000 repaired from B
+[  0.01s]    253.079 [D] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from B
+[  0.01s]    257.202 [D] gc: 5 key(s) marked for drop (orphans 34, tombstones 22 total)
+[  0.01s]    257.202 [D] compaction started (13722 bytes free)
+[  0.06s]    259.995 [D] compaction #4 done: bank B, 44 keys, 13976 bytes free
+[  0.06s]    267.202 [D] gc: 20 key(s) marked for drop (orphans 43, tombstones 33 total)
+[  1.53s >>> ]
+[  3.05s >>> status]
+[  3.10s] > status
+[  3.10s] node D  state ACTIVE  view ABCD  uptime 324s
+[  3.10s] hlc 14541809.0
+[  3.10s] storage recovered: 29 live, 15 tombstones, 44/64 keys, log 2776/16064 bytes, bank B, 4 compactions
+[  3.10s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.10s] sensor temp (simulated): on, 10 samples, last 25.766 degC seq 260, 20 ok, 0 under-replicated, 0 failed, 0 read failures
+[  4.58s >>> dump]
+[  4.59s] > dump
+[  4.59s]   v=14492384.0@D  h/A/light/0 = 390.570 lux  (seq 412, sampled at hlc 14492378, simulated)
+[  4.59s]   v=14522385.0@B  h/A/light/1 = 392.314 lux  (seq 413, sampled at hlc 14522378, simulated)
+[  4.59s]   v=14428576.2@A  h/A/light/2 = 392.395 lux  (seq 410, sampled at hlc 14428575, simulated)
+[  4.59s]   v=14462380.0@A  h/A/light/3 = 344.738 lux  (seq 411, sampled at hlc 14462378, simulated)
+[  4.59s]   v=14520670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 357, sampled at hlc 14520666, simulated)
+[  4.61s]   v=14490670.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 356, sampled at hlc 14490666, simulated)
+[  4.61s]   v=14520670.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 357, sampled at hlc 14520666, simulated)
+[  4.61s]   v=14430684.1@B  h/C/sound/2 = 2 events, 1.4 % active  (seq 354, sampled at hlc 14430665, simulated)
+[  4.61s]   v=14460685.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 355, sampled at hlc 14460665, simulated)
+[  4.61s]   v=14518399.1@B  s/D/temp = 25.766 degC  (seq 260, sampled at hlc 14518395, simulated)
+[  4.62s]   v=14518396.2@D  h/D/temp/0 = 25.766 degC  (seq 260, sampled at hlc 14518395, simulated)
+[  4.62s]   v=14522714.1@C  s/B/motion = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  4.62s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A  (drop pending)
+[  4.62s]   v=14462729.1@C  h/B/motion/1 = 3 events, last motion 26 s before the sample  (seq 165, sampled at hlc 14462712, simulated)
+[  4.62s]   humidity                 TOMBSTONE  v=11314009.1@B  (drop pending)
+[  4.62s]   v=6674842.1@A  k8 = "down-6"
+[  4.62s]   v=10567483.1@B  k9 = "from-c"
+[  4.62s]   v=6665607.1@C  k3 = "down-2"
+[  4.62s]   v=6667924.1@C  k24 = "down-3"
+[  4.62s]   v=6670241.1@C  k18 = "down-4"
+[  4.62s]   v=6672538.1@C  k19 = "down-5"
+[  4.62s]   v=14492716.0@D  h/B/motion/2 = 1 events, last motion 17 s before the sample  (seq 166, sampled at hlc 14492712, simulated)
+[  4.62s]   k2                       TOMBSTONE  v=10865486.1@D  (drop pending)
+[  4.62s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B  (drop pending)
+[  4.62s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  4.62s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D  (drop pending)
+[  4.64s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  4.64s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B  (drop pending)
+[  4.64s]   v=0.1020@A  cmp_sensor = "30"
+[  4.64s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B  (drop pending)
+[  4.64s]   v=0.1050@A  cmp_marker = "DONE"
+[  4.64s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B  (drop pending)
+[  4.64s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  4.64s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B  (drop pending)
+[  4.64s]   v=8496.0@A  phase6_100 = "99"
+[  4.64s]   v=14458443.0@B (drop pending)  h/D/temp/2 = 25.496 degC  (seq 258, sampled at hlc 14458397, simulated)
+[  4.64s]   v=14428398.1@A (drop pending)  h/D/temp/1 = 25.595 degC  (seq 257, sampled at hlc 14428394, simulated)
+[  4.64s]   v=14368413.0@B (drop pending)  h/D/temp/3 = 24.527 degC  (seq 255, sampled at hlc 14368394, simulated)
+[  4.64s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  4.64s]   v=9900928.1@A (drop pending)  kb1 = "from-b"
+[  4.64s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A  (drop pending)
+[  4.69s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B  (drop pending)
+[  4.69s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B  (drop pending)
+[  4.69s]   v=10913643.1@A (drop pending)  k20 = "local"
+[  4.69s] 44 key(s); log 2776/16064 bytes used
+
+# 14:53:56 compact one node at a time (~12 s apart):
+[  0.00s port open]
+[  1.51s >>> ]
+[  5.05s >>> compact]
+[  5.10s] > compact
+[  5.10s] compaction requested
+[  5.10s]    112.203 [A] compaction started (11110 bytes free)
+[  7.52s]    114.672 [A] compaction #1 done: bank A, 21 keys, 15101 bytes free
+[  8.58s >>> status]
+[  8.63s] > status
+[  8.63s] node A  state ACTIVE  view ABCD  uptime 115s
+[  8.63s] hlc 14569904.0
+[  8.63s] storage recovered: 21 live, 0 tombstones, 21/64 keys, log 963/16064 bytes, bank A, 1 compactions
+[  8.63s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  8.63s] sensor light (simulated): on, 4 samples, last 459.479 lux seq 414, 8 ok, 0 under-replicated, 0 failed, 0 read failures
+[  0.00s port open]
+[  1.52s >>> ]
+[  5.06s >>> compact]
+[  5.11s] > compact
+[  5.11s] compaction requested
+[  5.11s]    399.462 [B] compaction started (11395 bytes free)
+[  7.54s]    401.922 [B] compaction #3 done: bank A, 17 keys, 15262 bytes free
+[  8.60s >>> status]
+[  8.65s] > status
+[  8.65s] node B  state ACTIVE  view ABCD  uptime 402s
+[  8.65s] hlc 14580011.0
+[  8.65s] storage recovered: 17 live, 0 tombstones, 17/64 keys, log 802/16064 bytes, bank A, 3 compactions
+[  8.65s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  8.65s] sensor motion (simulated): on, 13 samples, last 1 events, last motion 15 s before the sample seq 168, 26 ok, 0 under-replicated, 0 failed, 0 read failures
+[  0.00s port open]
+[  1.52s >>> ]
+[  5.06s >>> compact]
+[  5.11s] > compact
+[  5.11s] compaction requested
+[  5.11s]    389.064 [C] compaction started (12447 bytes free)
+[  7.43s]    391.433 [C] compaction #3 done: bank A, 14 keys, 15478 bytes free
+[  7.94s]    391.902 [C] anti-entropy: tombstone k2 repaired from D
+[  7.94s]    391.911 [C] anti-entropy: tombstone k4 repaired from B
+[  7.94s]    391.925 [C] anti-entropy: tombstone phase6_wire_2117106867_000 repaired from A
+[  7.94s]    391.938 [C] anti-entropy: tombstone k0 repaired from A
+[  7.99s]    391.950 [C] anti-entropy: tombstone temp repaired from B
+[  7.99s]    391.961 [C] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from D
+[  7.99s]    391.983 [C] anti-entropy: tombstone phase6_wire_245014700_010 repaired from A
+[  8.04s]    392.031 [C] anti-entropy: tombstone phase6_wire_3115246074_010 repaired from A
+[  8.09s]    392.063 [C] anti-entropy: tombstone phase6_wire_1715376659_000 repaired from A
+[  8.14s]    392.103 [C] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from A
+[  8.59s >>> status]
+[  8.65s] > status
+[  8.65s] node C  state ACTIVE  view ABCD  uptime 392s
+[  8.65s] hlc 14590059.0
+[  8.65s] storage recovered: 14 live, 10 tombstones, 24/64 keys, log 1001/16064 bytes, bank A, 3 compactions
+[  8.65s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  8.65s] sensor sound (simulated): on, 13 samples, last 3 events, 1.7 % active seq 359, 26 ok, 0 under-replicated, 0 failed, 0 read failures
+[  0.00s port open]
+[  1.53s >>> ]
+[  5.03s >>> compact]
+[  5.09s] > compact
+[  5.09s] compaction requested
+[  5.09s]    378.822 [D] compaction started (12655 bytes free)
+[  7.63s]    381.359 [D] compaction #5 done: bank A, 24 keys, 14897 bytes free
+[  8.54s >>> status]
+[  8.59s] > status
+[  8.59s] node D  state ACTIVE  view ABCD  uptime 382s
+[  8.59s] hlc 14599999.0
+[  8.59s] storage recovered: 24 live, 0 tombstones, 24/64 keys, log 1167/16064 bytes, bank A, 5 compactions
+[  8.59s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  8.59s] sensor temp (simulated): on, 12 samples, last 25.054 degC seq 262, 24 ok, 0 under-replicated, 0 failed, 0 read failures
+[  8.94s]    382.679 [D] anti-entropy: tombstone phase6_wire_3321_000 repaired from A
+[  8.94s]    382.687 [D] anti-entropy: tombstone k2 repaired from C
+[  8.99s]    382.701 [D] anti-entropy: tombstone humidity repaired from B
+[  8.99s]    382.719 [D] anti-entropy: tombstone phase6_wire_2020787800_000 repaired from C
+[  8.99s]    382.729 [D] anti-entropy: tombstone phase6_wire_4101553140_000 repaired from B
+[  9.04s]    382.759 [D] anti-entropy: tombstone cmp_deleted repaired from B
+[  9.04s]    382.801 [D] anti-entropy: tombstone phase6_wire_760764433_000 repaired from B
+[  9.10s]    382.836 [D] anti-entropy: tombstone phase6_wire_3320_000 repaired from B
+[  9.15s]    382.878 [D] anti-entropy: tombstone phase6_wire_3216_000 repaired from B
+[  9.20s]    382.921 [D] anti-entropy: tombstone phase6_wire_4258761444_000 repaired from B
+[  9.25s]    382.961 [D] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from B
+
+# 14:54:49 tombstones are back (pushed by nodes that had not compacted yet, problem 11):
+[  0.00s port open]
+[  0.05s] m C
+[  0.05s]    120.945 [A] anti-entropy: tombstone phase6_wire_1799184098_004 repaired from C
+[  0.05s]    127.210 [A] gc: 14 key(s) marked for drop (orphans 0, tombstones 28 total)
+[  1.51s >>> ]
+[  3.53s >>> status]
+[  3.59s] > status
+[  3.59s] node A  state ACTIVE  view ABCD  uptime 164s
+[  3.59s] hlc 14618294.0
+[  3.59s] storage recovered: 21 live, 14 tombstones, 35/64 keys, log 2090/16064 bytes, bank A, 1 compactions
+[  3.59s] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[  3.59s] sensor light (simulated): on, 6 samples, last 502.997 lux seq 416, 12 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.55s >>> dump]
+[  5.57s] > dump
+[  5.57s]   v=14612383.1@C  s/A/light = 502.997 lux  (seq 416, sampled at hlc 14612378, simulated)
+[  5.57s]   v=14612384.0@D  h/A/light/0 = 502.997 lux  (seq 416, sampled at hlc 14612378, simulated)
+[  5.57s]   v=40148.1@A  x = "1"
+[  5.57s]   v=14552380.0@A  h/A/light/2 = 459.479 lux  (seq 414, sampled at hlc 14552378, simulated)
+[  5.57s]   v=14582379.2@A  h/A/light/3 = 514.705 lux  (seq 415, sampled at hlc 14582378, simulated)
+[  5.57s]   v=14610670.0@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 360, sampled at hlc 14610666, simulated)
+[  5.59s]   v=14520670.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 357, sampled at hlc 14520666, simulated)
+[  5.59s]   v=10562441.1@B  k14 = "from-b"
+[  5.59s]   v=10913643.1@A  k20 = "local"
+[  5.59s]   v=3948021.1@A  k11 = "hello-ac"
+[  5.59s]   v=14518396.2@D  h/D/temp/0 = 25.766 degC  (seq 260, sampled at hlc 14518395, simulated)
+[  5.59s]   v=6193158.1@A  z = "3"
+[  5.59s]   v=14548398.1@A  h/D/temp/1 = 25.727 degC  (seq 261, sampled at hlc 14548395, simulated)
+[  5.59s]   v=14578428.0@B  h/D/temp/2 = 25.054 degC  (seq 262, sampled at hlc 14578395, simulated)
+[  5.60s]   v=14608414.0@B  h/D/temp/3 = 25.368 degC  (seq 263, sampled at hlc 14608395, simulated)
+[  5.60s]   v=6674842.1@A  k8 = "down-6"
+[  5.60s]   v=9900928.1@A  kb1 = "from-b"
+[  5.60s]   v=0.1020@A  cmp_sensor = "30"
+[  5.60s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  5.60s]   v=8496.0@A  phase6_100 = "99"
+[  5.60s]   v=14612715.1@D  h/B/motion/2 = 3 events, last motion 15 s before the sample  (seq 170, sampled at hlc 14612712, simulated)
+[  5.60s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B  (drop pending)
+[  5.60s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A  (drop pending)
+[  5.60s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  5.60s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A  (drop pending)
+[  5.60s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B  (drop pending)
+[  5.60s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A  (drop pending)
+[  5.60s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B  (drop pending)
+[  5.60s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C  (drop pending)
+[  5.60s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B  (drop pending)
+[  5.65s]   k0                       TOMBSTONE  v=10836036.1@C  (drop pending)
+[  5.65s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C  (drop pending)
+[  5.65s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A  (drop pending)
+[  5.65s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A  (drop pending)
+[  5.65s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A  (drop pending)
+[  5.65s] 35 key(s); log 2090/16064 bytes used
+[  0.00s port open]
+[  0.05s] ntropy: tombstone phase6_wire_4258761444_000 repaired from D
+[  0.05s]    411.527 [B] anti-entropy: tombstone phase6_wire_3923394165_000 repaired from D
+[  0.05s]    427.200 [B] gc: 17 key(s) marked for drop (orphans 54, tombstones 34 total)
+[  1.52s >>> ]
+[  3.54s >>> status]
+[  3.60s] > status
+[  3.60s] node B  state ACTIVE  view ABCD  uptime 449s
+[  3.60s] hlc 14626390.0
+[  3.60s] storage recovered: 17 live, 17 tombstones, 34/64 keys, log 1854/16064 bytes, bank A, 3 compactions
+[  3.60s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.60s] sensor motion (simulated): on, 15 samples, last 3 events, last motion 15 s before the sample seq 170, 30 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.56s >>> dump]
+[  5.58s] > dump
+[  5.58s]   phase6_wire_3215_000     TOMBSTONE  v=11320382.1@B  (drop pending)
+[  5.58s]   v=14610670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 360, sampled at hlc 14610666, simulated)
+[  5.58s]   v=14522385.0@B  h/A/light/1 = 392.314 lux  (seq 413, sampled at hlc 14522378, simulated)
+[  5.58s]   v=3245024.1@C  y = "2"
+[  5.58s]   v=3957822.1@C  k6 = "cb-key"
+[  5.58s]   v=14550685.1@B  h/C/sound/2 = 4 events, 3.2 % active  (seq 358, sampled at hlc 14550666, simulated)
+[  5.58s]   humidity                 TOMBSTONE  v=11314009.1@B  (drop pending)
+[  5.59s]   v=14580682.1@B  h/C/sound/3 = 3 events, 1.7 % active  (seq 359, sampled at hlc 14580666, simulated)
+[  5.59s]   v=14608399.0@B  s/D/temp = 25.368 degC  (seq 263, sampled at hlc 14608395, simulated)
+[  5.59s]   v=14552713.2@B  h/B/motion/0 = 1 events, last motion 15 s before the sample  (seq 168, sampled at hlc 14552712, simulated)
+[  5.59s]   v=10567483.1@B  k9 = "from-c"
+[  5.59s]   v=14548398.1@A  h/D/temp/1 = 25.727 degC  (seq 261, sampled at hlc 14548395, simulated)
+[  5.59s]   v=6670241.1@C  k18 = "down-4"
+[  5.60s]   v=14578428.0@B  h/D/temp/2 = 25.054 degC  (seq 262, sampled at hlc 14578395, simulated)
+[  5.60s]   v=14522713.2@B  h/B/motion/3 = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  5.60s]   v=14608414.0@B  h/D/temp/3 = 25.368 degC  (seq 263, sampled at hlc 14608395, simulated)
+[  5.60s]   phase6_wire_4144886006_000 TOMBSTONE  v=29856.2@C  (drop pending)
+[  5.60s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B  (drop pending)
+[  5.60s]   phase6_wire_795334085_028 TOMBSTONE  v=11326759.1@A  (drop pending)
+[  5.60s]   v=9900928.1@A  kb1 = "from-b"
+[  5.60s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  5.60s]   phase6_wire_1596117061_000 TOMBSTONE  v=11314716.1@B  (drop pending)
+[  5.60s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  5.60s]   phase6_wire_3849341009_010 TOMBSTONE  v=11424169.1@A  (drop pending)
+[  5.60s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B  (drop pending)
+[  5.60s]   k4                       TOMBSTONE  v=10806520.1@B  (drop pending)
+[  5.60s]   phase6_wire_1656710395_000 TOMBSTONE  v=11315427.0@B  (drop pending)
+[  5.65s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B  (drop pending)
+[  5.65s]   temp                     TOMBSTONE  v=11327471.1@C  (drop pending)
+[  5.65s]   phase6_wire_3259223076_010 TOMBSTONE  v=11321803.1@B  (drop pending)
+[  5.65s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B  (drop pending)
+[  5.65s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B  (drop pending)
+[  5.65s]   v=10562441.1@B  k14 = "from-b"
+[  5.65s]   v=10913643.1@A  k20 = "local"
+[  5.65s] 34 key(s); log 1854/16064 bytes used
+[  0.00s port open]
+[  1.52s >>> ]
+[  3.55s >>> status]
+[  3.60s] > status
+[  3.60s] node C  state ACTIVE  view ABCD  uptime 437s
+[  3.60s] hlc 14634475.0
+[  3.60s] storage recovered: 14 live, 10 tombstones, 24/64 keys, log 1114/16064 bytes, bank A, 3 compactions
+[  3.60s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  3.60s] sensor sound (simulated): on, 14 samples, last 0 events, 0.0 % active seq 360, 28 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.57s >>> dump]
+[  5.58s] > dump
+[  5.58s]   v=14612383.1@C  s/A/light = 502.997 lux  (seq 416, sampled at hlc 14612378, simulated)
+[  5.58s]   v=40148.1@A  x = "1"
+[  5.58s]   v=3245024.1@C  y = "2"
+[  5.58s]   v=3948021.1@A  k11 = "hello-ac"
+[  5.58s]   v=3957822.1@C  k6 = "cb-key"
+[  5.58s]   k2                       TOMBSTONE  v=10865486.1@D  (drop pending)
+[  5.58s]   v=6193158.1@A  z = "3"
+[  5.58s]   k4                       TOMBSTONE  v=10806520.1@B  (drop pending)
+[  5.59s]   phase6_wire_2117106867_000 TOMBSTONE  v=11318259.1@C  (drop pending)
+[  5.59s]   k0                       TOMBSTONE  v=10836036.1@C  (drop pending)
+[  5.59s]   temp                     TOMBSTONE  v=11327471.1@C  (drop pending)
+[  5.59s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D  (drop pending)
+[  5.59s]   phase6_wire_245014700_010 TOMBSTONE  v=11318966.1@C  (drop pending)
+[  5.59s]   phase6_wire_3115246074_010 TOMBSTONE  v=11319670.1@A  (drop pending)
+[  5.59s]   phase6_wire_1715376659_000 TOMBSTONE  v=11316132.1@A  (drop pending)
+[  5.59s]   phase6_wire_1799184098_004 TOMBSTONE  v=11316838.1@A  (drop pending)
+[  5.59s]   v=6665607.1@C  k3 = "down-2"
+[  5.59s]   v=6667924.1@C  k24 = "down-3"
+[  5.60s]   v=6672538.1@C  k19 = "down-5"
+[  5.60s]   v=0.1050@A  cmp_marker = "DONE"
+[  5.60s]   v=14612714.0@C  s/B/motion = 3 events, last motion 15 s before the sample  (seq 170, sampled at hlc 14612712, simulated)
+[  5.60s]   v=14552713.2@B  h/B/motion/0 = 1 events, last motion 15 s before the sample  (seq 168, sampled at hlc 14552712, simulated)
+[  5.60s]   v=14582729.1@C  h/B/motion/1 = 2 events, last motion 11 s before the sample  (seq 169, sampled at hlc 14582712, simulated)
+[  5.65s]   v=14522713.2@B  h/B/motion/3 = 0 events, last motion 47 s before the sample  (seq 167, sampled at hlc 14522712, simulated)
+[  5.65s] 24 key(s); log 1114/16064 bytes used
+[  0.00s port open]
+[  1.52s >>> ]
+[  3.54s >>> status]
+[  3.60s] > status
+[  3.60s] node D  state ACTIVE  view ABCD  uptime 424s
+[  3.60s] hlc 14642532.0
+[  3.60s] storage recovered: 24 live, 11 tombstones, 35/64 keys, log 2281/16064 bytes, bank A, 5 compactions
+[  3.60s] pending: 0 client, 0 replication, 5 dedup entries, 8 free op slots
+[  3.60s] sensor temp (simulated): on, 14 samples, last 25.365 degC seq 264, 28 ok, 0 under-replicated, 0 failed, 0 read failures
+[  5.57s >>> dump]
+[  5.58s] > dump
+[  5.58s]   v=14612384.0@D  h/A/light/0 = 502.997 lux  (seq 416, sampled at hlc 14612378, simulated)
+[  5.58s]   v=14642389.0@B  h/A/light/1 = 536.838 lux  (seq 417, sampled at hlc 14642379, simulated)
+[  5.58s]   v=14552380.0@A  h/A/light/2 = 459.479 lux  (seq 414, sampled at hlc 14552378, simulated)
+[  5.58s]   v=14582379.2@A  h/A/light/3 = 514.705 lux  (seq 415, sampled at hlc 14582378, simulated)
+[  5.58s]   v=14640670.1@B  s/C/sound = 0 events, 0.0 % active  (seq 361, sampled at hlc 14640666, simulated)
+[  5.60s]   v=14610670.0@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 360, sampled at hlc 14610666, simulated)
+[  5.60s]   v=14640670.0@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 361, sampled at hlc 14640666, simulated)
+[  5.60s]   v=14550685.1@B  h/C/sound/2 = 4 events, 3.2 % active  (seq 358, sampled at hlc 14550666, simulated)
+[  5.60s]   v=14580682.1@B  h/C/sound/3 = 3 events, 1.7 % active  (seq 359, sampled at hlc 14580666, simulated)
+[  5.60s]   v=14638399.0@B  s/D/temp = 25.365 degC  (seq 264, sampled at hlc 14638395, simulated)
+[  5.61s]   v=14638396.2@D  h/D/temp/0 = 25.365 degC  (seq 264, sampled at hlc 14638395, simulated)
+[  5.61s]   v=14642714.0@C  s/B/motion = 3 events, last motion 13 s before the sample  (seq 171, sampled at hlc 14642712, simulated)
+[  5.61s]   phase6_wire_3321_000     TOMBSTONE  v=11323216.1@A  (drop pending)
+[  5.61s]   v=14582729.1@C  h/B/motion/1 = 2 events, last motion 11 s before the sample  (seq 169, sampled at hlc 14582712, simulated)
+[  5.61s]   k2                       TOMBSTONE  v=10865486.1@D  (drop pending)
+[  5.61s]   v=6674842.1@A  k8 = "down-6"
+[  5.61s]   v=10567483.1@B  k9 = "from-c"
+[  5.61s]   v=6665607.1@C  k3 = "down-2"
+[  5.61s]   v=6667924.1@C  k24 = "down-3"
+[  5.61s]   v=6670241.1@C  k18 = "down-4"
+[  5.61s]   v=6672538.1@C  k19 = "down-5"
+[  5.61s]   v=14612715.1@D  h/B/motion/2 = 3 events, last motion 15 s before the sample  (seq 170, sampled at hlc 14612712, simulated)
+[  5.61s]   humidity                 TOMBSTONE  v=11314009.1@B  (drop pending)
+[  5.61s]   phase6_wire_2020787800_000 TOMBSTONE  v=11317548.1@D  (drop pending)
+[  5.61s]   phase6_wire_4101553140_000 TOMBSTONE  v=11325347.0@B  (drop pending)
+[  5.61s]   cmp_deleted              TOMBSTONE  v=0.1040@A  (drop pending)
+[  5.62s]   phase6_wire_760764433_000 TOMBSTONE  v=79597.0@C  (drop pending)
+[  5.62s]   phase6_wire_3320_000     TOMBSTONE  v=11419074.1@B  (drop pending)
+[  5.62s]   v=0.1020@A  cmp_sensor = "30"
+[  5.62s]   phase6_wire_3216_000     TOMBSTONE  v=11321090.1@B  (drop pending)
+[  5.62s]   v=0.1050@A  cmp_marker = "DONE"
+[  5.62s]   phase6_wire_4258761444_000 TOMBSTONE  v=11326054.1@B  (drop pending)
+[  5.62s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  5.62s]   phase6_wire_3923394165_000 TOMBSTONE  v=11324639.1@B  (drop pending)
+[  5.62s]   v=8496.0@A  phase6_100 = "99"
+[  5.67s] 35 key(s); log 2340/16064 bytes used
+
+# 14:57:03 compact on all four at the same moment:
+[  0.00s port open]
+[  1.51s >>> ]
+[  2.52s >>> compact]
+[  2.57s] > compact
+[  2.57s] compaction requested
+[  2.57s]    296.740 [A] compaction started (13189 bytes free)
+[  5.03s]    299.205 [A] compaction #2 done: bank B, 21 keys, 15101 bytes free
+[  0.00s port open]
+[  1.51s >>> ]
+[  2.52s >>> compact]
+[  2.57s] > compact
+[  2.57s] compaction requested
+[  2.57s]    573.899 [B] compaction started (13303 bytes free)
+[  5.03s]    576.330 [B] compaction #4 done: bank B, 17 keys, 15262 bytes free
+[  0.00s port open]
+[  1.51s >>> ]
+[  2.52s >>> compact]
+[  2.57s] > compact
+[  2.57s] compaction requested
+[  2.57s]    553.450 [C] compaction started (14315 bytes free)
+[  4.98s]    555.818 [C] compaction #4 done: bank B, 14 keys, 15478 bytes free
+[  0.00s port open]
+[  1.51s >>> ]
+[  2.52s >>> compact]
+[  2.57s] > compact
+[  2.57s] compaction requested
+[  2.57s]    533.217 [D] compaction started (12744 bytes free)
+
+# check 1 (14:57:38 / 14:58:14):
+[  0.00s port open]
+[  1.53s >>> ]
+[  2.56s >>> status]
+[  2.61s] > status
+[  2.61s] node A  state ACTIVE  view ABCD  uptime 331s
+[  2.61s] hlc 14786059.0
+[  2.61s] storage recovered: 21 live, 0 tombstones, 21/64 keys, log 1132/16064 bytes, bank B, 2 compactions
+[  2.61s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.61s] sensor light (simulated): on, 11 samples, last 611.455 lux seq 421, 22 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.58s >>> dump]
+[  3.60s] > dump
+[  3.60s]   v=14762383.1@C  s/A/light = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.60s]   v=14732384.0@D  h/A/light/0 = 570.729 lux  (seq 420, sampled at hlc 14732379, simulated)
+[  3.60s]   v=40148.1@A  x = "1"
+[  3.60s]   v=14672380.2@A  h/A/light/2 = 593.374 lux  (seq 418, sampled at hlc 14672379, simulated)
+[  3.60s]   v=14702380.2@A  h/A/light/3 = 571.591 lux  (seq 419, sampled at hlc 14702379, simulated)
+[  3.60s]   v=14730670.0@D  h/C/sound/0 = 3 events, 2.9 % active  (seq 364, sampled at hlc 14730666, simulated)
+[  3.62s]   v=14760670.0@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.62s]   v=10562441.1@B  k14 = "from-b"
+[  3.62s]   v=10913643.1@A  k20 = "local"
+[  3.62s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.62s]   v=14758396.2@D  h/D/temp/0 = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.62s]   v=6193158.1@A  z = "3"
+[  3.62s]   v=14668399.1@A  h/D/temp/1 = 24.429 degC  (seq 265, sampled at hlc 14668395, simulated)
+[  3.62s]   v=14698414.0@B  h/D/temp/2 = 24.294 degC  (seq 266, sampled at hlc 14698395, simulated)
+[  3.67s]   v=14728411.0@B  h/D/temp/3 = 24.400 degC  (seq 267, sampled at hlc 14728395, simulated)
+[  3.67s]   v=6674842.1@A  k8 = "down-6"
+[  3.67s]   v=9900928.1@A  kb1 = "from-b"
+[  3.67s]   v=0.1020@A  cmp_sensor = "30"
+[  3.67s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.67s]   v=8496.0@A  phase6_100 = "99"
+[  3.67s]   v=14732715.0@D  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 174, sampled at hlc 14732712, simulated)
+[  3.67s] 21 key(s); log 1132/16064 bytes used
+[  0.00s port open]
+[  1.53s >>> ]
+[  2.56s >>> status]
+[  2.61s] > status
+[  2.61s] node B  state ACTIVE  view ABCD  uptime 609s
+[  2.61s] hlc 14786057.0
+[  2.61s] storage recovered: 17 live, 0 tombstones, 17/64 keys, log 1030/16064 bytes, bank B, 4 compactions
+[  2.61s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.61s] sensor motion (simulated): on, 20 samples, last 1 events, last motion 4 s before the sample seq 175, 40 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.58s >>> dump]
+[  3.60s] > dump
+[  3.60s]   v=14760670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.60s]   v=14762385.0@B  h/A/light/1 = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.60s]   v=3245024.1@C  y = "2"
+[  3.60s]   v=3957822.1@C  k6 = "cb-key"
+[  3.60s]   v=14670685.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 362, sampled at hlc 14670666, simulated)
+[  3.60s]   v=14700686.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 363, sampled at hlc 14700666, simulated)
+[  3.61s]   v=14758399.1@B  s/D/temp = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.61s]   v=14672713.2@B  h/B/motion/0 = 3 events, last motion 14 s before the sample  (seq 172, sampled at hlc 14672712, simulated)
+[  3.61s]   v=10567483.1@B  k9 = "from-c"
+[  3.61s]   v=14668399.1@A  h/D/temp/1 = 24.429 degC  (seq 265, sampled at hlc 14668395, simulated)
+[  3.61s]   v=6670241.1@C  k18 = "down-4"
+[  3.61s]   v=14698414.0@B  h/D/temp/2 = 24.294 degC  (seq 266, sampled at hlc 14698395, simulated)
+[  3.66s]   v=14762713.2@B  h/B/motion/3 = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.66s]   v=14728411.0@B  h/D/temp/3 = 24.400 degC  (seq 267, sampled at hlc 14728395, simulated)
+[  3.66s]   v=9900928.1@A  kb1 = "from-b"
+[  3.66s]   v=10562441.1@B  k14 = "from-b"
+[  3.66s]   v=10913643.1@A  k20 = "local"
+[  3.66s] 17 key(s); log 1030/16064 bytes used
+[  0.00s port open]
+[  1.53s >>> ]
+[  2.55s >>> status]
+[  2.61s] > status
+[  2.61s] node C  state ACTIVE  view ABCD  uptime 588s
+[  2.61s] hlc 14786056.0
+[  2.61s] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 760/16064 bytes, bank B, 4 compactions
+[  2.61s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.61s] sensor sound (simulated): on, 19 samples, last 0 events, 0.0 % active seq 365, 38 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.58s >>> dump]
+[  3.60s] > dump
+[  3.60s]   v=14762383.1@C  s/A/light = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.60s]   v=40148.1@A  x = "1"
+[  3.60s]   v=3245024.1@C  y = "2"
+[  3.60s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.60s]   v=3957822.1@C  k6 = "cb-key"
+[  3.60s]   v=6193158.1@A  z = "3"
+[  3.60s]   v=6665607.1@C  k3 = "down-2"
+[  3.60s]   v=6667924.1@C  k24 = "down-3"
+[  3.60s]   v=6672538.1@C  k19 = "down-5"
+[  3.60s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.60s]   v=14762714.0@C  s/B/motion = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.65s]   v=14672713.2@B  h/B/motion/0 = 3 events, last motion 14 s before the sample  (seq 172, sampled at hlc 14672712, simulated)
+[  3.65s]   v=14702729.1@C  h/B/motion/1 = 0 events, last motion 44 s before the sample  (seq 173, sampled at hlc 14702712, simulated)
+[  3.65s]   v=14762713.2@B  h/B/motion/3 = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.65s] 14 key(s); log 760/16064 bytes used
+[  0.00s port open]
+[  1.52s >>> ]
+[  2.55s >>> status]
+[  2.60s] > status
+[  2.60s] node D  state ACTIVE  view ABCD  uptime 568s
+[  2.60s] hlc 14786053.0
+[  2.60s] storage recovered: 24 live, 0 tombstones, 24/64 keys, log 1508/16064 bytes, bank B, 6 compactions
+[  2.60s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.60s] sensor temp (simulated): on, 18 samples, last 23.387 degC seq 268, 36 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.57s >>> dump]
+[  3.59s] > dump
+[  3.59s]   v=14732384.0@D  h/A/light/0 = 570.729 lux  (seq 420, sampled at hlc 14732379, simulated)
+[  3.59s]   v=14762385.0@B  h/A/light/1 = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.59s]   v=14672380.2@A  h/A/light/2 = 593.374 lux  (seq 418, sampled at hlc 14672379, simulated)
+[  3.59s]   v=14702380.2@A  h/A/light/3 = 571.591 lux  (seq 419, sampled at hlc 14702379, simulated)
+[  3.59s]   v=14760670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.60s]   v=14730670.0@D  h/C/sound/0 = 3 events, 2.9 % active  (seq 364, sampled at hlc 14730666, simulated)
+[  3.60s]   v=14760670.0@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.60s]   v=14670685.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 362, sampled at hlc 14670666, simulated)
+[  3.60s]   v=14700686.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 363, sampled at hlc 14700666, simulated)
+[  3.60s]   v=14758399.1@B  s/D/temp = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.62s]   v=14758396.2@D  h/D/temp/0 = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.62s]   v=14762714.0@C  s/B/motion = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.62s]   v=14702729.1@C  h/B/motion/1 = 0 events, last motion 44 s before the sample  (seq 173, sampled at hlc 14702712, simulated)
+[  3.62s]   v=6674842.1@A  k8 = "down-6"
+[  3.62s]   v=10567483.1@B  k9 = "from-c"
+[  3.62s]   v=6665607.1@C  k3 = "down-2"
+[  3.62s]   v=6667924.1@C  k24 = "down-3"
+[  3.62s]   v=6670241.1@C  k18 = "down-4"
+[  3.62s]   v=6672538.1@C  k19 = "down-5"
+[  3.67s]   v=14732715.0@D  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 174, sampled at hlc 14732712, simulated)
+[  3.67s]   v=0.1020@A  cmp_sensor = "30"
+[  3.67s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.67s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.67s]   v=8496.0@A  phase6_100 = "99"
+[  3.67s] 24 key(s); log 1508/16064 bytes used
+
+# check 2 (14:57:38 / 14:58:14):
+[  0.00s port open]
+[  1.53s >>> ]
+[  2.55s >>> status]
+[  2.60s] > status
+[  2.60s] node A  state ACTIVE  view ABCD  uptime 368s
+[  2.60s] hlc 14822323.0
+[  2.60s] storage recovered: 21 live, 0 tombstones, 21/64 keys, log 1352/16064 bytes, bank B, 2 compactions
+[  2.60s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  2.60s] sensor light (simulated): on, 12 samples, last 588.381 lux seq 422, 24 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.56s >>> dump]
+[  3.58s] > dump
+[  3.58s]   v=14822384.1@C  s/A/light = 546.748 lux  (seq 423, sampled at hlc 14822379, simulated)
+[  3.58s]   v=14732384.0@D  h/A/light/0 = 570.729 lux  (seq 420, sampled at hlc 14732379, simulated)
+[  3.58s]   v=40148.1@A  x = "1"
+[  3.58s]   v=14792380.2@A  h/A/light/2 = 588.381 lux  (seq 422, sampled at hlc 14792379, simulated)
+[  3.58s]   v=14822380.2@A  h/A/light/3 = 546.748 lux  (seq 423, sampled at hlc 14822379, simulated)
+[  3.58s]   v=14730670.0@D  h/C/sound/0 = 3 events, 2.9 % active  (seq 364, sampled at hlc 14730666, simulated)
+[  3.60s]   v=14760670.0@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.60s]   v=10562441.1@B  k14 = "from-b"
+[  3.60s]   v=10913643.1@A  k20 = "local"
+[  3.60s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.60s]   v=14758396.2@D  h/D/temp/0 = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.60s]   v=6193158.1@A  z = "3"
+[  3.60s]   v=14788399.1@A  h/D/temp/1 = 22.820 degC  (seq 269, sampled at hlc 14788395, simulated)
+[  3.60s]   v=14818412.0@B  h/D/temp/2 = 22.990 degC  (seq 270, sampled at hlc 14818395, simulated)
+[  3.65s]   v=14728411.0@B  h/D/temp/3 = 24.400 degC  (seq 267, sampled at hlc 14728395, simulated)
+[  3.65s]   v=6674842.1@A  k8 = "down-6"
+[  3.65s]   v=9900928.1@A  kb1 = "from-b"
+[  3.65s]   v=0.1020@A  cmp_sensor = "30"
+[  3.65s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.65s]   v=8496.0@A  phase6_100 = "99"
+[  3.65s]   v=14732715.0@D  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 174, sampled at hlc 14732712, simulated)
+[  3.65s] 21 key(s); log 1462/16064 bytes used
+[  0.00s port open]
+[  1.53s >>> ]
+[  2.55s >>> status]
+[  2.60s] > status
+[  2.60s] node B  state ACTIVE  view ABCD  uptime 645s
+[  2.60s] hlc 14822324.0
+[  2.60s] storage recovered: 17 live, 0 tombstones, 17/64 keys, log 1543/16064 bytes, bank B, 4 compactions
+[  2.60s] pending: 0 client, 0 replication, 4 dedup entries, 8 free op slots
+[  2.60s] sensor motion (simulated): on, 21 samples, last 1 events, last motion 6 s before the sample seq 176, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.56s >>> dump]
+[  3.58s] > dump
+[  3.58s]   v=14820670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 367, sampled at hlc 14820666, simulated)
+[  3.58s]   v=14762385.0@B  h/A/light/1 = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.58s]   v=3245024.1@C  y = "2"
+[  3.58s]   v=3957822.1@C  k6 = "cb-key"
+[  3.58s]   v=14790685.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 366, sampled at hlc 14790666, simulated)
+[  3.58s]   v=14820685.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 367, sampled at hlc 14820666, simulated)
+[  3.59s]   v=14818400.0@B  s/D/temp = 22.990 degC  (seq 270, sampled at hlc 14818395, simulated)
+[  3.59s]   v=14792713.2@B  h/B/motion/0 = 1 events, last motion 6 s before the sample  (seq 176, sampled at hlc 14792712, simulated)
+[  3.59s]   v=10567483.1@B  k9 = "from-c"
+[  3.59s]   v=14788399.1@A  h/D/temp/1 = 22.820 degC  (seq 269, sampled at hlc 14788395, simulated)
+[  3.59s]   v=6670241.1@C  k18 = "down-4"
+[  3.59s]   v=14818412.0@B  h/D/temp/2 = 22.990 degC  (seq 270, sampled at hlc 14818395, simulated)
+[  3.65s]   v=14762713.2@B  h/B/motion/3 = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.65s]   v=14728411.0@B  h/D/temp/3 = 24.400 degC  (seq 267, sampled at hlc 14728395, simulated)
+[  3.65s]   v=9900928.1@A  kb1 = "from-b"
+[  3.65s]   v=10562441.1@B  k14 = "from-b"
+[  3.65s]   v=10913643.1@A  k20 = "local"
+[  3.65s] 17 key(s); log 1543/16064 bytes used
+[  0.00s port open]
+[  1.52s >>> ]
+[  2.55s >>> status]
+[  2.60s] > status
+[  2.60s] node C  state ACTIVE  view ABCD  uptime 624s
+[  2.60s] hlc 14822324.0
+[  2.60s] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 934/16064 bytes, bank B, 4 compactions
+[  2.60s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  2.60s] sensor sound (simulated): on, 21 samples, last 0 events, 0.0 % active seq 367, 42 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.56s >>> dump]
+[  3.59s] > dump
+[  3.59s]   v=14822384.1@C  s/A/light = 546.748 lux  (seq 423, sampled at hlc 14822379, simulated)
+[  3.59s]   v=40148.1@A  x = "1"
+[  3.59s]   v=3245024.1@C  y = "2"
+[  3.59s]   v=3948021.1@A  k11 = "hello-ac"
+[  3.59s]   v=3957822.1@C  k6 = "cb-key"
+[  3.59s]   v=6193158.1@A  z = "3"
+[  3.59s]   v=6665607.1@C  k3 = "down-2"
+[  3.59s]   v=6667924.1@C  k24 = "down-3"
+[  3.59s]   v=6672538.1@C  k19 = "down-5"
+[  3.59s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.59s]   v=14822714.0@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 177, sampled at hlc 14822712, simulated)
+[  3.64s]   v=14792713.2@B  h/B/motion/0 = 1 events, last motion 6 s before the sample  (seq 176, sampled at hlc 14792712, simulated)
+[  3.64s]   v=14822728.1@C  h/B/motion/1 = 0 events, last motion 36 s before the sample  (seq 177, sampled at hlc 14822712, simulated)
+[  3.64s]   v=14762713.2@B  h/B/motion/3 = 1 events, last motion 4 s before the sample  (seq 175, sampled at hlc 14762712, simulated)
+[  3.64s] 14 key(s); log 1108/16064 bytes used
+[  0.00s port open]
+[  1.52s >>> ]
+[  2.55s >>> status]
+[  2.60s] > status
+[  2.60s] node D  state ACTIVE  view ABCD  uptime 604s
+[  2.60s] hlc 14822324.0
+[  2.60s] storage recovered: 24 live, 0 tombstones, 24/64 keys, log 1965/16064 bytes, bank B, 6 compactions
+[  2.60s] pending: 0 client, 0 replication, 3 dedup entries, 8 free op slots
+[  2.60s] sensor temp (simulated): on, 20 samples, last 22.990 degC seq 270, 40 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.56s >>> dump]
+[  3.58s] > dump
+[  3.58s]   v=14732384.0@D  h/A/light/0 = 570.729 lux  (seq 420, sampled at hlc 14732379, simulated)
+[  3.58s]   v=14762385.0@B  h/A/light/1 = 611.455 lux  (seq 421, sampled at hlc 14762379, simulated)
+[  3.58s]   v=14792380.2@A  h/A/light/2 = 588.381 lux  (seq 422, sampled at hlc 14792379, simulated)
+[  3.58s]   v=14822380.2@A  h/A/light/3 = 546.748 lux  (seq 423, sampled at hlc 14822379, simulated)
+[  3.58s]   v=14820670.0@B  s/C/sound = 0 events, 0.0 % active  (seq 367, sampled at hlc 14820666, simulated)
+[  3.59s]   v=14730670.0@D  h/C/sound/0 = 3 events, 2.9 % active  (seq 364, sampled at hlc 14730666, simulated)
+[  3.59s]   v=14760670.0@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 365, sampled at hlc 14760666, simulated)
+[  3.59s]   v=14790685.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 366, sampled at hlc 14790666, simulated)
+[  3.59s]   v=14820685.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 367, sampled at hlc 14820666, simulated)
+[  3.59s]   v=14818400.0@B  s/D/temp = 22.990 degC  (seq 270, sampled at hlc 14818395, simulated)
+[  3.61s]   v=14758396.2@D  h/D/temp/0 = 23.387 degC  (seq 268, sampled at hlc 14758395, simulated)
+[  3.61s]   v=14822714.0@C  s/B/motion = 0 events, last motion 36 s before the sample  (seq 177, sampled at hlc 14822712, simulated)
+[  3.61s]   v=14822728.1@C  h/B/motion/1 = 0 events, last motion 36 s before the sample  (seq 177, sampled at hlc 14822712, simulated)
+[  3.61s]   v=6674842.1@A  k8 = "down-6"
+[  3.61s]   v=10567483.1@B  k9 = "from-c"
+[  3.61s]   v=6665607.1@C  k3 = "down-2"
+[  3.61s]   v=6667924.1@C  k24 = "down-3"
+[  3.61s]   v=6670241.1@C  k18 = "down-4"
+[  3.61s]   v=6672538.1@C  k19 = "down-5"
+[  3.66s]   v=14732715.0@D  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 174, sampled at hlc 14732712, simulated)
+[  3.66s]   v=0.1020@A  cmp_sensor = "30"
+[  3.66s]   v=0.1050@A  cmp_marker = "DONE"
+[  3.66s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[  3.66s]   v=8496.0@A  phase6_100 = "99"
+[  3.66s] 24 key(s); log 2141/16064 bytes used

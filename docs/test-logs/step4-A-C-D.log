@@ -1,0 +1,332 @@
+# Three nodes A + C + D (B deferred, BRINGUP_LOG problem 6), then failure/rejoin of D. Mon 19.
+# Never power-cycle A (Pi bridge). Owners predicted with 'ring' before each write.
+
+# members/status on A (08:41:33-08:41:42):
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.56s] node A  state ACTIVE  view A-CD  uptime 5984s
+[  1.56s] hlc 6378008.0
+[  1.56s] storage recovered: 21 live, 0 tombstones, 21/64 keys, log 11512/16064 bytes, bank A, 2 compactions
+[  1.56s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.56s] sensor light (simulated): on, 200 samples, last 281.051 lux seq 213, 214 ok, 186 under-replicated, 0 failed, 0 read failures
+[  3.43s >>> members]
+[  3.49s] > members
+[  3.49s]   A  self    ACTIVE
+[  3.49s]   B  never heard
+[  3.49s]   C  alive   last heard 69 ms ago, 6188 heartbeats
+[  3.49s]   D  alive   last heard 212 ms ago, 350 heartbeats
+
+# members/status on C (08:41:33-08:41:42):
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.56s] node C  state ACTIVE  view A-CD  uptime 2538s
+[  1.56s] hlc 6380345.0
+[  1.56s] storage recovered: 21 live, 0 tombstones, 21/64 keys, log 12753/16064 bytes, bank B, 1 compactions
+[  1.56s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.56s] sensor sound (simulated): on, 84 samples, last 0 events, 0.0 % active seq 105, 168 ok, 0 under-replicated, 0 failed, 0 read failures
+[  2.72s >>> members]
+[  2.77s] > members
+[  2.77s]   A  alive   last heard 813 ms ago, 4905 heartbeats
+[  2.77s]   B  never heard
+[  2.77s]   C  self    ACTIVE
+[  2.77s]   D  alive   last heard 95 ms ago, 351 heartbeats
+
+# members/status on D (08:41:33-08:41:42):
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.56s] node D  state ACTIVE  view A-CD  uptime 53s
+[  1.56s] hlc 6384642.0
+[  1.56s] storage recovered: 20 live, 0 tombstones, 20/64 keys, log 2487/16064 bytes, bank A, 0 compactions
+[  1.56s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.56s] sensor temp (simulated): on, 1 samples, last 23.373 degC seq 4, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[  2.72s >>> members]
+[  2.77s] > members
+[  2.77s]   A  alive   last heard 220 ms ago, 104 heartbeats
+[  2.77s]   B  never heard
+[  2.77s]   C  alive   last heard 361 ms ago, 104 heartbeats
+[  2.77s]   D  self    ACTIVE
+
+# 08:41:46 ring on A, current view A-CD:
+[  0.00s port open]
+[  0.30s >>> ]
+[  0.71s >>> ring k2]
+[  0.76s] > ring k2
+[  0.76s] key 'k2' hash 953d7c08
+[  0.76s]   all nodes up : primary D, replica C
+[  0.76s]   current view : primary D, replica C
+[  1.11s >>> ring k3]
+[  1.16s] > ring k3
+[  1.16s] key 'k3' hash 963d7d9b
+[  1.16s]   all nodes up : primary D, replica C
+[  1.16s]   current view : primary D, replica C
+[  1.51s >>> ring k8]
+[  1.56s] > ring k8
+[  1.56s] key 'k8' hash 8f3d7296
+[  1.56s]   all nodes up : primary A, replica D
+[  1.56s]   current view : primary A, replica D
+[  1.92s >>> ring k9]
+[  1.97s] > ring k9
+[  1.97s] key 'k9' hash 903d7429
+[  1.97s]   all nodes up : primary B, replica D
+[  1.97s]   current view : primary D, replica A
+[  2.32s >>> ring k18]
+[  2.37s] > ring k18
+[  2.37s] key 'k18' hash a1d207fb
+[  2.37s]   all nodes up : primary D, replica B
+[  2.37s]   current view : primary D, replica C
+[  2.72s >>> ring k19]
+[  2.77s] > ring k19
+[  2.77s] key 'k19' hash a0d20668
+[  2.77s]   all nodes up : primary C, replica D
+[  2.77s]   current view : primary C, replica D
+[  3.13s >>> ring k24]
+[  3.18s] > ring k24
+[  3.18s] key 'k24' hash 2bca9274
+[  3.18s]   all nodes up : primary D, replica C
+[  3.18s]   current view : primary D, replica C
+
+# 08:42:02 sets via A:
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.81s >>> set k2 three-dc]
+[  1.86s] > set k2 three-dc
+[  3.32s >>> set k8 three-ad]
+[  3.37s] SET k2: OK (served by D, 1 attempt(s), 30 ms)
+[  3.37s] > set k8 three-ad
+[  3.37s] SET k8: OK (served by A, 1 attempt(s), 26 ms)
+[  4.82s >>> set k9 three-bd]
+[  4.88s] > set k9 three-bd
+
+# 08:42:08 gets on C (k9 reply fell outside the capture window):
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.82s >>> get k2]
+[  2.87s] > get k2
+[  2.87s] k2 = "three-dc"
+[  2.87s]    (served by D, 1 attempt(s), 18 ms)
+[  4.02s >>> get k8]
+[  4.07s] > get k8
+[  4.07s] k8 = "three-ad"
+[  4.07s]    (served by A, 1 attempt(s), 10 ms)
+
+# 08:42:13 gets + dump on D:
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> get k2]
+[  1.56s] > get k2
+[  1.56s] k2 = "three-dc"
+[  1.56s]    (served by D, 1 attempt(s), 0 ms)
+[  2.71s >>> get k8]
+[  2.76s] > get k8
+[  2.77s] k8 = "three-ad"
+[  2.77s]    (served by A, 1 attempt(s), 6 ms)
+[  3.92s >>> get k9]
+[  3.97s] > get k9
+[  3.97s] k9 = "three-bd"
+[  3.97s]    (served by D, 1 attempt(s), 0 ms)
+[  5.12s >>> dump]
+[  5.14s] > dump
+[  5.14s]   v=6338649.1@D  h/A/light/0 = 275.909 lux  (seq 212, sampled at hlc 6338644, simulated)
+[  5.14s]   v=6368649.1@D  h/A/light/1 = 281.051 lux  (seq 213, sampled at hlc 6368644, simulated)
+[  5.14s]   v=6398646.2@A  h/A/light/2 = 325.143 lux  (seq 214, sampled at hlc 6398645, simulated)
+[  5.14s]   v=6308645.2@A  h/A/light/3 = 204.030 lux  (seq 211, sampled at hlc 6308644, simulated)
+[  5.14s]   v=6415051.1@D  s/C/sound = 0 events, 0.0 % active  (seq 107, sampled at hlc 6415049, simulated)
+[  5.15s]   v=6325079.1@A  h/C/sound/0 = 0 events, 0.0 % active  (seq 104, sampled at hlc 6325049, simulated)
+[  5.15s]   v=6355067.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 105, sampled at hlc 6355049, simulated)
+[  5.15s]   v=6385066.1@D  h/C/sound/2 = 0 events, 0.0 % active  (seq 106, sampled at hlc 6385049, simulated)
+[  5.15s]   v=6415066.1@D  h/C/sound/3 = 0 events, 0.0 % active  (seq 107, sampled at hlc 6415049, simulated)
+[  5.15s]   v=6158649.1@C (drop pending)  s/A/light = 67.170 lux  (seq 206, sampled at hlc 6158644, simulated)
+[  5.15s]   v=40148.1@A (drop pending)  x = "1"
+[  5.17s]   v=3245024.1@C (drop pending)  y = "2"
+[  5.17s]   v=3948021.1@A (drop pending)  k11 = "hello-ac"
+[  5.17s]   v=3957822.1@C (drop pending)  k6 = "cb-key"
+[  5.17s]   v=3962062.1@C (drop pending)  k4 = "b-key"
+[  5.17s]   v=6391956.0@D  s/D/temp = 23.155 degC  (seq 5, sampled at hlc 6391955, simulated)
+[  5.17s]   v=6361970.1@D  h/D/temp/0 = 23.373 degC  (seq 4, sampled at hlc 6361955, simulated)
+[  5.17s]   v=6391975.1@A  h/D/temp/1 = 23.155 degC  (seq 5, sampled at hlc 6391955, simulated)
+[  5.17s]   v=6236494.1@A  h/D/temp/2 = 23.764 degC  (seq 2, sampled at hlc 6236477, simulated)
+[  5.22s]   v=6266494.1@A  h/D/temp/3 = 24.706 degC  (seq 3, sampled at hlc 6266477, simulated)
+[  5.22s]   v=6406876.1@D  k2 = "three-dc"
+[  5.22s]   v=6408441.1@A  k8 = "three-ad"
+[  5.22s]   v=6410008.1@D  k9 = "three-bd"
+[  5.22s] 23 key(s); log 2992/16064 bytes used
+
+# ~08:45:50 user unplugged D. 08:46:14 A: view drops D, then 7 writes to keys D owns or replicates:
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.51s >>> status]
+[  2.56s] > status
+[  2.56s] node A  state ACTIVE  view A-C-  uptime 6265s
+[  2.56s] hlc 6658461.0
+[  2.56s] storage recovered: 24 live, 0 tombstones, 24/64 keys, log 1814/16064 bytes, bank B, 3 compactions
+[  2.56s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[  2.56s] sensor light (simulated): on, 209 samples, last 614.234 lux seq 222, 232 ok, 186 under-replicated, 0 failed, 0 read failures
+[  4.72s >>> members]
+[  4.77s] > members
+[  4.77s]   A  self    ACTIVE
+[  4.77s]   B  never heard
+[  4.77s]   C  alive   last heard 142 ms ago, 6722 heartbeats
+[  4.77s]   D  DEAD    last heard 20371 ms ago, 868 heartbeats
+[  6.93s >>> set k2 down-1]
+[  6.98s] > set k2 down-1
+[  7.03s] SET k2: OK (served by C, 1 attempt(s), 57 ms)
+[  9.14s >>> set k3 down-2]
+[  9.19s] > set k3 down-2
+[ 11.34s >>> set k24 down-3]
+[ 11.39s] SET k3: OK (served by C, 1 attempt(s), 30 ms)
+[ 11.39s] > set k24 down-3
+[ 13.55s >>> set k18 down-4]
+[ 13.60s] SET k24: OK (served by C, 1 attempt(s), 36 ms)
+[ 13.60s] > set k18 down-4
+[ 13.60s] SET k18: OK (served by C, 1 attempt(s), 36 ms)
+[ 15.76s >>> set k19 down-5]
+[ 15.81s] > set k19 down-5
+[ 15.81s] SET k19: OK (served by C, 1 attempt(s), 33 ms)
+[ 17.97s >>> set k8 down-6]
+[ 18.02s] > set k8 down-6
+[ 18.02s] SET k8: OK (served by A, 1 attempt(s), 22 ms)
+[ 20.18s >>> set k9 down-7]
+[ 20.23s] > set k9 down-7
+
+# 08:46:55 A (the SET k9 reply printed late, at this open):
+[  0.00s port open]
+[  0.30s >>> ]
+[  2.84s >>> get k9]
+[  2.89s] SET k9: OK (served by A, 1 attempt(s), 27 ms)
+[  2.89s] > get k9
+[  2.89s] k9 = "down-7"
+[  2.89s]    (served by A, 1 attempt(s), 0 ms)
+
+# 08:48:21 D plugged back in (by-id link). 08:49:02 D:
+[  0.01s port open]
+[  0.31s >>> ]
+[  0.37s] > edge-kv firmwar entDypykrepA. 2p
+[  0.37s] unknown command 'edge-kv' (try 'help')
+[  1.82s >>> status]
+[  1.87s] > status
+[  1.87s] node D  state ACTIVE  view A-CD  uptime 45s
+[  1.87s] hlc 6826795.0
+[  1.87s] storage recovered: 27 live, 0 tombstones, 27/64 keys, log 6332/16064 bytes, bank A, 0 compactions
+[  1.87s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[  1.87s] sensor temp (simulated): on, 1 samples, last 23.373 degC seq 14, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+[  3.33s >>> dump]
+[  3.34s] > dump
+[  3.34s]   v=6818646.2@A  h/A/light/0 = 577.168 lux  (seq 228, sampled at hlc 6818645, simulated)
+[  3.34s]   v=6728646.2@A  h/A/light/1 = 628.092 lux  (seq 225, sampled at hlc 6728645, simulated)
+[  3.34s]   v=6758646.2@A  h/A/light/2 = 575.114 lux  (seq 226, sampled at hlc 6758645, simulated)
+[  3.34s]   v=6788646.2@A  h/A/light/3 = 562.848 lux  (seq 227, sampled at hlc 6788645, simulated)
+[  3.35s]   v=6805084.1@D  s/C/sound = 0 events, 0.0 % active  (seq 120, sampled at hlc 6805049, simulated)
+[  3.36s]   v=6805096.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 120, sampled at hlc 6805049, simulated)
+[  3.36s]   v=6715084.1@A  h/C/sound/1 = 0 events, 0.0 % active  (seq 117, sampled at hlc 6715049, simulated)
+[  3.36s]   v=6745090.1@A  h/C/sound/2 = 4 events, 3.5 % active  (seq 118, sampled at hlc 6745049, simulated)
+[  3.36s]   v=6775079.1@A  h/C/sound/3 = 6 events, 6.8 % active  (seq 119, sampled at hlc 6775049, simulated)
+[  3.36s]   v=6788651.1@C  s/A/light = 562.848 lux  (seq 227, sampled at hlc 6788645, simulated)
+[  3.36s]   v=40148.1@A (drop pending)  x = "1"
+[  3.37s]   v=3245024.1@C (drop pending)  y = "2"
+[  3.37s]   v=3948021.1@A (drop pending)  k11 = "hello-ac"
+[  3.37s]   v=3957822.1@C (drop pending)  k6 = "cb-key"
+[  3.37s]   v=3962062.1@C (drop pending)  k4 = "b-key"
+[  3.37s]   v=6812401.1@D  s/D/temp = 23.373 degC  (seq 14, sampled at hlc 6812401, simulated)
+[  3.37s]   v=6601971.1@D  h/D/temp/0 = 25.140 degC  (seq 12, sampled at hlc 6601956, simulated)
+[  3.37s]   v=6631973.1@A  h/D/temp/1 = 25.766 degC  (seq 13, sampled at hlc 6631956, simulated)
+[  3.37s]   v=6812467.1@A  h/D/temp/2 = 23.373 degC  (seq 14, sampled at hlc 6812401, simulated)
+[  3.42s]   v=6571970.1@A  h/D/temp/3 = 25.496 degC  (seq 11, sampled at hlc 6571956, simulated)
+[  3.42s]   v=6663219.1@C  k2 = "down-1"
+[  3.42s]   v=6674842.1@A  k8 = "down-6"
+[  3.42s]   v=6677147.1@A  k9 = "down-7"
+[  3.42s]   v=6665607.1@C  k3 = "down-2"
+[  3.42s]   v=6667924.1@C  k24 = "down-3"
+[  3.42s]   v=6670241.1@C  k18 = "down-4"
+[  3.42s]   v=6672538.1@C  k19 = "down-5"
+[  3.42s] 27 key(s); log 6332/16064 bytes used
+[  4.88s >>> get k2]
+[  4.93s] > get k2
+[  4.93s] k2 = "down-1"
+[  4.93s]    (served by D, 1 attempt(s), 0 ms)
+[  6.39s >>> get k9]
+[  6.44s] > get k9
+[  6.44s] k9 = "down-7"
+[  6.44s]    (served by D, 1 attempt(s), 0 ms)
+[  7.89s >>> stats]
+[  7.90s] > stats
+[  7.90s] radio   rx 281 (invalid 0, spoofed 0)  tx 131 (failed 0)
+[  7.90s] hb      tx 89  rx 184   membership changes 3
+[  7.90s] server  executed 6  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  7.90s] repl    started 3  ok 3  failed 0  stale 0   as replica: applied 1 stale 0
+[  7.90s] ae      rounds 6  chunks tx 35 rx 54  tables 7  pushes 0  resync tx 0 applied 19 stale 17
+[  7.90s] gc      orphans 6  tombstones 0  keys dropped 0
+[  7.90s] client  ok 5  failed 0  attempts 5  local 4
+[  7.90s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[  7.95s] env node-d, built Oct 19 2026 07:13:24, reset reason: power-on
+[  7.95s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[  7.95s] esp-now rx 281  queue overflows 0  unknown MAC 0
+[  7.95s] esp-now tx -> A: 3 delivered, 0 failed (MAC-layer ACK)
+[  7.95s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  7.95s] esp-now tx -> C: 4 delivered, 0 failed (MAC-layer ACK)
+[  7.95s] heap free 179056 (min 170232)  node task stack headroom 13336 bytes
+[  7.95s] eeprom page writes since boot: total 63, hottest page 98 with 5 (rated 1000000)
+
+# after rejoin, A:
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.56s] node A  state ACTIVE  view A-CD  uptime 6453s
+[  1.56s] hlc 6846493.0
+[  1.56s] storage recovered: 28 live, 0 tombstones, 28/64 keys, log 3410/16064 bytes, bank B, 3 compactions
+[  1.56s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  1.56s] sensor light (simulated): on, 215 samples, last 577.168 lux seq 228, 244 ok, 186 under-replicated, 0 failed, 0 read failures
+[  2.71s >>> stats]
+[  2.72s] > stats
+[  2.72s] radio   rx 10108 (invalid 0, spoofed 0)  tx 15526 (failed 0)
+[  2.72s] hb      tx 12901  rx 8004   membership changes 29
+[  2.72s] server  executed 431  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  2.72s] repl    started 237  ok 237  failed 0  stale 0   as replica: applied 265 stale 0
+[  2.72s] ae      rounds 645  chunks tx 1789 rx 1335  tables 360  pushes 71  resync tx 71 applied 4 stale 0
+[  2.72s] gc      orphans 10  tombstones 0  keys dropped 2
+[  2.72s] client  ok 446  failed 0  attempts 446  local 307
+[  2.72s] storage errors 0  compactions 3 (aborted 0)  faults injected 0
+[  2.72s] env node-a, built Oct 19 2026 06:54:24, reset reason: power-on
+[  2.72s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[  2.72s] esp-now rx 10108  queue overflows 0  unknown MAC 0
+[  2.72s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  2.72s] esp-now tx -> C: 723 delivered, 0 failed (MAC-layer ACK)
+[  2.72s] esp-now tx -> D: 113 delivered, 0 failed (MAC-layer ACK)
+[  2.72s] heap free 176936 (min 168212)  node task stack headroom 13208 bytes
+[  2.77s] eeprom page writes since boot: total 3622, hottest page 263 with 14 (rated 1000000)
+[  2.77s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+
+# after rejoin, C:
+[  0.00s port open]
+[  0.30s >>> ]
+[  1.51s >>> status]
+[  1.56s] > status
+[  1.56s] node C  state ACTIVE  view A-CD  uptime 3009s
+[  1.56s] hlc 6850924.0
+[  1.56s] storage recovered: 28 live, 0 tombstones, 28/64 keys, log 4158/16064 bytes, bank A, 2 compactions
+[  1.56s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[  1.56s] sensor sound (simulated): on, 100 samples, last 1 events, 1.0 % active seq 121, 200 ok, 0 under-replicated, 0 failed, 0 read failures
+[  2.71s >>> stats]
+[  2.72s] > stats
+[  2.72s] radio   rx 8551 (invalid 0, spoofed 0)  tx 7637 (failed 0)
+[  2.72s] hb      tx 6007  rx 6677   membership changes 14
+[  2.72s] server  executed 196  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[  2.72s] repl    started 191  ok 191  failed 0  stale 0   as replica: applied 204 stale 0
+[  2.72s] ae      rounds 302  chunks tx 975 rx 1225  tables 304  pushes 34  resync tx 34 applied 28 stale 0
+[  2.72s] gc      orphans 35  tombstones 0  keys dropped 12
+[  2.72s] client  ok 208  failed 0  attempts 208  local 89
+[  2.77s] storage errors 0  compactions 2 (aborted 0)  faults injected 0
+[  2.77s] env node-c, built Oct 19 2026 07:13:56, reset reason: power-on
+[  2.77s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[  2.77s] esp-now rx 8551  queue overflows 0  unknown MAC 0
+[  2.77s] esp-now tx -> A: 559 delivered, 0 failed (MAC-layer ACK)
+[  2.77s] esp-now tx -> B: 0 delivered, 0 failed (MAC-layer ACK)
+[  2.77s] esp-now tx -> D: 96 delivered, 0 failed (MAC-layer ACK)
+[  2.77s] heap free 178912 (min 170088)  node task stack headroom 13336 bytes
+[  2.77s] eeprom page writes since boot: total 2288, hottest page 9 with 7 (rated 1000000)

@@ -185,6 +185,10 @@ void on_send(
 
 } // namespace
 
+const std::uint8_t* configured_mac(node::Id id)
+{
+    return mac_for_node(id);
+}
 
 Result EspNowTransport::begin(
     node::Id local_node

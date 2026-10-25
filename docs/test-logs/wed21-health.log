@@ -1,0 +1,463 @@
+# Wed 21 06:49-06:52 health check after the overnight power-off: status, stats, members on A, B, C, D; then dump on each. Seconds since port open.
+# All four booted ~06:44-06:46 (uptime 230-330 s at 06:50). A has the BH1750 (GY-302) on its I2C bus with the EEPROM, REAL_SENSOR_NODES still 0x00.
+
+[   0.00s port open, node A, Wed 21 06:49:55]
+[   0.05s] >  anti-entropy: la19 [A] ar0 (STORAGE_ERROR)
+[   0.05s] unknown command ' anti-entropy:' (try 'help')
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node A  state ACTIVE  view ABCD  uptime 330s
+[   1.36s] hlc 20509898.0
+[   1.36s] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 3162/16064 bytes, bank A, 1 compactions
+[   1.36s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[   1.36s] sensor light (simulated): on, 11 samples, last 609.064 lux seq 582, 16 ok, 6 under-replicated, 0 failed, 0 read failures
+[   3.31s >>> stats]
+[   3.37s] > stats
+[   3.37s] radio   rx 2475 (invalid 0, spoofed 0)  tx 1230 (failed 0)
+[   3.37s] hb      tx 656  rx 1397   membership changes 4
+[   3.37s] server  executed 14  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   3.37s] repl    started 7  ok 7  failed 0  stale 0   as replica: applied 21 stale 0
+[   3.37s] ae      rounds 33  chunks tx 373 rx 947  tables 68  pushes 159  resync tx 159 applied 13 stale 0
+[   3.37s] gc      orphans 13  tombstones 0  keys dropped 13
+[   3.37s] client  ok 23  failed 0  attempts 23  local 12
+[   3.37s] storage errors 77  compactions 1 (aborted 1)  faults injected 0
+[   3.37s] env node-a, built Oct 20 2026 15:46:27, reset reason: power-on
+[   3.37s] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+[   3.37s] esp-now rx 2475  queue overflows 0  unknown MAC 0
+[   3.37s] esp-now tx -> B: 42 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> C: 16 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> D: 143 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] heap free 176888 (min 168164)  node task stack headroom 13176 bytes
+[   3.37s] eeprom page writes since boot: total 770, hottest page 10 with 7 (rated 1000000)
+[   3.37s] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+[   5.33s >>> members]
+[   5.39s] > members
+[   5.39s]   A  self    ACTIVE
+[   5.39s]   B  alive   last heard 414 ms ago, 466 heartbeats
+[   5.39s]   C  alive   last heard 258 ms ago, 423 heartbeats
+[   5.39s]   D  alive   last heard 924 ms ago, 519 heartbeats
+
+[   0.00s port open, node B, Wed 21 06:50:02]
+[   1.31s >>> status]
+[   1.36s] 
+[   1.36s] edge-kv firmware, node B
+[   1.36s] env node-b, built Oct 20 2026 15:46:38, reset reason: power-on
+[   1.36s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[   1.36s]      2.083 [B] storage recovered: 51 live, 0 tombstones, 8285/16064 log bytes used
+[   1.36s]      2.086 [B] state -> BOOTING
+[   1.36s] sensor motion: simulated (REAL_SENSOR_NODES)
+[   1.36s] 
+[   1.36s] edge-kv node B  (4-node ESP-NOW KV store, RF=2)
+[   1.36s] type 'help' for commands
+[   1.36s]      2.086 [B] view: AB-D
+[   1.36s]      4.209 [B] state -> CATCHUP
+[   1.36s]      4.231 [B] anti-entropy: key h/A/light/1 repaired from A
+[   1.36s]      4.631 [B] anti-entropy: key h/B/motion/1 repaired from D
+[   1.36s]      4.646 [B] anti-entropy: key s/A/light repaired from A
+[   1.36s]      4.668 [B] anti-entropy: key k19 repaired from D
+[   1.36s]      4.676 [B] anti-entropy: key x repaired from A
+[   1.36s]      4.710 [B] anti-entropy: key m9/D/3 repaired from D
+[   1.36s]      4.718 [B] anti-entropy: key k11 repaired from A
+[   1.36s]      4.748 [B] anti-entropy: key fo/1 repaired from D
+[   1.36s]      4.756 [B] anti-entropy: key z repaired from A
+[   1.36s]      4.788 [B] anti-entropy: key m9/B/0 repaired from D
+[   1.36s]      4.796 [B] anti-entropy: key lat/B/1 repaired from A
+[   1.36s]      4.829 [B] anti-entropy: key fo/2 repaired from D
+[   1.36s]      4.838 [B] anti-entropy: key lat/B/2 repaired from A
+[   1.36s]      4.869 [B] anti-entropy: key fo/3 repaired from D
+[   1.36s]      4.869 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+[   1.36s]      4.897 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+[   1.36s]      4.936 [B] anti-entropy: fo/14 from A failed (STORAGE_ERROR)
+[   1.36s]      4.976 [B] anti-entropy: fo/15 from A failed (STORAGE_ERROR)
+[   1.36s]      5.016 [B] anti-entropy: fo/16 from A failed (STORAGE_ERROR)
+[   1.36s]      5.056 [B] anti-entropy: fo/17 from A failed (STORAGE_ERROR)
+[   1.36s]      6.131 [B] anti-entropy: key s/A/light repaired from A
+[   1.36s]      6.196 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+[   1.36s]      6.236 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+[   1.36s]      6.275 [B] anti-entropy: fo/14 from A failed (STORAGE_ERROR)
+[   1.36s]      6.316 [B] anti-entropy: fo/15 from A failed (STORAGE_ERROR)
+[   1.36s]      6.355 [B] anti-entropy: fo/16 from A failed (STORAGE_ERROR)
+[   1.36s]      6.396 [B] anti-entropy: fo/17 from A failed (STORAGE_ERROR)
+[   1.36s]      7.209 [B] state -> ACTIVE
+[   1.36s]     11.171 [B] anti-entropy: key s/D/temp repaired from A
+[   1.36s]     21.596 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+[   1.36s]     21.639 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+[   1.36s]     21.679 [B] anti-entropy: fo/14 from A failed (STORAGE_ERROR)
+[   1.36s]     21.716 [B] anti-entropy: fo/15 from A failed (STORAGE_ERROR)
+[   1.36s]     21.759 [B] anti-entropy: fo/16 from A failed (STORAGE_ERROR)
+[   1.36s]     21.796 [B] anti-entropy: fo/17 from A failed (STORAGE_ERROR)
+[   1.36s]     31.596 [B] anti-entropy: lat/B/3 from A failed (STORAGE_ERROR)
+[   1.36s]     31.636 [B] anti-entropy: m9/C/6 from A failed (STORAGE_ERROR)
+[   1.36s]     31.677 [B] anti-entropy: fo/14 from A failed (STORAGE_ERROR)
+[   1.36s]     31.716 [B] anti-entropy: fo/15 from A failed (STORAGE_ERROR)
+[   1.36s]     31.755 [B] anti-entropy: fo/16 from A failed (STORAGE_ERROR)
+[   1.36s]     31.796 [B] anti-entropy: fo/17 from A failed (STORAGE_ERROR)
+[   1.36s]     32.416 [B] view: ABCD
+[   1.36s]     37.210 [B] gc: 13 key(s) marked for drop (orphans 13, tombstones 0 total)
+[   1.36s]     37.210 [B] compaction started (6951 bytes free)
+[   1.36s]     40.094 [B] compaction #1 done: bank A, 51 keys, 14070 bytes free
+[   1.36s] > status
+[   1.36s] node B  state ACTIVE  view ABCD  uptime 248s
+[   1.36s] hlc 20517429.0
+[   1.36s] storage recovered: 51 live, 0 tombstones, 51/64 keys, log 3642/16064 bytes, bank A, 1 compactions
+[   1.36s] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+[   1.36s] sensor motion (simulated): on, 8 samples, last 2 events, last motion 27 s before the sample seq 332, 16 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.32s >>> stats]
+[   3.37s] > stats
+[   3.37s] radio   rx 2452 (invalid 0, spoofed 0)  tx 894 (failed 0)
+[   3.37s] hb      tx 486  rx 1419   membership changes 2
+[   3.37s] server  executed 30  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   3.37s] repl    started 29  ok 29  failed 0  stale 0   as replica: applied 3 stale 0
+[   3.37s] ae      rounds 26  chunks tx 294 rx 916  tables 71  pushes 43  resync tx 43 applied 16 stale 6
+[   3.37s] gc      orphans 13  tombstones 0  keys dropped 13
+[   3.37s] client  ok 17  failed 0  attempts 17  local 4
+[   3.37s] storage errors 24  compactions 1 (aborted 0)  faults injected 0
+[   3.37s] env node-b, built Oct 20 2026 15:46:38, reset reason: power-on
+[   3.37s] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+[   3.37s] esp-now rx 2452  queue overflows 0  unknown MAC 0
+[   3.37s] esp-now tx -> A: 14 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> C: 26 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> D: 74 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] heap free 178864 (min 170040)  node task stack headroom 13320 bytes
+[   3.37s] eeprom page writes since boot: total 775, hottest page 9 with 7 (rated 1000000)
+[   5.33s >>> members]
+[   5.38s] > members
+[   5.38s]   A  alive   last heard 196 ms ago, 493 heartbeats
+[   5.38s]   B  self    ACTIVE
+[   5.38s]   C  alive   last heard 287 ms ago, 440 heartbeats
+[   5.38s]   D  alive   last heard 453 ms ago, 498 heartbeats
+
+[   0.00s port open, node C, Wed 21 06:50:10]
+[   1.47s >>> status]
+[   1.52s] 
+[   1.52s] edge-kv firmware, node C
+[   1.52s] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+[   1.52s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[   1.52s]      2.097 [C] storage recovered: 62 live, 0 tombstones, 8513/16064 log bytes used
+[   1.52s]      2.100 [C] state -> BOOTING
+[   1.52s] sensor sound: simulated (REAL_SENSOR_NODES)
+[   1.52s] 
+[   1.52s] edge-kv node C  (4-node ESP-NOW KV store, RF=2)
+[   1.52s] type 'help' for commands
+[   1.52s]      2.100 [C] view: ABCD
+[   1.52s]      4.210 [C] state -> CATCHUP
+[   1.52s]      4.393 [C] anti-entropy: key s/B/motion repaired from D
+[   1.52s]      4.433 [C] anti-entropy: key h/B/motion/1 repaired from D
+[   1.52s]      4.541 [C] anti-entropy: key s/A/light repaired from B
+[   1.52s]      7.210 [C] state -> ACTIVE
+[   1.52s] > status
+[   1.52s] node C  state ACTIVE  view ABCD  uptime 230s
+[   1.52s] hlc 20524584.0
+[   1.52s] storage recovered: 62 live, 0 tombstones, 62/64 keys, log 9837/16064 bytes, bank A, 0 compactions
+[   1.52s] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+[   1.52s] sensor sound (simulated): on, 7 samples, last 5 events, 4.6 % active seq 515, 13 ok, 1 under-replicated, 0 failed, 0 read failures
+[   3.48s >>> stats]
+[   3.53s] > stats
+[   3.53s] radio   rx 2237 (invalid 0, spoofed 0)  tx 825 (failed 0)
+[   3.53s] hb      tx 450  rx 1371   membership changes 1
+[   3.53s] server  executed 18  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+[   3.53s] repl    started 18  ok 18  failed 0  stale 0   as replica: applied 4 stale 0
+[   3.53s] ae      rounds 25  chunks tx 320 rx 805  tables 63  pushes 0  resync tx 0 applied 3 stale 3
+[   3.53s] gc      orphans 0  tombstones 0  keys dropped 0
+[   3.53s] client  ok 15  failed 0  attempts 15  local 0
+[   3.53s] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+[   3.53s] env node-c, built Oct 20 2026 15:46:48, reset reason: power-on
+[   3.53s] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+[   3.53s] esp-now rx 2237  queue overflows 0  unknown MAC 0
+[   3.53s] esp-now tx -> A: 16 delivered, 0 failed (MAC-layer ACK)
+[   3.53s] esp-now tx -> B: 26 delivered, 0 failed (MAC-layer ACK)
+[   3.53s] esp-now tx -> D: 13 delivered, 0 failed (MAC-layer ACK)
+[   3.53s] heap free 178864 (min 170040)  node task stack headroom 13560 bytes
+[   3.53s] eeprom page writes since boot: total 71, hottest page 145 with 4 (rated 1000000)
+[   5.50s >>> members]
+[   5.55s] > members
+[   5.55s]   A  alive   last heard 1340 ms ago, 459 heartbeats
+[   5.55s]   B  alive   last heard 87 ms ago, 462 heartbeats
+[   5.55s]   C  self    ACTIVE
+[   5.55s]   D  alive   last heard 84 ms ago, 460 heartbeats
+
+[   0.00s port open, node D, Wed 21 06:50:17]
+[   0.05s] rom B failed (STORAGE_ERROR)
+[   0.05s]    283.351 [D] anti-entropy: m9/C/4 from B failed (STORAGE_ERROR)
+[   0.05s] > rom A failed (ST key(s) marked f
+[   0.05s] unknown command 'rom' (try 'help')
+[   1.31s >>> status]
+[   1.36s] > status
+[   1.36s] node D  state ACTIVE  view ABCD  uptime 286s
+[   1.36s] hlc 20532078.0
+[   1.36s] storage recovered: 64 live, 0 tombstones, 64/64 keys, log 5046/16064 bytes, bank A, 4 compactions
+[   1.36s] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+[   1.36s] sensor temp (simulated): on, 9 samples, last 25.140 degC seq 424, 18 ok, 0 under-replicated, 0 failed, 0 read failures
+[   3.32s >>> stats]
+[   3.37s] > stats
+[   3.37s] radio   rx 2733 (invalid 0, spoofed 0)  tx 1129 (failed 0)
+[   3.37s] hb      tx 563  rx 1536   membership changes 3
+[   3.37s] server  executed 16  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+[   3.37s] repl    started 14  ok 12  failed 2  stale 0   as replica: applied 38 stale 0
+[   3.37s] ae      rounds 30  chunks tx 390 rx 950  tables 71  pushes 97  resync tx 97 applied 9 stale 0
+[   3.37s] gc      orphans 4  tombstones 0  keys dropped 4
+[   3.37s] client  ok 19  failed 0  attempts 19  local 5
+[   3.37s] storage errors 159  compactions 4 (aborted 0)  faults injected 0
+[   3.37s] env node-d, built Oct 20 2026 15:38:19, reset reason: power-on
+[   3.37s] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+[   3.37s] esp-now rx 2733  queue overflows 0  unknown MAC 0
+[   3.37s] esp-now tx -> A: 108 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> B: 52 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] esp-now tx -> C: 16 delivered, 0 failed (MAC-layer ACK)
+[   3.37s] heap free 179008 (min 170180)  node task stack headroom 13320 bytes
+[   3.37s] eeprom page writes since boot: total 2873, hottest page 19 with 14 (rated 1000000)
+[   5.33s >>> members]
+[   5.39s] > members
+[   5.39s]   A  alive   last heard 371 ms ago, 570 heartbeats
+[   5.39s]   B  alive   last heard 53 ms ago, 511 heartbeats
+[   5.39s]   C  alive   last heard 397 ms ago, 467 heartbeats
+[   5.39s]   D  self    ACTIVE
+
+# dump on each node
+
+[   0.00s port open, node A, Wed 21 06:51:02]
+[   1.31s >>> dump]
+[   1.36s] > dump
+[   1.36s]   v=20574781.1@C  s/A/light = 565.180 lux  (seq 585, sampled at hlc 20574778, simulated)
+[   1.36s]   v=20544797.1@D  h/A/light/0 = 547.327 lux  (seq 584, sampled at hlc 20544778, simulated)
+[   1.36s]   v=40148.1@A  x = "1"
+[   1.36s]   v=20484779.2@A  h/A/light/2 = 609.064 lux  (seq 582, sampled at hlc 20484778, simulated)
+[   1.36s]   v=20514779.2@A  h/A/light/3 = 593.988 lux  (seq 583, sampled at hlc 20514778, simulated)
+[   1.36s]   v=20527740.1@D  h/C/sound/0 = 2 events, 1.4 % active  (seq 516, sampled at hlc 20527735, simulated)
+[   1.36s]   v=20557738.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 517, sampled at hlc 20557735, simulated)
+[   1.36s]   v=10562441.1@B  k14 = "from-b"
+[   1.36s]   v=10913643.1@A  k20 = "local"
+[   1.36s]   v=3948021.1@A  k11 = "hello-ac"
+[   1.36s]   v=20516326.1@D  h/D/temp/0 = 25.140 degC  (seq 424, sampled at hlc 20516324, simulated)
+[   1.36s]   v=6193158.1@A  z = "3"
+[   1.36s]   v=20546332.1@A  h/D/temp/1 = 25.766 degC  (seq 425, sampled at hlc 20546325, simulated)
+[   1.36s]   v=20576342.1@B  h/D/temp/2 = 25.726 degC  (seq 426, sampled at hlc 20576325, simulated)
+[   1.36s]   v=20486341.1@B  h/D/temp/3 = 25.496 degC  (seq 423, sampled at hlc 20486325, simulated)
+[   1.36s]   v=6674842.1@A  k8 = "down-6"
+[   1.36s]   v=9900928.1@A  kb1 = "from-b"
+[   1.36s]   v=0.1020@A  cmp_sensor = "30"
+[   1.36s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[   1.36s]   v=8496.0@A  phase6_100 = "99"
+[   1.36s]   v=20555034.1@D  h/B/motion/2 = 3 events, last motion 26 s before the sample  (seq 334, sampled at hlc 20555029, simulated)
+[   1.41s]   v=18075663.1@D  lat/A/6 = "v46"
+[   1.41s]   v=18086073.1@C  lat/B/1 = "v49"
+[   1.41s]   v=18085367.1@C  lat/B/2 = "v42"
+[   1.41s]   v=18085468.1@C  lat/B/3 = "v43"
+[   1.41s]   v=18085669.1@D  lat/B/5 = "v45"
+[   1.41s]   v=18085769.1@A  lat/B/6 = "v46"
+[   1.41s]   v=17874859.1@A  m9/C/2 = "v72"
+[   1.41s]   v=17850260.1@A  m9/C/5 = "v739"
+[   1.41s]   v=17850202.1@A  m9/D/5 = "v739"
+[   1.41s]   v=17860810.1@A  m9/C/7 = "v347"
+[   1.41s]   v=17860768.1@A  m9/D/7 = "v347"
+[   1.41s]   v=17840811.1@C  m9/C/6 = "v401"
+[   1.41s]   v=17867861.1@A  m9/C/4 = "v15"
+[   1.41s]   v=17840751.1@C  m9/D/6 = "v401"
+[   1.41s]   v=17867799.1@A  m9/D/4 = "v15"
+[   1.41s]   v=17863108.1@A  m9/C/3 = "v992"
+[   1.41s]   v=17855158.1@A  m9/D/1 = "v271"
+[   1.41s]   v=17858476.0@C  m9/D/0 = "v820"
+[   1.41s]   v=17855179.1@A  m9/B/1 = "v271"
+[   1.41s]   v=17863084.3@C  m9/B/3 = "v992"
+[   1.41s]   v=17874819.1@A  m9/B/2 = "v72"
+[   1.41s]   v=17850222.1@A  m9/B/5 = "v739"
+[   1.41s]   v=17860787.1@B  m9/B/7 = "v347"
+[   1.41s]   v=19236570.2@A  fo/14 = "while-down-2"
+[   1.41s]   v=17840771.0@A  m9/B/6 = "v401"
+[   1.41s]   v=17867818.1@A  m9/B/4 = "v15"
+[   1.41s]   v=19236670.2@A  fo/15 = "while-down-3"
+[   1.41s]   v=19236771.2@A  fo/16 = "while-down-4"
+[   1.41s]   v=19236872.2@A  fo/17 = "while-down-5"
+[   1.41s]   v=19237173.2@A  fo/43 = "while-down-8"
+[   1.41s] 51 key(s); log 3782/16064 bytes used
+
+[   0.00s port open, node B, Wed 21 06:51:08]
+[   1.32s >>> dump]
+[   1.37s] > dump
+[   1.37s]   v=18096001.1@B  lat/C/0 = "v48"
+[   1.37s]   v=20557736.2@B  s/C/sound = 0 events, 0.0 % active  (seq 517, sampled at hlc 20557735, simulated)
+[   1.37s]   v=20574781.1@B  h/A/light/1 = 565.180 lux  (seq 585, sampled at hlc 20574778, simulated)
+[   1.37s]   v=3245024.1@C  y = "2"
+[   1.37s]   v=3957822.1@C  k6 = "cb-key"
+[   1.37s]   v=20467751.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 514, sampled at hlc 20467735, simulated)
+[   1.37s]   v=18096102.1@B  lat/C/1 = "v49"
+[   1.37s]   v=20497751.1@B  h/C/sound/3 = 5 events, 4.6 % active  (seq 515, sampled at hlc 20497735, simulated)
+[   1.37s]   v=20576327.1@B  s/D/temp = 25.726 degC  (seq 426, sampled at hlc 20576325, simulated)
+[   1.37s]   v=20495031.1@B  h/B/motion/0 = 2 events, last motion 27 s before the sample  (seq 332, sampled at hlc 20495029, simulated)
+[   1.37s]   v=10567483.1@B  k9 = "from-c"
+[   1.37s]   v=20546332.1@A  h/D/temp/1 = 25.766 degC  (seq 425, sampled at hlc 20546325, simulated)
+[   1.37s]   v=6670241.1@C  k18 = "down-4"
+[   1.37s]   v=20576342.1@B  h/D/temp/2 = 25.726 degC  (seq 426, sampled at hlc 20576325, simulated)
+[   1.37s]   v=20465031.1@B  h/B/motion/3 = 0 events, last motion 42 s before the sample  (seq 331, sampled at hlc 20465029, simulated)
+[   1.37s]   v=20486341.1@B  h/D/temp/3 = 25.496 degC  (seq 423, sampled at hlc 20486325, simulated)
+[   1.37s]   v=18095396.1@B  lat/C/2 = "v42"
+[   1.37s]   v=18095495.1@B  lat/C/3 = "v43"
+[   1.37s]   v=18095596.1@D  lat/C/4 = "v44"
+[   1.37s]   v=9900928.1@A  kb1 = "from-b"
+[   1.37s]   v=18095697.1@B  lat/C/5 = "v45"
+[   1.37s]   v=18095798.1@D  lat/C/6 = "v46"
+[   1.37s]   v=18095899.1@D  lat/C/7 = "v47"
+[   1.37s]   v=18106123.1@D  lat/D/0 = "v48"
+[   1.37s]   v=18106224.1@D  lat/D/1 = "v49"
+[   1.42s]   v=18105521.1@B  lat/D/2 = "v42"
+[   1.42s]   v=18105623.0@B  lat/D/3 = "v43"
+[   1.42s]   v=18105723.1@C  lat/D/4 = "v44"
+[   1.42s]   v=18105823.0@B  lat/D/5 = "v45"
+[   1.42s]   v=18105921.1@D  lat/D/6 = "v46"
+[   1.42s]   v=18106023.1@D  lat/D/7 = "v47"
+[   1.42s]   v=17863124.0@C  m9/A/3 = "v992"
+[   1.42s]   v=10562441.1@B  k14 = "from-b"
+[   1.42s]   v=10913643.1@A  k20 = "local"
+[   1.42s]   v=17855209.1@B  m9/A/1 = "v271"
+[   1.42s]   v=17858517.1@B  m9/A/0 = "v820"
+[   1.42s]   v=17855200.1@B  m9/C/1 = "v271"
+[   1.42s]   v=17863108.1@A  m9/C/3 = "v992"
+[   1.42s]   v=17858526.1@B  m9/C/0 = "v820"
+[   1.42s]   v=17874796.1@B  m9/D/2 = "v72"
+[   1.42s]   v=17874859.1@A  m9/C/2 = "v72"
+[   1.42s]   v=17850260.1@A  m9/C/5 = "v739"
+[   1.42s]   v=17860810.1@A  m9/C/7 = "v347"
+[   1.42s]   v=17867861.1@A  m9/C/4 = "v15"
+[   1.42s]   v=17874847.2@C  m9/A/2 = "v72"
+[   1.42s]   v=17850248.3@C  m9/A/5 = "v739"
+[   1.42s]   v=17860787.1@B  m9/B/7 = "v347"
+[   1.42s]   v=17860837.2@B  m9/A/7 = "v347"
+[   1.42s]   v=17840798.2@C  m9/A/6 = "v401"
+[   1.42s]   v=17867843.2@C  m9/A/4 = "v15"
+[   1.42s]   v=19237273.1@B  fo/50 = "while-down-9"
+[   1.42s] 51 key(s); log 4030/16064 bytes used
+
+[   0.00s port open, node C, Wed 21 06:51:13]
+[   1.31s >>> dump]
+[   1.36s] > dump
+[   1.36s]   v=20574781.1@C  s/A/light = 565.180 lux  (seq 585, sampled at hlc 20574778, simulated)
+[   1.36s]   v=40148.1@A  x = "1"
+[   1.36s]   v=3245024.1@C  y = "2"
+[   1.36s]   v=3948021.1@A  k11 = "hello-ac"
+[   1.36s]   v=3957822.1@C  k6 = "cb-key"
+[   1.36s]   v=18075864.1@D  lat/A/0 = "v48"
+[   1.36s]   v=6193158.1@A  z = "3"
+[   1.36s]   v=18075965.1@D  lat/A/1 = "v49"
+[   1.36s]   v=18075261.1@D  lat/A/2 = "v42"
+[   1.36s]   v=18075361.1@D  lat/A/3 = "v43"
+[   1.36s]   v=18075462.1@D  lat/A/4 = "v44"
+[   1.36s]   v=18075564.1@D  lat/A/5 = "v45"
+[   1.36s]   v=18075763.1@C  lat/A/7 = "v47"
+[   1.36s]   v=18085972.1@D  lat/B/0 = "v48"
+[   1.36s]   v=18086073.1@C  lat/B/1 = "v49"
+[   1.36s]   v=18085367.1@C  lat/B/2 = "v42"
+[   1.36s]   v=18085468.1@C  lat/B/3 = "v43"
+[   1.36s]   v=18085568.1@C  lat/B/4 = "v44"
+[   1.36s]   v=6665607.1@C  k3 = "down-2"
+[   1.36s]   v=6667924.1@C  k24 = "down-3"
+[   1.36s]   v=6672538.1@C  k19 = "down-5"
+[   1.36s]   v=0.1050@A  cmp_marker = "DONE"
+[   1.36s]   v=20585033.1@C  s/B/motion = 1 events, last motion 17 s before the sample  (seq 335, sampled at hlc 20585029, simulated)
+[   1.36s]   v=20495031.1@B  h/B/motion/0 = 2 events, last motion 27 s before the sample  (seq 332, sampled at hlc 20495029, simulated)
+[   1.36s]   v=20525049.0@C  h/B/motion/1 = 3 events, last motion 18 s before the sample  (seq 333, sampled at hlc 20525029, simulated)
+[   1.36s]   v=20585031.1@B  h/B/motion/3 = 1 events, last motion 17 s before the sample  (seq 335, sampled at hlc 20585029, simulated)
+[   1.36s]   v=18085873.1@D  lat/B/7 = "v47"
+[   1.41s]   v=18105723.1@C  lat/D/4 = "v44"
+[   1.41s]   v=17855158.1@A  m9/D/1 = "v271"
+[   1.41s]   v=17863061.1@D  m9/D/3 = "v992"
+[   1.41s]   v=17858476.0@C  m9/D/0 = "v820"
+[   1.41s]   v=17874796.1@B  m9/D/2 = "v72"
+[   1.41s]   v=17850202.1@A  m9/D/5 = "v739"
+[   1.41s]   v=17860768.1@A  m9/D/7 = "v347"
+[   1.41s]   v=17840811.1@C  m9/C/6 = "v401"
+[   1.41s]   v=17840751.1@C  m9/D/6 = "v401"
+[   1.41s]   v=17867799.1@A  m9/D/4 = "v15"
+[   1.41s]   v=17863124.0@C  m9/A/3 = "v992"
+[   1.41s]   v=17863084.3@C  m9/B/3 = "v992"
+[   1.41s]   v=17855209.1@B  m9/A/1 = "v271"
+[   1.41s]   v=17858498.1@D  m9/B/0 = "v820"
+[   1.41s]   v=17858517.1@B  m9/A/0 = "v820"
+[   1.41s]   v=17874819.1@A  m9/B/2 = "v72"
+[   1.41s]   v=17874847.2@C  m9/A/2 = "v72"
+[   1.41s]   v=17850222.1@A  m9/B/5 = "v739"
+[   1.41s]   v=17850248.3@C  m9/A/5 = "v739"
+[   1.41s]   v=17860837.2@B  m9/A/7 = "v347"
+[   1.41s]   v=17840771.0@A  m9/B/6 = "v401"
+[   1.41s]   v=17840798.2@C  m9/A/6 = "v401"
+[   1.41s]   v=17867818.1@A  m9/B/4 = "v15"
+[   1.41s]   v=17867843.2@C  m9/A/4 = "v15"
+[   1.41s]   v=18566026.1@C  fo/1 = "before"
+[   1.41s]   v=19236570.2@A  fo/14 = "while-down-2"
+[   1.41s]   v=19236363.1@D  fo/2 = "while-down-0"
+[   1.41s]   v=19236670.2@A  fo/15 = "while-down-3"
+[   1.41s]   v=19236470.1@D  fo/3 = "while-down-1"
+[   1.46s]   v=19236771.2@A  fo/16 = "while-down-4"
+[   1.46s]   v=19236973.1@D  fo/22 = "while-down-6"
+[   1.46s]   v=19236872.2@A  fo/17 = "while-down-5"
+[   1.46s]   v=19237074.1@D  fo/38 = "while-down-7"
+[   1.46s]   v=19237173.2@A  fo/43 = "while-down-8"
+[   1.46s]   v=19237273.1@B  fo/50 = "while-down-9"
+[   1.46s] 62 key(s); log 10244/16064 bytes used
+
+[   0.00s port open, node D, Wed 21 06:51:18]
+[   1.31s >>> dump]
+[   1.36s] > dump
+[   1.36s]   v=20544797.1@D  h/A/light/0 = 547.327 lux  (seq 584, sampled at hlc 20544778, simulated)
+[   1.36s]   v=20574781.1@B  h/A/light/1 = 565.180 lux  (seq 585, sampled at hlc 20574778, simulated)
+[   1.36s]   v=20484779.2@A  h/A/light/2 = 609.064 lux  (seq 582, sampled at hlc 20484778, simulated)
+[   1.36s]   v=20514779.2@A  h/A/light/3 = 593.988 lux  (seq 583, sampled at hlc 20514778, simulated)
+[   1.36s]   v=20587736.2@B  s/C/sound = 0 events, 0.0 % active  (seq 518, sampled at hlc 20587735, simulated)
+[   1.36s]   v=20527740.1@D  h/C/sound/0 = 2 events, 1.4 % active  (seq 516, sampled at hlc 20527735, simulated)
+[   1.36s]   v=20557738.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 517, sampled at hlc 20557735, simulated)
+[   1.36s]   v=20587751.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 518, sampled at hlc 20587735, simulated)
+[   1.36s]   v=20497751.1@B  h/C/sound/3 = 5 events, 4.6 % active  (seq 515, sampled at hlc 20497735, simulated)
+[   1.36s]   v=20576327.1@B  s/D/temp = 25.726 degC  (seq 426, sampled at hlc 20576325, simulated)
+[   1.36s]   v=20516326.1@D  h/D/temp/0 = 25.140 degC  (seq 424, sampled at hlc 20516324, simulated)
+[   1.36s]   v=20585033.1@C  s/B/motion = 1 events, last motion 17 s before the sample  (seq 335, sampled at hlc 20585029, simulated)
+[   1.36s]   v=18075864.1@D  lat/A/0 = "v48"
+[   1.36s]   v=20525049.0@C  h/B/motion/1 = 3 events, last motion 18 s before the sample  (seq 333, sampled at hlc 20525029, simulated)
+[   1.36s]   v=18075965.1@D  lat/A/1 = "v49"
+[   1.36s]   v=6674842.1@A  k8 = "down-6"
+[   1.36s]   v=10567483.1@B  k9 = "from-c"
+[   1.36s]   v=6665607.1@C  k3 = "down-2"
+[   1.36s]   v=6667924.1@C  k24 = "down-3"
+[   1.41s]   v=6670241.1@C  k18 = "down-4"
+[   1.41s]   v=6672538.1@C  k19 = "down-5"
+[   1.41s]   v=20555034.1@D  h/B/motion/2 = 3 events, last motion 26 s before the sample  (seq 334, sampled at hlc 20555029, simulated)
+[   1.41s]   v=18075261.1@D  lat/A/2 = "v42"
+[   1.41s]   v=18075361.1@D  lat/A/3 = "v43"
+[   1.41s]   v=18075462.1@D  lat/A/4 = "v44"
+[   1.41s]   v=18075564.1@D  lat/A/5 = "v45"
+[   1.41s]   v=18075663.1@D  lat/A/6 = "v46"
+[   1.41s]   v=18075763.1@C  lat/A/7 = "v47"
+[   1.41s]   v=0.1020@A  cmp_sensor = "30"
+[   1.41s]   v=18085972.1@D  lat/B/0 = "v48"
+[   1.41s]   v=0.1050@A  cmp_marker = "DONE"
+[   1.41s]   v=18085568.1@C  lat/B/4 = "v44"
+[   1.41s]   v=8340.24@A  hlc_probe = 0x0000000020940018 (8 bytes)
+[   1.41s]   v=18085669.1@D  lat/B/5 = "v45"
+[   1.41s]   v=8496.0@A  phase6_100 = "99"
+[   1.41s]   v=18085769.1@A  lat/B/6 = "v46"
+[   1.41s]   v=18085873.1@D  lat/B/7 = "v47"
+[   1.41s]   v=18096001.1@B  lat/C/0 = "v48"
+[   1.41s]   v=18096102.1@B  lat/C/1 = "v49"
+[   1.41s]   v=18095396.1@B  lat/C/2 = "v42"
+[   1.41s]   v=18095495.1@B  lat/C/3 = "v43"
+[   1.41s]   v=18095596.1@D  lat/C/4 = "v44"
+[   1.41s]   v=18095697.1@B  lat/C/5 = "v45"
+[   1.41s]   v=18095798.1@D  lat/C/6 = "v46"
+[   1.41s]   v=18095899.1@D  lat/C/7 = "v47"
+[   1.41s]   v=18106123.1@D  lat/D/0 = "v48"
+[   1.41s]   v=18106224.1@D  lat/D/1 = "v49"
+[   1.41s]   v=18105521.1@B  lat/D/2 = "v42"
+[   1.41s]   v=18105623.0@B  lat/D/3 = "v43"
+[   1.41s]   v=18105823.0@B  lat/D/5 = "v45"
+[   1.41s]   v=18105921.1@D  lat/D/6 = "v46"
+[   1.41s]   v=18106023.1@D  lat/D/7 = "v47"
+[   1.46s]   v=17855200.1@B  m9/C/1 = "v271"
+[   1.46s]   v=17858526.1@B  m9/C/0 = "v820"
+[   1.46s]   v=17863061.1@D  m9/D/3 = "v992"
+[   1.46s]   v=17855179.1@A  m9/B/1 = "v271"
+[   1.46s]   v=18566026.1@C  fo/1 = "before"
+[   1.46s]   v=17858498.1@D  m9/B/0 = "v820"
+[   1.46s]   v=19236363.1@D  fo/2 = "while-down-0"
+[   1.46s]   v=19236470.1@D  fo/3 = "while-down-1"
+[   1.46s]   v=19236973.1@D  fo/22 = "while-down-6"
+[   1.46s]   v=19237074.1@D  fo/38 = "while-down-7"
+[   1.46s] 62 key(s); log 3100/16064 bytes used
+

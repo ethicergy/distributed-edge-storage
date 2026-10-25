@@ -10,6 +10,7 @@ from typing import Callable, Dict, List, Optional
 
 from . import framing, protocol, reading
 from .protocol import COMMITTED, MessageType, Response, Status
+from .rawlog import RawLog
 
 
 class EdgeKVError(Exception):
@@ -47,16 +48,21 @@ class EdgeKV:
         timeout: float = 10.0,
         retries: int = 1,
         transport=None,
+        raw_log: Optional[RawLog] = None,
     ) -> None:
         if transport is None:
             import serial  # pyserial; imported lazily so tests need not have it
 
-            transport = serial.serial_for_url(port, baudrate=baudrate, timeout=0.05)
+            # Exclusive: a second edgekv on the same port fails at once
+            # instead of both stealing each other's answers.
+            options = {} if "://" in port else {"exclusive": True}
+            transport = serial.serial_for_url(port, baudrate=baudrate, timeout=0.05, **options)
 
         self._io = transport
         self._timeout = timeout
         self._retries = retries
-        self._decoder = framing.Decoder()
+        self._raw_log = raw_log
+        self._decoder = framing.Decoder(raw_log.add if raw_log is not None else None)
         self._next_id = random.randint(1, 0x7FFFFFFF)
         self.bridge_node: Optional[int] = None
         # wall-clock ms minus HLC physical ms, from the latest answer
@@ -65,6 +71,8 @@ class EdgeKV:
     # -------------------------------------------------- plumbing
 
     def close(self) -> None:
+        if self._raw_log is not None:
+            self._raw_log.close()
         self._io.close()
 
     def __enter__(self) -> "EdgeKV":
@@ -97,11 +105,16 @@ class EdgeKV:
                     if time.monotonic() - idle_since > 0.1:
                         envelopes = self._decoder.abandon_partial()
                         idle_since = time.monotonic()
+                        if self._raw_log is not None:
+                            self._raw_log.flush()
                     else:
                         continue
                 else:
                     idle_since = time.monotonic()
                     envelopes = self._decoder.feed(data)
+
+                if envelopes and self._raw_log is not None:
+                    self._raw_log.flush()
 
                 for envelope in envelopes:
                     try:

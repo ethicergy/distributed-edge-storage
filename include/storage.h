@@ -182,6 +182,10 @@ public:
     // written). Used for garbage collection decided by anti-entropy.
     Result mark_drop(std::size_t slot);
 
+    // Cause of the most recent failure of apply/set/remove/compaction/
+    // format; NONE after one of those succeeds.
+    Fault last_fault() const { return last_fault_; }
+
     bool drop_pending(std::size_t slot) const;
 
     Stats stats() const;
@@ -240,6 +244,13 @@ private:
     std::uint32_t compactions_aborted_ = 0;
     std::uint32_t keys_dropped_ = 0;
     BootKind boot_kind_ = BootKind::NONE;
+    mutable Fault last_fault_ = Fault::NONE;
+
+    Result fail(Result result, Fault fault) const
+    {
+        last_fault_ = fault;
+        return result;
+    }
 
     int find_index_entry(KeyView key) const;
 
