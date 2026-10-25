@@ -1,0 +1,1113 @@
+# Sun 25 remaining H-tests on the final firmware (-fi images, mask 0x0D). WSL clock = UTC (IST = UTC+5:30).
+01:49:15.385 [C] --- port open
+01:49:15.385 [D] --- port open
+01:49:15.386 [B] --- port open
+01:49:15.386 [A] --- port open
+01:49:15.536 [D]  31684.578 [D] compaction started (3070 bytes free)
+01:49:17.850 [D]  31687.020 [D] compaction #29 done: bank A, 14 keys, 15253 bytes free
+01:49:18.109 [A] >>> stats
+01:49:18.111 [B] >>> stats
+01:49:18.112 [A] > stats
+01:49:18.112 [A] radio   rx 214442 (invalid 0, spoofed 0)  tx 78781 (failed 0)
+01:49:18.112 [A] hb      tx 63420  rx 188745   membership changes 26
+01:49:18.112 [A] server  executed 791  not-ready 0  dedup replays 15  suppressed 0  table-full 0
+01:49:18.112 [A] repl    started 791  ok 791  failed 0  stale 0   as replica: applied 2950 stale 2
+01:49:18.112 [A] ae      rounds 3173  chunks tx 9576 rx 19963  tables 9298  pushes 12  resync tx 12 applied 13 stale 0
+01:49:18.112 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:49:18.112 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:49:18.112 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 76
+01:49:18.112 [A] chip temp 61.1 degC (die temperature, not ambient)
+01:49:18.112 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:49:18.112 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:49:18.112 [A] esp-now rx 214442  queue overflows 0  unknown MAC 4980
+01:49:18.112 [A] esp-now tx -> B: 1062 delivered, 0 failed (MAC-layer ACK)
+01:49:18.112 [A] esp-now tx -> C: 2179 delivered, 0 failed (MAC-layer ACK)
+01:49:18.112 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:49:18.112 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+01:49:18.113 [C] >>> stats
+01:49:18.113 [B] > stats
+01:49:18.113 [B] radio   rx 222352 (invalid 0, spoofed 0)  tx 79286 (failed 0)
+01:49:18.113 [B] hb      tx 63400  rx 189794   membership changes 10
+01:49:18.114 [B] server  executed 3962  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+01:49:18.114 [B] repl    started 3952  ok 3952  failed 0  stale 0   as replica: applied 264 stale 0
+01:49:18.114 [B] ae      rounds 3172  chunks tx 6489 rx 23216  tables 9463  pushes 6  resync tx 6 applied 4 stale 0
+01:49:18.114 [B] gc      orphans 4  tombstones 0  keys dropped 4
+01:49:18.114 [B] client  ok 2213  failed 0  attempts 2220  local 529
+01:49:18.115 [D] >>> stats
+01:49:18.116 [B] storage errors 0  compactions 19 (aborted 0)  faults injected 73
+01:49:18.116 [B] chip temp 54.5 degC (die temperature, not ambient)
+01:49:18.116 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+01:49:18.116 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:49:18.116 [B] esp-now rx 222352  queue overflows 0  unknown MAC 4658
+01:49:18.116 [B] esp-now tx -> A: 1058 delivered, 0 failed (MAC-layer ACK)
+01:49:18.116 [B] esp-now tx -> C: 3486 delivered, 3 failed (MAC-layer ACK)
+01:49:18.116 [B] esp-now tx -> D: 4826 delivered, 0 failed (MAC-layer ACK)
+01:49:18.116 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+01:49:18.116 [C] > stats
+01:49:18.116 [C] radio   rx 223317 (invalid 0, spoofed 0)  tx 74955 (failed 0)
+01:49:18.116 [C] hb      tx 63380  rx 189821   membership changes 10
+01:49:18.116 [C] server  executed 2467  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+01:49:18.116 [C] repl    started 2459  ok 2455  failed 3  stale 1   as replica: applied 600 stale 0
+01:49:18.116 [C] ae      rounds 3171  chunks tx 3867 rx 25811  tables 9447  pushes 2  resync tx 2 applied 12 stale 2
+01:49:18.116 [C] gc      orphans 9  tombstones 6  keys dropped 15
+01:49:18.116 [C] client  ok 2113  failed 0  attempts 2113  local 2
+01:49:18.117 [D] > stats
+01:49:18.117 [D] radio   rx 218988 (invalid 0, spoofed 0)  tx 82593 (failed 0)
+01:49:18.117 [D] hb      tx 63358  rx 189787   membership changes 8
+01:49:18.117 [D] server  executed 1444  not-ready 0  dedup replays 42  suppressed 12  table-full 0
+01:49:18.117 [D] repl    started 1444  ok 1439  failed 3  stale 2   as replica: applied 4828 stale 1
+01:49:18.117 [D] ae      rounds 3170  chunks tx 9837 rx 19838  tables 9457  pushes 3  resync tx 3 applied 4 stale 2
+01:49:18.117 [D] gc      orphans 7  tombstones 8  keys dropped 13
+01:49:18.117 [D] client  ok 2111  failed 0  attempts 2111  local 263
+01:49:18.117 [C] storage errors 0  compactions 13 (aborted 0)  faults injected 97
+01:49:18.117 [C] chip temp 54.4 degC (die temperature, not ambient)
+01:49:18.117 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+01:49:18.117 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+01:49:18.117 [C] esp-now rx 223317  queue overflows 0  unknown MAC 4070
+01:49:18.117 [C] esp-now tx -> A: 2156 delivered, 0 failed (MAC-layer ACK)
+01:49:18.117 [C] esp-now tx -> B: 3470 delivered, 0 failed (MAC-layer ACK)
+01:49:18.117 [C] esp-now tx -> D: 2033 delivered, 0 failed (MAC-layer ACK)
+01:49:18.117 [C] heap free 174324 (min 165864)  node task stack headroom 13416 bytes
+01:49:18.118 [D] storage errors 0  compactions 29 (aborted 0)  faults injected 113
+01:49:18.118 [D] chip temp 53.6 degC (die temperature, not ambient)
+01:49:18.118 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: unknown
+01:49:18.118 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+01:49:18.118 [D] esp-now rx 218988  queue overflows 0  unknown MAC 4102
+01:49:18.118 [D] esp-now tx -> A: 2501 delivered, 0 failed (MAC-layer ACK)
+01:49:18.118 [D] esp-now tx -> B: 4804 delivered, 0 failed (MAC-layer ACK)
+01:49:18.118 [D] esp-now tx -> C: 2021 delivered, 0 failed (MAC-layer ACK)
+01:49:18.118 [D] heap free 174712 (min 166152)  node task stack headroom 13272 bytes
+01:49:18.118 [C] >>> ring k20
+01:49:18.119 [C] >>> ring k0
+01:49:18.163 [A] eeprom page writes since boot: total 19878, hottest page 161 with 61 (rated 1000000)
+01:49:18.163 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:49:18.166 [B] eeprom page writes since boot: total 22272, hottest page 11 with 70 (rated 1000000)
+01:49:18.168 [C] eeprom page writes since boot: total 15597, hottest page 13 with 49 (rated 1000000)
+01:49:18.168 [C] > ring k20
+01:49:18.168 [C] key 'k20' hash 27ca8c28
+01:49:18.168 [C]   all nodes up : primary A, replica B
+01:49:18.168 [C]   current view : primary A, replica B
+01:49:18.168 [C] > ring k0
+01:49:18.168 [C] key 'k0' hash 973d7f2e
+01:49:18.168 [C]   all nodes up : primary C, replica A
+01:49:18.168 [C]   current view : primary C, replica A
+01:49:18.168 [D] eeprom page writes since boot: total 33921, hottest page 335 with 103 (rated 1000000)
+# 01:49:34 H4 start: samplers off on all four
+01:49:34.124 [A] >>> sensor off
+01:49:34.125 [B] >>> sensor off
+01:49:34.126 [C] >>> sensor off
+01:49:34.127 [B] > sensor off
+01:49:34.127 [B] sampler off
+01:49:34.127 [C] > sensor off
+01:49:34.127 [C] sampler off
+01:49:34.127 [D] >>> sensor off
+01:49:34.173 [A] > sensor off
+01:49:34.173 [A] sampler off
+01:49:34.178 [D] > sensor off
+01:49:34.178 [D] sampler off
+# 01:49:37 snapshot: H4 before
+01:49:37.130 [A] >>> stats
+01:49:37.132 [A] > stats
+01:49:37.132 [A] radio   rx 214561 (invalid 0, spoofed 0)  tx 78824 (failed 0)
+01:49:37.132 [A] hb      tx 63457  rx 188852   membership changes 26
+01:49:37.132 [A] server  executed 791  not-ready 0  dedup replays 15  suppressed 0  table-full 0
+01:49:37.132 [A] repl    started 791  ok 791  failed 0  stale 0   as replica: applied 2950 stale 2
+01:49:37.132 [A] ae      rounds 3175  chunks tx 9582 rx 19975  tables 9304  pushes 12  resync tx 12 applied 13 stale 0
+01:49:37.132 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:49:37.132 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:49:37.133 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 76
+01:49:37.133 [A] chip temp 62.1 degC (die temperature, not ambient)
+01:49:37.133 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:49:37.133 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:49:37.133 [A] esp-now rx 214561  queue overflows 0  unknown MAC 4986
+01:49:37.133 [A] esp-now tx -> B: 1062 delivered, 0 failed (MAC-layer ACK)
+01:49:37.133 [A] esp-now tx -> C: 2179 delivered, 0 failed (MAC-layer ACK)
+01:49:37.134 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:49:37.134 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+01:49:37.184 [A] eeprom page writes since boot: total 19878, hottest page 161 with 61 (rated 1000000)
+01:49:37.184 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:49:38.133 [B] >>> stats
+01:49:38.135 [B] > stats
+01:49:38.135 [B] radio   rx 222482 (invalid 0, spoofed 0)  tx 79329 (failed 0)
+01:49:38.135 [B] hb      tx 63439  rx 189910   membership changes 10
+01:49:38.135 [B] server  executed 3962  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+01:49:38.135 [B] repl    started 3952  ok 3952  failed 0  stale 0   as replica: applied 264 stale 0
+01:49:38.135 [B] ae      rounds 3174  chunks tx 6493 rx 23230  tables 9469  pushes 6  resync tx 6 applied 4 stale 0
+01:49:38.135 [B] gc      orphans 4  tombstones 0  keys dropped 4
+01:49:38.135 [B] client  ok 2213  failed 0  attempts 2220  local 529
+01:49:38.137 [B] storage errors 0  compactions 19 (aborted 0)  faults injected 73
+01:49:38.137 [B] chip temp 54.5 degC (die temperature, not ambient)
+01:49:38.137 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+01:49:38.137 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:49:38.137 [B] esp-now rx 222482  queue overflows 0  unknown MAC 4665
+01:49:38.137 [B] esp-now tx -> A: 1058 delivered, 0 failed (MAC-layer ACK)
+01:49:38.137 [B] esp-now tx -> C: 3486 delivered, 3 failed (MAC-layer ACK)
+01:49:38.137 [B] esp-now tx -> D: 4826 delivered, 0 failed (MAC-layer ACK)
+01:49:38.137 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+01:49:38.187 [B] eeprom page writes since boot: total 22272, hottest page 11 with 70 (rated 1000000)
+# 01:49:40 H4a lost SET_REQ
+01:49:40.139 [C] >>> fault drop-req 1
+01:49:40.160 [C] > fault drop-req 1
+01:49:40.161 [C] fault armed
+01:49:41.642 [C] >>> set k20 v1
+01:49:41.668 [C] > set k20 v1
+01:49:41.668 [C]  31720.737 [C] FAULT: dropped first transmission of SET_REQ
+01:49:42.272 [C] SET k20: OK (served by A, 1 attempt(s), 624 ms)
+# 01:49:45 snapshot: after H4a
+01:49:45.648 [A] >>> stats
+01:49:45.649 [A] > stats
+01:49:45.649 [A] radio   rx 214622 (invalid 0, spoofed 0)  tx 78846 (failed 0)
+01:49:45.649 [A] hb      tx 63474  rx 188905   membership changes 26
+01:49:45.649 [A] server  executed 792  not-ready 0  dedup replays 15  suppressed 0  table-full 0
+01:49:45.649 [A] repl    started 792  ok 792  failed 0  stale 0   as replica: applied 2950 stale 2
+01:49:45.649 [A] ae      rounds 3176  chunks tx 9585 rx 19981  tables 9307  pushes 12  resync tx 12 applied 13 stale 0
+01:49:45.649 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:49:45.649 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:49:45.651 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 76
+01:49:45.651 [A] chip temp 62.1 degC (die temperature, not ambient)
+01:49:45.651 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:49:45.651 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:49:45.651 [A] esp-now rx 214622  queue overflows 0  unknown MAC 4986
+01:49:45.651 [A] esp-now tx -> B: 1063 delivered, 0 failed (MAC-layer ACK)
+01:49:45.651 [A] esp-now tx -> C: 2180 delivered, 0 failed (MAC-layer ACK)
+01:49:45.651 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:49:45.651 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+01:49:45.701 [A] eeprom page writes since boot: total 19880, hottest page 161 with 61 (rated 1000000)
+01:49:45.701 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:49:46.651 [B] >>> stats
+01:49:46.653 [B] > stats
+01:49:46.653 [B] radio   rx 222543 (invalid 0, spoofed 0)  tx 79350 (failed 0)
+01:49:46.653 [B] hb      tx 63457  rx 189963   membership changes 10
+01:49:46.653 [B] server  executed 3962  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+01:49:46.653 [B] repl    started 3952  ok 3952  failed 0  stale 0   as replica: applied 265 stale 0
+01:49:46.653 [B] ae      rounds 3175  chunks tx 6495 rx 23237  tables 9472  pushes 6  resync tx 6 applied 4 stale 0
+01:49:46.653 [B] gc      orphans 4  tombstones 0  keys dropped 4
+01:49:46.653 [B] client  ok 2213  failed 0  attempts 2220  local 529
+01:49:46.654 [B] storage errors 0  compactions 19 (aborted 0)  faults injected 73
+01:49:46.654 [B] chip temp 54.5 degC (die temperature, not ambient)
+01:49:46.654 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+01:49:46.654 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:49:46.654 [B] esp-now rx 222543  queue overflows 0  unknown MAC 4665
+01:49:46.654 [B] esp-now tx -> A: 1059 delivered, 0 failed (MAC-layer ACK)
+01:49:46.654 [B] esp-now tx -> C: 3486 delivered, 3 failed (MAC-layer ACK)
+01:49:46.654 [B] esp-now tx -> D: 4826 delivered, 0 failed (MAC-layer ACK)
+01:49:46.654 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+01:49:46.704 [B] eeprom page writes since boot: total 22274, hottest page 11 with 70 (rated 1000000)
+# 01:49:48 H4b lost SET_ACK
+01:49:48.656 [A] >>> fault drop-ack 1
+01:49:48.667 [A] > fault drop-ack 1
+01:49:48.667 [A] fault armed
+01:49:50.159 [C] >>> set k20 v2
+01:49:50.164 [C] > set k20 v2
+01:49:50.225 [A]  31750.374 [A] FAULT: dropped SET_ACK to C#3940036013 (result cached)
+01:49:50.767 [C] SET k20: OK (served by A, 1 attempt(s), 603 ms)
+01:49:50.778 [A]  31750.949 [A] SET_REQ k20 from C#3940036013: duplicate, cached response replayed
+# 01:49:54 snapshot: after H4b
+01:49:54.165 [A] >>> stats
+01:49:54.166 [A] > stats
+01:49:54.167 [A] radio   rx 214685 (invalid 0, spoofed 0)  tx 78869 (failed 0)
+01:49:54.167 [A] hb      tx 63492  rx 188958   membership changes 26
+01:49:54.167 [A] server  executed 793  not-ready 0  dedup replays 16  suppressed 0  table-full 0
+01:49:54.167 [A] repl    started 793  ok 793  failed 0  stale 0   as replica: applied 2950 stale 2
+01:49:54.167 [A] ae      rounds 3177  chunks tx 9588 rx 19988  tables 9310  pushes 12  resync tx 12 applied 13 stale 0
+01:49:54.167 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:49:54.167 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:49:54.168 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 77
+01:49:54.168 [A] chip temp 63.1 degC (die temperature, not ambient)
+01:49:54.168 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:49:54.168 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:49:54.168 [A] esp-now rx 214685  queue overflows 0  unknown MAC 4986
+01:49:54.168 [A] esp-now tx -> B: 1064 delivered, 0 failed (MAC-layer ACK)
+01:49:54.168 [A] esp-now tx -> C: 2181 delivered, 0 failed (MAC-layer ACK)
+01:49:54.168 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:49:54.168 [A] heap free 172592 (min 164132)  node task stack headroom 13224 bytes
+01:49:54.218 [A] eeprom page writes since boot: total 19882, hottest page 349 with 62 (rated 1000000)
+01:49:54.219 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:49:55.167 [B] >>> stats
+01:49:55.169 [B] > stats
+01:49:55.169 [B] radio   rx 222605 (invalid 0, spoofed 0)  tx 79372 (failed 0)
+01:49:55.169 [B] hb      tx 63475  rx 190017   membership changes 10
+01:49:55.169 [B] server  executed 3962  not-ready 0  dedup replays 0  suppressed 1  table-full 0
+01:49:55.169 [B] repl    started 3952  ok 3952  failed 0  stale 0   as replica: applied 266 stale 0
+01:49:55.169 [B] ae      rounds 3176  chunks tx 6498 rx 23244  tables 9475  pushes 6  resync tx 6 applied 4 stale 0
+01:49:55.169 [B] gc      orphans 4  tombstones 0  keys dropped 4
+01:49:55.169 [B] client  ok 2213  failed 0  attempts 2220  local 529
+01:49:55.170 [B] storage errors 0  compactions 19 (aborted 0)  faults injected 73
+01:49:55.170 [B] chip temp 54.5 degC (die temperature, not ambient)
+01:49:55.170 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+01:49:55.170 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:49:55.170 [B] esp-now rx 222605  queue overflows 0  unknown MAC 4665
+01:49:55.170 [B] esp-now tx -> A: 1060 delivered, 0 failed (MAC-layer ACK)
+01:49:55.170 [B] esp-now tx -> C: 3486 delivered, 3 failed (MAC-layer ACK)
+01:49:55.170 [B] esp-now tx -> D: 4826 delivered, 0 failed (MAC-layer ACK)
+01:49:55.170 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+01:49:55.220 [B] eeprom page writes since boot: total 22277, hottest page 11 with 70 (rated 1000000)
+# 01:49:57 H4c lost REPL_ACK
+01:49:57.173 [B] >>> fault drop-repl-ack 1
+01:49:57.182 [B] > fault drop-repl-ack 1
+01:49:57.182 [B] fault armed
+01:50:00.167 [C] >>> set k20 v3
+01:50:00.201 [C] > set k20 v3
+01:50:00.231 [B]  31748.844 [B] FAULT: dropped REPL_ACK #3020328000 (applied and cached)
+01:50:00.483 [B]  31749.124 [B] REPL_REQ A#3020328000 duplicate: cached REPL_ACK replayed
+01:50:00.502 [C] SET k20: OK (served by A, 1 attempt(s), 308 ms)
+# 01:50:04 snapshot: after H4c
+01:50:04.172 [A] >>> stats
+01:50:04.174 [A] > stats
+01:50:04.174 [A] radio   rx 214743 (invalid 0, spoofed 0)  tx 78893 (failed 0)
+01:50:04.174 [A] hb      tx 63510  rx 189010   membership changes 26
+01:50:04.174 [A] server  executed 794  not-ready 0  dedup replays 16  suppressed 0  table-full 0
+01:50:04.174 [A] repl    started 794  ok 794  failed 0  stale 0   as replica: applied 2950 stale 2
+01:50:04.174 [A] ae      rounds 3178  chunks tx 9591 rx 19992  tables 9312  pushes 12  resync tx 12 applied 13 stale 0
+01:50:04.174 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:50:04.174 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:50:04.175 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 77
+01:50:04.175 [A] chip temp 63.1 degC (die temperature, not ambient)
+01:50:04.176 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:50:04.176 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:50:04.176 [A] esp-now rx 214743  queue overflows 0  unknown MAC 4986
+01:50:04.176 [A] esp-now tx -> B: 1066 delivered, 0 failed (MAC-layer ACK)
+01:50:04.176 [A] esp-now tx -> C: 2182 delivered, 0 failed (MAC-layer ACK)
+01:50:04.176 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:50:04.176 [A] heap free 172592 (min 164132)  node task stack headroom 13224 bytes
+01:50:04.226 [A] eeprom page writes since boot: total 19885, hottest page 349 with 63 (rated 1000000)
+01:50:04.226 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:50:05.175 [B] >>> stats
+01:50:05.176 [B] > stats
+01:50:05.176 [B] radio   rx 222667 (invalid 0, spoofed 0)  tx 79393 (failed 0)
+01:50:05.176 [B] hb      tx 63492  rx 190070   membership changes 10
+01:50:05.176 [B] server  executed 3962  not-ready 0  dedup replays 1  suppressed 1  table-full 0
+01:50:05.176 [B] repl    started 3952  ok 3952  failed 0  stale 0   as replica: applied 267 stale 0
+01:50:05.176 [B] ae      rounds 3177  chunks tx 6501 rx 23251  tables 9478  pushes 6  resync tx 6 applied 4 stale 0
+01:50:05.176 [B] gc      orphans 4  tombstones 0  keys dropped 4
+01:50:05.176 [B] client  ok 2213  failed 0  attempts 2220  local 529
+01:50:05.178 [B] storage errors 0  compactions 19 (aborted 0)  faults injected 74
+01:50:05.178 [B] chip temp 54.5 degC (die temperature, not ambient)
+01:50:05.178 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: unknown
+01:50:05.178 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:50:05.178 [B] esp-now rx 222667  queue overflows 0  unknown MAC 4665
+01:50:05.178 [B] esp-now tx -> A: 1061 delivered, 0 failed (MAC-layer ACK)
+01:50:05.178 [B] esp-now tx -> C: 3486 delivered, 3 failed (MAC-layer ACK)
+01:50:05.178 [B] esp-now tx -> D: 4826 delivered, 0 failed (MAC-layer ACK)
+01:50:05.178 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+01:50:05.228 [B] eeprom page writes since boot: total 22279, hottest page 11 with 70 (rated 1000000)
+01:50:07.177 [A] >>> dump
+01:50:07.190 [A] > dump
+01:50:07.190 [A]   v=78911177.2@A  h/A/light/2 = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:50:07.190 [A]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:50:07.190 [A]   v=78911180.1@C  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:50:07.190 [A]   v=78881472.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+01:50:07.190 [A]   v=78821177.2@A  h/A/light/3 = 8.333 lux  (seq 4183, sampled at hlc 78821176)
+01:50:07.204 [A]   v=78821229.1@D  h/B/motion/2 = 3 events, last motion 14 s before the sample  (seq 2658, sampled at hlc 78821226, simulated)
+01:50:07.204 [A]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:50:07.204 [A]   v=78851180.1@D  h/A/light/0 = 8.333 lux  (seq 4184, sampled at hlc 78851176)
+01:50:07.204 [A]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:50:07.204 [A]   v=78881685.1@D  h/D/temp/0 = 29.400 degC  (seq 4456, sampled at hlc 78881683)
+01:50:07.254 [A]   v=78851469.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+01:50:07.254 [A]   v=78955134.1@A  k20 = "v3"
+01:50:07.254 [A] 12 key(s); log 5757/16064 bytes used
+01:50:09.190 [B] >>> dump
+01:50:09.199 [B] > dump
+01:50:09.199 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:50:09.199 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:50:09.199 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:50:09.211 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:50:09.211 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:50:09.211 [B]   v=78851228.1@B  h/B/motion/3 = 0 events, last motion 44 s before the sample  (seq 2659, sampled at hlc 78851226, simulated)
+01:50:09.211 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:50:09.211 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:50:09.262 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:50:09.262 [B]   v=78881228.1@B  h/B/motion/0 = 1 events, last motion 2 s before the sample  (seq 2660, sampled at hlc 78881226, simulated)
+01:50:09.262 [B]   v=78955134.1@A  k20 = "v3"
+01:50:09.262 [B] 11 key(s); log 4746/16064 bytes used
+# 01:50:21 H5 duplicate request
+01:50:21.941 [A] >>> stats
+01:50:21.943 [A] > stats
+01:50:21.943 [A] radio   rx 214866 (invalid 0, spoofed 0)  tx 78936 (failed 0)
+01:50:21.943 [A] hb      tx 63547  rx 189120   membership changes 26
+01:50:21.943 [A] server  executed 794  not-ready 0  dedup replays 16  suppressed 0  table-full 0
+01:50:21.943 [A] repl    started 794  ok 794  failed 0  stale 0   as replica: applied 2950 stale 2
+01:50:21.943 [A] ae      rounds 3180  chunks tx 9597 rx 20005  tables 9317  pushes 12  resync tx 12 applied 13 stale 0
+01:50:21.943 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:50:21.943 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:50:21.944 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 77
+01:50:21.944 [A] chip temp 63.1 degC (die temperature, not ambient)
+01:50:21.944 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:50:21.945 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:50:21.945 [A] esp-now rx 214866  queue overflows 0  unknown MAC 4991
+01:50:21.945 [A] esp-now tx -> B: 1066 delivered, 0 failed (MAC-layer ACK)
+01:50:21.945 [A] esp-now tx -> C: 2182 delivered, 0 failed (MAC-layer ACK)
+01:50:21.945 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:50:21.945 [A] heap free 172592 (min 164132)  node task stack headroom 13224 bytes
+01:50:21.995 [A] eeprom page writes since boot: total 19885, hottest page 349 with 63 (rated 1000000)
+01:50:21.995 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:50:23.445 [C] >>> fault dup 1
+01:50:23.484 [C] > fault dup 1
+01:50:23.484 [C] fault armed
+01:50:24.948 [C] >>> set k20 dup
+01:50:24.990 [C] > set k20 dup
+01:50:24.990 [C]  31764.476 [C] FAULT: SET_REQ sent twice
+01:50:24.990 [C] SET k20: OK (served by A, 1 attempt(s), 28 ms)
+01:50:28.960 [A] >>> stats
+01:50:28.961 [A] > stats
+01:50:28.961 [A] radio   rx 214916 (invalid 0, spoofed 0)  tx 78953 (failed 0)
+01:50:28.961 [A] hb      tx 63562  rx 189163   membership changes 26
+01:50:28.961 [A] server  executed 795  not-ready 0  dedup replays 16  suppressed 1  table-full 0
+01:50:28.961 [A] repl    started 795  ok 795  failed 0  stale 0   as replica: applied 2950 stale 2
+01:50:28.961 [A] ae      rounds 3180  chunks tx 9597 rx 20009  tables 9319  pushes 12  resync tx 12 applied 13 stale 0
+01:50:28.961 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:50:28.961 [A] client  ok 2223  failed 0  attempts 2226  local 527
+01:50:28.963 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 77
+01:50:28.963 [A] chip temp 63.1 degC (die temperature, not ambient)
+01:50:28.963 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:50:28.963 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:50:28.963 [A] esp-now rx 214916  queue overflows 0  unknown MAC 4991
+01:50:28.963 [A] esp-now tx -> B: 1067 delivered, 0 failed (MAC-layer ACK)
+01:50:28.963 [A] esp-now tx -> C: 2183 delivered, 0 failed (MAC-layer ACK)
+01:50:28.963 [A] esp-now tx -> D: 2511 delivered, 0 failed (MAC-layer ACK)
+01:50:28.963 [A] heap free 172592 (min 164132)  node task stack headroom 13224 bytes
+01:50:29.013 [A] eeprom page writes since boot: total 19887, hottest page 349 with 63 (rated 1000000)
+01:50:29.013 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+# 01:50:30 H10 stale version
+01:50:30.957 [C] >>> set k0 current
+01:50:30.975 [C] > set k0 current
+01:50:31.026 [C] SET k0: OK (served by C, 1 attempt(s), 24 ms)
+01:50:35.463 [C] >>> stats
+01:50:35.464 [C] > stats
+01:50:35.464 [C] radio   rx 223848 (invalid 0, spoofed 0)  tx 75124 (failed 0)
+01:50:35.465 [C] hb      tx 63533  rx 190278   membership changes 10
+01:50:35.465 [C] server  executed 2468  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+01:50:35.465 [C] repl    started 2460  ok 2456  failed 3  stale 1   as replica: applied 600 stale 0
+01:50:35.465 [C] ae      rounds 3179  chunks tx 3876 rx 25880  tables 9471  pushes 2  resync tx 2 applied 12 stale 2
+01:50:35.465 [C] gc      orphans 9  tombstones 6  keys dropped 15
+01:50:35.465 [C] client  ok 2118  failed 0  attempts 2118  local 3
+01:50:35.466 [C] storage errors 0  compactions 13 (aborted 0)  faults injected 99
+01:50:35.466 [C] chip temp 54.4 degC (die temperature, not ambient)
+01:50:35.466 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+01:50:35.466 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+01:50:35.466 [C] esp-now rx 223848  queue overflows 0  unknown MAC 4081
+01:50:35.466 [C] esp-now tx -> A: 2163 delivered, 0 failed (MAC-layer ACK)
+01:50:35.466 [C] esp-now tx -> B: 3470 delivered, 0 failed (MAC-layer ACK)
+01:50:35.466 [C] esp-now tx -> D: 2033 delivered, 0 failed (MAC-layer ACK)
+01:50:35.466 [C] heap free 174324 (min 165864)  node task stack headroom 13272 bytes
+01:50:35.516 [C] eeprom page writes since boot: total 15599, hottest page 13 with 49 (rated 1000000)
+01:50:36.959 [D] >>> stale k0 C
+01:50:36.994 [D] > stale k0 C
+01:50:36.994 [D]  31765.096 [D] FAULT: stale write (hlc 65536) sent to C
+01:50:36.994 [D] stale version of 'k0' sent to C; it must be rejected (check 'stats' there)
+01:50:39.961 [C] >>> stats
+01:50:39.964 [C] > stats
+01:50:39.964 [C] radio   rx 223878 (invalid 0, spoofed 0)  tx 75133 (failed 0)
+01:50:39.964 [C] hb      tx 63542  rx 190307   membership changes 10
+01:50:39.964 [C] server  executed 2468  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+01:50:39.964 [C] repl    started 2460  ok 2456  failed 3  stale 1   as replica: applied 600 stale 0
+01:50:39.964 [C] ae      rounds 3179  chunks tx 3876 rx 25880  tables 9471  pushes 2  resync tx 2 applied 12 stale 3
+01:50:39.964 [C] gc      orphans 9  tombstones 6  keys dropped 15
+01:50:39.964 [C] client  ok 2118  failed 0  attempts 2118  local 3
+01:50:39.965 [C] storage errors 0  compactions 13 (aborted 0)  faults injected 99
+01:50:39.965 [C] chip temp 54.4 degC (die temperature, not ambient)
+01:50:39.965 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+01:50:39.965 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+01:50:39.965 [C] esp-now rx 223878  queue overflows 0  unknown MAC 4081
+01:50:39.965 [C] esp-now tx -> A: 2163 delivered, 0 failed (MAC-layer ACK)
+01:50:39.965 [C] esp-now tx -> B: 3470 delivered, 0 failed (MAC-layer ACK)
+01:50:39.965 [C] esp-now tx -> D: 2033 delivered, 0 failed (MAC-layer ACK)
+01:50:39.965 [C] heap free 174324 (min 165864)  node task stack headroom 13272 bytes
+01:50:40.016 [C] eeprom page writes since boot: total 15599, hottest page 13 with 49 (rated 1000000)
+01:50:41.473 [A] >>> get k0
+01:50:41.517 [A] > get k0
+01:50:41.517 [A] k0 = "current"
+01:50:41.517 [A]    (served by C, 1 attempt(s), 5 ms)
+01:50:43.468 [C] >>> get k0
+01:50:43.481 [C] > get k0
+01:50:43.481 [C] k0 = "current"
+01:50:43.481 [C]    (served by C, 1 attempt(s), 0 ms)
+# 01:50:59 H6 armed: on B's port loss -> C set k20 during; +4 s C set k20 after; C ring k20
+01:52:48.722 [B] --- port lost, reopening
+01:52:48.758 [C] >>> set k20 during
+# 01:52:48.759 H6: B port lost -> set k20 during sent
+01:52:48.790 [C] > set k20 during
+01:52:50.197 [A]  31930.116 [A] replica B did not answer for k20: under-replicated
+01:52:50.247 [C] SET k20: UNDER_REPLICATED (served by A, 1 attempt(s), 1504 ms)
+01:52:50.649 [A]  31930.538 [A] view: A-CD
+01:52:50.649 [D]  31899.456 [D] view: A-CD
+01:52:50.649 [C]  31909.836 [C] view: A-CD
+01:52:52.560 [C]  31911.866 [C] anti-entropy: key s/D/temp repaired from D
+01:52:52.610 [C]  31911.907 [C] anti-entropy: key s/C/sound repaired from D
+01:52:52.765 [C] >>> set k20 after
+01:52:52.811 [C] > set k20 after
+01:52:52.811 [C] SET k20: OK (served by A, 1 attempt(s), 25 ms)
+01:52:53.664 [D]  31902.624 [D] anti-entropy: key h/D/temp/1 repaired from A
+01:52:53.665 [D]  31902.639 [D] anti-entropy: key h/B/motion/3 repaired from C
+01:52:53.715 [D]  31902.664 [D] anti-entropy: key h/B/motion/0 repaired from C
+01:52:53.715 [D]  31902.679 [D] anti-entropy: key h/D/temp/2 repaired from A
+01:52:53.715 [D]  31902.702 [D] anti-entropy: key h/D/temp/3 repaired from A
+01:52:55.768 [C] >>> ring k20
+01:52:55.776 [C] > ring k20
+01:52:55.776 [C] key 'k20' hash 27ca8c28
+01:52:55.776 [C]   all nodes up : primary A, replica B
+01:52:55.776 [C]   current view : primary A, replica D
+01:52:57.770 [A] >>> stats
+01:52:57.772 [A] > stats
+01:52:57.772 [A] radio   rx 215897 (invalid 0, spoofed 0)  tx 79306 (failed 0)
+01:52:57.772 [A] hb      tx 63859  rx 190023   membership changes 27
+01:52:57.772 [A] server  executed 797  not-ready 0  dedup replays 16  suppressed 2  table-full 0
+01:52:57.772 [A] repl    started 797  ok 796  failed 1  stale 0   as replica: applied 2951 stale 2
+01:52:57.772 [A] ae      rounds 3195  chunks tx 9642 rx 20124  tables 9362  pushes 15  resync tx 15 applied 13 stale 0
+01:52:57.772 [A] gc      orphans 11  tombstones 2  keys dropped 12
+01:52:57.772 [A] client  ok 2224  failed 0  attempts 2227  local 527
+01:52:57.774 [A] storage errors 1  compactions 17 (aborted 0)  faults injected 77
+01:52:57.774 [A] chip temp 62.1 degC (die temperature, not ambient)
+01:52:57.774 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: unknown
+01:52:57.774 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+01:52:57.774 [A] esp-now rx 215897  queue overflows 0  unknown MAC 5010
+01:52:57.774 [A] esp-now tx -> B: 1067 delivered, 3 failed (MAC-layer ACK)
+01:52:57.774 [A] esp-now tx -> C: 2187 delivered, 0 failed (MAC-layer ACK)
+01:52:57.774 [A] esp-now tx -> D: 2515 delivered, 0 failed (MAC-layer ACK)
+01:52:57.774 [A] heap free 172592 (min 164132)  node task stack headroom 13224 bytes
+01:52:57.824 [A] eeprom page writes since boot: total 19894, hottest page 349 with 63 (rated 1000000)
+01:52:57.824 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+01:53:00.134 [A]  31940.509 [A] anti-entropy: key h/C/sound/2 repaired from D
+01:53:00.184 [A]  31940.549 [A] anti-entropy: key h/C/sound/3 repaired from D
+01:53:00.235 [A]  31940.588 [A] anti-entropy: key h/A/light/1 repaired from D
+01:53:43.142 [B] --- port open
+01:53:43.142 [B] 
+01:53:43.142 [B] edge-kv firmware, node B [fault injection build]
+01:53:43.142 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+01:53:43.142 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:53:43.142 [B]      1.920 [B] storage recovered: 11 live, 0 tombstones, 4777/16064 log bytes used
+01:53:43.142 [B]      1.923 [B] state -> BOOTING
+01:53:43.142 [B] sensor motion: simulated (REAL_SENSOR_NODES)
+01:53:43.142 [B] 
+01:53:43.142 [B] edge-kv node B  (4-node ESP-NOW KV store, RF=2)
+01:53:43.142 [B] type 'help' for commands
+01:53:43.142 [B]      1.923 [B] view: AB-D
+01:53:43.142 [B]      2.096 [B] view: ABCD
+01:53:43.142 [B]      4.207 [B] state -> CATCHUP
+01:53:43.193 [B]      4.302 [B] anti-entropy: key k20 repaired from D
+01:53:44.985 [D]  31954.026 [D] view: ABCD
+01:53:44.985 [C]  31964.408 [C] view: ABCD
+01:53:44.985 [A]  31985.109 [A] view: ABCD
+01:53:44.997 [B]      7.207 [B] state -> ACTIVE
+# 01:53:47 NS: B back
+01:53:47.093 [A]  31987.319 [A] gc: 3 key(s) marked for drop (orphans 14, tombstones 2 total)
+01:53:47.695 [C]  31967.205 [C] gc: 2 key(s) marked for drop (orphans 11, tombstones 6 total)
+01:53:48.047 [D]  31957.220 [D] gc: 6 key(s) marked for drop (orphans 13, tombstones 8 total)
+01:53:50.047 [B] >>> dump
+01:53:50.047 [B] >>> status
+01:53:50.061 [B] > dump
+01:53:50.061 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:53:50.061 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:53:50.062 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:53:50.062 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:53:50.062 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:53:50.073 [B]   v=78851228.1@B  h/B/motion/3 = 0 events, last motion 44 s before the sample  (seq 2659, sampled at hlc 78851226, simulated)
+01:53:50.073 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:53:50.073 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:53:50.073 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:53:50.073 [B]   v=78881228.1@B  h/B/motion/0 = 1 events, last motion 2 s before the sample  (seq 2660, sampled at hlc 78881226, simulated)
+01:53:50.123 [B]   v=79128682.1@A  k20 = "after"
+01:53:50.123 [B] 11 key(s); log 4810/16064 bytes used
+01:53:50.123 [B] > status
+01:53:50.123 [B] node B  state ACTIVE  view ABCD  uptime 12s
+01:53:50.123 [B] hlc 79186311.0
+01:53:50.123 [B] storage recovered: 11 live, 0 tombstones, 11/64 keys, log 4810/16064 bytes, bank A, 0 compactions
+01:53:50.123 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+01:53:50.123 [B] sensor motion (simulated): on, 0 samples, last - seq 0, 0 ok, 0 under-replicated, 0 failed, 0 read failures
+01:53:50.123 [B] chip temp 48.5 degC (die temperature, not ambient)
+01:53:58.100 [A]  31997.297 [A] view: ABC-
+01:53:58.603 [A]  31997.796 [A] view: ABCD
+01:54:00.513 [A]  31999.797 [A] view: ABC-
+01:54:02.423 [A]  32001.796 [A] view: ABCD
+01:54:06.246 [A]  32005.797 [A] view: ABC-
+# 01:54:07 H9 start: C set k20 zombie
+01:54:07.190 [C] >>> set k20 zombie
+01:54:07.201 [C] > set k20 zombie
+01:54:07.252 [C] SET k20: OK (served by A, 1 attempt(s), 33 ms)
+01:54:08.156 [A]  32007.796 [A] view: ABCD
+01:54:08.558 [C]  31987.494 [C] view: -BCD
+01:54:09.313 [A]  32008.997 [A] view: AB-D
+01:54:09.445 [B]     31.212 [B] anti-entropy: key s/A/light repaired from C
+01:54:09.445 [B]     31.244 [B] anti-entropy: key k0 repaired from C
+01:54:09.514 [C]  31988.493 [C] view: ABCD
+01:54:10.068 [A]  32009.797 [A] view: AB--
+01:54:10.206 [B] >>> dump
+01:54:10.220 [B] > dump
+01:54:10.220 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:54:10.220 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:54:10.220 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:54:10.220 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:54:10.220 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:54:10.232 [B]   v=78851228.1@B  h/B/motion/3 = 0 events, last motion 44 s before the sample  (seq 2659, sampled at hlc 78851226, simulated)
+01:54:10.233 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:54:10.233 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:54:10.233 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:54:10.233 [B]   v=78881228.1@B  h/B/motion/0 = 1 events, last motion 2 s before the sample  (seq 2660, sampled at hlc 78881226, simulated)
+01:54:10.233 [B]   v=79202684.1@A  k20 = "zombie"
+01:54:10.269 [A]  32009.996 [A] view: ABC-
+01:54:10.283 [B]   v=78911180.1@C  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:54:10.283 [B]   v=78987339.1@C  k0 = "current"
+01:54:10.283 [B] 13 key(s); log 4932/16064 bytes used
+01:54:10.571 [A]  32010.296 [A] view: ABCD
+01:54:11.879 [C]  31990.994 [C] view: -BCD
+01:54:12.180 [A]  32011.997 [A] view: AB-D
+# 01:54:12 H9 armed: on B's port loss +3 s -> C del k20
+01:54:13.136 [A]  32012.996 [A] view: ABCD
+01:54:14.393 [A]  32014.298 [A] view: ABC-
+01:54:14.744 [C]  31993.993 [C] view: ABCD
+01:54:14.845 [A]  32014.796 [A] view: ABCD
+01:54:15.046 [A]  32014.997 [A] view: AB-D
+01:54:15.153 [B]     37.207 [B] gc: 2 key(s) marked for drop (orphans 2, tombstones 0 total)
+01:54:16.656 [C]  31995.994 [C] view: -BCD
+01:54:16.757 [A]  32016.797 [A] view: AB--
+01:54:17.159 [C]  31996.493 [C] view: ABCD
+01:54:17.460 [A]  32017.498 [A] view: ABC-
+01:54:18.967 [B]     41.209 [B] anti-entropy: key h/C/sound/1 repaired from A
+01:54:19.017 [B]     41.248 [B] anti-entropy: key h/C/sound/0 repaired from A
+01:54:19.068 [C]  31998.494 [C] view: -BCD
+01:54:19.168 [A]  32019.296 [A] view: ABCD
+01:54:19.519 [C]  31998.993 [C] view: ABCD
+01:54:24.695 [B]     47.207 [B] gc: 2 key(s) marked for drop (orphans 4, tombstones 0 total)
+01:54:44.012 [B] --- port lost, reopening
+01:54:45.539 [C]  32024.925 [C] view: A-CD
+01:54:45.540 [A]  32045.628 [A] view: A-CD
+01:54:45.540 [D]  32014.545 [D] view: A-CD
+01:54:47.057 [C] >>> del k20
+# 01:54:47.059 H9: B down -> del k20 sent
+01:54:47.100 [C] > del k20
+01:54:47.100 [C] DEL k20: OK (served by A, 1 attempt(s), 31 ms)
+01:54:53.235 [D]  32022.664 [D] anti-entropy: key h/B/motion/3 repaired from C
+01:55:30.619 [B] --- port open
+01:55:30.619 [B] 
+01:55:30.620 [B] edge-kv firmware, node B [fault injection build]
+01:55:30.620 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+01:55:30.620 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+01:55:30.620 [B]      1.935 [B] storage recovered: 15 live, 0 tombstones, 5113/16064 log bytes used
+01:55:30.620 [B]      1.937 [B] state -> BOOTING
+01:55:30.620 [B] sensor motion: simulated (REAL_SENSOR_NODES)
+01:55:30.620 [B] 
+01:55:30.620 [B] edge-kv node B  (4-node ESP-NOW KV store, RF=2)
+01:55:30.620 [B] type 'help' for commands
+01:55:30.620 [B]      1.938 [B] view: -B-D
+01:55:30.620 [B]      1.940 [B] view: -BCD
+01:55:30.620 [B]      2.139 [B] view: ABCD
+01:55:30.634 [C]  32070.063 [C] view: ABCD
+01:55:30.635 [D]  32059.683 [D] view: ABCD
+01:55:30.635 [A]  32090.765 [A] view: ABCD
+01:55:30.672 [B]      4.207 [B] state -> CATCHUP
+01:55:30.672 [B]      4.303 [B] anti-entropy: tombstone k20 repaired from D
+01:55:30.672 [B]      7.207 [B] state -> ACTIVE
+# 01:55:34 NS: B back (H9); waiting 30 s, then gets from every node, sync, B dump
+01:55:39.155 [D]  32067.220 [D] gc: 2 key(s) marked for drop (orphans 15, tombstones 8 total)
+01:55:41.539 [B]     17.208 [B] gc: 4 key(s) marked for drop (orphans 4, tombstones 0 total)
+01:55:43.422 [A]  32102.766 [A] view: A-CD
+01:55:43.924 [A]  32103.265 [A] view: ABCD
+01:55:47.748 [A]  32107.271 [A] view: A-CD
+01:55:48.251 [A]  32107.776 [A] view: ABCD
+01:56:05.662 [A] >>> get k20
+01:56:05.663 [B] >>> get k20
+01:56:05.664 [C] >>> get k20
+01:56:05.665 [D] >>> get k20
+01:56:05.681 [B] > get k20
+01:56:05.681 [B] GET k20: NOT_FOUND (served by A, 1 attempt(s), 9 ms)
+01:56:05.697 [C] > get k20
+01:56:05.697 [C] GET k20: NOT_FOUND (served by A, 1 attempt(s), 9 ms)
+01:56:05.697 [A] > get k20
+01:56:05.697 [A] GET k20: NOT_FOUND (served by A, 1 attempt(s), 0 ms)
+01:56:05.697 [D] > get k20
+01:56:05.697 [D] GET k20: NOT_FOUND (served by A, 1 attempt(s), 10 ms)
+01:56:07.667 [B] >>> dump
+01:56:07.679 [B] > dump
+01:56:07.680 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:07.680 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:07.680 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:07.680 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:56:07.680 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:07.691 [B]   v=79219484.0@B  h/B/motion/3 = 3 events, last motion 20 s before the sample  (seq 2663, sampled at hlc 79219482, simulated)
+01:56:07.691 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:56:07.691 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:56:07.691 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:56:07.691 [B]   v=79295140.0@B  h/B/motion/0 = 0 events, no motion since boot  (seq 2664, sampled at hlc 79295138, simulated)
+01:56:07.691 [B]   k20                      TOMBSTONE  v=79243156.1@A
+01:56:07.742 [B]   v=78911180.1@C (drop pending)  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:56:07.742 [B]   v=78987339.1@C (drop pending)  k0 = "current"
+01:56:07.742 [B]   v=78881472.1@D (drop pending)  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+01:56:07.742 [B]   v=78851469.1@D (drop pending)  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+01:56:07.742 [B] 15 key(s); log 5202/16064 bytes used
+01:56:09.669 [B] >>> sync
+01:56:09.703 [B] > sync
+01:56:09.703 [B] anti-entropy round requested
+01:56:15.207 [B] >>> sync
+01:56:15.213 [B] > sync
+01:56:15.213 [B] anti-entropy round requested
+01:56:19.210 [B] >>> sync
+01:56:19.235 [B] > sync
+01:56:19.235 [B] anti-entropy round requested
+01:56:23.212 [B] >>> dump
+01:56:23.213 [A] >>> get k20
+01:56:23.216 [B] >>> get k20
+01:56:23.216 [A] > get k20
+01:56:23.217 [A] GET k20: NOT_FOUND (served by A, 1 attempt(s), 0 ms)
+01:56:23.217 [C] >>> get k20
+01:56:23.218 [D] >>> get k20
+01:56:23.227 [B] > dump
+01:56:23.227 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:23.227 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:23.227 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:23.227 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:56:23.227 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:23.238 [B]   v=79219484.0@B  h/B/motion/3 = 3 events, last motion 20 s before the sample  (seq 2663, sampled at hlc 79219482, simulated)
+01:56:23.238 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:56:23.238 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:56:23.238 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:56:23.238 [B]   v=79295140.0@B  h/B/motion/0 = 0 events, no motion since boot  (seq 2664, sampled at hlc 79295138, simulated)
+01:56:23.238 [B]   k20                      TOMBSTONE  v=79243156.1@A
+01:56:23.266 [D] > get k20
+01:56:23.266 [D] GET k20: NOT_FOUND (served by A, 1 attempt(s), 4 ms)
+01:56:23.267 [C] > get k20
+01:56:23.267 [C] GET k20: NOT_FOUND (served by A, 1 attempt(s), 5 ms)
+01:56:23.289 [B]   v=78911180.1@C (drop pending)  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:56:23.289 [B]   v=78987339.1@C (drop pending)  k0 = "current"
+01:56:23.289 [B]   v=78881472.1@D (drop pending)  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+01:56:23.289 [B]   v=78851469.1@D (drop pending)  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+01:56:23.289 [B] 15 key(s); log 5202/16064 bytes used
+01:56:23.289 [B] > get k20
+01:56:23.289 [B] GET k20: NOT_FOUND (served by A, 1 attempt(s), 37 ms)
+# 01:56:45 H7 start: C set k20 before-failover
+01:56:45.697 [C] >>> set k20 before-failover
+01:56:45.700 [C] > set k20 before-failover
+01:56:45.800 [C] SET k20: OK (served by A, 1 attempt(s), 58 ms)
+01:56:48.709 [A] >>> dump
+01:56:48.711 [B] >>> dump
+01:56:48.717 [A] > dump
+01:56:48.717 [A]   v=78911177.2@A  h/A/light/2 = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:56:48.717 [A]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:48.725 [B] > dump
+01:56:48.725 [B]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:48.725 [B]   v=78911709.1@A  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+01:56:48.725 [B]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:48.725 [B]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:56:48.725 [B]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:48.729 [A]   v=78911180.1@C  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:56:48.729 [A]   v=78881472.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+01:56:48.729 [A]   v=78821177.2@A  h/A/light/3 = 8.333 lux  (seq 4183, sampled at hlc 78821176)
+01:56:48.729 [A]   v=79355143.1@D  h/B/motion/2 = 3 events, last motion 15 s before the sample  (seq 2666, sampled at hlc 79355138, simulated)
+01:56:48.729 [A]   v=78821702.1@B  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+01:56:48.738 [B]   v=79219484.0@B  h/B/motion/3 = 3 events, last motion 20 s before the sample  (seq 2663, sampled at hlc 79219482, simulated)
+01:56:48.738 [B]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:56:48.738 [B]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:56:48.739 [B]   v=78881182.1@B  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:56:48.739 [B]   v=79295140.0@B  h/B/motion/0 = 0 events, no motion since boot  (seq 2664, sampled at hlc 79295138, simulated)
+01:56:48.739 [B]   v=79360660.1@A  k20 = "before-failover"
+01:56:48.744 [A]   v=78851180.1@D  h/A/light/0 = 8.333 lux  (seq 4184, sampled at hlc 78851176)
+01:56:48.744 [A]   v=78851702.1@B  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+01:56:48.744 [A]   v=78881685.1@D  h/D/temp/0 = 29.400 degC  (seq 4456, sampled at hlc 78881683)
+01:56:48.744 [A]   v=78851469.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+01:56:48.744 [A]   v=79360660.1@A  k20 = "before-failover"
+01:56:48.744 [A]   v=78987339.1@C  k0 = "current"
+01:56:48.744 [A]   v=78911484.1@B (drop pending)  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+01:56:48.789 [B]   v=78911180.1@C (drop pending)  s/A/light = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+01:56:48.789 [B]   v=78987339.1@C (drop pending)  k0 = "current"
+01:56:48.789 [B]   v=78881472.1@D (drop pending)  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+01:56:48.789 [B]   v=78851469.1@D (drop pending)  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+01:56:48.789 [B] 15 key(s); log 5245/16064 bytes used
+01:56:48.794 [A]   v=78821481.1@B (drop pending)  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+01:56:48.795 [A]   v=78881182.1@B (drop pending)  h/A/light/1 = 8.333 lux  (seq 4185, sampled at hlc 78881176)
+01:56:48.795 [A] 16 key(s); log 6292/16064 bytes used
+# 01:56:51 H7/H8 armed: on A's port loss +3 s -> C get k20, C set k20 after-failover, C ring k20; then C get k20 every 0.5 s until A ACTIVE + 10 s
+01:58:05.949 [A] --- port lost, reopening
+# 01:58:05.999 H7: A port lost
+01:58:07.469 [C]  32226.495 [C] view: -BCD
+01:58:07.469 [B]    163.641 [B] view: -BCD
+01:58:07.469 [D]  32216.114 [D] view: -BCD
+01:58:09.004 [C] >>> get k20
+01:58:09.026 [C] > get k20
+01:58:09.026 [C] k20 = "before-failover"
+01:58:09.026 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:10.007 [C] >>> set k20 after-failover
+01:58:10.030 [C] > set k20 after-failover
+01:58:10.080 [C] SET k20: OK (served by B, 1 attempt(s), 30 ms)
+01:58:11.511 [C] >>> ring k20
+01:58:11.528 [C] >>> get k20
+01:58:11.536 [C] > ring k20
+01:58:11.537 [C] key 'k20' hash 27ca8c28
+01:58:11.537 [C]   all nodes up : primary A, replica B
+01:58:11.537 [C]   current view : primary B, replica D
+01:58:11.537 [C] > get k20
+01:58:11.537 [C] k20 = "after-failover"
+01:58:11.537 [C]    (served by B, 1 attempt(s), 7 ms)
+01:58:12.039 [C] >>> get k20
+01:58:12.089 [C] > get k20
+01:58:12.089 [C] k20 = "after-failover"
+01:58:12.089 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:12.541 [C]  32231.867 [C] anti-entropy: key h/A/light/2 repaired from D
+01:58:12.551 [C] >>> get k20
+01:58:12.592 [C] > get k20
+01:58:12.592 [C] k20 = "after-failover"
+01:58:12.592 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:12.592 [C]  32231.907 [C] anti-entropy: key h/B/motion/2 repaired from D
+01:58:12.592 [C]  32231.907 [C] compaction started (3064 bytes free)
+01:58:12.643 [C]  32231.957 [C] anti-entropy: key h/A/light/3 repaired from D
+01:58:12.693 [C]  32231.989 [C] anti-entropy: key h/A/light/0 repaired from D
+01:58:12.743 [C]  32232.037 [C] anti-entropy: key h/D/temp/0 repaired from D
+01:58:13.064 [C] >>> get k20
+01:58:13.095 [C] > get k20
+01:58:13.095 [C] k20 = "after-failover"
+01:58:13.095 [C]    (served by B, 1 attempt(s), 18 ms)
+01:58:13.577 [C] >>> get k20
+01:58:13.597 [C] > get k20
+01:58:13.648 [C] k20 = "after-failover"
+01:58:13.648 [C]    (served by B, 1 attempt(s), 18 ms)
+01:58:14.092 [C] >>> get k20
+01:58:14.150 [C] > get k20
+01:58:14.150 [C] k20 = "after-failover"
+01:58:14.150 [C]    (served by B, 1 attempt(s), 18 ms)
+01:58:14.604 [C] >>> get k20
+01:58:14.653 [C] > get k20
+01:58:14.653 [C] k20 = "after-failover"
+01:58:14.653 [C]    (served by B, 1 attempt(s), 18 ms)
+01:58:14.904 [C]  32234.309 [C] compaction #14 done: bank B, 11 keys, 15450 bytes free
+01:58:15.116 [C] >>> get k20
+01:58:15.155 [C] > get k20
+01:58:15.155 [C] k20 = "after-failover"
+01:58:15.155 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:15.630 [C] >>> get k20
+01:58:15.657 [C] > get k20
+01:58:15.657 [C] k20 = "after-failover"
+01:58:15.657 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:16.142 [C] >>> get k20
+01:58:16.159 [C] > get k20
+01:58:16.159 [C] k20 = "after-failover"
+01:58:16.159 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:16.656 [C] >>> get k20
+01:58:16.663 [C] > get k20
+01:58:16.663 [C] k20 = "after-failover"
+01:58:16.663 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:17.167 [C] >>> get k20
+01:58:17.215 [C] > get k20
+01:58:17.215 [C] k20 = "after-failover"
+01:58:17.215 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:17.680 [C] >>> get k20
+01:58:17.717 [C] > get k20
+01:58:17.717 [C] k20 = "after-failover"
+01:58:17.717 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:18.194 [C] >>> get k20
+01:58:18.219 [C] > get k20
+01:58:18.220 [C] k20 = "after-failover"
+01:58:18.220 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:18.705 [C] >>> get k20
+01:58:18.721 [C] > get k20
+01:58:18.721 [C] k20 = "after-failover"
+01:58:18.721 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:19.218 [C] >>> get k20
+01:58:19.223 [C] > get k20
+01:58:19.274 [C] k20 = "after-failover"
+01:58:19.274 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:19.730 [C] >>> get k20
+01:58:19.776 [C] > get k20
+01:58:19.776 [C] k20 = "after-failover"
+01:58:19.776 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:20.244 [C] >>> get k20
+01:58:20.277 [C] > get k20
+01:58:20.277 [C] k20 = "after-failover"
+01:58:20.277 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:20.756 [C] >>> get k20
+01:58:20.779 [C] > get k20
+01:58:20.779 [C] k20 = "after-failover"
+01:58:20.779 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:21.267 [C] >>> get k20
+01:58:21.281 [C] > get k20
+01:58:21.281 [C] k20 = "after-failover"
+01:58:21.282 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:21.779 [C] >>> get k20
+01:58:21.783 [C] > get k20
+01:58:21.834 [C] k20 = "after-failover"
+01:58:21.834 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:22.291 [C] >>> get k20
+01:58:22.336 [C] > get k20
+01:58:22.336 [C] k20 = "after-failover"
+01:58:22.336 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:22.803 [C] >>> get k20
+01:58:22.838 [C] > get k20
+01:58:22.838 [C] k20 = "after-failover"
+01:58:22.838 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:23.316 [C] >>> get k20
+01:58:23.340 [C] > get k20
+01:58:23.340 [C] k20 = "after-failover"
+01:58:23.340 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:23.829 [C] >>> get k20
+01:58:23.842 [C] > get k20
+01:58:23.842 [C] k20 = "after-failover"
+01:58:23.842 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:24.342 [C] >>> get k20
+01:58:24.344 [C] > get k20
+01:58:24.394 [C] k20 = "after-failover"
+01:58:24.394 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:24.854 [C] >>> get k20
+01:58:24.896 [C] > get k20
+01:58:24.896 [C] k20 = "after-failover"
+01:58:24.896 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:25.365 [C] >>> get k20
+01:58:25.399 [C] > get k20
+01:58:25.399 [C] k20 = "after-failover"
+01:58:25.399 [C]    (served by B, 1 attempt(s), 7 ms)
+01:58:25.877 [C] >>> get k20
+01:58:25.901 [C] > get k20
+01:58:25.901 [C] k20 = "after-failover"
+01:58:25.901 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:27.977 [C] >>> get k20
+01:58:27.989 [C] > get k20
+01:58:27.989 [C] k20 = "after-failover"
+01:58:27.989 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:28.489 [C] >>> get k20
+01:58:28.491 [C] > get k20
+01:58:28.542 [C] k20 = "after-failover"
+01:58:28.542 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:29.003 [C] >>> get k20
+01:58:29.044 [C] > get k20
+01:58:29.044 [C] k20 = "after-failover"
+01:58:29.044 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:29.515 [C] >>> get k20
+01:58:29.546 [C] > get k20
+01:58:29.546 [C] k20 = "after-failover"
+01:58:29.546 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:30.027 [C] >>> get k20
+01:58:30.048 [C] > get k20
+01:58:30.048 [C] k20 = "after-failover"
+01:58:30.048 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:30.541 [C] >>> get k20
+01:58:30.550 [C] > get k20
+01:58:30.551 [C] k20 = "after-failover"
+01:58:30.551 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:31.052 [C] >>> get k20
+01:58:31.103 [C] > get k20
+01:58:31.103 [C] k20 = "after-failover"
+01:58:31.103 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:31.563 [C] >>> get k20
+01:58:31.605 [C] > get k20
+01:58:31.605 [C] k20 = "after-failover"
+01:58:31.605 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:32.075 [C] >>> get k20
+01:58:32.107 [C] > get k20
+01:58:32.108 [C] k20 = "after-failover"
+01:58:32.108 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:32.588 [C] >>> get k20
+01:58:32.610 [C] > get k20
+01:58:32.610 [C] k20 = "after-failover"
+01:58:32.610 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:33.102 [C] >>> get k20
+01:58:33.112 [C] > get k20
+01:58:33.112 [C] k20 = "after-failover"
+01:58:33.112 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:33.616 [C] >>> get k20
+01:58:33.664 [C] > get k20
+01:58:33.664 [C] k20 = "after-failover"
+01:58:33.664 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:34.128 [C] >>> get k20
+01:58:34.166 [C] > get k20
+01:58:34.166 [C] k20 = "after-failover"
+01:58:34.166 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:34.640 [C] >>> get k20
+01:58:34.668 [C] > get k20
+01:58:34.668 [C] k20 = "after-failover"
+01:58:34.668 [C]    (served by B, 1 attempt(s), 8 ms)
+01:58:35.153 [C] >>> get k20
+01:58:35.171 [C] > get k20
+01:58:35.171 [C] k20 = "after-failover"
+01:58:35.171 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:35.667 [C] >>> get k20
+01:58:35.673 [C] > get k20
+01:58:35.723 [C] k20 = "after-failover"
+01:58:35.724 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:36.180 [C] >>> get k20
+01:58:36.226 [C] > get k20
+01:58:36.226 [C] k20 = "after-failover"
+01:58:36.226 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:36.692 [C] >>> get k20
+01:58:36.728 [C] > get k20
+01:58:36.728 [C] k20 = "after-failover"
+01:58:36.728 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:37.205 [C] >>> get k20
+01:58:37.230 [C] > get k20
+01:58:37.231 [C] k20 = "after-failover"
+01:58:37.231 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:37.718 [C] >>> get k20
+01:58:37.732 [C] > get k20
+01:58:37.732 [C] k20 = "after-failover"
+01:58:37.732 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:38.230 [C] >>> get k20
+01:58:38.234 [C] > get k20
+01:58:38.284 [C] k20 = "after-failover"
+01:58:38.284 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:38.742 [C] >>> get k20
+01:58:38.786 [C] > get k20
+01:58:38.786 [C] k20 = "after-failover"
+01:58:38.786 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:39.253 [C] >>> get k20
+01:58:39.288 [C] > get k20
+01:58:39.289 [C] k20 = "after-failover"
+01:58:39.289 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:39.765 [C] >>> get k20
+01:58:39.791 [C] > get k20
+01:58:39.791 [C] k20 = "after-failover"
+01:58:39.791 [C]    (served by B, 1 attempt(s), 5 ms)
+01:58:40.277 [C] >>> get k20
+01:58:40.293 [C] > get k20
+01:58:40.293 [C] k20 = "after-failover"
+01:58:40.293 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:40.790 [C] >>> get k20
+01:58:40.795 [C] > get k20
+01:58:40.845 [C] k20 = "after-failover"
+01:58:40.845 [C]    (served by B, 1 attempt(s), 8 ms)
+01:58:41.303 [C] >>> get k20
+01:58:41.347 [C] > get k20
+01:58:41.347 [C] k20 = "after-failover"
+01:58:41.347 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:41.816 [C] >>> get k20
+01:58:41.850 [C] > get k20
+01:58:41.850 [C] k20 = "after-failover"
+01:58:41.850 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:42.329 [C] >>> get k20
+01:58:42.352 [C] > get k20
+01:58:42.352 [C] k20 = "after-failover"
+01:58:42.352 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:42.849 [C] >>> get k20
+01:58:42.854 [C] > get k20
+01:58:42.905 [C] k20 = "after-failover"
+01:58:42.905 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:43.359 [C] >>> get k20
+01:58:43.406 [C] > get k20
+01:58:43.407 [C] k20 = "after-failover"
+01:58:43.407 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:43.884 [C] >>> get k20
+01:58:43.909 [C] > get k20
+01:58:43.909 [C] k20 = "after-failover"
+01:58:43.909 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:44.392 [C] >>> get k20
+01:58:44.411 [C] > get k20
+01:58:44.411 [C] k20 = "after-failover"
+01:58:44.411 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:44.904 [C] >>> get k20
+01:58:44.913 [C] > get k20
+01:58:44.913 [C] k20 = "after-failover"
+01:58:44.913 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:45.416 [C] >>> get k20
+01:58:45.465 [C] > get k20
+01:58:45.466 [C] k20 = "after-failover"
+01:58:45.466 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:45.769 [A] --- port open
+01:58:45.819 [A] > edge-kv firmwar6064 log bytes u
+01:58:45.820 [A] unknown command 'edge-kv' (try 'help')
+01:58:45.820 [A]      4.216 [A] state -> CATCHUP
+01:58:45.820 [A]      4.279 [A] anti-entropy: key h/B/motion/2 repaired from C
+01:58:45.820 [A]      4.316 [A] anti-entropy: key k20 repaired from B
+01:58:45.928 [C] >>> get k20
+01:58:45.968 [C] > get k20
+01:58:45.968 [C] k20 = "after-failover"
+01:58:45.968 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:46.440 [C] >>> get k20
+01:58:46.470 [C] > get k20
+01:58:46.470 [C] k20 = "after-failover"
+01:58:46.470 [C]    (served by B, 1 attempt(s), 8 ms)
+01:58:46.955 [C] >>> get k20
+01:58:46.972 [C] > get k20
+01:58:46.972 [C] k20 = "after-failover"
+01:58:46.972 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:47.462 [C] >>> get k20
+01:58:47.474 [C] > get k20
+01:58:47.474 [C] k20 = "after-failover"
+01:58:47.474 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:47.973 [C] >>> get k20
+01:58:47.976 [C] > get k20
+01:58:48.027 [C] k20 = "after-failover"
+01:58:48.027 [C]    (served by B, 1 attempt(s), 6 ms)
+01:58:48.378 [B]    205.084 [B] view: ABCD
+01:58:48.378 [C]  32267.938 [C] view: ABCD
+01:58:48.378 [D]  32257.557 [D] view: ABCD
+01:58:48.379 [A]      7.216 [A] state -> ACTIVE
+# 01:58:48.485 H8: A ACTIVE seen; 10 more s of GETs
+01:58:48.488 [C] >>> get k20
+01:58:48.529 [C] > get k20
+01:58:48.529 [C] k20 = "after-failover"
+01:58:48.529 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:48.990 [C] >>> get k20
+01:58:49.031 [C] > get k20
+01:58:49.031 [C] k20 = "after-failover"
+01:58:49.031 [C]    (served by A, 1 attempt(s), 8 ms)
+01:58:49.494 [C] >>> get k20
+01:58:49.533 [C] > get k20
+01:58:49.533 [C] k20 = "after-failover"
+01:58:49.533 [C]    (served by A, 1 attempt(s), 6 ms)
+# 01:58:49 NS: A back
+01:58:49.996 [C] >>> get k20
+01:58:50.035 [C] > get k20
+01:58:50.035 [C] k20 = "after-failover"
+01:58:50.035 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:50.500 [C] >>> get k20
+01:58:50.537 [C] > get k20
+01:58:50.537 [C] k20 = "after-failover"
+01:58:50.537 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:51.003 [C] >>> get k20
+01:58:51.039 [C] > get k20
+01:58:51.039 [C] k20 = "after-failover"
+01:58:51.039 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:51.506 [C] >>> get k20
+01:58:51.541 [C] > get k20
+01:58:51.541 [C] k20 = "after-failover"
+01:58:51.541 [C]    (served by A, 1 attempt(s), 8 ms)
+01:58:52.010 [C] >>> get k20
+01:58:52.043 [C] > get k20
+01:58:52.043 [C] k20 = "after-failover"
+01:58:52.043 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:52.513 [C] >>> get k20
+01:58:52.545 [C] > get k20
+01:58:52.545 [C] k20 = "after-failover"
+01:58:52.545 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:53.017 [C] >>> get k20
+01:58:53.047 [C] > get k20
+01:58:53.047 [C] k20 = "after-failover"
+01:58:53.047 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:53.521 [C] >>> get k20
+01:58:53.549 [C] > get k20
+01:58:53.549 [C] k20 = "after-failover"
+01:58:53.549 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:54.023 [C] >>> get k20
+01:58:54.051 [C] > get k20
+01:58:54.051 [C] k20 = "after-failover"
+01:58:54.051 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:54.526 [C] >>> get k20
+01:58:54.553 [C] > get k20
+01:58:54.553 [C] k20 = "after-failover"
+01:58:54.553 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:55.029 [C] >>> get k20
+01:58:55.054 [C] > get k20
+01:58:55.054 [C] k20 = "after-failover"
+01:58:55.054 [C]    (served by A, 1 attempt(s), 6 ms)
+01:58:55.533 [C] >>> get k20
+01:58:55.556 [C] > get k20
+01:58:55.556 [C] k20 = "after-failover"
+01:58:55.556 [C]    (served by A, 1 attempt(s), 9 ms)
+01:58:56.036 [C] >>> get k20
+01:58:56.058 [C] > get k20
+01:58:56.058 [C] k20 = "after-failover"
+01:58:56.058 [C]    (served by A, 1 attempt(s), 8 ms)
+01:58:56.539 [C] >>> get k20
+01:58:56.561 [C] > get k20
+01:58:56.561 [C] k20 = "after-failover"
+01:58:56.561 [C]    (served by A, 1 attempt(s), 8 ms)
+01:58:57.042 [C] >>> get k20
+01:58:57.064 [C] > get k20
+01:58:57.064 [C] k20 = "after-failover"
+01:58:57.064 [C]    (served by A, 1 attempt(s), 8 ms)
+01:58:57.265 [C]  32277.205 [C] gc: 5 key(s) marked for drop (orphans 16, tombstones 6 total)
+01:58:57.545 [C] >>> get k20
+01:58:57.566 [C] > get k20
+01:58:57.566 [C] k20 = "after-failover"
+01:58:57.566 [C]    (served by A, 1 attempt(s), 9 ms)
+01:58:57.666 [D]  32267.220 [D] gc: 1 key(s) marked for drop (orphans 16, tombstones 8 total)
+01:58:57.968 [A]     17.216 [A] gc: 3 key(s) marked for drop (orphans 3, tombstones 0 total)
+01:58:58.048 [C] >>> get k20
+01:58:58.068 [C] > get k20
+01:58:58.068 [C] k20 = "after-failover"
+01:58:58.068 [C]    (served by A, 1 attempt(s), 6 ms)
+# 01:58:58.554 H8: GET loop stopped
