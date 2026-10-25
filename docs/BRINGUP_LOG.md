@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sat 24 17:08 UTC: steps 1-6 done, **overnight soak running since 17:05:07 UTC = 22:35 IST**)
+## RESUME HERE (updated Sun 25 01:45 UTC = 07:15 IST: today's plan done, soak collected)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -18,7 +18,15 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * Problem 15: fault logging `24569fb`, F1 `9ded10a` (DHT read under the bus lock), F2 `15a9273` (final write-cycle poll).
 * `make check` passes (32 host tests + 40 Pi tests); all 8 envs build without warnings.
 
-### SOAK IN PROGRESS (M10/H13): started Sat 24 17:05:07 UTC (22:35 IST)
+### SOAK DONE (M10/H13, M11): Sat 24 17:05:07 → Sun 25 01:35 UTC (8 h 30 min)
+
+* **Result:** all four ACTIVE `ABCD` at the end, **no reboot** (uptime ≈ 30 850 s), all 98 polls answered by every node. Samples A 1026, B 1025, C 1025, D 1024 (≈ 30 850 s / 30 s); sensor writes **100 % committed** (A 1 under-replicated), **0 failed**; client ops 0 failed on all four; **storage errors A 1, B/C/D 0**; **aborted compactions 0** (compactions A 16, B 18, C 13, D 28); queue overflows 0; heap stable (min 164-170 KB); D: 21 DHT read failures in 8.5 h, never `STALE`.
+* **A's one storage error:** 17:26:17 UTC `storage error on s/A/light (replica write from C): I2C_ERROR`, repaired 17:26:21. First time A's sporadic errors are named (problem 15, A part): an I2C transfer error on the bus shared with the BH1750. Rare (1 in 8.5 h); next step if it matters: log BH1750 read timing / retry the write once on `I2C_ERROR`.
+* **Radio episode 19:31-19:35 UTC (01:01 IST, nobody present):** 22 view changes, A briefly `A---`; no error, no reboot, client ops unaffected (C and D 3 failed replication attempts each, retried). Heartbeat loss as in problem 14.
+* `unknown MAC` grew steadily on every node (~0.15 / s): another 2.4 GHz ESP-NOW/Wi-Fi sender nearby; harmless (filtered).
+* RESULTS filled: §4 sensors, §5 wear (hottest page → years to 1M: A 16.1, B 14.4, C 20.0, D 10.0), `chip_temp` (A 60-66, B 54-64, C 52-61, D 53-62 °C die; room 29.3-29.8 °C). `soak-sat24.log`, `measure-soak-sat24.log`.
+
+### (soak setup, as started)
 
 * **Firmware:** the final build below on all four (A, C, D real; B simulated), 30 s sampling, Pi off. Storage errors 0 on all four at the start; `faults injected` frozen at the loss-test counts (A 76, B 73, C 97, D 113).
 * **Recording:** `docs/test-logs/soak-sat24.log` — one continuous capture of all four consoles (every line, UTC timestamps: view changes, compactions, `storage error on … : <fault>` lines, anti-entropy, reboots / port loss), plus `status` and `stats` on every node every 5 min (chip temp, storage errors, compactions / aborted, sensor sample counts, last value, read failures, under-replicated / failed writes, ESP-NOW delivered / failed, queue overflows, heap). Capture and poller are detached processes in WSL (`cap.py` and a shell loop in the session scratchpad; the poller stops when `soak_on` there is removed).
@@ -87,8 +95,8 @@ Pre-filled from BRINGUP §3.5 / §4.7. Fill in the right-hand columns as you go.
 | M9d | Sensor D: DHT11 + radio check (§4.8, bit off vs on) | Mon 19 PM | 1.5 | Wed 21 07:53 | Wed 21 09:01 | 1.1 | done (problems 16, 17 on the way; problem 15 seen on D) | D off 07:58:30 for wiring. Problem 16 (EEPROM FATAL, bad jumper) fixed 08:19; problem 17 (DHT11 wired by position) fixed ~08:47. **4.8 radio check**, 3 × `bench 50` at 1 s sampling: bit off (08:21, node-d 08:20:33) vs bit on (08:48, node-d 08:25:31, `0x09`): ok/failed 150/0 vs 150/0; avg (mean of 3) 29.3 vs 30.7 ms (+1.4, pass ≤ +5); max 53 vs 67 ms (+14, pass ≤ +20); extra client attempts 2 vs 0; data frames per client op 282/180 = 1.57 vs 332/214 = 1.55 (−1 %; raw counts differ because the simulated source wrote 30 samples in run 1 vs 64 real ones in run 2); radio failed 0 vs 0; Σ dedup replays A, B, C 0 vs 0. **Pass.** **Stimulus:** reads 30.8-31.3 °C; breath 08:53:30-44: 31.3 → 33.3 °C in 7 samples; DATA off ~08:56:05: `31.300 degC STALE (last good value, no good read lately)` from 08:56:15 (10 s, `DHT_STALE_MS`); DATA on: last STALE 09:00:11.9, `30.800 degC` at 09:00:13.9. 120 read failures, all in the DATA-off window. Period back to 5000 at 09:01:30. **While DATA was off, 8 compactions on D aborted and D logged 7 storage errors (problem 15).** `sensor-D.log`, `dht-radio-off.log`, `dht-radio-on.log`, `dht-radio-on-attempt1.log`, `A-capture-wed21.log` | NS |
 | M9e | All four sensors together, 30 min, logs | Mon 19 PM | 1.0 | | | | | | |
 | G1 | **Go/no-go** per sensor at 17:00 (record which bits stay set) | Mon 19 17:00 | — | | | | | | |
-| M10 | Overnight soak (H13, shortened), started | Mon 19 night | 0.5 | | | | | | |
-| M11 | Read soak; `measure.py` sensor + wear sections | Tue 20 AM | 0.5 | | | | | | |
+| M10 | Overnight soak (H13, shortened), started | Mon 19 night | 0.5 | Sat 24 17:05 UTC | Sun 25 01:35 UTC | 8.5 | **done** | all four up 8.5 h, 0 failed writes, storage errors A 1 (I2C_ERROR, repaired), 0 aborts; RESULTS §4, §5, chip_temp. `soak-sat24.log` | NS |
+| M11 | Read soak; `measure.py` sensor + wear sections | Tue 20 AM | 0.5 | Sun 25 01:35 UTC | Sun 25 01:45 UTC | 0.2 | **done** | final `status`/`stats`/`members`/`sensors`; `measure.py --sections sensors,wear` filled RESULTS §4, §5; chip_temp row; findings in RESUME HERE. `measure-soak-sat24.log` | NS |
 | M12 | Fault-injection images: H4, H5, H10, `measure.py --loss` (10 %, 20 %) | Tue 20 AM | 1.0 | | | | | | |
 | M13 | H12b (power cut during compaction) | Tue 20 AM | 0.5 | | | | | | |
 | M14 | RESULTS.md hardware column filled, "why they differ" written | Tue 20 PM | 1.0 | | | | | | |
