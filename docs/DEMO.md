@@ -2,7 +2,9 @@
 
 Four ESP32-C3 nodes (A–D) form a leaderless key-value store over ESP-NOW. Node A bridges to a Raspberry Pi. The demo uses only node consoles and the Pi CLI. If the hardware misbehaves, the same script runs in the simulator ("Fallback" at the end).
 
-The expected outputs below come from a full rehearsal in `build/host/edge_sim` on 2026-10-17. Numbers (latencies, hlc, sequence numbers, sensor values) will differ. Key placement does not: it depends only on the key name.
+The expected outputs below come from a full rehearsal in `build/host/edge_sim` on 2026-10-17; the **hardware rehearsal of Sun 25 Oct** (no-Pi variant, `docs/test-logs/sun25-demo-rehearsal.log`) confirmed every step and its notes are folded in below. Numbers (latencies, hlc, sequence numbers, sensor values) will differ. Key placement does not: it depends only on the key name.
+
+**Sensors on the boards (Sat 24):** A light, C sound and D temperature are real; **B's motion is simulated** (its AM312 gave no output, BRINGUP_LOG problem 24), and every B reading says `simulated`. C's LM393 only hears a loud clap within ~5 cm of its microphone, and even then not every time.
 
 ## Before the audience arrives (not counted)
 
@@ -12,7 +14,8 @@ The expected outputs below come from a full rehearsal in `build/host/edge_sim` o
 4. Check that the Pi's `python3 -m edgekv ping` prints `bridge is node A`.
 5. Doing step 7 on the boards? Flash the `-fi` images beforehand (`pio run -e node-a-fi -t upload …`, same for B–D). Otherwise step 7 uses the simulator.
 6. If a console reply seems missing, press Enter: the next input always brings out anything still waiting on the board (BRINGUP_LOG problem 9, fixed in the firmware since Tue 20).
-7. Run only one Pi command at a time. A second command while `watch` runs is refused with ``error: port busy: another edgekv command is using it, stop `watch` first``. Stop `watch` with Ctrl-C first.
+7. After a USB replug, a console through usbipd reopens only ~5-6 s after the board powers up: the board's first lines (boot banner, `storage recovered`, `BOOTING`, `CATCHUP`) are already gone, and the buffered banner may come back as `unknown command 'edge-kv'` (harmless, BRINGUP_LOG problem 10). Step 6 is written for that.
+8. Run only one Pi command at a time. A second command while `watch` runs is refused with ``error: port busy: another edgekv command is using it, stop `watch` first``. Stop `watch` with Ctrl-C first.
 
 ## 1. The cluster is up (1 min)
 
@@ -26,7 +29,8 @@ The expected outputs below come from a full rehearsal in `build/host/edge_sim` o
 ```
 node A  state ACTIVE  view ABCD  uptime 65s
 storage recovered: 6 live, 0 tombstones, 6/64 keys, log 455/16064 bytes, ...
-sensor light (simulated): on, 3 samples, last 389.097 lux seq 2, 6 ok, ...   <- "hardware" once A's bit is set
+sensor light (hardware): on, 5 samples, last 10.833 lux seq 4210, 8 ok, ...
+(B: sensor motion (simulated) ...; C: sensor sound (hardware) ...; D: sensor temp (hardware) ...)
 > members
   A  self    ACTIVE
   B  alive   last heard 45 ms ago, 31 heartbeats
@@ -41,8 +45,10 @@ sensor light (simulated): on, 3 samples, last 389.097 lux seq 2, 6 ok, ...   <- 
 | where | command |
 |---|---|
 | Pi | `python3 -m edgekv watch --interval 5 --csv demo.csv` |
-| room | wave at B's PIR, clap **within ~5 cm of C's microphone** (the LM393 module does not hear claps further away; RESULTS.md), cover A's light sensor, breathe on D's DHT11 |
+| room | cover A's light sensor with a hand (~10 s: **0.000 lux**, then back to room light), breathe on D's DHT11 for **~20 s** from close up (rehearsal: 10 s gave only +0.5 °C), clap loudly **within ~5 cm of C's microphone** (may not register: say so; RESULTS.md). **No wave at B**: B's motion is simulated, its line says `simulated` |
 | Pi | Ctrl-C, then `head -5 demo.csv` |
+
+**Without the Pi** (Pi off or its link down): type `sensors` on any console every ~5 s instead of `watch`; it prints the four latest readings and which node served each.
 
 **Audience sees** (every 5 s):
 
@@ -141,9 +147,11 @@ k6 = "written-while-C-down"
 | where | command |
 |---|---|
 | table | plug node C back in |
-| console C | watch the boot log, then `dump` |
+| console C | `status` (shows `storage recovered … ACTIVE`, uptime a few seconds), then `dump` |
 
-**Audience sees** on C, within about 6 s:
+**On the boards (rehearsal Sun 25):** C's console reattaches ~6 s after power-on, when C is already `ACTIVE`, so the lines below are **not visible live**; show the result instead: A's log prints `view: ABCD`, C's `status` says ACTIVE, and `dump` on C holds `k6 = "written-while-C-down"` (repaired while it caught up). Plug C in without leaning over the other boards: in the rehearsal A's view flapped for ~30 s right after C's replug (heartbeat loss, BRINGUP_LOG problem 14).
+
+**In the simulator** (and what C logs, unseen, on the board), within about 6 s:
 
 ```
   [C] storage recovered: 7 live, 0 tombstones, ...
@@ -168,7 +176,7 @@ This needs the fault-injection images (`node-a-fi` … `node-d-fi`) on all four 
 |---|---|
 | each console (A, B, C, D) | `fault loss 20` |
 | console A | `bench 50` |
-| each console | `fault clear` |
+| each console | `fault clear` (the console answers `fault armed` for every `fault` command, `clear` included; the faults are cleared, `faults injected` in `stats` stops growing) |
 
 **Audience sees** (on each console, then on A):
 
@@ -180,6 +188,8 @@ bench: 50 sequential SETs on keys bench/0..7
   ...
 bench: 50 ok, 0 failed in 36594 ms; latency min 7 avg 731 max 5211 ms
 ```
+
+On the boards (rehearsal Sun 25): `bench: 50 ok, 0 failed in 30400 ms; latency min 26 avg 608 max 4904 ms`, 14 `duplicate … replayed` lines.
 
 The `duplicate … replayed` lines appear on the consoles of the nodes that are primaries for the bench keys. Simulator reference numbers: avg 731 ms, max 5.2 s, 0 failed (`docs/RESULTS.md` §3, `loss20_A`).
 
@@ -200,6 +210,14 @@ D: fault clear
 (`loss 0.2` / `loss 0` in the simulator does the same from the simulated radio's side, in one line.) If you type `fault loss` on a normal image, the console answers `fault injection not compiled in`: the normal images cannot drop packets on purpose (`scripts/check_images.sh`, run by `make firmware`).
 
 **Idea:** lost packets are retransmitted with the same request id, and the receiver's dedup table replays the cached answer. Every write still executes exactly once (all 50 ok, latency goes up, no failures).
+
+## After the demo (not counted)
+
+Delete the demo keys, so they do not take slots in the 64-key per-node index (BRINGUP_LOG problem 13): on any console `del bench/0` … `del bench/7`, `del demo/greeting`, `del k6` (and `demo/pi` if the Pi step ran). Set `sensor period 30000` again on every console and `log info` on B and D.
+
+## Rehearsal timings (hardware, Sun 25 Oct, no-Pi variant)
+
+Command time only (no narration): step 1 4 s, step 2 60 s, step 3 3 s, step 4 3 s, step 5 10 s after the unplug (view `AB-D` 1.8 s after it), step 6 27 s from replug to `dump`, step 7 34 s. About 2.5 min of commands: the 10 minutes is narration. A timed run with a speaker is still to do (rehearsal 2).
 
 ## Closing line (15 s)
 
