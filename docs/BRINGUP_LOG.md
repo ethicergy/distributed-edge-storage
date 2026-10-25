@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sun 25 02:12 UTC: soak collected; remaining H-tests done, all pass; next: DEMO rehearsal, SLIDES_DATA)
+## RESUME HERE (updated Sun 25 02:30 UTC: H-tests done, DEMO rehearsal 1 done and script fixed, SLIDES_DATA.md + figures written)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 

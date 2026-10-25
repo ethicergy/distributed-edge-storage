@@ -550,3 +550,10 @@
 02:18:26.691 [C] eeprom page writes since boot: total 347, hottest page 31 with 5 (rated 1000000)
 02:18:26.692 [B] eeprom page writes since boot: total 2071, hottest page 11 with 7 (rated 1000000)
 02:18:26.693 [D] eeprom page writes since boot: total 2601, hottest page 315 with 12 (rated 1000000)
+02:20:07.834 [A]    684.224 [A] gc: 1 key(s) marked for drop (orphans 13, tombstones 1 total)
+02:20:12.280 [C]    257.211 [C] gc: 4 key(s) marked for drop (orphans 2, tombstones 4 total)
+02:20:12.652 [D]    677.217 [D] gc: 2 key(s) marked for drop (orphans 12, tombstones 2 total)
+02:20:13.876 [B]    687.210 [B] gc: 2 key(s) marked for drop (orphans 18, tombstones 2 total)
+02:20:18.567 [A]    694.224 [A] gc: 3 key(s) marked for drop (orphans 13, tombstones 4 total)
+02:21:19.141 [A]    756.058 [A] view: ABC-
+02:21:20.146 [A]    757.057 [A] view: ABCD
