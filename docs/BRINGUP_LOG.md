@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sun 25 02:30 UTC: H-tests done, DEMO rehearsal 1 done and script fixed, SLIDES_DATA.md + figures written)
+## RESUME HERE (updated Sun 25 03:15 UTC: **firmware FROZEN at `2417e28`** for the presentation)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -33,6 +33,13 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * **Check Sat 24 17:56 UTC (before NS sleeps):** capture + poller alive, all four ports present, 10 polls in 50 min, ~100 samples per node (= 50 min / 30 s), 0 view changes, 0 aborted compactions, `faults injected` frozen. **One storage error on A at 17:26:17 UTC: `storage error on s/A/light (replica write from C): I2C_ERROR`**, repaired by anti-entropy at 17:26:21; none since. First time A's errors are named (problem 15, A part; A shares its I2C bus with the BH1750): analyse after the soak. Windows: sleep never (AC and DC), hibernate never on AC (16 h on battery), laptop on AC power.
 * **Needs overnight:** laptop plugged in, **no sleep/hibernate**, the WSL/Claude Code terminal left open (closing all WSL sessions can stop the VM and the capture), boards untouched, D's EEPROM on the table.
 * **Collect: Sun 25 from ~07:00 IST (01:30 UTC), ≥ 8 h.** Steps (M11): stop the poller; `status`, `stats`, `members`, `sensors` on all four into the soak log; quit the capture; check: storage errors (expect 0), aborted compactions (0), queue overflows (0), sensor `0 failed`, seq ≈ elapsed / 30 s, no reboots (uptime), view `ABCD`; then `scripts/measure.py --sections sensors,wear` (fills RESULTS §4 sensors and §5 wear); chip temp per node over the night (`grep 'chip temp'`, RESULTS `chip_temp` plot plan); commit + push.
+
+### FIRMWARE FROZEN (NS, Sun 25): `git 2417e28` on all four
+
+* **Rule:** no firmware changes until the presentation; only fixes for actual breakage, and **ask NS first**.
+* Images: `-fi` on all four, flashed 03:12:42-03:13:14 UTC; banner and `stats` print `env node-x-fi, git 2417e28, reset reason: …` (the revision replaced `__DATE__/__TIME__`, which only dated `main.cpp`; `scripts/git_rev.py`, `scripts/pio_git_rev.py`; `-dirty` = `src/`, `include/` or `platformio.ini` differ from the commit; docs and logs ignored). `scripts/check_images.sh` fails any image not built from the current revision (verified: right after the commit all 8 old images were `BAD`, after `make firmware` all `ok  git 2417e28`) and warns on `-dirty`.
+* Health 03:13:44: all four ACTIVE `ABCD`, storage errors 0, aborted 0, faults injected 0; A light, C sound, D temp hardware, B motion simulated.
+* Contents: mask `0x0D`, F1 + F2 + fault logging, `chip temp` in `status`/`stats`, `fault clear` → `faults cleared`, git revision.
 
 ### FIRMWARE UPDATE Sun 25 02:35 UTC (approved by NS): `fault clear` answers `faults cleared`
 

@@ -296,3 +296,19 @@ node-c-fi      SUCCESS   00:00:06.795
 MAC: 14:63:93:c5:c1:9c
 ========================= [SUCCESS] Took 6.96 seconds =========================
 node-d-fi      SUCCESS   00:00:06.959
+== node-a-fi 03:12:42 git 2417e28
+MAC: 14:63:93:c5:d0:18
+========================= [SUCCESS] Took 8.60 seconds =========================
+node-a-fi      SUCCESS   00:00:08.596
+== node-b-fi 03:12:54 git 2417e28
+MAC: 14:63:93:c5:c3:1c
+========================= [SUCCESS] Took 6.63 seconds =========================
+node-b-fi      SUCCESS   00:00:06.627
+== node-c-fi 03:13:04 git 2417e28
+MAC: 14:63:93:c8:a3:08
+========================= [SUCCESS] Took 6.49 seconds =========================
+node-c-fi      SUCCESS   00:00:06.486
+== node-d-fi 03:13:14 git 2417e28
+MAC: 14:63:93:c5:c1:9c
+========================= [SUCCESS] Took 8.60 seconds =========================
+node-d-fi      SUCCESS   00:00:08.601

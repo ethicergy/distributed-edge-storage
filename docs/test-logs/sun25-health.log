@@ -120,3 +120,113 @@
 02:36:20.947 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
 02:36:20.947 [B] sensor motion (simulated): on, 2 samples, last 3 events, last motion 20 s before the sample seq 2809, 4 ok, 0 under-replicated, 0 failed, 0 read failures
 02:36:20.947 [B] chip temp 53.5 degC (die temperature, not ambient)
+03:13:44.953 [A] >>> stats
+03:13:44.955 [A] > stats
+03:13:44.962 [A] radio   rx 325 (invalid 0, spoofed 0)  tx 132 (failed 0)
+03:13:44.962 [A] hb      tx 96  rx 244   membership changes 7
+03:13:44.962 [A] server  executed 2  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+03:13:44.962 [A] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 5 stale 0
+03:13:44.963 [A] ae      rounds 7  chunks tx 21 rx 66  tables 18  pushes 5  resync tx 5 applied 4 stale 1
+03:13:44.963 [A] gc      orphans 4  tombstones 0  keys dropped 0
+03:13:44.963 [A] client  ok 5  failed 0  attempts 5  local 2
+03:13:44.963 [A] storage errors 0  compactions 1 (aborted 0)  faults injected 0
+03:13:44.963 [A] chip temp 63.1 degC (die temperature, not ambient)
+03:13:44.963 [A] env node-a-fi, git 2417e28, reset reason: unknown
+03:13:44.963 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+03:13:44.963 [A] esp-now rx 325  queue overflows 0  unknown MAC 4
+03:13:44.963 [B] >>> stats
+03:13:44.963 [A] esp-now tx -> B: 2 delivered, 0 failed (MAC-layer ACK)
+03:13:44.963 [A] esp-now tx -> C: 8 delivered, 0 failed (MAC-layer ACK)
+03:13:44.964 [A] esp-now tx -> D: 5 delivered, 0 failed (MAC-layer ACK)
+03:13:44.964 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+03:13:44.964 [C] >>> stats
+03:13:44.964 [B] > stats
+03:13:44.964 [B] radio   rx 275 (invalid 0, spoofed 0)  tx 104 (failed 0)
+03:13:44.964 [B] hb      tx 75  rx 213   membership changes 7
+03:13:44.964 [B] server  executed 4  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+03:13:44.965 [B] repl    started 2  ok 2  failed 0  stale 0   as replica: applied 0 stale 0
+03:13:44.965 [B] ae      rounds 6  chunks tx 18 rx 49  tables 13  pushes 1  resync tx 1 applied 4 stale 2
+03:13:44.965 [B] gc      orphans 4  tombstones 0  keys dropped 0
+03:13:44.965 [B] client  ok 3  failed 0  attempts 4  local 1
+03:13:44.965 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+03:13:44.966 [D] >>> stats
+03:13:44.966 [B] chip temp 60.5 degC (die temperature, not ambient)
+03:13:44.966 [B] env node-b-fi, git 2417e28, reset reason: unknown
+03:13:44.966 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+03:13:44.966 [C] > stats
+03:13:44.967 [C] radio   rx 215 (invalid 0, spoofed 0)  tx 76 (failed 0)
+03:13:44.967 [B] esp-now rx 275  queue overflows 0  unknown MAC 4
+03:13:44.967 [D] > stats
+03:13:44.967 [C] hb      tx 54  rx 168   membership changes 5
+03:13:44.968 [B] esp-now tx -> A: 0 delivered, 0 failed (MAC-layer ACK)
+03:13:44.968 [B] esp-now tx -> C: 3 delivered, 3 failed (MAC-layer ACK)
+03:13:44.968 [B] esp-now tx -> D: 5 delivered, 0 failed (MAC-layer ACK)
+03:13:44.968 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+03:13:44.968 [C] server  executed 1  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+03:13:44.968 [D] radio   rx 151 (invalid 0, spoofed 0)  tx 53 (failed 0)
+03:13:44.968 [C] repl    started 1  ok 1  failed 0  stale 0   as replica: applied 1 stale 0
+03:13:44.969 [C] ae      rounds 5  chunks tx 15 rx 36  tables 9  pushes 1  resync tx 1 applied 3 stale 2
+03:13:44.969 [C] gc      orphans 5  tombstones 0  keys dropped 0
+03:13:44.968 [D] hb      tx 33  rx 128   membership changes 2
+03:13:44.969 [C] client  ok 3  failed 0  attempts 3  local 0
+03:13:44.969 [D] server  executed 1  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+03:13:44.969 [D] repl    started 1  ok 1  failed 0  stale 0   as replica: applied 1 stale 0
+03:13:44.969 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+03:13:44.969 [D] ae      rounds 4  chunks tx 16 rx 17  tables 5  pushes 0  resync tx 0 applied 1 stale 1
+03:13:44.969 [D] gc      orphans 2  tombstones 0  keys dropped 0
+03:13:44.969 [C] chip temp 59.4 degC (die temperature, not ambient)
+03:13:44.969 [C] env node-c-fi, git 2417e28, reset reason: unknown
+03:13:44.970 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+03:13:44.970 [C] esp-now rx 215  queue overflows 0  unknown MAC 5
+03:13:44.970 [C] esp-now tx -> A: 3 delivered, 0 failed (MAC-layer ACK)
+03:13:44.969 [D] client  ok 1  failed 0  attempts 1  local 0
+03:13:44.970 [C] esp-now tx -> B: 2 delivered, 0 failed (MAC-layer ACK)
+03:13:44.970 [C] esp-now tx -> D: 2 delivered, 0 failed (MAC-layer ACK)
+03:13:44.970 [C] heap free 174324 (min 165864)  node task stack headroom 13544 bytes
+03:13:44.970 [C] eeprom page writes since boot: total 14, hottest page 21 with 3 (rated 1000000)
+03:13:44.970 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+03:13:44.970 [D] chip temp 59.6 degC (die temperature, not ambient)
+03:13:44.970 [D] env node-d-fi, git 2417e28, reset reason: unknown
+03:13:44.970 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+03:13:44.970 [D] esp-now rx 151  queue overflows 0  unknown MAC 1
+03:13:44.970 [D] esp-now tx -> A: 1 delivered, 0 failed (MAC-layer ACK)
+03:13:44.970 [D] esp-now tx -> B: 2 delivered, 0 failed (MAC-layer ACK)
+03:13:44.970 [D] esp-now tx -> C: 1 delivered, 0 failed (MAC-layer ACK)
+03:13:44.970 [D] heap free 174712 (min 166152)  node task stack headroom 13544 bytes
+03:13:44.970 [D] eeprom page writes since boot: total 8, hottest page 111 with 5 (rated 1000000)
+03:13:45.014 [A] eeprom page writes since boot: total 582, hottest page 272 with 7 (rated 1000000)
+03:13:45.014 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+03:13:45.018 [B] eeprom page writes since boot: total 17, hottest page 44 with 3 (rated 1000000)
+03:13:46.467 [A] >>> status
+03:13:46.468 [A] > status
+03:13:46.469 [A] node A  state ACTIVE  view ABCD  uptime 56s
+03:13:46.469 [A] hlc 83926963.0
+03:13:46.469 [A] storage recovered: 15 live, 0 tombstones, 15/64 keys, log 1028/16064 bytes, bank B, 1 compactions
+03:13:46.469 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+03:13:46.468 [B] >>> status
+03:13:46.472 [C] >>> status
+03:13:46.472 [B] > status
+03:13:46.472 [B] node B  state ACTIVE  view ABCD  uptime 46s
+03:13:46.472 [B] hlc 83926964.0
+03:13:46.472 [B] storage recovered: 14 live, 0 tombstones, 14/64 keys, log 2688/16064 bytes, bank A, 0 compactions
+03:13:46.472 [B] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+03:13:46.472 [B] sensor motion (simulated): on, 2 samples, last 3 events, last motion 20 s before the sample seq 2884, 4 ok, 0 under-replicated, 0 failed, 0 read failures
+03:13:46.472 [B] chip temp 60.5 degC (die temperature, not ambient)
+03:13:46.473 [D] >>> status
+03:13:46.474 [C] > status
+03:13:46.474 [C] node C  state ACTIVE  view ABCD  uptime 35s
+03:13:46.474 [C] hlc 83926967.0
+03:13:46.474 [C] storage recovered: 12 live, 0 tombstones, 12/64 keys, log 1209/16064 bytes, bank A, 0 compactions
+03:13:46.474 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+03:13:46.474 [C] sensor sound (hardware): on, 1 samples, last 0 events, 0.0 % active seq 3248, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+03:13:46.519 [A] sensor light (hardware): on, 2 samples, last 0.000 lux seq 4403, 4 ok, 0 under-replicated, 0 failed, 0 read failures
+03:13:46.519 [A] chip temp 63.1 degC (die temperature, not ambient)
+03:13:46.524 [D] > status
+03:13:46.524 [D] node D  state ACTIVE  view ABCD  uptime 24s
+03:13:46.524 [D] hlc 83926967.0
+03:13:46.524 [D] storage recovered: 19 live, 0 tombstones, 19/64 keys, log 6735/16064 bytes, bank A, 0 compactions
+03:13:46.524 [D] pending: 0 client, 0 replication, 1 dedup entries, 8 free op slots
+03:13:46.524 [D] sensor temp (hardware): on, 0 samples, last - seq 0, 0 ok, 0 under-replicated, 0 failed, 0 read failures
+03:13:46.524 [D] chip temp 59.6 degC (die temperature, not ambient)
+03:13:46.524 [C] chip temp 59.4 degC (die temperature, not ambient)
+03:13:48.678 [D]     27.208 [D] gc: 3 key(s) marked for drop (orphans 5, tombstones 0 total)
