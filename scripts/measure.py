@@ -661,7 +661,7 @@ def measure_loss(s: Session, r: Results, bench: int, levels=(10, 20)) -> None:
                 r.put(f"loss{pct}_{origin}", "no bench result")
         after = {n: snapshot(s, n) for n in NODES}
         for node in NODES:
-            s.command(node, "fault clear", re.compile(r"^fault armed"))
+            s.command(node, "fault clear", re.compile(r"^(faults cleared|fault armed)"))
 
         extra = sum(after[n].get("attempts", 0) - before[n].get("attempts", 0) for n in (BRIDGE, "B")) - 2 * bench
         replays = sum(after[n].get("dedup_replays", 0) - before[n].get("dedup_replays", 0) for n in NODES)

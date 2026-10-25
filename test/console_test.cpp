@@ -191,8 +191,12 @@ int main()
     REQUIRE(cluster.runtime(node::B).faults().tx_loss_percent == 10);
     run(cluster, console, "fault loss 101");
     REQUIRE(contains("usage: fault"));
+    g_output.clear();
     run(cluster, console, "fault clear");
     REQUIRE(cluster.runtime(node::B).faults().tx_loss_percent == 0);
+    // Clearing says so; it once answered "fault armed" (DEMO rehearsal, Sun 25).
+    REQUIRE(contains("faults cleared\n"));
+    REQUIRE(!contains("fault armed"));
 
     run(cluster, console, "frobnicate");
     REQUIRE(contains("unknown command 'frobnicate'"));

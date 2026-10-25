@@ -268,5 +268,5 @@ digital output (DO), which hears a loud clap only within ~5 cm.
 * **Storage:** A shares its I2C bus with the BH1750; one `I2C_ERROR` in 8.5 h
   (repaired); no deployment id in the EEPROM superblock (reused modules carry
   old data).
-* **Tooling:** `fault clear` prints `fault armed` (text only); consoles through
-  usbipd miss a board's first ~6 s after a replug.
+* **Tooling:** consoles through usbipd miss a board's first ~6 s after a
+  replug.

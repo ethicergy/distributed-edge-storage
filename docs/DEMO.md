@@ -45,7 +45,7 @@ sensor light (hardware): on, 5 samples, last 10.833 lux seq 4210, 8 ok, ...
 | where | command |
 |---|---|
 | Pi | `python3 -m edgekv watch --interval 5 --csv demo.csv` |
-| room | cover A's light sensor with a hand (~10 s: **0.000 lux**, then back to room light), breathe on D's DHT11 for **~20 s** from close up (rehearsal: 10 s gave only +0.5 °C), clap loudly **within ~5 cm of C's microphone** (may not register: say so; RESULTS.md). **No wave at B**: B's motion is simulated, its line says `simulated` |
+| room | cover A's light sensor with a hand (~10 s: **0.000 lux**, then back to room light), breathe on D's DHT11 for **~20 s** from close up (rehearsal: 10 s gave only +0.5 °C), clap loudly **within ~5 cm of C's microphone** (may not register: in rehearsal 1, two sharp claps at 5 cm gave 0 events; say so; RESULTS.md). **No wave at B**: B's motion is simulated, its line says `simulated` |
 | Pi | Ctrl-C, then `head -5 demo.csv` |
 
 **Without the Pi** (Pi off or its link down): type `sensors` on any console every ~5 s instead of `watch`; it prints the four latest readings and which node served each.
@@ -176,7 +176,7 @@ This needs the fault-injection images (`node-a-fi` … `node-d-fi`) on all four 
 |---|---|
 | each console (A, B, C, D) | `fault loss 20` |
 | console A | `bench 50` |
-| each console | `fault clear` (the console answers `fault armed` for every `fault` command, `clear` included; the faults are cleared, `faults injected` in `stats` stops growing) |
+| each console | `fault clear` (answers `faults cleared`) |
 
 **Audience sees** (on each console, then on A):
 

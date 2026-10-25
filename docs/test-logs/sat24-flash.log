@@ -280,3 +280,19 @@ node-d-fi      SUCCESS   00:00:06.622
 17:01:47.649 [D] sensor temp (hardware): on, 1 samples, last 29.800 degC seq 3405, 2 ok, 0 under-replicated, 0 failed, 0 read failures
 17:01:47.649 [D] chip temp 53.6 degC (die temperature, not ambient)
 17:01:48.400 [A]     67.209 [A] gc: 1 key(s) marked for drop (orphans 11, tombstones 0 total)
+== node-a-fi 02:35:11
+MAC: 14:63:93:c5:d0:18
+========================= [SUCCESS] Took 7.29 seconds =========================
+node-a-fi      SUCCESS   00:00:07.293
+== node-b-fi 02:35:22
+MAC: 14:63:93:c5:c3:1c
+========================= [SUCCESS] Took 7.85 seconds =========================
+node-b-fi      SUCCESS   00:00:07.853
+== node-c-fi 02:35:33
+MAC: 14:63:93:c8:a3:08
+========================= [SUCCESS] Took 6.79 seconds =========================
+node-c-fi      SUCCESS   00:00:06.795
+== node-d-fi 02:35:43
+MAC: 14:63:93:c5:c1:9c
+========================= [SUCCESS] Took 6.96 seconds =========================
+node-d-fi      SUCCESS   00:00:06.959

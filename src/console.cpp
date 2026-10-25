@@ -722,6 +722,8 @@ void Console::cmd_fault(const char* input)
         return;
     } else if (std::strcmp(args, "clear") == 0) {
         faults = edge::Faults{};
+        printf("faults cleared\n");
+        return;
     } else {
         printf("usage: fault drop-req|drop-ack|drop-repl|drop-repl-ack|dup|clear [n] | fault loss <percent>\n");
         return;
