@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sun 25 03:15 UTC: **firmware FROZEN at `2417e28`** for the presentation)
+## RESUME HERE (updated Sun 25 04:20 UTC: **boards unplugged by NS**; firmware frozen at `2417e28` = tag `v1.0-presentation`, merged to `main` in PR #1)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -33,6 +33,10 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 * **Check Sat 24 17:56 UTC (before NS sleeps):** capture + poller alive, all four ports present, 10 polls in 50 min, ~100 samples per node (= 50 min / 30 s), 0 view changes, 0 aborted compactions, `faults injected` frozen. **One storage error on A at 17:26:17 UTC: `storage error on s/A/light (replica write from C): I2C_ERROR`**, repaired by anti-entropy at 17:26:21; none since. First time A's errors are named (problem 15, A part; A shares its I2C bus with the BH1750): analyse after the soak. Windows: sleep never (AC and DC), hibernate never on AC (16 h on battery), laptop on AC power.
 * **Needs overnight:** laptop plugged in, **no sleep/hibernate**, the WSL/Claude Code terminal left open (closing all WSL sessions can stop the VM and the capture), boards untouched, D's EEPROM on the table.
 * **Collect: Sun 25 from ~07:00 IST (01:30 UTC), ≥ 8 h.** Steps (M11): stop the poller; `status`, `stats`, `members`, `sensors` on all four into the soak log; quit the capture; check: storage errors (expect 0), aborted compactions (0), queue overflows (0), sensor `0 failed`, seq ≈ elapsed / 30 s, no reboots (uptime), view `ABCD`; then `scripts/measure.py --sections sensors,wear` (fills RESULTS §4 sensors and §5 wear); chip temp per node over the night (`grep 'chip temp'`, RESULTS `chip_temp` plot plan); commit + push.
+
+### Sun 25 04:20 UTC: boards unplugged (NS)
+
+All four boards unplugged by NS after the merge. They still hold the frozen `-fi` images (`git 2417e28`). On the next power-up: by-id ports (A 1-1, B 5-4, C 5-3, D 5-2 in `usbipd`), empty line first, then a health check (`stats`, `status`: view `ABCD`, storage errors 0). Samplers come back at the default 30 s.
 
 ### FIRMWARE FROZEN (NS, Sun 25): `git 2417e28` on all four
 
