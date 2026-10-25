@@ -1111,3 +1111,1318 @@
 01:58:58.068 [C] k20 = "after-failover"
 01:58:58.068 [C]    (served by A, 1 attempt(s), 6 ms)
 # 01:58:58.554 H8: GET loop stopped
+# 02:00:01 H12b: D dump before; then 'D compact' every 3 s until D's port is lost (NS cuts D's power)
+02:00:01.441 [D] >>> dump
+02:00:01.455 [D] > dump
+02:00:01.455 [D]   v=78911177.2@A  h/A/light/2 = 7.500 lux  (seq 4186, sampled at hlc 78911176)
+02:00:01.455 [D]   v=78911710.1@B  s/D/temp = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+02:00:01.455 [D]   v=79535142.1@C  s/B/motion = 3 events, last motion 18 s before the sample  (seq 2672, sampled at hlc 79535138, simulated)
+02:00:01.455 [D]   v=79445157.1@C  h/B/motion/1 = 3 events, last motion 12 s before the sample  (seq 2669, sampled at hlc 79445138, simulated)
+02:00:01.455 [D]   v=78881472.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+02:00:01.467 [D]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:00:01.467 [D]   v=79475143.1@D  h/B/motion/2 = 0 events, last motion 42 s before the sample  (seq 2670, sampled at hlc 79475138, simulated)
+02:00:01.467 [D]   v=79485514.2@A  h/A/light/3 = 50.000 lux  (seq 4187, sampled at hlc 79485513)
+02:00:01.467 [D]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:00:01.467 [D]   v=79515518.1@D  h/A/light/0 = 50.000 lux  (seq 4188, sampled at hlc 79515514)
+02:00:01.480 [D]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+02:00:01.480 [D]   v=79545517.1@B  h/A/light/1 = 49.166 lux  (seq 4189, sampled at hlc 79545514)
+02:00:01.480 [D]   v=78881685.1@D  h/D/temp/0 = 29.400 degC  (seq 4456, sampled at hlc 78881683)
+02:00:01.480 [D]   v=78851469.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+02:00:01.480 [D]   v=79445780.2@B (drop pending)  k20 = "after-failover"
+02:00:01.480 [D]   v=78911709.1@A (drop pending)  h/D/temp/1 = 29.400 degC  (seq 4457, sampled at hlc 78911705)
+02:00:01.530 [D]   v=79219484.0@B (drop pending)  h/B/motion/3 = 3 events, last motion 20 s before the sample  (seq 2663, sampled at hlc 79219482, simulated)
+02:00:01.530 [D]   v=78881228.1@B (drop pending)  h/B/motion/0 = 1 events, last motion 2 s before the sample  (seq 2660, sampled at hlc 78881226, simulated)
+02:00:01.530 [D]   v=78821702.1@B (drop pending)  h/D/temp/2 = 29.800 degC  (seq 4454, sampled at hlc 78821683)
+02:00:01.530 [D]   v=78851702.1@B (drop pending)  h/D/temp/3 = 29.800 degC  (seq 4455, sampled at hlc 78851683)
+02:00:01.530 [D] 20 key(s); log 2384/16064 bytes used
+02:00:04.296 [D] >>> compact
+02:00:04.297 [D] > compact
+02:00:04.347 [D] compaction requested
+02:00:04.347 [D]  32333.921 [D] compaction started (13680 bytes free)
+02:00:06.663 [D]  32336.348 [D] compaction #30 done: bank B, 14 keys, 15253 bytes free
+02:00:07.354 [D] >>> compact
+02:00:07.371 [D] > compact
+02:00:07.371 [D] compaction requested
+02:00:07.371 [D]  32337.060 [D] compaction started (15253 bytes free)
+02:00:11.556 [D]  32339.516 [D] compaction #31 done: bank A, 14 keys, 15253 bytes free
+02:00:12.126 [D] >>> compact
+02:00:12.166 [D] > compact
+02:00:12.166 [D] compaction requested
+02:00:12.166 [D]  32340.108 [D] compaction started (15253 bytes free)
+02:00:14.479 [D]  32342.534 [D] compaction #32 done: bank B, 14 keys, 15253 bytes free
+02:00:15.186 [D] >>> compact
+02:00:15.232 [D] > compact
+02:00:15.232 [D] compaction requested
+02:00:15.232 [D]  32343.299 [D] compaction started (15253 bytes free)
+02:00:17.489 [D]  32345.725 [D] compaction #33 done: bank A, 14 keys, 15253 bytes free
+02:00:18.244 [D] >>> compact
+02:00:18.291 [D] > compact
+02:00:18.291 [D] compaction requested
+02:00:18.291 [D]  32346.559 [D] compaction started (15253 bytes free)
+02:00:20.551 [D]  32349.025 [D] compaction #34 done: bank B, 14 keys, 15253 bytes free
+02:00:21.300 [D] >>> compact
+02:00:21.305 [D] > compact
+02:00:21.305 [D] compaction requested
+02:00:21.305 [D]  32349.850 [D] compaction started (15253 bytes free)
+02:00:23.568 [D]  32352.276 [D] compaction #35 done: bank A, 14 keys, 15253 bytes free
+02:00:24.355 [D] >>> compact
+02:00:24.373 [D] > compact
+02:00:24.373 [D] compaction requested
+02:00:24.373 [D]  32353.140 [D] compaction started (15253 bytes free)
+02:00:26.635 [D]  32355.567 [D] compaction #36 done: bank B, 14 keys, 15253 bytes free
+02:00:27.411 [D] >>> compact
+02:00:27.439 [D] > compact
+02:00:27.439 [D] compaction requested
+02:00:27.439 [D]  32356.437 [D] compaction started (15253 bytes free)
+02:00:29.703 [D]  32358.863 [D] compaction #37 done: bank A, 14 keys, 15253 bytes free
+02:00:30.466 [D] >>> compact
+02:00:30.508 [D] > compact
+02:00:30.508 [D] compaction requested
+02:00:30.508 [D]  32359.733 [D] compaction started (15253 bytes free)
+02:00:32.772 [D]  32362.160 [D] compaction #38 done: bank B, 14 keys, 15253 bytes free
+02:00:33.523 [D] >>> compact
+02:00:33.526 [D] > compact
+02:00:33.527 [D] compaction requested
+02:00:33.527 [D]  32362.962 [D] compaction started (15253 bytes free)
+02:00:35.893 [D]  32365.413 [D] compaction #39 done: bank A, 14 keys, 15253 bytes free
+02:00:36.584 [D] >>> compact
+02:00:36.595 [D] > compact
+02:00:36.595 [D] compaction requested
+02:00:36.595 [D]  32366.144 [D] compaction started (15253 bytes free)
+02:00:38.962 [D]  32368.602 [D] compaction #40 done: bank B, 14 keys, 15253 bytes free
+02:00:39.642 [D] >>> compact
+02:00:39.667 [D] > compact
+02:00:39.667 [D] compaction requested
+02:00:39.667 [D]  32369.324 [D] compaction started (15253 bytes free)
+02:00:42.099 [D]  32371.751 [D] compaction #41 done: bank A, 14 keys, 15253 bytes free
+02:00:42.186 [D] --- port lost, reopening
+# 02:00:42.202 H12b: D port lost, compact loop stopped
+02:00:45.806 [C]  32384.136 [C] view: ABC-
+02:00:45.807 [A]    123.416 [A] view: ABC-
+02:00:45.808 [B]    321.282 [B] view: ABC-
+02:00:49.523 [B]    325.175 [B] anti-entropy: key h/B/motion/1 repaired from C
+02:00:52.537 [A]    130.553 [A] anti-entropy: key s/B/motion repaired from C
+02:00:52.537 [A]    130.564 [A] anti-entropy: key h/A/light/1 repaired from B
+02:00:53.090 [C]  32391.868 [C] anti-entropy: key h/A/light/2 repaired from A
+02:00:53.140 [C]  32391.908 [C] anti-entropy: key s/D/temp repaired from B
+02:00:53.140 [C]  32391.922 [C] anti-entropy: key h/B/motion/2 repaired from A
+02:00:53.140 [C]  32391.947 [C] anti-entropy: key h/A/light/0 repaired from A
+02:00:53.191 [C]  32391.961 [C] anti-entropy: key s/C/sound repaired from B
+02:01:16.606 [D] --- port open
+02:01:16.607 [D] 
+02:01:16.607 [D] edge-kv firmware, node D [fault injection build]
+02:01:16.607 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:01:16.607 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:01:16.607 [D]      1.760 [D] storage recovered: 14 live, 0 tombstones, 811/16064 log bytes used
+02:01:16.607 [D]      1.763 [D] state -> BOOTING
+02:01:16.607 [D] sensor temp: hardware
+02:01:16.607 [D] 
+02:01:16.607 [D] edge-kv node D  (4-node ESP-NOW KV store, RF=2)
+02:01:16.607 [D] type 'help' for commands
+02:01:16.607 [D]      1.763 [D] view: ---D
+02:01:16.607 [D]      1.963 [D] view: --CD
+02:01:16.607 [D]      2.074 [D] view: A-CD
+02:01:16.607 [D]      2.199 [D] view: ABCD
+02:01:16.658 [D]      4.214 [D] state -> CATCHUP
+02:01:16.658 [D]      4.237 [D] anti-entropy: key s/B/motion repaired from C
+02:01:16.658 [D]      4.276 [D] anti-entropy: key h/A/light/3 repaired from A
+02:01:20.209 [D]      7.214 [D] state -> ACTIVE
+02:01:20.210 [A]    157.860 [A] view: ABCD
+02:01:20.210 [C]  32418.580 [C] view: ABCD
+02:01:20.212 [B]    355.726 [B] view: ABCD
+02:01:21.615 [B]    357.208 [B] gc: 1 key(s) marked for drop (orphans 5, tombstones 0 total)
+# 02:01:24 NS: D back (H12b attempt 1: cut 87 ms after compaction #41 done = not mid-compaction)
+02:01:28.146 [A]    166.344 [A] view: A-CD
+02:01:28.297 [C]  32427.205 [C] gc: 6 key(s) marked for drop (orphans 22, tombstones 6 total)
+02:01:28.950 [A]    167.216 [A] gc: 1 key(s) marked for drop (orphans 4, tombstones 0 total)
+02:01:29.904 [D]     17.575 [D] view: -BCD
+02:01:29.904 [C]  32428.940 [C] view: -BCD
+02:01:30.357 [C]  32429.439 [C] view: ABCD
+02:01:30.457 [A]    168.842 [A] view: ABCD
+02:01:32.217 [C]  32431.440 [C] view: -BCD
+02:01:32.669 [C]  32431.908 [C] anti-entropy: key h/A/light/0 repaired from D
+02:01:33.122 [C]  32432.438 [C] view: ABCD
+02:01:33.122 [D]     21.074 [D] view: ABCD
+02:01:35.838 [A]    174.608 [A] view: AB-D
+02:01:35.938 [C]  32435.439 [C] view: -BCD
+02:01:35.938 [D]     24.075 [D] view: -BCD
+02:01:36.442 [D]     24.574 [D] view: ABCD
+02:01:36.442 [C]  32435.938 [C] view: ABCD
+02:01:38.302 [A]    177.216 [A] gc: 1 key(s) marked for drop (orphans 5, tombstones 0 total)
+02:01:39.609 [A]    178.608 [A] view: ABCD
+02:01:40.312 [A]    179.361 [A] view: ABC-
+02:01:43.182 [A]    182.360 [A] view: ABCD
+02:01:43.937 [A]    183.108 [A] view: AB-D
+02:01:45.949 [C]  32445.939 [C] view: -BCD
+02:01:46.401 [C]  32446.438 [C] view: ABCD
+02:01:46.551 [A]    185.861 [A] view: AB--
+02:01:46.804 [A]    186.107 [A] view: ABC-
+02:01:48.370 [C]  32448.439 [C] view: -BCD
+02:01:48.371 [D]     37.075 [D] view: -BCD
+02:01:48.877 [D]     37.574 [D] view: ABCD
+02:01:50.043 [A]    189.359 [A] view: ABCD
+02:01:50.399 [C]  32450.438 [C] view: ABCD
+02:01:51.109 [A]    190.436 [A] anti-entropy: key s/A/light repaired from C
+# 02:01:55 H12b attempt 2: D dump before; 'D compact' every 1 s (request flag keeps compactions back to back) until D's port is lost
+02:01:55.661 [D] >>> dump
+02:01:55.675 [D] > dump
+02:01:55.675 [D]   v=79575515.2@A  h/A/light/2 = 49.166 lux  (seq 4190, sampled at hlc 79575514)
+02:01:55.675 [D]   v=79658658.1@B  s/D/temp = 29.300 degC  (seq 4458, sampled at hlc 79658656)
+02:01:55.675 [D]   v=79655145.1@C  s/B/motion = 1 events, last motion 15 s before the sample  (seq 2676, sampled at hlc 79655138, simulated)
+02:01:55.675 [D]   v=79565157.1@C  h/B/motion/1 = 3 events, last motion 26 s before the sample  (seq 2673, sampled at hlc 79565138, simulated)
+02:01:55.675 [D]   v=78881472.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+02:01:55.686 [D]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:01:55.687 [D]   v=79595150.2@D  h/B/motion/2 = 1 events, last motion 17 s before the sample  (seq 2674, sampled at hlc 79595138, simulated)
+02:01:55.687 [D]   v=79605515.2@A  h/A/light/3 = 49.166 lux  (seq 4191, sampled at hlc 79605514)
+02:01:55.687 [D]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:01:55.687 [D]   v=79635518.1@D  h/A/light/0 = 49.166 lux  (seq 4192, sampled at hlc 79635514)
+02:01:55.737 [D]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+02:01:55.737 [D]   v=79665521.1@B  h/A/light/1 = 50.000 lux  (seq 4193, sampled at hlc 79665514)
+02:01:55.737 [D]   v=78881685.1@D  h/D/temp/0 = 29.400 degC  (seq 4456, sampled at hlc 78881683)
+02:01:55.737 [D]   v=78851469.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+02:01:55.737 [D] 14 key(s); log 1150/16064 bytes used
+02:01:58.193 [D] >>> compact
+02:01:58.199 [D] > compact
+02:01:58.199 [D] compaction requested
+02:01:58.199 [D]     45.424 [D] compaction started (14914 bytes free)
+02:01:58.597 [C]  32457.205 [C] gc: 1 key(s) marked for drop (orphans 23, tombstones 6 total)
+02:01:59.200 [D] >>> compact
+02:01:59.253 [D] > compact
+02:01:59.253 [D] compaction requested
+02:02:00.205 [D] >>> compact
+02:02:00.259 [D] > compact
+02:02:00.259 [D] compaction requested
+02:02:00.459 [D]     47.851 [D] compaction #1 done: bank B, 14 keys, 15253 bytes free
+02:02:00.459 [D]     47.852 [D] compaction started (15253 bytes free)
+02:02:01.212 [D] >>> compact
+02:02:01.263 [D] > compact
+02:02:01.263 [D] compaction requested
+02:02:02.218 [D] >>> compact
+02:02:02.266 [D] > compact
+02:02:02.266 [D] compaction requested
+02:02:02.769 [D]     50.302 [D] compaction #2 done: bank A, 14 keys, 15253 bytes free
+02:02:02.769 [D]     50.304 [D] compaction started (15253 bytes free)
+02:02:03.223 [D] >>> compact
+02:02:03.271 [D] > compact
+02:02:03.271 [D] compaction requested
+02:02:04.228 [D] >>> compact
+02:02:04.276 [D] > compact
+02:02:04.276 [D] compaction requested
+02:02:05.030 [D]     52.731 [D] compaction #3 done: bank B, 14 keys, 15253 bytes free
+02:02:05.030 [D]     52.732 [D] compaction started (15253 bytes free)
+02:02:05.235 [D] >>> compact
+02:02:05.281 [D] > compact
+02:02:05.281 [D] compaction requested
+02:02:06.241 [D] >>> compact
+02:02:06.285 [D] > compact
+02:02:06.285 [D] compaction requested
+02:02:07.242 [D]     55.159 [D] compaction #4 done: bank A, 14 keys, 15253 bytes free
+02:02:07.242 [D]     55.160 [D] compaction started (15253 bytes free)
+02:02:07.245 [D] >>> compact
+02:02:07.292 [D] > compact
+02:02:07.292 [D] compaction requested
+02:02:08.251 [D] >>> compact
+02:02:08.298 [D] > compact
+02:02:08.298 [D] compaction requested
+02:02:09.256 [D] >>> compact
+02:02:09.302 [D] > compact
+02:02:09.302 [D] compaction requested
+02:02:09.553 [D]     57.617 [D] compaction #5 done: bank B, 14 keys, 15253 bytes free
+02:02:09.553 [D]     57.618 [D] compaction started (15253 bytes free)
+02:02:10.262 [D] >>> compact
+02:02:10.307 [D] > compact
+02:02:10.307 [D] compaction requested
+02:02:10.508 [B]    407.208 [B] gc: 1 key(s) marked for drop (orphans 6, tombstones 0 total)
+02:02:11.268 [D] >>> compact
+02:02:11.313 [D] > compact
+02:02:11.313 [D] compaction requested
+02:02:11.766 [D]     60.044 [D] compaction #6 done: bank A, 14 keys, 15253 bytes free
+02:02:11.766 [D]     60.045 [D] compaction started (15253 bytes free)
+02:02:12.273 [D] >>> compact
+02:02:12.319 [D] > compact
+02:02:12.319 [D] compaction requested
+02:02:13.280 [D] >>> compact
+02:02:13.327 [D] > compact
+02:02:13.327 [D] compaction requested
+02:02:14.082 [D]     62.509 [D] compaction #7 done: bank B, 14 keys, 15253 bytes free
+02:02:14.082 [D]     62.510 [D] compaction started (15253 bytes free)
+02:02:14.286 [D] >>> compact
+02:02:14.334 [D] > compact
+02:02:14.334 [D] compaction requested
+02:02:15.292 [D] >>> compact
+02:02:15.341 [D] > compact
+02:02:15.341 [D] compaction requested
+02:02:16.298 [D] >>> compact
+02:02:16.348 [D] > compact
+02:02:16.348 [D] compaction requested
+02:02:16.449 [D]     64.937 [D] compaction #8 done: bank A, 14 keys, 15253 bytes free
+02:02:16.449 [D]     64.938 [D] compaction started (15253 bytes free)
+02:02:17.304 [D] >>> compact
+02:02:17.355 [D] > compact
+02:02:17.355 [D] compaction requested
+02:02:18.318 [D] >>> compact
+02:02:18.362 [D] > compact
+02:02:18.362 [D] compaction requested
+02:02:18.765 [D]     67.365 [D] compaction #9 done: bank B, 14 keys, 15253 bytes free
+02:02:18.765 [D]     67.366 [D] compaction started (15253 bytes free)
+02:02:19.324 [D] >>> compact
+02:02:19.369 [D] > compact
+02:02:19.370 [D] compaction requested
+02:02:20.331 [D] >>> compact
+02:02:20.376 [D] > compact
+02:02:20.376 [D] compaction requested
+02:02:21.080 [D]     69.809 [D] compaction #10 done: bank A, 14 keys, 15253 bytes free
+02:02:21.080 [D]     69.810 [D] compaction started (15253 bytes free)
+02:02:21.336 [D] >>> compact
+02:02:21.382 [D] > compact
+02:02:21.382 [D] compaction requested
+02:02:22.344 [D] >>> compact
+02:02:22.348 [D] > compact
+02:02:22.348 [D] compaction requested
+02:02:23.354 [D] >>> compact
+02:02:23.370 [D] > compact
+02:02:23.370 [D] compaction requested
+02:02:23.523 [D]     72.237 [D] compaction #11 done: bank B, 14 keys, 15253 bytes free
+02:02:23.523 [D]     72.238 [D] compaction started (15253 bytes free)
+02:02:24.363 [D] >>> compact
+02:02:24.391 [D] > compact
+02:02:24.391 [D] compaction requested
+02:02:25.370 [D] >>> compact
+02:02:25.413 [D] > compact
+02:02:25.413 [D] compaction requested
+02:02:27.713 [D]     74.692 [D] compaction #12 done: bank A, 14 keys, 15253 bytes free
+02:02:27.713 [D]     74.693 [D] compaction started (15253 bytes free)
+02:02:28.069 [D] >>> compact
+02:02:28.116 [D] > compact
+02:02:28.116 [D] compaction requested
+02:02:29.074 [D] >>> compact
+02:02:29.123 [D] > compact
+02:02:29.123 [D] compaction requested
+02:02:30.030 [D]     77.121 [D] compaction #13 done: bank B, 14 keys, 15253 bytes free
+02:02:30.030 [D]     77.122 [D] compaction started (15253 bytes free)
+02:02:30.090 [D] >>> compact
+02:02:30.131 [D] > compact
+02:02:30.131 [D] compaction requested
+02:02:31.096 [D] >>> compact
+02:02:31.138 [D] > compact
+02:02:31.138 [D] compaction requested
+02:02:32.102 [D] >>> compact
+02:02:32.142 [D] > compact
+02:02:32.142 [D] compaction requested
+02:02:32.293 [D]     79.549 [D] compaction #14 done: bank A, 14 keys, 15253 bytes free
+02:02:32.293 [D]     79.550 [D] compaction started (15253 bytes free)
+02:02:33.108 [D] >>> compact
+02:02:33.148 [D] > compact
+02:02:33.149 [D] compaction requested
+02:02:34.114 [D] >>> compact
+02:02:34.153 [D] > compact
+02:02:34.154 [D] compaction requested
+02:02:34.556 [D]     81.978 [D] compaction #15 done: bank B, 14 keys, 15253 bytes free
+02:02:34.556 [D]     81.979 [D] compaction started (15253 bytes free)
+02:02:35.120 [D] >>> compact
+02:02:35.160 [D] > compact
+02:02:35.160 [D] compaction requested
+02:02:36.126 [D] >>> compact
+02:02:36.166 [D] > compact
+02:02:36.167 [D] compaction requested
+02:02:36.770 [D]     84.406 [D] compaction #16 done: bank A, 14 keys, 15253 bytes free
+02:02:36.770 [D]     84.407 [D] compaction started (15253 bytes free)
+02:02:37.131 [D] >>> compact
+02:02:37.173 [D] > compact
+02:02:37.173 [D] compaction requested
+02:02:38.137 [D] >>> compact
+02:02:38.178 [D] > compact
+02:02:38.178 [D] compaction requested
+02:02:39.033 [D]     86.861 [D] compaction #17 done: bank B, 14 keys, 15253 bytes free
+02:02:39.033 [D]     86.862 [D] compaction started (15253 bytes free)
+02:02:39.143 [D] >>> compact
+02:02:39.185 [D] > compact
+02:02:39.185 [D] compaction requested
+02:02:40.150 [D] >>> compact
+02:02:40.190 [D] > compact
+02:02:40.190 [D] compaction requested
+02:02:41.157 [D] >>> compact
+02:02:41.198 [D] > compact
+02:02:41.198 [D] compaction requested
+02:02:41.349 [D]     89.320 [D] compaction #18 done: bank A, 14 keys, 15253 bytes free
+02:02:41.349 [D]     89.321 [D] compaction started (15253 bytes free)
+02:02:42.163 [D] >>> compact
+02:02:42.205 [D] > compact
+02:02:42.205 [D] compaction requested
+02:02:43.169 [D] >>> compact
+02:02:43.211 [D] > compact
+02:02:43.211 [D] compaction requested
+02:02:43.613 [D]     91.775 [D] compaction #19 done: bank B, 14 keys, 15253 bytes free
+02:02:43.613 [D]     91.776 [D] compaction started (15253 bytes free)
+02:02:44.175 [D] >>> compact
+02:02:44.216 [D] > compact
+02:02:44.216 [D] compaction requested
+02:02:45.190 [D] >>> compact
+02:02:45.221 [D] > compact
+02:02:45.221 [D] compaction requested
+02:02:45.874 [D]     94.203 [D] compaction #20 done: bank A, 14 keys, 15253 bytes free
+02:02:45.874 [D]     94.204 [D] compaction started (15253 bytes free)
+02:02:46.196 [D] >>> compact
+02:02:46.226 [D] > compact
+02:02:46.226 [D] compaction requested
+02:02:47.202 [D] >>> compact
+02:02:47.231 [D] > compact
+02:02:47.231 [D] compaction requested
+02:02:48.185 [D]     96.631 [D] compaction #21 done: bank B, 14 keys, 15253 bytes free
+02:02:48.185 [D]     96.632 [D] compaction started (15253 bytes free)
+02:02:48.209 [D] >>> compact
+02:02:48.236 [D] > compact
+02:02:48.236 [D] compaction requested
+02:02:49.215 [D] >>> compact
+02:02:49.240 [D] > compact
+02:02:49.240 [D] compaction requested
+02:02:50.230 [D] >>> compact
+02:02:50.245 [D] > compact
+02:02:50.245 [D] compaction requested
+02:02:50.596 [D]     99.099 [D] compaction #22 done: bank A, 14 keys, 15253 bytes free
+02:02:50.596 [D]     99.100 [D] compaction started (15253 bytes free)
+02:02:51.236 [D] >>> compact
+02:02:51.251 [D] > compact
+02:02:51.251 [D] compaction requested
+02:02:52.242 [D] >>> compact
+02:02:52.256 [D] > compact
+02:02:52.256 [D] compaction requested
+02:02:52.909 [D]    101.527 [D] compaction #23 done: bank B, 14 keys, 15253 bytes free
+02:02:52.909 [D]    101.528 [D] compaction started (15253 bytes free)
+02:02:53.248 [D] >>> compact
+02:02:53.261 [D] > compact
+02:02:53.261 [D] compaction requested
+02:02:54.254 [D] >>> compact
+02:02:54.265 [D] > compact
+02:02:54.265 [D] compaction requested
+02:02:55.261 [D] >>> compact
+02:02:55.270 [D]    103.955 [D] compaction #24 done: bank A, 14 keys, 15253 bytes free
+02:02:55.270 [D]    103.956 [D] compaction started (15253 bytes free)
+02:02:55.270 [D] > compact
+02:02:55.270 [D] compaction requested
+02:02:56.271 [D] >>> compact
+02:02:56.334 [D] > compact
+02:02:56.334 [D] compaction requested
+02:02:57.281 [D] >>> compact
+02:02:57.299 [D] > compact
+02:02:57.299 [D] compaction requested
+02:02:57.704 [D]    106.383 [D] compaction #25 done: bank B, 14 keys, 15253 bytes free
+02:02:57.705 [D]    106.384 [D] compaction started (15253 bytes free)
+02:02:58.287 [D] >>> compact
+02:02:58.312 [D] > compact
+02:02:58.312 [D] compaction requested
+02:02:59.298 [D] >>> compact
+02:02:59.325 [D] > compact
+02:02:59.325 [D] compaction requested
+02:03:01.799 [D]    108.812 [D] compaction #26 done: bank A, 14 keys, 15253 bytes free
+02:03:01.800 [D]    108.813 [D] compaction started (15253 bytes free)
+02:03:01.973 [D] >>> compact
+02:03:02.001 [D] > compact
+02:03:02.001 [D] compaction requested
+02:03:02.979 [D] >>> compact
+02:03:03.005 [D] > compact
+02:03:03.005 [D] compaction requested
+02:03:03.987 [D] >>> compact
+02:03:04.009 [D] > compact
+02:03:04.009 [D] compaction requested
+02:03:04.160 [D]    111.265 [D] compaction #27 done: bank B, 14 keys, 15253 bytes free
+02:03:04.160 [D]    111.266 [D] compaction started (15253 bytes free)
+02:03:04.992 [D] >>> compact
+02:03:05.014 [D] > compact
+02:03:05.014 [D] compaction requested
+02:03:05.998 [D] >>> compact
+02:03:06.017 [D] > compact
+02:03:06.017 [D] compaction requested
+02:03:06.419 [D]    113.692 [D] compaction #28 done: bank A, 14 keys, 15253 bytes free
+02:03:06.419 [D]    113.693 [D] compaction started (15253 bytes free)
+02:03:07.004 [D] >>> compact
+02:03:07.022 [D] > compact
+02:03:07.022 [D] compaction requested
+02:03:08.010 [D] >>> compact
+02:03:08.025 [D] > compact
+02:03:08.025 [D] compaction requested
+02:03:08.628 [D]    116.120 [D] compaction #29 done: bank B, 14 keys, 15253 bytes free
+02:03:08.628 [D]    116.121 [D] compaction started (15253 bytes free)
+02:03:09.015 [D] >>> compact
+02:03:09.030 [D] > compact
+02:03:09.030 [D] compaction requested
+02:03:10.021 [D] >>> compact
+02:03:10.034 [D] > compact
+02:03:10.034 [D] compaction requested
+02:03:10.838 [D]    118.564 [D] compaction #30 done: bank A, 14 keys, 15253 bytes free
+02:03:10.838 [D]    118.565 [D] compaction started (15253 bytes free)
+02:03:11.026 [D] >>> compact
+02:03:11.088 [D] > compact
+02:03:11.089 [D] compaction requested
+02:03:12.040 [D] >>> compact
+02:03:12.092 [D] > compact
+02:03:12.092 [D] compaction requested
+02:03:13.046 [D] >>> compact
+02:03:13.097 [D] > compact
+02:03:13.097 [D] compaction requested
+02:03:13.198 [D]    121.022 [D] compaction #31 done: bank B, 14 keys, 15200 bytes free
+02:03:13.198 [D]    121.023 [D] compaction started (15200 bytes free)
+02:03:14.053 [D] >>> compact
+02:03:14.105 [D] > compact
+02:03:14.105 [D] compaction requested
+02:03:15.058 [D] >>> compact
+02:03:15.111 [D] > compact
+02:03:15.111 [D] compaction requested
+02:03:15.513 [D]    123.475 [D] compaction #32 done: bank A, 14 keys, 15253 bytes free
+02:03:15.513 [D]    123.476 [D] compaction started (15253 bytes free)
+02:03:16.065 [D] >>> compact
+02:03:16.115 [D] > compact
+02:03:16.115 [D] compaction requested
+02:03:17.072 [D] >>> compact
+02:03:17.119 [D] > compact
+02:03:17.119 [D] compaction requested
+02:03:17.823 [D]    125.904 [D] compaction #33 done: bank B, 14 keys, 15253 bytes free
+02:03:17.874 [D]    125.905 [D] compaction started (15253 bytes free)
+02:03:18.079 [D] >>> compact
+02:03:18.124 [D] > compact
+02:03:18.125 [D] compaction requested
+02:03:19.085 [D] >>> compact
+02:03:19.130 [D] > compact
+02:03:19.130 [D] compaction requested
+02:03:20.091 [D] >>> compact
+02:03:20.137 [D] > compact
+02:03:20.137 [D] compaction requested
+02:03:20.187 [D]    128.349 [D] compaction #34 done: bank A, 14 keys, 15253 bytes free
+02:03:20.187 [D]    128.351 [D] compaction started (15253 bytes free)
+02:03:21.097 [D] >>> compact
+02:03:21.143 [D] > compact
+02:03:21.143 [D] compaction requested
+02:03:22.103 [D] >>> compact
+02:03:22.147 [D] > compact
+02:03:22.147 [D] compaction requested
+02:03:22.498 [D]    130.779 [D] compaction #35 done: bank B, 14 keys, 15253 bytes free
+02:03:22.498 [D]    130.780 [D] compaction started (15253 bytes free)
+02:03:23.110 [D] >>> compact
+02:03:23.152 [D] > compact
+02:03:23.152 [D] compaction requested
+02:03:24.116 [D] >>> compact
+02:03:24.156 [D] > compact
+02:03:24.156 [D] compaction requested
+02:03:24.809 [D]    133.207 [D] compaction #36 done: bank A, 14 keys, 15253 bytes free
+02:03:24.810 [D]    133.208 [D] compaction started (15253 bytes free)
+02:03:25.122 [D] >>> compact
+02:03:25.161 [D] > compact
+02:03:25.161 [D] compaction requested
+02:03:26.128 [D] >>> compact
+02:03:26.169 [D] > compact
+02:03:26.169 [D] compaction requested
+02:03:27.142 [D] >>> compact
+02:03:27.173 [D]    135.660 [D] compaction #37 done: bank B, 14 keys, 15253 bytes free
+02:03:27.174 [D] > compact
+02:03:27.174 [D] compaction requested
+02:03:27.174 [D]    135.661 [D] compaction started (15253 bytes free)
+02:03:28.149 [D] >>> compact
+02:03:28.179 [D] > compact
+02:03:28.179 [D] compaction requested
+02:03:29.156 [D] >>> compact
+02:03:29.183 [D] > compact
+02:03:29.183 [D] compaction requested
+02:03:29.535 [D]    138.089 [D] compaction #38 done: bank A, 14 keys, 15253 bytes free
+02:03:29.536 [D]    138.090 [D] compaction started (15253 bytes free)
+02:03:30.162 [D] >>> compact
+02:03:30.189 [D] > compact
+02:03:30.189 [D] compaction requested
+02:03:31.170 [D] >>> compact
+02:03:31.193 [D] > compact
+02:03:31.194 [D] compaction requested
+02:03:31.897 [D]    140.518 [D] compaction #39 done: bank B, 14 keys, 15253 bytes free
+02:03:31.897 [D]    140.520 [D] compaction started (15253 bytes free)
+02:03:32.176 [D] >>> compact
+02:03:32.199 [D] > compact
+02:03:32.199 [D] compaction requested
+02:03:33.183 [D] >>> compact
+02:03:33.203 [D] > compact
+02:03:33.203 [D] compaction requested
+02:03:35.818 [D] >>> compact
+02:03:35.837 [D] > compact
+02:03:35.837 [D] compaction requested
+02:03:35.937 [D]    142.947 [D] compaction #40 done: bank A, 14 keys, 15253 bytes free
+02:03:35.938 [D]    142.948 [D] compaction started (15253 bytes free)
+02:03:36.824 [D] >>> compact
+02:03:36.841 [D] > compact
+02:03:36.841 [D] compaction requested
+02:03:37.830 [D] >>> compact
+02:03:37.846 [D] > compact
+02:03:37.846 [D] compaction requested
+02:03:38.248 [D]    145.376 [D] compaction #41 done: bank B, 14 keys, 15253 bytes free
+02:03:38.248 [D]    145.377 [D] compaction started (15253 bytes free)
+02:03:38.845 [D] >>> compact
+02:03:38.900 [D] > compact
+02:03:38.901 [D] compaction requested
+02:03:39.852 [D] >>> compact
+02:03:39.855 [D] > compact
+02:03:39.855 [D] compaction requested
+02:03:40.559 [D]    147.843 [D] compaction #42 done: bank A, 14 keys, 15253 bytes free
+02:03:40.559 [D]    147.844 [D] compaction started (15253 bytes free)
+02:03:40.857 [D] >>> compact
+02:03:40.910 [D] > compact
+02:03:40.910 [D] compaction requested
+02:03:41.863 [D] >>> compact
+02:03:41.915 [D] > compact
+02:03:41.915 [D] compaction requested
+02:03:42.819 [D]    150.273 [D] compaction #43 done: bank B, 14 keys, 15253 bytes free
+02:03:42.820 [D]    150.274 [D] compaction started (15253 bytes free)
+02:03:42.868 [D] >>> compact
+02:03:42.920 [D] > compact
+02:03:42.920 [D] compaction requested
+02:03:43.882 [D] >>> compact
+02:03:43.924 [D] > compact
+02:03:43.924 [D] compaction requested
+02:03:44.887 [D] >>> compact
+02:03:44.930 [D] > compact
+02:03:44.930 [D] compaction requested
+02:03:45.081 [D]    152.715 [D] compaction #44 done: bank A, 14 keys, 15253 bytes free
+02:03:45.081 [D]    152.717 [D] compaction started (15253 bytes free)
+02:03:45.893 [D] >>> compact
+02:03:45.935 [D] > compact
+02:03:45.935 [D] compaction requested
+02:03:46.899 [D] >>> compact
+02:03:46.940 [D] > compact
+02:03:46.941 [D] compaction requested
+02:03:47.343 [D]    155.143 [D] compaction #45 done: bank B, 14 keys, 15253 bytes free
+02:03:47.344 [D]    155.144 [D] compaction started (15253 bytes free)
+02:03:47.905 [D] >>> compact
+02:03:47.946 [D] > compact
+02:03:47.946 [D] compaction requested
+02:03:48.920 [D] >>> compact
+02:03:48.951 [D] > compact
+02:03:48.951 [D] compaction requested
+02:03:49.554 [D]    157.572 [D] compaction #46 done: bank A, 14 keys, 15253 bytes free
+02:03:49.554 [D]    157.573 [D] compaction started (15253 bytes free)
+02:03:49.926 [D] >>> compact
+02:03:49.956 [D] > compact
+02:03:49.956 [D] compaction requested
+02:03:50.931 [D] >>> compact
+02:03:50.961 [D] > compact
+02:03:50.961 [D] compaction requested
+02:03:51.815 [D]    160.039 [D] compaction #47 done: bank B, 14 keys, 15253 bytes free
+02:03:51.815 [D]    160.040 [D] compaction started (15253 bytes free)
+02:03:51.937 [D] >>> compact
+02:03:51.966 [D] > compact
+02:03:51.967 [D] compaction requested
+02:03:52.943 [D] >>> compact
+02:03:52.972 [D] > compact
+02:03:52.972 [D] compaction requested
+02:03:53.950 [D] >>> compact
+02:03:53.978 [D] > compact
+02:03:53.978 [D] compaction requested
+02:03:54.179 [D]    162.468 [D] compaction #48 done: bank A, 14 keys, 15253 bytes free
+02:03:54.179 [D]    162.469 [D] compaction started (15253 bytes free)
+02:03:54.956 [D] >>> compact
+02:03:54.984 [D] > compact
+02:03:54.985 [D] compaction requested
+02:03:55.961 [D] >>> compact
+02:03:55.991 [D] > compact
+02:03:55.991 [D] compaction requested
+02:03:56.496 [D]    164.896 [D] compaction #49 done: bank B, 14 keys, 15253 bytes free
+02:03:56.496 [D]    164.897 [D] compaction started (15253 bytes free)
+02:03:56.967 [D] >>> compact
+02:03:56.999 [D] > compact
+02:03:57.000 [D] compaction requested
+02:03:57.973 [D] >>> compact
+02:03:58.007 [D] > compact
+02:03:58.008 [D] compaction requested
+02:03:58.814 [D]    167.325 [D] compaction #50 done: bank A, 14 keys, 15253 bytes free
+02:03:58.814 [D]    167.326 [D] compaction started (15253 bytes free)
+02:03:58.980 [D] >>> compact
+02:03:59.016 [D] > compact
+02:03:59.016 [D] compaction requested
+02:03:59.987 [D] >>> compact
+02:04:00.022 [D] > compact
+02:04:00.022 [D] compaction requested
+02:04:00.992 [D] >>> compact
+02:04:01.027 [D] > compact
+02:04:01.028 [D] compaction requested
+02:04:01.128 [D]    169.753 [D] compaction #51 done: bank B, 14 keys, 15253 bytes free
+02:04:01.129 [D]    169.754 [D] compaction started (15253 bytes free)
+02:04:01.998 [D] >>> compact
+02:04:02.034 [D] > compact
+02:04:02.034 [D] compaction requested
+02:04:03.006 [D] >>> compact
+02:04:03.049 [D] > compact
+02:04:03.049 [D] compaction requested
+02:04:03.512 [D]    172.205 [D] compaction #52 done: bank A, 14 keys, 15253 bytes free
+02:04:03.563 [D]    172.206 [D] compaction started (15253 bytes free)
+02:04:04.024 [D] >>> compact
+02:04:04.076 [D] > compact
+02:04:04.076 [D] compaction requested
+02:04:05.032 [D] >>> compact
+02:04:05.053 [D] > compact
+02:04:05.053 [D] compaction requested
+02:04:06.031 [D]    174.633 [D] compaction #53 done: bank B, 14 keys, 15253 bytes free
+02:04:06.031 [D]    174.634 [D] compaction started (15253 bytes free)
+02:04:06.038 [D] >>> compact
+02:04:06.082 [D] > compact
+02:04:06.082 [D] compaction requested
+02:04:07.048 [D] >>> compact
+02:04:07.052 [D] > compact
+02:04:07.052 [D] compaction requested
+02:04:09.690 [D] >>> compact
+02:04:09.745 [D] > compact
+02:04:09.745 [D] compaction requested
+02:04:10.048 [D]    177.061 [D] compaction #54 done: bank A, 14 keys, 15253 bytes free
+02:04:10.048 [D]    177.062 [D] compaction started (15253 bytes free)
+02:04:10.696 [D] >>> compact
+02:04:10.702 [D] > compact
+02:04:10.702 [D] compaction requested
+02:04:11.702 [D] >>> compact
+02:04:11.759 [D] > compact
+02:04:11.759 [D] compaction requested
+02:04:12.412 [D]    179.519 [D] compaction #55 done: bank B, 14 keys, 15253 bytes free
+02:04:12.413 [D]    179.520 [D] compaction started (15253 bytes free)
+02:04:12.708 [D] >>> compact
+02:04:12.764 [D] > compact
+02:04:12.764 [D] compaction requested
+02:04:13.713 [D] >>> compact
+02:04:13.718 [D] > compact
+02:04:13.718 [D] compaction requested
+02:04:14.623 [D]    181.961 [D] compaction #56 done: bank A, 14 keys, 15253 bytes free
+02:04:14.623 [D]    181.962 [D] compaction started (15253 bytes free)
+02:04:14.719 [D] >>> compact
+02:04:14.724 [D] > compact
+02:04:14.724 [D] compaction requested
+02:04:15.733 [D] >>> compact
+02:04:15.779 [D] > compact
+02:04:15.779 [D] compaction requested
+02:04:16.741 [D] >>> compact
+02:04:16.790 [D] > compact
+02:04:16.790 [D] compaction requested
+02:04:16.890 [D]    184.413 [D] compaction #57 done: bank B, 14 keys, 15253 bytes free
+02:04:16.890 [D]    184.414 [D] compaction started (15253 bytes free)
+02:04:17.746 [D] >>> compact
+02:04:17.794 [D] > compact
+02:04:17.794 [D] compaction requested
+02:04:18.752 [D] >>> compact
+02:04:18.799 [D] > compact
+02:04:18.799 [D] compaction requested
+02:04:19.151 [D]    186.841 [D] compaction #58 done: bank A, 14 keys, 15253 bytes free
+02:04:19.152 [D]    186.842 [D] compaction started (15253 bytes free)
+02:04:19.760 [D] >>> compact
+02:04:19.806 [D] > compact
+02:04:19.806 [D] compaction requested
+02:04:20.773 [D] >>> compact
+02:04:20.813 [D] > compact
+02:04:20.813 [D] compaction requested
+02:04:21.468 [D]    189.284 [D] compaction #59 done: bank B, 14 keys, 15253 bytes free
+02:04:21.468 [D]    189.285 [D] compaction started (15253 bytes free)
+02:04:21.780 [D] >>> compact
+02:04:21.820 [D] > compact
+02:04:21.820 [D] compaction requested
+02:04:22.786 [D] >>> compact
+02:04:22.826 [D] > compact
+02:04:22.826 [D] compaction requested
+02:04:23.783 [D]    191.712 [D] compaction #60 done: bank A, 14 keys, 15253 bytes free
+02:04:23.783 [D]    191.713 [D] compaction started (15253 bytes free)
+02:04:23.792 [D] >>> compact
+02:04:23.833 [D] > compact
+02:04:23.833 [D] compaction requested
+02:04:24.798 [D] >>> compact
+02:04:24.839 [D] > compact
+02:04:24.840 [D] compaction requested
+02:04:25.804 [D] >>> compact
+02:04:25.847 [D] > compact
+02:04:25.847 [D] compaction requested
+02:04:26.099 [D]    194.140 [D] compaction #61 done: bank B, 14 keys, 15253 bytes free
+02:04:26.099 [D]    194.141 [D] compaction started (15253 bytes free)
+02:04:26.809 [D] >>> compact
+02:04:26.853 [D] > compact
+02:04:26.853 [D] compaction requested
+02:04:27.816 [D] >>> compact
+02:04:27.859 [D] > compact
+02:04:27.859 [D] compaction requested
+02:04:28.412 [D]    196.594 [D] compaction #62 done: bank A, 14 keys, 15253 bytes free
+02:04:28.412 [D]    196.595 [D] compaction started (15253 bytes free)
+02:04:28.822 [D] >>> compact
+02:04:28.865 [D] > compact
+02:04:28.865 [D] compaction requested
+02:04:29.828 [D] >>> compact
+02:04:29.871 [D] > compact
+02:04:29.872 [D] compaction requested
+02:04:30.727 [D]    199.022 [D] compaction #63 done: bank B, 14 keys, 15253 bytes free
+02:04:30.727 [D]    199.023 [D] compaction started (15253 bytes free)
+02:04:30.842 [D] >>> compact
+02:04:30.878 [D] > compact
+02:04:30.878 [D] compaction requested
+02:04:31.848 [D] >>> compact
+02:04:31.885 [D] > compact
+02:04:31.885 [D] compaction requested
+02:04:32.854 [D] >>> compact
+02:04:32.893 [D] > compact
+02:04:32.893 [D] compaction requested
+02:04:33.095 [D]    201.451 [D] compaction #64 done: bank A, 14 keys, 15253 bytes free
+02:04:33.095 [D]    201.452 [D] compaction started (15253 bytes free)
+02:04:33.859 [D] >>> compact
+02:04:33.899 [D] > compact
+02:04:33.899 [D] compaction requested
+02:04:34.865 [D] >>> compact
+02:04:34.906 [D] > compact
+02:04:34.906 [D] compaction requested
+02:04:35.409 [D]    203.880 [D] compaction #65 done: bank B, 14 keys, 15253 bytes free
+02:04:35.409 [D]    203.881 [D] compaction started (15253 bytes free)
+02:04:35.879 [D] >>> compact
+02:04:35.913 [D] > compact
+02:04:35.913 [D] compaction requested
+02:04:36.886 [D] >>> compact
+02:04:36.920 [D] > compact
+02:04:36.920 [D] compaction requested
+02:04:37.776 [D]    206.308 [D] compaction #66 done: bank A, 14 keys, 15253 bytes free
+02:04:37.776 [D]    206.309 [D] compaction started (15253 bytes free)
+02:04:37.892 [D] >>> compact
+02:04:37.926 [D] > compact
+02:04:37.927 [D] compaction requested
+02:04:38.898 [D] >>> compact
+02:04:38.931 [D] > compact
+02:04:38.932 [D] compaction requested
+02:04:39.904 [D] >>> compact
+02:04:39.938 [D] > compact
+02:04:39.938 [D] compaction requested
+02:04:40.190 [D]    208.794 [D] compaction #67 done: bank B, 14 keys, 15253 bytes free
+02:04:40.190 [D]    208.795 [D] compaction started (15253 bytes free)
+02:04:40.921 [D] >>> compact
+02:04:40.944 [D] > compact
+02:04:40.944 [D] compaction requested
+02:04:41.928 [D] >>> compact
+02:04:41.951 [D] > compact
+02:04:41.951 [D] compaction requested
+02:04:44.234 [D]    211.249 [D] compaction #68 done: bank A, 14 keys, 15253 bytes free
+02:04:44.234 [D]    211.251 [D] compaction started (15253 bytes free)
+02:04:44.574 [D] >>> compact
+02:04:44.586 [D] > compact
+02:04:44.586 [D] compaction requested
+02:04:45.581 [D] >>> compact
+02:04:45.592 [D] > compact
+02:04:45.592 [D] compaction requested
+02:04:46.547 [D]    213.677 [D] compaction #69 done: bank B, 14 keys, 15253 bytes free
+02:04:46.547 [D]    213.678 [D] compaction started (15253 bytes free)
+02:04:46.587 [D] >>> compact
+02:04:46.598 [D] > compact
+02:04:46.598 [D] compaction requested
+02:04:47.606 [D] >>> compact
+02:04:47.653 [D] > compact
+02:04:47.653 [D] compaction requested
+02:04:48.613 [D] >>> compact
+02:04:48.658 [D] > compact
+02:04:48.659 [D] compaction requested
+02:04:48.760 [D]    216.106 [D] compaction #70 done: bank A, 14 keys, 15253 bytes free
+02:04:48.760 [D]    216.107 [D] compaction started (15253 bytes free)
+02:04:49.618 [D] >>> compact
+02:04:49.664 [D] > compact
+02:04:49.664 [D] compaction requested
+02:04:50.624 [D] >>> compact
+02:04:50.669 [D] > compact
+02:04:50.670 [D] compaction requested
+02:04:51.022 [D]    218.549 [D] compaction #71 done: bank B, 14 keys, 15253 bytes free
+02:04:51.022 [D]    218.550 [D] compaction started (15253 bytes free)
+02:04:51.629 [D] >>> compact
+02:04:51.676 [D] > compact
+02:04:51.676 [D] compaction requested
+02:04:52.025 [D] --- port lost, reopening
+# 02:04:52.638 H12b attempt 2: D port lost, loop stopped
+02:04:53.684 [C]  32632.758 [C] view: ABC-
+02:04:53.685 [A]    372.037 [A] view: ABC-
+02:04:53.685 [B]    569.904 [B] view: ABC-
+02:04:58.719 [B]    575.215 [B] anti-entropy: key h/B/motion/1 repaired from C
+02:05:01.788 [A]    380.556 [A] anti-entropy: key h/A/light/1 repaired from B
+02:05:01.788 [A]    380.571 [A] anti-entropy: key s/B/motion repaired from C
+02:05:02.342 [C]  32641.867 [C] anti-entropy: key s/D/temp repaired from B
+02:05:02.342 [C]  32641.882 [C] anti-entropy: key h/A/light/2 repaired from A
+02:05:02.392 [C]  32641.909 [C] anti-entropy: key h/B/motion/2 repaired from A
+02:05:02.392 [C]  32641.948 [C] anti-entropy: key h/A/light/3 repaired from A
+02:05:02.443 [C]  32641.987 [C] anti-entropy: key h/A/light/0 repaired from A
+02:05:02.493 [C]  32642.028 [C] anti-entropy: key h/D/temp/0 repaired from A
+02:05:17.883 [D] --- port open
+02:05:17.883 [D] 
+02:05:17.883 [D] edge-kv firmware, node D [fault injection build]
+02:05:17.883 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:05:17.883 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:05:17.883 [D]      1.761 [D] storage recovered: 14 live, 0 tombstones, 811/16064 log bytes used
+02:05:17.883 [D]      1.764 [D] state -> BOOTING
+02:05:17.883 [D] sensor temp: hardware
+02:05:17.883 [D] 
+02:05:17.883 [D] edge-kv node D  (4-node ESP-NOW KV store, RF=2)
+02:05:17.883 [D] type 'help' for commands
+02:05:17.883 [D]      1.764 [D] view: ---D
+02:05:17.883 [D]      1.828 [D] view: --CD
+02:05:17.883 [D]      1.940 [D] view: A-CD
+02:05:17.883 [D]      2.081 [D] view: ABCD
+02:05:17.934 [D]      4.215 [D] state -> CATCHUP
+02:05:17.934 [D]      4.238 [D] anti-entropy: key s/B/motion repaired from A
+02:05:20.239 [D]      7.215 [D] state -> ACTIVE
+02:05:20.267 [A]    397.995 [A] view: ABCD
+02:05:20.267 [B]    595.862 [B] view: ABCD
+02:05:20.267 [C]  32658.716 [C] view: ABCD
+02:05:21.522 [B]    597.207 [B] gc: 1 key(s) marked for drop (orphans 7, tombstones 0 total)
+# 02:05:25 NS: D back (H12b attempt 2)
+02:05:28.158 [D] >>> dump
+02:05:28.173 [D] > dump
+02:05:28.173 [D]   v=79815515.2@A  h/A/light/2 = 51.666 lux  (seq 4198, sampled at hlc 79815514)
+02:05:28.173 [D]   v=79838701.1@B  s/D/temp = 29.300 degC  (seq 4464, sampled at hlc 79838698)
+02:05:28.173 [D]   v=79865142.1@C  s/B/motion = 1 events, last motion 4 s before the sample  (seq 2683, sampled at hlc 79865138, simulated)
+02:05:28.173 [D]   v=79805156.1@C  h/B/motion/1 = 0 events, last motion 44 s before the sample  (seq 2681, sampled at hlc 79805138, simulated)
+02:05:28.173 [D]   v=78881472.1@D  h/C/sound/1 = 0 events, 0.0 % active  (seq 3085, sampled at hlc 78881465)
+02:05:28.184 [D]   v=78911469.1@B  s/C/sound = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:05:28.184 [D]   v=79835143.2@D  h/B/motion/2 = 0 events, last motion 74 s before the sample  (seq 2682, sampled at hlc 79835138, simulated)
+02:05:28.184 [D]   v=79845515.2@A  h/A/light/3 = 50.000 lux  (seq 4199, sampled at hlc 79845514)
+02:05:28.184 [D]   v=78911484.1@B  h/C/sound/2 = 0 events, 0.0 % active  (seq 3086, sampled at hlc 78911465)
+02:05:28.184 [D]   v=79875519.1@D  h/A/light/0 = 49.166 lux  (seq 4200, sampled at hlc 79875514)
+02:05:28.235 [D]   v=78821481.1@B  h/C/sound/3 = 0 events, 0.0 % active  (seq 3083, sampled at hlc 78821465)
+02:05:28.235 [D]   v=79785518.1@B  h/A/light/1 = 50.000 lux  (seq 4197, sampled at hlc 79785514)
+02:05:28.235 [D]   v=79838700.1@D  h/D/temp/0 = 29.300 degC  (seq 4464, sampled at hlc 79838698)
+02:05:28.235 [D]   v=78851469.1@D  h/C/sound/0 = 0 events, 0.0 % active  (seq 3084, sampled at hlc 78851465)
+02:05:28.235 [D] 14 key(s); log 926/16064 bytes used
+02:05:28.358 [C]  32667.205 [C] gc: 6 key(s) marked for drop (orphans 29, tombstones 6 total)
+02:05:29.062 [A]    407.216 [A] gc: 2 key(s) marked for drop (orphans 7, tombstones 0 total)
+02:05:40.507 [D]     28.440 [D] view: -BCD
+02:05:40.526 [C]  32679.939 [C] view: -BCD
+02:05:41.612 [D]     29.582 [D] view: --CD
+02:05:41.634 [A]    420.361 [A] view: A-CD
+02:05:42.085 [C]  32681.581 [C] view: --CD
+02:05:42.337 [A]    421.111 [A] view: A--D
+02:05:42.387 [C]  32681.908 [C] anti-entropy: key h/A/light/0 repaired from D
+02:05:42.437 [C]  32681.947 [C] anti-entropy: key h/C/sound/1 repaired from D
+02:05:42.488 [C]  32681.987 [C] anti-entropy: key h/C/sound/2 repaired from D
+02:05:42.538 [C]  32682.027 [C] anti-entropy: key h/C/sound/3 repaired from D
+02:05:42.538 [C]  32682.066 [C] anti-entropy: key h/A/light/1 repaired from D
+02:05:42.588 [C]  32682.107 [C] anti-entropy: key h/C/sound/0 repaired from D
+02:05:42.788 [A]    421.607 [A] view: A-CD
+02:05:43.522 [D]     31.581 [D] view: -BCD
+02:05:43.543 [A]    422.359 [A] view: ABCD
+02:05:43.543 [C]  32683.080 [C] view: -BCD
+02:05:43.875 [D]     31.939 [D] view: ABCD
+02:05:43.895 [C]  32683.439 [C] view: ABCD
+02:05:44.700 [A]    423.608 [A] view: AB-D
+02:05:45.436 [D]     33.582 [D] view: A-CD
+02:05:45.457 [A]    424.360 [A] view: A--D
+02:05:45.658 [A]    424.607 [A] view: A-CD
+02:05:45.759 [C]  32685.439 [C] view: -BCD
+02:05:45.788 [D]     33.940 [D] view: --CD
+02:05:46.241 [D]     34.439 [D] view: A-CD
+02:05:46.261 [C]  32685.938 [C] view: ABCD
+02:05:46.865 [C]  32686.581 [C] view: A-CD
+02:05:47.367 [C]  32687.080 [C] view: ABCD
+02:05:47.568 [A]    426.608 [A] view: A--D
+02:05:48.071 [A]    427.109 [A] view: A-CD
+02:05:48.171 [B]    625.092 [B] anti-entropy: key s/D/temp repaired from D
+02:05:48.171 [C]  32687.939 [C] view: -BCD
+02:05:48.203 [D]     36.440 [D] view: --CD
+02:05:48.221 [B]    625.134 [B] anti-entropy: key h/D/temp/1 repaired from C
+02:05:48.774 [A]    427.859 [A] view: ABCD
+02:05:48.807 [D]     37.081 [D] view: -BCD
+02:05:49.110 [D]     37.439 [D] view: ABCD
+02:05:49.126 [C]  32688.939 [C] view: ABCD
+02:05:52.745 [A]    430.434 [A] anti-entropy: key h/D/temp/1 repaired from C
+# 02:05:54 H12a: write h12/0..3, then NS power-cycles all four
+02:05:54.574 [C] >>> set h12/0 persist-0
+02:05:54.604 [C] > set h12/0 persist-0
+02:05:54.654 [C] SET h12/0: OK (served by A, 1 attempt(s), 33 ms)
+02:05:55.777 [C] >>> set h12/1 persist-1
+02:05:55.810 [C] > set h12/1 persist-1
+02:05:55.810 [C] SET h12/1: OK (served by D, 1 attempt(s), 32 ms)
+02:05:56.980 [C] >>> set h12/2 persist-2
+02:05:57.016 [C] > set h12/2 persist-2
+02:05:57.016 [C] SET h12/2: OK (served by D, 1 attempt(s), 26 ms)
+02:05:58.183 [C] >>> set h12/3 persist-3
+02:05:58.223 [C] > set h12/3 persist-3
+02:05:58.224 [C] SET h12/3: OK (served by C, 1 attempt(s), 30 ms)
+02:05:59.386 [C] >>> ring h12/0
+02:05:59.429 [C] > ring h12/0
+02:05:59.430 [C] key 'h12/0' hash 1f6d8e17
+02:05:59.430 [C]   all nodes up : primary A, replica C
+02:05:59.430 [C]   current view : primary A, replica C
+02:05:59.989 [C] >>> ring h12/1
+02:06:00.033 [C] > ring h12/1
+02:06:00.033 [C] key 'h12/1' hash 1e6d8c84
+02:06:00.033 [C]   all nodes up : primary D, replica A
+02:06:00.033 [C]   current view : primary D, replica A
+02:06:00.592 [C] >>> ring h12/2
+02:06:00.636 [C] > ring h12/2
+02:06:00.636 [C] key 'h12/2' hash 216d913d
+02:06:00.636 [C]   all nodes up : primary D, replica C
+02:06:00.636 [C]   current view : primary D, replica C
+02:06:01.196 [C] >>> ring h12/3
+02:06:01.239 [C] > ring h12/3
+02:06:01.239 [C] key 'h12/3' hash 206d8faa
+02:06:01.239 [C]   all nodes up : primary C, replica B
+02:06:01.239 [C]   current view : primary C, replica B
+02:06:02.809 [A] >>> stats
+02:06:02.810 [B] >>> stats
+02:06:02.811 [A] > stats
+02:06:02.811 [A] radio   rx 2844 (invalid 0, spoofed 0)  tx 1148 (failed 0)
+02:06:02.811 [A] hb      tx 868  rx 2365   membership changes 26
+02:06:02.811 [A] server  executed 29  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:06:02.812 [A] repl    started 9  ok 9  failed 0  stale 0   as replica: applied 30 stale 0
+02:06:02.812 [A] ae      rounds 46  chunks tx 184 rx 381  tables 110  pushes 11  resync tx 11 applied 8 stale 5
+02:06:02.812 [A] gc      orphans 7  tombstones 0  keys dropped 0
+02:06:02.812 [A] client  ok 31  failed 0  attempts 31  local 7
+02:06:02.812 [C] >>> stats
+02:06:02.813 [B] > stats
+02:06:02.813 [B] radio   rx 4386 (invalid 0, spoofed 0)  tx 1657 (failed 0)
+02:06:02.813 [B] hb      tx 1264  rx 3598   membership changes 9
+02:06:02.814 [B] server  executed 99  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:06:02.814 [B] repl    started 27  ok 27  failed 0  stale 0   as replica: applied 4 stale 0
+02:06:02.814 [B] ae      rounds 67  chunks tx 232 rx 627  tables 183  pushes 8  resync tx 8 applied 5 stale 3
+02:06:02.814 [B] gc      orphans 7  tombstones 0  keys dropped 0
+02:06:02.814 [B] client  ok 45  failed 0  attempts 45  local 11
+02:06:02.814 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:06:02.814 [A] chip temp 57.1 degC (die temperature, not ambient)
+02:06:02.814 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: power-on
+02:06:02.814 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+02:06:02.814 [A] esp-now rx 2844  queue overflows 0  unknown MAC 62
+02:06:02.815 [A] esp-now tx -> B: 9 delivered, 0 failed (MAC-layer ACK)
+02:06:02.815 [A] esp-now tx -> C: 63 delivered, 0 failed (MAC-layer ACK)
+02:06:02.815 [A] esp-now tx -> D: 24 delivered, 0 failed (MAC-layer ACK)
+02:06:02.815 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:06:02.815 [B] chip temp 53.5 degC (die temperature, not ambient)
+02:06:02.815 [C] > stats
+02:06:02.816 [C] radio   rx 230029 (invalid 0, spoofed 0)  tx 77438 (failed 0)
+02:06:02.816 [C] hb      tx 65388  rx 195300   membership changes 48
+02:06:02.816 [C] server  executed 2517  not-ready 0  dedup replays 27  suppressed 9  table-full 0
+02:06:02.816 [C] repl    started 2504  ok 2500  failed 3  stale 1   as replica: applied 618 stale 0
+02:06:02.816 [A] heap free 172592 (min 164132)  node task stack headroom 13240 bytes
+02:06:02.816 [D] >>> stats
+02:06:02.816 [C] ae      rounds 3271  chunks tx 4107 rx 26803  tables 9724  pushes 19  resync tx 19 applied 37 stale 3
+02:06:02.816 [C] gc      orphans 29  tombstones 6  keys dropped 17
+02:06:02.816 [C] client  ok 2221  failed 0  attempts 2221  local 5
+02:06:02.816 [C] storage errors 0  compactions 14 (aborted 0)  faults injected 99
+02:06:02.816 [C] chip temp 52.4 degC (die temperature, not ambient)
+02:06:02.816 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: unknown
+02:06:02.816 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+02:06:02.816 [C] esp-now rx 230030  queue overflows 0  unknown MAC 4206
+02:06:02.816 [C] esp-now tx -> A: 2232 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+02:06:02.817 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+02:06:02.817 [B] esp-now rx 4386  queue overflows 0  unknown MAC 87
+02:06:02.817 [B] esp-now tx -> A: 17 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [B] esp-now tx -> C: 114 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [B] esp-now tx -> D: 30 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+02:06:02.817 [C] esp-now tx -> B: 3591 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [C] esp-now tx -> D: 2071 delivered, 0 failed (MAC-layer ACK)
+02:06:02.817 [C] heap free 174324 (min 165864)  node task stack headroom 13272 bytes
+02:06:02.818 [D] > stats
+02:06:02.818 [D] radio   rx 310 (invalid 0, spoofed 0)  tx 125 (failed 0)
+02:06:02.818 [D] hb      tx 87  rx 249   membership changes 14
+02:06:02.818 [D] server  executed 5  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:06:02.818 [D] repl    started 5  ok 5  failed 0  stale 0   as replica: applied 2 stale 0
+02:06:02.818 [D] ae      rounds 6  chunks tx 18 rx 48  tables 12  pushes 9  resync tx 9 applied 1 stale 1
+02:06:02.818 [D] gc      orphans 0  tombstones 0  keys dropped 0
+02:06:02.818 [D] client  ok 3  failed 0  attempts 3  local 2
+02:06:02.818 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:06:02.818 [D] chip temp 51.6 degC (die temperature, not ambient)
+02:06:02.818 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:06:02.818 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:06:02.818 [D] esp-now rx 310  queue overflows 0  unknown MAC 4
+02:06:02.818 [D] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+02:06:02.818 [D] esp-now tx -> B: 4 delivered, 0 failed (MAC-layer ACK)
+02:06:02.818 [D] esp-now tx -> C: 12 delivered, 0 failed (MAC-layer ACK)
+02:06:02.818 [D] heap free 174712 (min 166152)  node task stack headroom 13304 bytes
+02:06:02.866 [A] eeprom page writes since boot: total 131, hottest page 376 with 5 (rated 1000000)
+02:06:02.866 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+02:06:02.867 [B] eeprom page writes since boot: total 101, hottest page 102 with 5 (rated 1000000)
+02:06:02.868 [C] eeprom page writes since boot: total 16390, hottest page 320 with 52 (rated 1000000)
+02:06:02.868 [D] eeprom page writes since boot: total 22, hottest page 274 with 5 (rated 1000000)
+02:06:08.101 [C]  32707.206 [C] gc: 8 key(s) marked for drop (orphans 37, tombstones 6 total)
+02:06:09.509 [D]     57.216 [D] gc: 1 key(s) marked for drop (orphans 1, tombstones 0 total)
+02:07:50.701 [A] --- port lost, reopening
+02:07:52.227 [C]  32811.440 [C] view: -BCD
+02:07:52.227 [D]    159.940 [D] view: -BCD
+02:07:52.227 [B]    748.586 [B] view: -BCD
+02:07:52.629 [C]  32811.867 [C] anti-entropy: key h/A/light/2 repaired from D
+02:07:52.679 [C]  32811.907 [C] anti-entropy: key h/B/motion/2 repaired from D
+02:07:52.679 [C]  32811.947 [C] anti-entropy: key h/A/light/3 repaired from D
+02:07:52.729 [C]  32811.985 [C] anti-entropy: key h/A/light/0 repaired from D
+02:07:52.779 [C]  32812.027 [C] anti-entropy: key h/D/temp/0 repaired from D
+02:07:52.830 [C]  32812.065 [C] anti-entropy: key h12/1 repaired from D
+02:07:55.693 [C]  32815.082 [C] view: --CD
+02:07:55.693 [D]    163.582 [D] view: --CD
+02:07:56.038 [C] --- port lost, reopening
+02:07:57.852 [D]    165.829 [D] view: ---D
+02:08:01.169 [B] --- port lost, reopening
+02:08:01.319 [D] --- port lost, reopening
+02:08:48.499 [A] --- port open
+02:08:48.549 [A] 
+02:08:48.549 [A] edge-kv firmware, node A (Pi bridge) [fault injection build]
+02:08:48.549 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: power-on
+02:08:48.549 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+02:08:48.549 [A]      2.140 [A] storage recovered: 19 live, 0 tombstones, 9535/16064 log bytes used
+02:08:48.549 [A]      2.143 [A] state -> BOOTING
+02:08:48.549 [A] sensor light: hardware
+02:08:48.549 [A] 
+02:08:48.549 [A] edge-kv node A  (4-node ESP-NOW KV store, RF=2)
+02:08:48.549 [A] type 'help' for commands
+02:08:48.549 [A]      2.144 [A] view: A---
+02:08:48.549 [A]      4.223 [A] state -> ACTIVE
+02:08:49.252 [A]      5.238 [A] SET_REQ s/A/light stored without replica (no other node alive)
+02:08:49.252 [A]      5.252 [A] SET_REQ h/A/light/2 stored without replica (no other node alive)
+02:08:51.460 [A]      7.564 [A] anti-entropy: key h/A/light/1 repaired from B
+02:08:51.511 [A]      7.599 [A] anti-entropy: key s/D/temp repaired from B
+02:08:51.511 [A]      7.643 [A] anti-entropy: key s/C/sound repaired from B
+02:08:51.561 [A]      7.684 [A] anti-entropy: key h/B/motion/3 repaired from B
+02:08:51.612 [A]      7.724 [A] anti-entropy: key h/B/motion/0 repaired from B
+02:08:51.662 [A]      7.764 [A] anti-entropy: key h/B/motion/1 repaired from B
+02:08:51.662 [A]      7.801 [A] anti-entropy: key h12/3 repaired from B
+02:08:52.962 [B] --- port open
+02:08:52.962 [B] > edge-kv firmwares used
+02:08:52.962 [B] unknown command 'edge-kv' (try 'help')
+02:08:52.962 [B] >      2.0
+02:08:52.962 [B] unknown command '     2.0' (try 'help')
+02:08:52.962 [B]      4.492 [B] anti-entropy: key s/A/light repaired from A
+02:08:52.962 [B]      4.533 [B] anti-entropy: key h/A/light/2 repaired from A
+02:08:52.962 [B]      4.572 [B] anti-entropy: key h/A/light/3 repaired from A
+02:08:52.962 [B]      4.613 [B] anti-entropy: key h/B/motion/2 repaired from A
+02:08:52.962 [B]      4.652 [B] anti-entropy: key h/A/light/0 repaired from A
+02:08:52.962 [B]      4.692 [B] anti-entropy: key h/D/temp/0 repaired from A
+02:08:53.012 [B]      4.732 [B] anti-entropy: key s/B/motion repaired from A
+02:08:53.013 [B]      4.766 [B] anti-entropy: key h12/0 repaired from A
+02:08:53.013 [B]      4.810 [B] anti-entropy: key h12/1 repaired from A
+02:08:53.113 [B]      5.852 [B] anti-entropy: key h/B/motion/1 repaired from C
+02:08:53.877 [C] --- port open
+02:08:53.928 [C] console: ignored 35 character(s) received while the port was opening; type the command again
+02:08:54.379 [C]      4.010 [C] view: ABC-
+02:08:54.417 [B]      7.210 [B] state -> ACTIVE
+02:08:54.421 [A]     10.650 [A] view: AB--
+02:08:54.579 [C]      4.211 [C] state -> CATCHUP
+02:08:54.630 [C]      4.234 [C] anti-entropy: key s/A/light repaired from B
+02:08:54.630 [C]      4.273 [C] anti-entropy: key h/A/light/2 repaired from B
+02:08:54.680 [C]      4.311 [C] anti-entropy: key s/D/temp repaired from B
+02:08:57.438 [C]      7.211 [C] state -> ACTIVE
+02:08:57.477 [B]     10.414 [B] view: ABC-
+02:08:57.480 [A]     13.849 [A] view: ABC-
+02:08:57.831 [A]     14.224 [A] gc: 6 key(s) marked for drop (orphans 6, tombstones 0 total)
+02:09:00.118 [D] --- port open
+02:09:00.119 [D] 
+02:09:00.119 [D] edge-kv firmware, node D [fault injection build]
+02:09:00.119 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:09:00.119 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:09:00.119 [D]      1.814 [D] storage recovered: 17 live, 0 tombstones, 2076/16064 log bytes used
+02:09:00.119 [D]      1.816 [D] state -> BOOTING
+02:09:00.119 [D] sensor temp: hardware
+02:09:00.119 [D] 
+02:09:00.119 [D] edge-kv node D  (4-node ESP-NOW KV store, RF=2)
+02:09:00.119 [D] type 'help' for commands
+02:09:00.119 [D]      1.817 [D] view: ---D
+02:09:00.119 [D]      1.921 [D] view: -B-D
+02:09:00.119 [D]      2.001 [D] view: AB-D
+02:09:00.119 [D]      2.122 [D] view: ABCD
+02:09:00.137 [A]     16.649 [A] view: A-C-
+02:09:00.169 [D]      4.214 [D] state -> CATCHUP
+02:09:00.169 [D]      4.238 [D] anti-entropy: key h/A/light/2 repaired from C
+02:09:01.473 [D]      5.816 [D] anti-entropy: key h/D/temp/1 repaired from A
+02:09:01.523 [D]      5.856 [D] anti-entropy: key h/D/temp/2 repaired from A
+02:09:01.523 [D]      5.895 [D] anti-entropy: key h/D/temp/3 repaired from A
+02:09:01.573 [D]      5.932 [D] anti-entropy: key k20 repaired from A
+02:09:02.777 [D]      7.214 [D] state -> ACTIVE
+02:09:02.794 [B]     16.008 [B] view: ABCD
+02:09:02.794 [A]     19.443 [A] view: A-CD
+02:09:02.806 [C]     12.806 [C] view: ABCD
+02:09:02.995 [A]     19.646 [A] view: ABCD
+02:09:03.948 [B]     17.211 [B] gc: 13 key(s) marked for drop (orphans 13, tombstones 0 total)
+02:09:04.902 [A]     21.647 [A] view: A-CD
+02:09:05.856 [A]     22.648 [A] view: ABCD
+02:09:07.022 [C]     17.212 [C] gc: 5 key(s) marked for drop (orphans 5, tombstones 0 total)
+02:09:07.364 [A]     24.224 [A] gc: 3 key(s) marked for drop (orphans 9, tombstones 0 total)
+02:09:07.767 [A]     24.649 [A] view: A-CD
+02:09:07.898 [D]     12.533 [D] anti-entropy: key s/B/motion repaired from A
+02:09:09.174 [A]     26.146 [A] view: ABCD
+02:09:21.909 [A]     37.850 [A] view: AB-D
+# 02:09:22 NS: all four back (H12a)
+02:09:23.438 [D]     27.215 [D] gc: 4 key(s) marked for drop (orphans 4, tombstones 0 total)
+02:09:23.817 [A]     39.852 [A] view: ABCD
+02:09:27.634 [C]     37.212 [C] gc: 9 key(s) marked for drop (orphans 14, tombstones 0 total)
+02:09:30.055 [A] >>> get h12/0
+02:09:30.057 [B] >>> get h12/0
+02:09:30.059 [C] >>> get h12/0
+02:09:30.060 [D] >>> get h12/0
+02:09:30.066 [D] > get h12/0
+02:09:30.095 [B] > get h12/0
+02:09:30.096 [B] h12/0 = "persist-0"
+02:09:30.096 [B]    (served by A, 1 attempt(s), 7 ms)
+02:09:30.096 [A] > get h12/0
+02:09:30.096 [A] h12/0 = "persist-0"
+02:09:30.096 [C] > get h12/0
+02:09:30.096 [C] h12/0 = "persist-0"
+02:09:30.096 [C]    (served by A, 1 attempt(s), 8 ms)
+02:09:30.096 [A]    (served by A, 1 attempt(s), 0 ms)
+02:09:30.116 [D] h12/0 = "persist-0"
+02:09:30.116 [D]    (served by A, 1 attempt(s), 8 ms)
+02:09:31.558 [A] >>> get h12/1
+02:09:31.558 [B] >>> get h12/1
+02:09:31.559 [C] >>> get h12/1
+02:09:31.560 [D] >>> get h12/1
+02:09:31.574 [D] > get h12/1
+02:09:31.574 [D] h12/1 = "persist-1"
+02:09:31.574 [D]    (served by D, 1 attempt(s), 0 ms)
+02:09:31.602 [A] > get h12/1
+02:09:31.602 [A] h12/1 = "persist-1"
+02:09:31.602 [A]    (served by D, 1 attempt(s), 6 ms)
+02:09:31.602 [B] > get h12/1
+02:09:31.602 [B] h12/1 = "persist-1"
+02:09:31.602 [B]    (served by D, 1 attempt(s), 7 ms)
+02:09:31.602 [C] > get h12/1
+02:09:31.602 [C] h12/1 = "persist-1"
+02:09:31.602 [C]    (served by D, 1 attempt(s), 9 ms)
+02:09:33.071 [A] >>> get h12/2
+02:09:33.072 [B] >>> get h12/2
+02:09:33.074 [C] >>> get h12/2
+02:09:33.074 [D] >>> get h12/2
+02:09:33.106 [A] > get h12/2
+02:09:33.106 [A] h12/2 = "persist-2"
+02:09:33.106 [A]    (served by D, 1 attempt(s), 9 ms)
+02:09:33.106 [B] > get h12/2
+02:09:33.106 [B] h12/2 = "persist-2"
+02:09:33.106 [C] > get h12/2
+02:09:33.107 [C] h12/2 = "persist-2"
+02:09:33.107 [C]    (served by D, 1 attempt(s), 9 ms)
+02:09:33.107 [B]    (served by D, 1 attempt(s), 10 ms)
+02:09:33.129 [D] > get h12/2
+02:09:33.129 [D] h12/2 = "persist-2"
+02:09:33.129 [D]    (served by D, 1 attempt(s), 0 ms)
+02:09:34.564 [A] >>> get h12/3
+02:09:34.565 [B] >>> get h12/3
+02:09:34.565 [C] >>> get h12/3
+02:09:34.566 [D] >>> get h12/3
+02:09:34.584 [D] > get h12/3
+02:09:34.584 [D] h12/3 = "persist-3"
+02:09:34.584 [D]    (served by C, 1 attempt(s), 12 ms)
+02:09:34.612 [C] > get h12/3
+02:09:34.612 [C] h12/3 = "persist-3"
+02:09:34.612 [C]    (served by C, 1 attempt(s), 0 ms)
+02:09:34.612 [B] > get h12/3
+02:09:34.613 [A] > get h12/3
+02:09:34.613 [A] h12/3 = "persist-3"
+02:09:34.613 [A]    (served by C, 1 attempt(s), 9 ms)
+02:09:34.613 [B] h12/3 = "persist-3"
+02:09:34.613 [B]    (served by C, 1 attempt(s), 11 ms)
+02:09:36.067 [A] >>> stats
+02:09:36.068 [B] >>> stats
+02:09:36.070 [A] > stats
+02:09:36.070 [A] radio   rx 256 (invalid 0, spoofed 0)  tx 150 (failed 0)
+02:09:36.070 [A] hb      tx 97  rx 186   membership changes 12
+02:09:36.070 [A] server  executed 9  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:09:36.070 [A] repl    started 1  ok 1  failed 0  stale 0   as replica: applied 3 stale 0
+02:09:36.070 [A] ae      rounds 5  chunks tx 24 rx 51  tables 10  pushes 17  resync tx 17 applied 7 stale 0
+02:09:36.070 [A] gc      orphans 9  tombstones 0  keys dropped 0
+02:09:36.070 [A] client  ok 9  failed 0  attempts 9  local 5
+02:09:36.070 [A] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:09:36.070 [B] > stats
+02:09:36.070 [B] radio   rx 343 (invalid 0, spoofed 0)  tx 144 (failed 0)
+02:09:36.070 [B] hb      tx 85  rx 240   membership changes 3
+02:09:36.070 [B] server  executed 7  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:09:36.070 [B] repl    started 5  ok 5  failed 0  stale 0   as replica: applied 0 stale 0
+02:09:36.070 [B] ae      rounds 6  chunks tx 29 rx 74  tables 16  pushes 11  resync tx 11 applied 10 stale 0
+02:09:36.070 [B] gc      orphans 13  tombstones 0  keys dropped 0
+02:09:36.070 [B] client  ok 9  failed 0  attempts 9  local 1
+02:09:36.070 [B] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:09:36.070 [C] >>> stats
+02:09:36.071 [A] chip temp 57.1 degC (die temperature, not ambient)
+02:09:36.071 [A] env node-a-fi, built Oct 24 2026 16:42:20, reset reason: power-on
+02:09:36.071 [A] MAC 14:63:93:C5:D0:18 matches the table entry for node A
+02:09:36.071 [A] esp-now rx 256  queue overflows 0  unknown MAC 3
+02:09:36.071 [A] esp-now tx -> B: 12 delivered, 0 failed (MAC-layer ACK)
+02:09:36.071 [A] esp-now tx -> C: 8 delivered, 0 failed (MAC-layer ACK)
+02:09:36.071 [A] esp-now tx -> D: 9 delivered, 0 failed (MAC-layer ACK)
+02:09:36.071 [A] heap free 172592 (min 164132)  node task stack headroom 13176 bytes
+02:09:36.072 [B] chip temp 52.5 degC (die temperature, not ambient)
+02:09:36.072 [B] env node-b-fi, built Oct 24 2026 16:42:25, reset reason: power-on
+02:09:36.072 [B] MAC 14:63:93:C5:C3:1C matches the table entry for node B
+02:09:36.072 [B] esp-now rx 343  queue overflows 0  unknown MAC 4
+02:09:36.072 [B] esp-now tx -> A: 10 delivered, 0 failed (MAC-layer ACK)
+02:09:36.072 [B] esp-now tx -> C: 11 delivered, 0 failed (MAC-layer ACK)
+02:09:36.072 [B] esp-now tx -> D: 9 delivered, 0 failed (MAC-layer ACK)
+02:09:36.072 [B] heap free 178584 (min 170024)  node task stack headroom 13304 bytes
+02:09:36.072 [D] >>> stats
+02:09:36.073 [C] > stats
+02:09:36.073 [C] radio   rx 317 (invalid 0, spoofed 0)  tx 129 (failed 0)
+02:09:36.073 [C] hb      tx 78  rx 237   membership changes 4
+02:09:36.074 [C] server  executed 8  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:09:36.074 [C] repl    started 4  ok 4  failed 0  stale 0   as replica: applied 1 stale 0
+02:09:36.074 [C] ae      rounds 6  chunks tx 30 rx 56  tables 11  pushes 3  resync tx 3 applied 3 stale 3
+02:09:36.074 [C] gc      orphans 14  tombstones 0  keys dropped 0
+02:09:36.074 [C] client  ok 7  failed 0  attempts 7  local 1
+02:09:36.075 [C] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:09:36.075 [A] >>> status
+02:09:36.075 [D] > stats
+02:09:36.075 [D] radio   rx 304 (invalid 0, spoofed 0)  tx 104 (failed 0)
+02:09:36.075 [D] hb      tx 67  rx 227   membership changes 4
+02:09:36.075 [D] server  executed 8  not-ready 0  dedup replays 0  suppressed 0  table-full 0
+02:09:36.075 [D] repl    started 0  ok 0  failed 0  stale 0   as replica: applied 6 stale 0
+02:09:36.075 [D] ae      rounds 5  chunks tx 20 rx 52  tables 9  pushes 0  resync tx 0 applied 6 stale 2
+02:09:36.075 [D] gc      orphans 4  tombstones 0  keys dropped 0
+02:09:36.075 [D] client  ok 7  failed 0  attempts 7  local 2
+02:09:36.076 [D] storage errors 0  compactions 0 (aborted 0)  faults injected 0
+02:09:36.076 [B] >>> status
+02:09:36.076 [C] chip temp 50.4 degC (die temperature, not ambient)
+02:09:36.076 [C] env node-c-fi, built Oct 24 2026 16:42:31, reset reason: power-on
+02:09:36.076 [C] MAC 14:63:93:C8:A3:08 matches the table entry for node C
+02:09:36.076 [C] esp-now rx 317  queue overflows 0  unknown MAC 2
+02:09:36.076 [C] esp-now tx -> A: 5 delivered, 0 failed (MAC-layer ACK)
+02:09:36.076 [C] esp-now tx -> B: 9 delivered, 0 failed (MAC-layer ACK)
+02:09:36.076 [A] eeprom page writes since boot: total 37, hottest page 412 with 5 (rated 1000000)
+02:09:36.076 [A] bridge requests 0  responses 0  pings 0  busy 0  frames 0  crc errors 0  len errors 0
+02:09:36.076 [A] > status
+02:09:36.076 [D] chip temp 50.6 degC (die temperature, not ambient)
+02:09:36.076 [D] env node-d-fi, built Oct 24 2026 16:42:37, reset reason: power-on
+02:09:36.077 [D] MAC 14:63:93:C5:C1:9C matches the table entry for node D
+02:09:36.077 [A] node A  state ACTIVE  view ABCD  uptime 52s
+02:09:36.077 [A] hlc 80076098.0
+02:09:36.077 [A] storage recovered: 25 live, 0 tombstones, 25/64 keys, log 10258/16064 bytes, bank B, 0 compactions
+02:09:36.077 [A] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+02:09:36.077 [C] >>> status
+02:09:36.077 [D] esp-now rx 304  queue overflows 0  unknown MAC 3
+02:09:36.077 [D] esp-now tx -> A: 4 delivered, 0 failed (MAC-layer ACK)
+02:09:36.077 [D] esp-now tx -> B: 8 delivered, 0 failed (MAC-layer ACK)
+02:09:36.077 [D] esp-now tx -> C: 5 delivered, 0 failed (MAC-layer ACK)
+02:09:36.077 [D] heap free 174712 (min 166152)  node task stack headroom 13544 bytes
+02:09:36.077 [C] esp-now tx -> D: 7 delivered, 0 failed (MAC-layer ACK)
+02:09:36.078 [C] heap free 174324 (min 165864)  node task stack headroom 13544 bytes
+02:09:36.078 [D] >>> status
+02:09:36.078 [A] sensor light (hardware): on, 2 samples, last 10.833 lux seq 4207, 2 ok, 2 under-replicated, 0 failed, 0 read failures
+02:09:36.078 [A] chip temp 57.1 degC (die temperature, not ambient)
+02:09:36.122 [B] eeprom page writes since boot: total 43, hottest page 134 with 5 (rated 1000000)
+02:09:36.122 [B] > status
+02:09:36.122 [B] node B  state ACTIVE  view ABCD  uptime 49s
+02:09:36.123 [B] hlc 80076099.0
+02:09:36.123 [B] storage recovered: 25 live, 0 tombstones, 25/64 keys, log 8468/16064 bytes, bank A, 0 compactions
+02:09:36.123 [B] pending: 0 client, 0 replication, 0 dedup entries, 8 free op slots
+02:09:36.123 [B] sensor motion (simulated): on, 2 samples, last 3 events, last motion 20 s before the sample seq 2685, 4 ok, 0 under-replicated, 0 failed, 0 read failures
+02:09:36.123 [B] chip temp 52.5 degC (die temperature, not ambient)
+02:09:36.128 [D] eeprom page writes since boot: total 35, hottest page 297 with 5 (rated 1000000)
+02:09:36.128 [D] > status
+02:09:36.128 [D] node D  state ACTIVE  view ABCD  uptime 40s
+02:09:36.128 [D] hlc 80076101.0
+02:09:36.128 [D] storage recovered: 20 live, 0 tombstones, 20/64 keys, log 2745/16064 bytes, bank B, 0 compactions
+02:09:36.128 [D] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+02:09:36.128 [D] sensor temp (hardware): on, 1 samples, last 29.300 degC seq 4470, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+02:09:36.128 [D] chip temp 50.6 degC (die temperature, not ambient)
+02:09:36.128 [C] eeprom page writes since boot: total 22, hottest page 345 with 4 (rated 1000000)
+02:09:36.128 [C] > status
+02:09:36.128 [C] node C  state ACTIVE  view ABCD  uptime 46s
+02:09:36.128 [C] hlc 80076099.0
+02:09:36.128 [C] storage recovered: 23 live, 0 tombstones, 23/64 keys, log 5766/16064 bytes, bank B, 0 compactions
+02:09:36.128 [C] pending: 0 client, 0 replication, 2 dedup entries, 8 free op slots
+02:09:36.128 [C] sensor sound (hardware): on, 1 samples, last 0 events, 0.0 % active seq 3087, 2 ok, 0 under-replicated, 0 failed, 0 read failures
+02:09:36.128 [C] chip temp 50.4 degC (die temperature, not ambient)
+02:09:37.533 [A]     54.224 [A] gc: 1 key(s) marked for drop (orphans 10, tombstones 0 total)
+02:10:07.641 [C] >>> del h12/0
+02:10:07.650 [C] > del h12/0
+02:10:07.700 [C] DEL h12/0: OK (served by A, 1 attempt(s), 25 ms)
+02:10:08.646 [C] >>> del h12/1
+02:10:08.654 [C] > del h12/1
+02:10:08.704 [C] DEL h12/1: OK (served by D, 1 attempt(s), 32 ms)
+02:10:09.648 [C] >>> del h12/2
+02:10:09.658 [C] > del h12/2
+02:10:09.709 [C] DEL h12/2: OK (served by D, 1 attempt(s), 29 ms)
+02:10:10.651 [C] >>> del h12/3
+02:10:10.663 [C] > del h12/3
+02:10:10.713 [C] DEL h12/3: OK (served by C, 1 attempt(s), 21 ms)
+02:10:11.659 [C] >>> del k0
+02:10:11.668 [C] > del k0
+02:10:11.718 [C] DEL k0: OK (served by C, 1 attempt(s), 24 ms)
+02:10:12.670 [C] >>> del k20
+02:10:12.672 [C] > del k20
+02:10:12.722 [C] DEL k20: OK (served by A, 1 attempt(s), 32 ms)
