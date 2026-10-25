@@ -188,6 +188,13 @@ void format_mac(const std::uint8_t* mac, char (&out)[18])
 
 // Env, build time, reset reason, and whether this board's MAC is the
 // one the static table (transport.cpp) expects for NODE_ID.
+// Commit of the firmware sources, "-dirty" if they differ from it
+// (scripts/git_rev.py, defined by scripts/pio_git_rev.py). Identifies the
+// image; a compile time would only date main.cpp.
+#ifndef EDGE_GIT_REV
+#define EDGE_GIT_REV "unknown"
+#endif
+
 void print_identity(console::WriteFn write, void* write_context)
 {
     char line[200];
@@ -195,10 +202,9 @@ void print_identity(console::WriteFn write, void* write_context)
     std::snprintf(
         line,
         sizeof(line),
-        "env %s, built %s %s, reset reason: %s\n",
+        "env %s, git %s, reset reason: %s\n",
         EDGE_ENV_NAME,
-        __DATE__,
-        __TIME__,
+        EDGE_GIT_REV,
         reset_reason_name(esp_reset_reason())
     );
     write(write_context, line);
