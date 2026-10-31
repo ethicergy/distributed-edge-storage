@@ -1,6 +1,6 @@
 # Bring-up log
 
-## RESUME HERE (updated Sun 25 04:20 UTC: **boards unplugged by NS**; firmware frozen at `2417e28` = tag `v1.0-presentation`, merged to `main` in PR #1)
+## RESUME HERE (updated Sat 31 16:55 UTC: **hardware access has ended**, boards at college, docs only from here; boards unplugged Sun 25 04:20; firmware frozen at `2417e28` = tag `v1.0-presentation`, merged to `main` in PR #1)
 
 A fresh session needs only this section. Detail is in the tables below (milestones §1, problems §2, decisions §3) and in `docs/test-logs/`. Timestamps in this log are the laptop's clock (`date`), not NS's recollection.
 
@@ -36,11 +36,15 @@ A fresh session needs only this section. Detail is in the tables below (mileston
 
 ### Sat 31 16:41 UTC: final-report data (docs only, boards still unplugged)
 
-`docs/report/README.md` + `chip_temp_soak.png`. Soak poll stats per sensor (98 polls, 17:05:07 → 01:31:10): light 0 / 0 / 46.666 lux, temp 29.7 / 29.8 / 29.8 °C, sound 0 / 0 / 0 events (min / median / max). Dedup entry 96 B, table 6 144 B (64 entries), `DedupManager` 6 176 B (DWARF of the `-fi` ELF). Build: 4MB flash, `app0` 1 280 KiB, images 65-66 % of it. **Open:** `esptool flash_id` on the four SuperMinis (needs the boards plugged in). **Revised 16:48 (NS):** the report has no clock times or dates. `chip_temp_soak.png` was regenerated with elapsed hours by `docs/report/make_chip_temp_elapsed.py`; `docs/figures/` and `scripts/make_figures.py` are unchanged. The padding split was corrected to 90 B data + 6 B padding (I had written 82/14). Added die temperature min / median / max (A 60.1/66.1/66.1, B 53.5/62.5/63.5, C 52.4/61.4/61.4, D 52.6/60.6/61.6 °C); the early dip and the end drop are not explained by the log. No photos or videos of the nodes exist (NS).
+`docs/report/README.md` + `chip_temp_soak.png`. Soak poll stats per sensor (98 polls, 17:05:07 → 01:31:10): light 0 / 0 / 46.666 lux, temp 29.7 / 29.8 / 29.8 °C, sound 0 / 0 / 0 events (min / median / max). Dedup entry 96 B, table 6 144 B (64 entries), `DedupManager` 6 176 B (DWARF of the `-fi` ELF). Build: 4MB flash, `app0` 1 280 KiB, images 65-66 % of it. **Revised 16:48 (NS):** the report has no clock times or dates. `chip_temp_soak.png` was regenerated with elapsed hours by `docs/report/make_chip_temp_elapsed.py`; `docs/figures/` and `scripts/make_figures.py` are unchanged. The padding split was corrected to 90 B data + 6 B padding (I had written 82/14). Added die temperature min / median / max (A 60.1/66.1/66.1, B 53.5/62.5/63.5, C 52.4/61.4/61.4, D 52.6/60.6/61.6 °C); the early dip and the end drop are not explained by the log. No photos or videos of the nodes exist (NS).
+
+### Sat 31 16:55 UTC: hardware access has ended (NS)
+
+The boards stay at college: no more plugging in, no `usbipd`, no serial sessions. Report item 3 (flash chip) was closed without `esptool flash_id`. A search of `docs/test-logs/`, this log, `.pio/`, the shell history and the project's Claude Code session transcripts found no esptool flash detection output (`Detected flash size`, `Manufacturer:`, `Device:`, `Features:`, `Embedded Flash`). The only detection line is `Chip is ESP32-C3 (QFN32) (revision v0.4)` for board A (MAC `c5:d0:18`), from a Sun 18 upload kept in session transcript `a98848fe…jsonl` line 80; the other boards' upload outputs were filtered to MAC + result. `docs/report/README.md` §3 now says the physical flash is not verified; the build is 4 MB and the images are ~66 % of the 1 280 KiB app partition.
 
 ### Sun 25 04:20 UTC: boards unplugged (NS)
 
-All four boards unplugged by NS after the merge. They still hold the frozen `-fi` images (`git 2417e28`). On the next power-up: by-id ports (A 1-1, B 5-4, C 5-3, D 5-2 in `usbipd`), empty line first, then a health check (`stats`, `status`: view `ABCD`, storage errors 0). Samplers come back at the default 30 s.
+All four boards unplugged by NS after the merge. They still hold the frozen `-fi` images (`git 2417e28`). Hardware access has since ended (Sat 31 above).
 
 ### FIRMWARE FROZEN (NS, Sun 25): `git 2417e28` on all four
 
@@ -88,7 +92,7 @@ Test-first (`console_test` failed on the missing reply, then passed); `scripts/m
 * Firmware fixes test-first (host/sim test failing first); ask before any change NS has not approved, and log decisions in §3.
 * `scripts/measure.py` waits after opening each port and deletes its test keys (`--keep-keys` to keep).
 * `format yes` on every new EEPROM module before it joins (problem 7).
-* A board missing from `/dev/serial/by-id`: on Windows (admin PowerShell) `usbipd list`, then `usbipd attach --wsl --busid <BUSID> --auto-attach` with A 1-1, D 5-2, B 5-4, C 5-3 (swapped Sat 24 14:50, problem 21). If it is not listed at all, the cable or power is the problem (NS).
+* Hardware access has ended (Sat 31, NS): the `usbipd` attach instructions were removed; see "hardware access has ended" above.
 * PlatformIO is `.venv/bin/pio` (not on PATH). Commit and push at the points NS names; "who" column = NS.
 
 ---

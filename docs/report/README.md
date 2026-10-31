@@ -69,8 +69,21 @@ offset 96 = sizeof, so there is no tail padding.
   coredump 64 KiB.
   Image sizes (`firmware.bin`, `-fi`): A 863 296 B (65.9 % of app0), B 853 328 B (65.1 %),
   C and D 860 528 B (65.7 %).
-* **Physical chip (`esptool flash_id`): NOT YET CONFIRMED.** No log in the repo records it,
-  and the boards are unplugged. Needs the boards connected (see the bring-up log).
+* **Physical flash chip: not verified.** The hardware is no longer available, so `esptool
+  flash_id` could not be run. No saved upload output records esptool's flash detection
+  (`Detected flash size`, `Auto-detected Flash size`, `Manufacturer:`, `Device:`,
+  `Features:`, `Embedded Flash`). The search covered `docs/test-logs/`,
+  `docs/BRINGUP_LOG.md`, `.pio/`, the shell history and the Claude Code session
+  transcripts of this project.
+* The only esptool detection line found is `Chip is ESP32-C3 (QFN32) (revision v0.4)` for
+  board A (MAC `14:63:93:c5:d0:18`). It comes from one upload's output in a session
+  transcript outside the repo
+  (`~/.claude/projects/-home-navaneeth-MC-distributed-edge-storage/a98848fe-930d-4d21-a02a-2108802b1226.jsonl`,
+  line 80). It names the SoC and its revision, not the flash chip or its size. The other
+  boards' saved upload outputs kept only the MAC and the result line.
+* The build is configured for 4 MB, and all four images fit in the 1 280 KiB app partition
+  at ~66 %. The soak doesn't prove the flash size: the images use only the first ~0.9 MB
+  of flash.
 
 ## 4. Attachments in this folder
 
