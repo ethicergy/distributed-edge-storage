@@ -12,7 +12,8 @@ The wire protocol (`include/protocol.h`) is frozen: 22-byte header,
 11 message types, the status table. Nothing below adds fields to it.
 
 Decisions that were open in the completion prompt (D0–D8) are recorded
-in [DECISIONS.md](DECISIONS.md).
+in [DECISIONS.md](DECISIONS.md). What a node does, step by step and byte
+by byte, is in [PROTOCOL.md](PROTOCOL.md).
 
 ---
 
